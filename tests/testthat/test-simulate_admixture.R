@@ -2,7 +2,7 @@ context("simulate_Admixture")
 
 test_that("simulate admixture use", {
 
-  vx <- isoSIM::simulate_admixture(pop_size = 100,
+  vx <- simulate_admixture(pop_size = 100,
                            number_of_founders = 2,
                            total_runtime = 100,
                            morgan = 1,

@@ -8,7 +8,7 @@ testthat::test_that("tajima", {
 
   t <- 10
 
-  found <- isoSIM::calculate_tajima_d(pop$population)$D
+  found <- calculate_tajima_d(pop$population)$D
 
   while(t < 1000) {
     pop <- simulate_admixture(pop$population,
@@ -17,7 +17,7 @@ testthat::test_that("tajima", {
                               total_runtime = 10,
                               progress_bar = FALSE)
     found <- c(found,
-               isoSIM::calculate_tajima_d(pop$population)$D
+               calculate_tajima_d(pop$population)$D
     )
     t <- t + 10
    # cat(t,"\n")
