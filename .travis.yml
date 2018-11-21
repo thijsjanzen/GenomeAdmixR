@@ -1,0 +1,14 @@
+language: r
+cache: packages
+warnings_are_errors: false
+
+r_github_packages:
+  - jimhester/lintr
+  - r-lib/covr
+  - MangoTheCat/goodpractice
+
+after_success:
+ # - Rscript -e 'lintr::lint_package()'
+ # - travis_wait Rscript -e 'library(goodpractice); gp()'
+  - travis_wait 60 Rscript codecov.R;
+  - travis_wait 30 Rscript -e 'covr::codecov()'
