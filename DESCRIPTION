@@ -1,0 +1,14 @@
+Package: isoSIM
+Type: Package
+Title: Simulate Linkage Disequilibrium Along Chromosomes in Isofemale Lines
+Version: 0.57.1
+Date: 2018-30-10
+Authors@R: c(person("Thijs","Janzen", email = "thijsjanzen@gmail.com", role=c("aut","cre")),
+             person("Fernando","Diaz G.",email="ferdiazfer@gmail.com", role=c("ctb")))
+Description: Simulation of source populations, and simulation of the creation of isofemale lines from these populations.
+License: GPL (>= 2)
+Imports: Rcpp (>= 0.12.12), hierfstat, tibble, methods, tidyr
+Suggests: testit, testthat, knitr, rmarkdown, ggplot2, magrittr, dplyr, junctions, covr, ggridges
+LinkingTo: Rcpp, RcppArmadillo
+SystemRequirements: C++11
+VignetteBuilder: knitr
