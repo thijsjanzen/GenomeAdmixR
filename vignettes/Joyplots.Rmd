@@ -13,9 +13,9 @@ knitr::opts_chunk$set(fig.width=6)
 ```
 
 ```{r}
-library(isoSIM)
+library(GenomeAdmixR)
 library(ggplot2)
-packageVersion("isoSIM")
+packageVersion("GenomeAdmixR")
 ```
 
 # Demonstration of how to use joyplots

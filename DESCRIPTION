@@ -1,8 +1,8 @@
-Package: isoSIM
+Package: GenomeAdmixR
 Type: Package
-Title: Simulate Linkage Disequilibrium Along Chromosomes in Isofemale Lines
-Version: 0.57.1
-Date: 2018-30-10
+Title: Simulate Admixture of Genomes
+Version: 0.58
+Date: 2018-21-11
 Authors@R: c(person("Thijs","Janzen", email = "thijsjanzen@gmail.com", role=c("aut","cre")),
              person("Fernando","Diaz G.",email="ferdiazfer@gmail.com", role=c("ctb")))
 Description: Simulation of source populations, and simulation of the creation of isofemale lines from these populations.

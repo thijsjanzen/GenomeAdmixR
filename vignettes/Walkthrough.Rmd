@@ -12,13 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.width=6) 
 ```
 
-# ISOSIM
-The package isoSIM was designed to simulate the generation of iso-female lines, and simulate genomic changes during, and after, formation of iso-female lines. Furthermore, it allows for simulation of effects after crossing individuals from iso-female lines.
+# GenomeAdmixR
+The package GenomeAdmixR was designed to simulate the generation of iso-female lines, and simulate genomic changes during, and after, formation of iso-female lines. Furthermore, it allows for simulation of effects after crossing individuals from iso-female lines.
 
 ```{r}
-library(isoSIM)
+library(GenomeAdmixR)
 library(ggplot2)
-packageVersion("isoSIM")
+packageVersion("GenomeAdmixR")
 ```
 
 

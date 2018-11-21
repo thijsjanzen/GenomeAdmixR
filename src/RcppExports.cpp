@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // calculate_allele_spectrum_cpp
 NumericMatrix calculate_allele_spectrum_cpp(NumericVector v1, double step_size, bool progress_bar);
-RcppExport SEXP _isoSIM_calculate_allele_spectrum_cpp(SEXP v1SEXP, SEXP step_sizeSEXP, SEXP progress_barSEXP) {
+RcppExport SEXP _GenomeAdmixR_calculate_allele_spectrum_cpp(SEXP v1SEXP, SEXP step_sizeSEXP, SEXP progress_barSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,7 +21,7 @@ END_RCPP
 }
 // simulate_cpp
 List simulate_cpp(Rcpp::NumericVector input_population, NumericMatrix select, int pop_size, int number_of_founders, Rcpp::NumericVector starting_proportions, int total_runtime, double morgan, bool progress_bar, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection);
-RcppExport SEXP _isoSIM_simulate_cpp(SEXP input_populationSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP number_of_foundersSEXP, SEXP starting_proportionsSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP progress_barSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP) {
+RcppExport SEXP _GenomeAdmixR_simulate_cpp(SEXP input_populationSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP number_of_foundersSEXP, SEXP starting_proportionsSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP progress_barSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -43,7 +43,7 @@ END_RCPP
 }
 // create_pop_admixed_cpp
 List create_pop_admixed_cpp(int num_individuals, int num_ancestors, int population_size, double size_in_morgan);
-RcppExport SEXP _isoSIM_create_pop_admixed_cpp(SEXP num_individualsSEXP, SEXP num_ancestorsSEXP, SEXP population_sizeSEXP, SEXP size_in_morganSEXP) {
+RcppExport SEXP _GenomeAdmixR_create_pop_admixed_cpp(SEXP num_individualsSEXP, SEXP num_ancestorsSEXP, SEXP population_sizeSEXP, SEXP size_in_morganSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -57,7 +57,7 @@ END_RCPP
 }
 // test_fish_functions
 void test_fish_functions();
-RcppExport SEXP _isoSIM_test_fish_functions() {
+RcppExport SEXP _GenomeAdmixR_test_fish_functions() {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     test_fish_functions();
@@ -66,14 +66,14 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_isoSIM_calculate_allele_spectrum_cpp", (DL_FUNC) &_isoSIM_calculate_allele_spectrum_cpp, 3},
-    {"_isoSIM_simulate_cpp", (DL_FUNC) &_isoSIM_simulate_cpp, 12},
-    {"_isoSIM_create_pop_admixed_cpp", (DL_FUNC) &_isoSIM_create_pop_admixed_cpp, 4},
-    {"_isoSIM_test_fish_functions", (DL_FUNC) &_isoSIM_test_fish_functions, 0},
+    {"_GenomeAdmixR_calculate_allele_spectrum_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_allele_spectrum_cpp, 3},
+    {"_GenomeAdmixR_simulate_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_cpp, 12},
+    {"_GenomeAdmixR_create_pop_admixed_cpp", (DL_FUNC) &_GenomeAdmixR_create_pop_admixed_cpp, 4},
+    {"_GenomeAdmixR_test_fish_functions", (DL_FUNC) &_GenomeAdmixR_test_fish_functions, 0},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_isoSIM(DllInfo *dll) {
+RcppExport void R_init_GenomeAdmixR(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

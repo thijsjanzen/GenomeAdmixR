@@ -1,11 +1,13 @@
-\name{isoSIM-package}
-\alias{isoSIM-package}
-\alias{isoSIM}
+\name{GenomeAdmixR-package}
+\alias{GenomeAdmixR-package}
+\alias{GenomeAdmixR}
 \docType{package}
 \title{
- This package simulates the generation of an isofemale line
+ This package simulates admixture of ancestry
 }
 \description{
+   Version 0.58 - renamed to GenomeAdmixR \cr
+   Version 0.58 - collapsed and improved many functions \cr
    Version 0.57 - Added function to generate admixed individuals \cr
    Version 0.56 - Added starting frequencies to 'simulate_admixture' \cr
    Version 0.55 - extended 'calculate_marker_frequency' to handle a vector of locations \cr

@@ -13,12 +13,12 @@ knitr::opts_chunk$set(fig.width=6)
 ```
 
 # Creation of isofemale lines
-The package isoSIM was designed to simulate the generation of iso-female lines, and simulate genomic changes during, and after, formation of iso-female lines. Furthermore, it allows for simulation of effects after crossing individuals from iso-female lines.
+The package GenomeAdmixR was designed to simulate the generation of iso-female lines, and simulate genomic changes during, and after, formation of iso-female lines. Furthermore, it allows for simulation of effects after crossing individuals from iso-female lines.
 
 ```{r load libraries}
-library(isoSIM)
+library(GenomeAdmixR)
 library(ggplot2)
-packageVersion("isoSIM")
+packageVersion("GenomeAdmixR")
 ```
 We will analyze whether we can genetically tell apart two populations, where one population was founded by crossing two isofemale lines that were created from the same source population, and the other population was founded by crossing two isofemale lines created from different source populations. 
 

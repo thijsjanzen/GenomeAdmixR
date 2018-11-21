@@ -1,5 +1,5 @@
-\name{isoSIM-internal}
-\title{Internal isoSIM functions}
+\name{GenomeAdmixR-internal}
+\title{Internal GenomeAdmixR functions}
 \alias{test_fish_functions}
 \alias{create_iso_female_line}
 \alias{findtype}
@@ -24,6 +24,6 @@
 \alias{create_pop_admixed_cpp}
 \alias{check_input_pop}
 
-\description{Internal isoSIM functions}
+\description{Internal GenomeAdmixR functions}
 \details{These are not to be called by the user}
 \keyword{internal}
