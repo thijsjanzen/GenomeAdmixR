@@ -13,8 +13,8 @@ A package under construction to simulate genetic admixture in relation to isofem
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
 
 # Version history
-Version 0.58 - Removed many old functions, and improved usability for many existing functions
-Version 0.58 - Renamed to GenomeAdmixR
+Version 0.58 - Removed many old functions, and improved usability for many existing functions <br />
+Version 0.58 - Renamed to GenomeAdmixR <br />
 Version 0.57 - Added function to generate admixed individuals <br />
 Version 0.56 - Added starting frequencies to 'simulate_admixture' <br />
 Version 0.55 - extended 'calculate_marker_frequency' to handle a vector of locations <br />
