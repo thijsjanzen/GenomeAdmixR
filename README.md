@@ -9,7 +9,7 @@ Genetic admixture simulation
 # What is GenomeAdmixR?
 A package under construction to simulate genetic admixture in relation to isofemale lines
 
-# Demonstration isoSIM
+# Demonstration GenomeAdmixR
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
 
 # Version history
