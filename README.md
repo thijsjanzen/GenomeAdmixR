@@ -1,18 +1,20 @@
-# isoSIM
-Genetic admixture simulation for isofemale lines and further
+# GenomeAdmixR
+Genetic admixture simulation
 
 [![Build Status](https://travis-ci.org/thijsjanzen/isoSIM.svg?branch=master)](https://travis-ci.org/thijsjanzen/isoSIM)
 [![codecov](https://codecov.io/gh/thijsjanzen/isoSIM/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/isoSIM)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/isoSIM)](https://cran.r-project.org/package=isoSIM)
 
 
-# What is isoSIM?
+# What is GenomeAdmixR?
 A package under construction to simulate genetic admixture in relation to isofemale lines
 
 # Demonstration isoSIM
-Thijs Janzen gave a presentation demonstrating isoSIM at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
+Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
 
 # Version history
+Version 0.58 - Removed many old functions, and improved usability for many existing functions
+Version 0.58 - Renamed to GenomeAdmixR
 Version 0.57 - Added function to generate admixed individuals <br />
 Version 0.56 - Added starting frequencies to 'simulate_admixture' <br />
 Version 0.55 - extended 'calculate_marker_frequency' to handle a vector of locations <br />
