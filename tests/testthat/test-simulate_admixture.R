@@ -22,8 +22,10 @@ test_that("simulate_admixture", {
                            seed = 42,
                            select_matrix = select_matrix,
                            multiplicative_selection = TRUE)
+  are_equal <- all.equal(vx$population, vy$population)
+  if(length(are_equal) > 1) are_equal <- FALSE
 
-  testthat::expect_true(!all.equal(vx$population, vy$population))
+  testthat::expect_true(!are_equal)
 })
 
 
