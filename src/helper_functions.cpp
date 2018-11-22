@@ -280,23 +280,15 @@ double calculate_fitness(const Fish& focal,
     }
 
     double fitness = 0.0;
+    if (multiplicative_selection) fitness = 1.0;
+    for(int i = 0; i < num_alleles.size(); ++i) {
+        if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
 
-    if(!multiplicative_selection) {
-        for(int i = 0; i < num_alleles.size(); ++i) {
-            if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-
-            int fitness_index = 1 + num_alleles[i];
-            fitness += select(i, fitness_index);
-        }
-    }
-
-    if(multiplicative_selection) {
-        fitness = 1.0;
-        for(int i = 0; i < num_alleles.size(); ++i) {
-            if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-
-            int fitness_index = 1 + num_alleles[i];
+        int fitness_index = 1 + num_alleles[i];
+        if(multiplicative_selection) {
             fitness *= select(i, fitness_index);
+        } else {
+            fitness += select(i, fitness_index);
         }
     }
 
