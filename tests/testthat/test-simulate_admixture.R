@@ -1,10 +1,11 @@
 context("simulate_Admixture")
 
 test_that("simulate_admixture", {
-  select_matrix <- matrix(NA, nrow=1, ncol=5)
+  select_matrix <- matrix(NA, nrow=2, ncol=5)
 
   s <- 0.1
   select_matrix[1, ] <- c(0.5, 0.5, 0.5+0.5*s, 0.5+s, 0)
+  select_matrix[2, ] <- c(0.6, 0.5, 0.5+0.5*s, 0.5+s, 0)
 
   vx <- simulate_admixture(pop_size = 100,
                            number_of_founders = 2,
@@ -22,7 +23,7 @@ test_that("simulate_admixture", {
                            select_matrix = select_matrix,
                            multiplicative_selection = TRUE)
 
-  testthat::expect_true(!all.equal(vx, vy))
+  testthat::expect_true(!all.equal(vx$population, vy$population))
 })
 
 

@@ -286,10 +286,8 @@ double calculate_fitness(const Fish& focal,
 
         int fitness_index = 1 + num_alleles[i];
         if(multiplicative_selection) {
-            Rcout << "mult_select" << fitness << " " << fitness_index << " " << select(i, fitness_index) << "\n";
             fitness *= select(i, fitness_index);
         } else {
-            Rcout << " sum_select" << fitness << " " << fitness_index << " " << select(i, fitness_index) << "\n";
             fitness += select(i, fitness_index);
         }
     }
