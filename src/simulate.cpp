@@ -38,7 +38,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         bool multiplicative_selection,
                                         int num_alleles) {
 
-    Rcout << "simulate_population: " << multiplicative_selection << "\n";
+    //Rcout << "simulate_population: " << multiplicative_selection << "\n";
 
     bool use_selection = FALSE;
     if(select(1, 1) >= 0) use_selection = TRUE;
@@ -167,7 +167,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
               bool track_junctions,
               bool multiplicative_selection)
 {
-    Rcout << "simulate_cpp: " << multiplicative_selection << "\n";
+    //Rcout << "simulate_cpp: " << multiplicative_selection << "\n";
 
     std::vector< Fish > Pop;
     int number_of_alleles = number_of_founders;
