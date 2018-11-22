@@ -1,9 +1,9 @@
 # GenomeAdmixR
 Genetic admixture simulation
 
-[![Build Status](https://travis-ci.org/thijsjanzen/isoSIM.svg?branch=master)](https://travis-ci.org/thijsjanzen/GenomeAdmixR)
-[![codecov](https://codecov.io/gh/thijsjanzen/isoSIM/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/isoSIM)](https://cran.r-project.org/package=GenomeAdmixR)
+[![Build Status](https://travis-ci.org/thijsjanzen/GenomeAdmixR.svg?branch=master)](https://travis-ci.org/thijsjanzen/GenomeAdmixR)
+[![codecov](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 
 
 # What is GenomeAdmixR?
