@@ -289,7 +289,7 @@ double calculate_fitness(const Fish& focal,
             Rcout << "mult_select" << fitness << " " << fitness_index << " " << select(i, fitness_index) << "\n";
             fitness *= select(i, fitness_index);
         } else {
-§R          Rcout << " sum_select" << fitness << " " << fitness_index << " " << select(i, fitness_index) << "\n";
+            Rcout << " sum_select" << fitness << " " << fitness_index << " " << select(i, fitness_index) << "\n";
             fitness += select(i, fitness_index);
         }
     }
