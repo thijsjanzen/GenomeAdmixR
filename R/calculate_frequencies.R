@@ -1,35 +1,3 @@
-create_random_markers <- function(number_of_markers) {
-  markers <- c()
-  while (length(markers) < number_of_markers) {
-    temp_markers <- runif(number_of_markers - length(markers), 0, 1)
-    which_dupl <- which(duplicated(temp_markers))
-    if (length(which_dupl)) {
-      temp_markers <- temp_markers[-which_dupl]
-    }
-    markers <- c(markers, temp_markers)
-  }
-  markers <- sort(markers)
-  return(markers)
-}
-
-calculate_dist_junctions <- function(pop) {
-  get_num_junctions <- function(indiv) {
-    v1 <- length(indiv$chromosome1[, 1]) - 2
-    v2 <- length(indiv$chromosome2[, 1]) - 2 #subract one for start
-    return(c(v1, v2))
-  }
-
-  vx <- unlist(lapply(pop, get_num_junctions))
-
-  return(vx)
-}
-
-plot_dist_junctions <- function(pop) {
-  junct <- calculate_dist_junctions(pop)
-  vx <- table(junct)
-  barplot(vx)
-}
-
 calculate_marker_frequency <- function(pop, location) {
 
   pop <- check_input_pop(pop)

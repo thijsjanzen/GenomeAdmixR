@@ -112,3 +112,44 @@ plot_difference_frequencies <- function(results,
 
   return(p1)
 }
+
+plot_frequencies <- function(result,
+                             step_size = 0.01,
+                             progress_bar = FALSE) {
+
+  to_plot <- calculate_allele_frequencies(result,
+                                          step_size,
+                                          progress_bar)
+
+  p1 <- ggplot2::ggplot(to_plot,
+                          ggplot2::aes(x = to_plot$location,
+                                       y = to_plot$frequency,
+                                       colour = as.factor(to_plot$ancestor))) +
+        geom_step()
+
+  p1 <- p1 +
+    ggplot2::xlab("Location (Morgan)") +
+    ggplot2::ylab("Frequency") +
+    ggplot2::labs(col = "Ancestor")
+
+  return(p1)
+}
+
+
+calculate_dist_junctions <- function(pop) {
+  get_num_junctions <- function(indiv) {
+    v1 <- length(indiv$chromosome1[, 1]) - 2
+    v2 <- length(indiv$chromosome2[, 1]) - 2 #subract one for start
+    return(c(v1, v2))
+  }
+
+  vx <- unlist(lapply(pop, get_num_junctions))
+
+  return(vx)
+}
+
+plot_dist_junctions <- function(pop) {
+  junct <- calculate_dist_junctions(pop)
+  vx <- table(junct)
+  barplot(vx)
+}

@@ -89,16 +89,12 @@ simulate_admixture <- function(input_population = NA,
 
   output <- list()
   if(track_frequency == FALSE && track_junctions == FALSE) {
-    output <- list("population" = selected_popstruct,
-                 "initial_frequency" = initial_freq_tibble,
-                 "final_frequency" = final_freq_tibble,
-                 "junctions" = selected_pop$junctions)
+    output <- list("population" = selected_popstruct)
   }
 
   if(track_frequency == FALSE && track_junctions == TRUE) {
     output <- list("population" = selected_popstruct,
-                   "initial_frequency" = initial_freq_tibble,
-                   "final_frequency" = final_freq_tibble)
+                   "junctions" = selected_pop$junctions)
   }
 
   if(track_frequency == TRUE && track_junctions == FALSE) {

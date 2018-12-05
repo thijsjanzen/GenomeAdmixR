@@ -101,3 +101,17 @@ increase_ancestor <- function(population, increment = 20) {
   class(pop_2) <- "population"
   return(pop_2)
 }
+
+create_random_markers <- function(number_of_markers) {
+  markers <- c()
+  while (length(markers) < number_of_markers) {
+    temp_markers <- runif(number_of_markers - length(markers), 0, 1)
+    which_dupl <- which(duplicated(temp_markers))
+    if (length(which_dupl)) {
+      temp_markers <- temp_markers[-which_dupl]
+    }
+    markers <- c(markers, temp_markers)
+  }
+  markers <- sort(markers)
+  return(markers)
+}
