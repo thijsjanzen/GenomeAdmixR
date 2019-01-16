@@ -259,13 +259,18 @@ std::vector< junction > create_chromosome(int num_ancestors,
         pos += exp_u;
         if(pos < 1) {
             int new_anc = random_number(num_ancestors);
-            if(num_ancestors == 2) {
-                new_anc = 1 - current_anc;
+            //if(num_ancestors == 2) {
+            //    new_anc = 1 - current_anc;
+            //}
+            //while(new_anc == current_anc) new_anc = random_number(num_ancestors);
+            //junction to_add(pos, new_anc);
+            //chrom.push_back(to_add);
+            //current_anc = new_anc;
+            if(new_anc != current_anc) {
+                junction to_add(pos, new_anc);
+                chrom.push_back(to_add);
+                current_anc = new_anc;
             }
-            while(new_anc == current_anc) new_anc = random_number(num_ancestors);
-            junction to_add(pos, new_anc);
-            chrom.push_back(to_add);
-            current_anc = new_anc;
         }
     }
     junction to_add(1.0, -1);
