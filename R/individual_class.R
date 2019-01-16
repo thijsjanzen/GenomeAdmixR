@@ -1,10 +1,10 @@
 print.individual <- function(x, ...) {
   print("Individual with two Chromosomes")
   v1 <- paste("Chromosome 1:",
-              length(x$chromosome1) - 2,
+              length(x$chromosome1[, 1]) - 2,
               "junctions")
   v2 <- paste("Chromosome 2:",
-              length(x$chromosome2) - 2,
+              length(x$chromosome2[, 1]) - 2,
               "junctions")
   print(v1)
   print(v2)
