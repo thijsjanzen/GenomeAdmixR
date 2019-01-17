@@ -72,10 +72,10 @@ void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels) {
     for(auto i = chrom.begin(); i != chrom.end(); ++i) {
         if(founder_labels.empty()) {
-            founder_labels.push_back((*i))
+            founder_labels.push_back((*i).right)
         } else {
-            if(std::find(founder_labels.begin(), founder_labels.end(), (*i)) == founder_labels.end()) {
-                founder_labels.push_back((*i))
+            if(std::find(founder_labels.begin(), founder_labels.end(), (*i).right) == founder_labels.end()) {
+                founder_labels.push_back((*i).right)
             }
         }
     }
