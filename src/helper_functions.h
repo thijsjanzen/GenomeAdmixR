@@ -45,6 +45,16 @@ double calculate_fitness(const Fish& focal,
                          bool multiplicative_selection);
 
 int draw_random_founder(const std::vector<double>& v);
+void update_founder_labels(const std::vector<junction> chrom,
+                           std::vector<int>& founder_labels);
+
+arma::mat update_frequency_tibble(const std::vector< Fish >& v,
+                                  double m,
+                                  const std::vector<int>& founder_labels);
+
+arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
+                                        const NumericVector& markers,
+                                        const std::vector<int>& founder_labels);
 
 
 

@@ -208,7 +208,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         frequencies_table = x;
     }
 
-    arma::mat initial_frequencies = update_all_frequencies(Pop, track_markers, number_of_alleles, founder_labels);
+    arma::mat initial_frequencies = update_all_frequencies_tibble(Pop, track_markers, number_of_alleles, founder_labels);
 
     std::vector<double> junctions;
   //  Rcout << "starting simulation\n";
@@ -227,7 +227,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                       number_of_alleles,
                                                       founder_labels);
 
-    arma::mat final_frequencies = update_all_frequencies(outputPop, track_markers, number_of_alleles, founder_labels);
+    arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, number_of_alleles, founder_labels);
 
     return List::create( Named("population") = convert_to_list(outputPop),
                          Named("frequencies") = frequencies_table,
