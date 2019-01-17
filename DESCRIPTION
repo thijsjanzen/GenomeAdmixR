@@ -1,8 +1,8 @@
 Package: GenomeAdmixR
 Type: Package
 Title: Simulate Admixture of Genomes
-Version: 0.59
-Date: 2018-05-12
+Version: 0.59.1
+Date: 2019-17-01
 Authors@R: c(person("Thijs","Janzen", email = "thijsjanzen@gmail.com", role=c("aut","cre")),
              person("Fernando","Diaz G.",email="ferdiazfer@gmail.com", role=c("ctb")))
 Description: Simulation of source populations, and simulation of the creation of isofemale lines from these populations.

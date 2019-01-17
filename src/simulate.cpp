@@ -179,8 +179,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
         number_of_founders = 0;
         for(auto it = Pop.begin(); it != Pop.end(); ++it) {
-            update_founder_labels((*it).chromosome1, founder_labels));
-            update_founder_labels((*it).chromosome2, founder_labels));
+            update_founder_labels((*it).chromosome1, founder_labels);
+            update_founder_labels((*it).chromosome2, founder_labels);
         }
         number_of_alleles = founder_labels.size();
         Rcout << "Number of alleles is " << number_of_alleles << "\n";
