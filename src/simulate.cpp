@@ -36,7 +36,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         bool track_junctions,
                                         std::vector<double>& junctions,
                                         bool multiplicative_selection,
-                                        int num_alleles) {
+                                        int num_alleles,
+                                        const std::vector<int>& founder_labels) {
 
     //Rcout << "simulate_population: " << multiplicative_selection << "\n";
 
@@ -178,10 +179,10 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
         number_of_founders = 0;
         for(auto it = Pop.begin(); it != Pop.end(); ++it) {
-            update_founder_labels((*it).chromosome1, founder_labels))
-            update_founder_labels((*it).chromosome2, founder_labels))
+            update_founder_labels((*it).chromosome1, founder_labels));
+            update_founder_labels((*it).chromosome2, founder_labels));
         }
-        number_of_alleles = length(founder_labels);
+        number_of_alleles = founder_labels.size();
         Rcout << "Number of alleles is " << number_of_alleles << "\n";
     } else {
         std::vector<double> starting_freqs = as< std::vector<double> >(starting_proportions);
@@ -208,7 +209,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         frequencies_table = x;
     }
 
-    arma::mat initial_frequencies = update_all_frequencies_tibble(Pop, track_markers, number_of_alleles, founder_labels);
+    arma::mat initial_frequencies = update_all_frequencies_tibble(Pop, track_markers, founder_labels);
 
     std::vector<double> junctions;
   //  Rcout << "starting simulation\n";
@@ -227,7 +228,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                       number_of_alleles,
                                                       founder_labels);
 
-    arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, number_of_alleles, founder_labels);
+    arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, founder_labels);
 
     return List::create( Named("population") = convert_to_list(outputPop),
                          Named("frequencies") = frequencies_table,
