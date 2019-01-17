@@ -94,7 +94,9 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                 //for(int j = 0; j < v.size(); ++j) {
                 //    x(t, j) = v(j);
                 //}
-                arma::mat local_mat = update_frequency_tibble(Pop, track_markers, founder_labels);
+                arma::mat local_mat = update_frequency_tibble(Pop,
+                                                              track_markers[i],
+                                                              founder_labels);
                 for(int j = 0; j < local_mat.size(); ++j) {
                     for(int k = 0; k < 3; ++k) {
                         x(j, k) = local_mat(j, k);
