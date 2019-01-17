@@ -189,6 +189,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
         int end = start + markers.size();
         for(int j = start; j < end; ++j) {
            for(int k = 0; k < 3; ++k) {
+               Rcout << j << "\t" << k << "\t" << j - start << "\n";
                output(j, k) = local_mat(j - start, k);
            }
         }
