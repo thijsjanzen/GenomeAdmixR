@@ -400,8 +400,8 @@ int draw_random_founder(const std::vector<double>& v) {
 }
 
 // [[Rcpp::export]]
-arma::mat calculate_allele_spectrum_cpp(NumericVector v1,
-                                        NumericVector markers,
+arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
+                                        Rcpp::NumericVector markers,
                                         bool progress_bar)
 {
     std::vector< Fish > Pop;
