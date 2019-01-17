@@ -68,13 +68,22 @@ bool is_fixed(const std::vector< Fish >& v) {
     return true;
 }
 
+int find_index(const std::vector<int>& v, int value) {
+    for(int i = 0; i < v.size(); ++i) {
+        if(v[i] == value) return i;
+    }
+    //Rcout << "ERROR! Could not find ancestry label, returning -1, expect out of range error soon\n";
+    return -1;
+}
+
+
 void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels) {
     for(auto i = chrom.begin(); i != chrom.end(); ++i) {
         if(founder_labels.empty()) {
             founder_labels.push_back((*i).right);
         } else {
-            if(std::find(founder_labels.begin(), founder_labels.end(), (*i).right) == founder_labels.end()) {
+            if(find_index(founder_labels, (*i).right) == -1) {
                 founder_labels.push_back((*i).right);
             }
         }
@@ -121,13 +130,6 @@ NumericVector update_frequency(const std::vector< Fish >& v,
     return(freq);
 }
 
-int find_index(const std::vector<int>& v, int value) {
-    for(int i = 0; i < v.size(); ++i) {
-        if(v[i] == value) return i;
-    }
-    Rcout << "ERROR! Could not find ancestry label, returning -1, expect out of range error soon\n";
-    return -1;
-}
 
 
 arma::mat update_frequency_tibble(const std::vector< Fish >& v,
