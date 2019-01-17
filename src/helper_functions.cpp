@@ -6,6 +6,7 @@
 //
 
 #include "helper_functions.h"
+#include <vector>
 
 bool verify_individual_cpp(const Fish& Nemo) {
     for(int i = 0; i < Nemo.chromosome1.size(); ++i) {
@@ -67,12 +68,13 @@ bool is_fixed(const std::vector< Fish >& v) {
     return true;
 }
 
-void update_founder_labels(const std::vector<junction> chrom, std::vector<int>& founder_labels) {
+void update_founder_labels(const std::vector<junction> chrom,
+                           std::vector<int>& founder_labels) {
     for(auto i = chrom.begin(); i != chrom.end(); ++i) {
         if(founder_labels.empty()) {
             founder_labels.push_back((*i))
         } else {
-            if(!std::find(founder_labels.begin(), founder_labels.end(), (*i)) {
+            if(std::find(founder_labels.begin(), founder_labels.end(), (*i)) == founder_labels.end()) {
                 founder_labels.push_back((*i))
             }
         }
@@ -181,6 +183,7 @@ arma::mat update_all_frequencies(const std::vector< Fish >& pop,
        // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
        // and we have to put that in the right place in the output matrix
        int start = i * markers.size();
+       int end = start + markers.size();
        for(int j = start, j < end; ++j) {
            for(int k = 0; k < 3; ++k) {
                output(j, k) = local_mat(j - start, k);
