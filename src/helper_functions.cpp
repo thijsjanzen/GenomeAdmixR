@@ -176,7 +176,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
 
     //Rcout << "this is update_all_frequencies_tibble\n";
     int number_of_alleles = founder_labels.size();
-    Rcout << number_of_alleles << "\n";
+  //  Rcout << number_of_alleles << "\n";
     arma::mat output(markers.size() * number_of_alleles, 3);
 
     for(int i = 0; i < markers.size(); ++i) {

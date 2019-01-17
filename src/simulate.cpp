@@ -87,7 +87,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
         if(track_junctions) junctions.push_back(calc_mean_junctions(Pop));
 
         if(track_frequency) {
-            Rcout << "track frequency start\n";
+            //Rcout << "track frequency start\n";
             for(int i = 0; i < track_markers.size(); ++i) {
                 arma::mat x = frequencies.slice(i);
                 if(track_markers[i] < 0) break;
@@ -225,10 +225,10 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     }
 
     arma::mat initial_frequencies = update_all_frequencies_tibble(Pop, track_markers, founder_labels);
-    Rcout << "collected initial frequencies\n";
+  //  Rcout << "collected initial frequencies\n";
 
     std::vector<double> junctions;
-    Rcout << "starting simulation\n";
+  //  Rcout << "starting simulation\n";
     std::vector<Fish> outputPop = simulate_Population(Pop,
                                                       select,
                                                       pop_size,
