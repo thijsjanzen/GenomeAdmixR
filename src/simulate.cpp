@@ -152,7 +152,6 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     return(Pop);
 }
 
-
 // [[Rcpp::export]]
 List simulate_cpp(Rcpp::NumericVector input_population,
               NumericMatrix select,
@@ -171,27 +170,19 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
     std::vector< Fish > Pop;
     int number_of_alleles = number_of_founders;
+    std::vector<int> founder_labels;
 
     if(input_population[0] > -1e4) {
-     //   Rcout << "Found input population! converting!\n";
+        Rcout << "Found input population! converting!\n";
         Pop = convert_NumericVector_to_fishVector(input_population);
 
         number_of_founders = 0;
-
         for(auto it = Pop.begin(); it != Pop.end(); ++it) {
-            for(auto i = (*it).chromosome1.begin(); i != (*it).chromosome1.end(); ++i) {
-                if((*i).right > number_of_founders) {
-                    number_of_founders = (*i).right;
-                }
-            }
-            for(auto i = (*it).chromosome2.begin(); i != (*it).chromosome2.end(); ++i) {
-                if((*i).right > number_of_founders) {
-                    number_of_founders = (*i).right;
-                }
-            }
+            update_founder_labels((*it).chromosome1, founder_labels))
+            update_founder_labels((*it).chromosome2, founder_labels))
         }
-        number_of_alleles = number_of_founders + 1;
-       // Rcout << "Number of alleles calculated\n";
+        number_of_alleles = length(founder_labels);
+        Rcout << "Number of alleles is " << number_of_alleles << "\n";
     } else {
         std::vector<double> starting_freqs = as< std::vector<double> >(starting_proportions);
         for(int i = 0; i < pop_size; ++i) {
@@ -202,6 +193,9 @@ List simulate_cpp(Rcpp::NumericVector input_population,
             Fish p2 = Fish( founder_2 );
 
             Pop.push_back(mate(p1,p2, morgan));
+        }
+        for(int i = 0; i < number_of_alleles; ++i) {
+            founder_labels.push_back(i);
         }
     }
 
@@ -214,7 +208,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         frequencies_table = x;
     }
 
-    arma::mat initial_frequencies = update_all_frequencies(Pop, track_markers, number_of_alleles);
+    arma::mat initial_frequencies = update_all_frequencies(Pop, track_markers, number_of_alleles, founder_labels);
 
     std::vector<double> junctions;
   //  Rcout << "starting simulation\n";
@@ -230,9 +224,10 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                       track_junctions,
                                                       junctions,
                                                       multiplicative_selection,
-                                                      number_of_alleles);
+                                                      number_of_alleles,
+                                                      founder_labels);
 
-    arma::mat final_frequencies = update_all_frequencies(outputPop, track_markers, number_of_alleles);
+    arma::mat final_frequencies = update_all_frequencies(outputPop, track_markers, number_of_alleles, founder_labels);
 
     return List::create( Named("population") = convert_to_list(outputPop),
                          Named("frequencies") = frequencies_table,

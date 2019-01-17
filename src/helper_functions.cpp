@@ -67,6 +67,19 @@ bool is_fixed(const std::vector< Fish >& v) {
     return true;
 }
 
+void update_founder_labels(const std::vector<junction> chrom, std::vector<int>& founder_labels) {
+    for(auto i = chrom.begin(); i != chrom.end(); ++i) {
+        if(founder_labels.empty()) {
+            founder_labels.push_back((*i))
+        } else {
+            if(!std::find(founder_labels.begin(), founder_labels.end(), (*i)) {
+                founder_labels.push_back((*i))
+            }
+        }
+    }
+    return;
+}
+
 NumericVector update_frequency(const std::vector< Fish >& v,
                                double m,
                                int num_alleles) {
@@ -106,16 +119,87 @@ NumericVector update_frequency(const std::vector< Fish >& v,
     return(freq);
 }
 
+int find_index(const std::vector<int>& v, int value) {
+    for(int i = 0; i < v.size(); ++i) {
+        if(v[i] == value) return i;
+    }
+    return -1;
+}
+
+
+arma::mat update_frequency_tibble(const std::vector< Fish >& v,
+                                  double m,
+                                  const std::vector<int>& founder_labels) {
+
+   int num_alleles = founder_labels.size();
+    arma::mat allele_matrix(num_alleles,3);
+    for(int i = 0; i < num_alleles; ++i) {
+        allele_matrix(i, 0) = m;
+        allele_matrix(i, 1) = founder_labels[i];
+        allele_matrix(i, 2) = 0;
+    }
+
+   for(auto it = v.begin(); it != v.end(); ++it) {
+       for(auto i = ((*it).chromosome1.begin()+1); i != (*it).chromosome1.end(); ++i) {
+           if((*i).pos > m) {
+               int local_anc = (*(i-1)).right;
+               int index = find_index(founder_labels, local_anc);
+               allele_matrix(index, 2)++;
+               break;
+           }
+       }
+
+       for(auto i = ((*it).chromosome2.begin()+1); i != (*it).chromosome2.end(); ++i) {
+           if((*i).pos > m) {
+               int local_anc = (*(i-1)).right;
+               int index = find_index(founder_labels, local_anc);
+               allele_matrix(index, 2)++;
+               break;
+           }
+       }
+   }
+
+   for(int i = 0; i < num_alleles; ++i) {
+       allele_matrix(i, 2) *= 1.0 / (2 * v.size());
+   }
+
+   return(allele_matrix);
+}
+
+
+arma::mat update_all_frequencies(const std::vector< Fish >& pop,
+                                const NumericVector& markers,
+                                const std::vector<int>& founder_labels) {
+
+    int number_of_alleles = founder_labels.size();
+    arma::mat output(markers.size() * number_of_alleles, 3);
+
+   for(int i = 0; i < markers.size(); ++i) {
+       arma::mat local_mat = update_frequency_tibble(pop,
+                                                 markers[i],
+                                                 founder_labels);
+       // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
+       // and we have to put that in the right place in the output matrix
+       int start = i * markers.size();
+       for(int j = start, j < end; ++j) {
+           for(int k = 0; k < 3; ++k) {
+               output(j, k) = local_mat(j - start, k);
+           }
+       }
+   }
+   return(output);
+}
+
 arma::mat update_all_frequencies(const std::vector< Fish >& pop,
                                  const NumericVector& markers,
-                                 int number_of_founders) {
+                                 int number_of_alleles) {
 
-    arma::mat output(markers.size(), number_of_founders);
+    arma::mat output(markers.size(), number_of_alleles);
 
     for(int i = 0; i < markers.size(); ++i) {
         NumericVector v = update_frequency(pop,
                                            markers[i],
-                                           number_of_founders);
+                                           number_of_alleles);
         for(int j = 0; j < v.size(); ++j) {
             output(i, j) = v(j);
         }
