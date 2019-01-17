@@ -216,7 +216,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
     if(track_frequency) {
         //Rcout << "Preparing frequencies_table\n";
-        int number_entries = track_markers.size();
+       // int number_entries = track_markers.size();
+        int number_of_markers = track_markers.size();
         //arma::cube x(total_runtime, number_of_alleles, number_entries); // n_row, n_col, n_slices, type
         arma::cube x(number_of_markers * number_of_alleles, 3, total_runtime); // 3 columns: loc, anc, type
         frequencies_table = x;
