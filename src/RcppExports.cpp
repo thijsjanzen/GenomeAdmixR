@@ -7,15 +7,15 @@
 using namespace Rcpp;
 
 // calculate_allele_spectrum_cpp
-NumericMatrix calculate_allele_spectrum_cpp(NumericVector v1, double step_size, bool progress_bar);
-RcppExport SEXP _GenomeAdmixR_calculate_allele_spectrum_cpp(SEXP v1SEXP, SEXP step_sizeSEXP, SEXP progress_barSEXP) {
+arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population, Rcpp::NumericVector markers, bool progress_bar);
+RcppExport SEXP _GenomeAdmixR_calculate_allele_spectrum_cpp(SEXP input_populationSEXP, SEXP markersSEXP, SEXP progress_barSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type v1(v1SEXP);
-    Rcpp::traits::input_parameter< double >::type step_size(step_sizeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type input_population(input_populationSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type markers(markersSEXP);
     Rcpp::traits::input_parameter< bool >::type progress_bar(progress_barSEXP);
-    rcpp_result_gen = Rcpp::wrap(calculate_allele_spectrum_cpp(v1, step_size, progress_bar));
+    rcpp_result_gen = Rcpp::wrap(calculate_allele_spectrum_cpp(input_population, markers, progress_bar));
     return rcpp_result_gen;
 END_RCPP
 }
