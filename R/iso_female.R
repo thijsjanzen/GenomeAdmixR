@@ -19,6 +19,7 @@ create_iso_female <- function(source_pop,
   output_females <- list()
   for (i in 1:n) {
     parents <- list(iso_females[[i]], iso_females[[i + n]])
+    class(parents) <- "population"
 
     inbred_population <- simulate_admixture(input_population = parents,
                                             pop_size = inbreeding_pop_size,

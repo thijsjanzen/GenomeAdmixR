@@ -187,7 +187,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     std::vector<int> founder_labels;
 
     if(input_population[0] > -1e4) {
-        Rcout << "Found input population! converting!\n";
+        //Rcout << "Found input population! converting!\n";
         Pop = convert_NumericVector_to_fishVector(input_population);
 
         number_of_founders = 0;
@@ -196,7 +196,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
             update_founder_labels((*it).chromosome2, founder_labels);
         }
         number_of_alleles = founder_labels.size();
-        Rcout << "Number of alleles is " << number_of_alleles << "\n";
+        //Rcout << "Number of alleles is " << number_of_alleles << "\n";
     } else {
         std::vector<double> starting_freqs = as< std::vector<double> >(starting_proportions);
         for(int i = 0; i < pop_size; ++i) {
@@ -243,7 +243,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                       multiplicative_selection,
                                                       number_of_alleles,
                                                       founder_labels);
-    Rcout << "finished simulation\n";
+    //Rcout << "finished simulation\n";
     arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, founder_labels);
 
     return List::create( Named("population") = convert_to_list(outputPop),
