@@ -99,8 +99,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                                               track_markers[i],
                                                               founder_labels);
 
-                Rcout << "translating local_mat to x\n";
-                Rcout << x.size() << "\t" << local_mat.size() << "\n";
+                // Rcout << "translating local_mat to x\n";
+                // Rcout << x.size() << "\t" << local_mat.size() << "\n";
                 for(int j = 0; j < founder_labels.size(); ++j) {
                     for(int k = 0; k < 3; ++k) {
                         x(j, k) = local_mat(j, k);

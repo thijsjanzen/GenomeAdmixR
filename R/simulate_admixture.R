@@ -105,21 +105,21 @@ simulate_admixture <- function(input_population = NA,
   }
 
   if(track_frequency == TRUE && track_junctions == FALSE) {
+    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
+    colnames(frequencies_tibble) <- c("time","location","ancestor","frequency")
 
     output <- list("population" = selected_popstruct,
-                   "frequencies" = create_tibble_from_freq_table(
-                                        selected_pop$frequencies,
-                                        markers),
+                   "frequencies" = frequencies_tibble,
                    "initial_frequency" = initial_freq_tibble,
                    "final_frequency" = final_freq_tibble)
   }
 
   if(track_frequency == TRUE && track_junctions == TRUE) {
+    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
+    colnames(frequencies_tibble) <- c("time","location","ancestor","frequency")
 
     output <- list("population" = selected_popstruct,
-                   "frequencies" = create_tibble_from_freq_table(
-                                        selected_pop$frequencies,
-                                        markers),
+                   "frequencies" = frequencies_tibble,
                    "initial_frequency" = initial_freq_tibble,
                    "final_frequency" = final_freq_tibble,
                    "junctions" = selected_pop$junctions)
