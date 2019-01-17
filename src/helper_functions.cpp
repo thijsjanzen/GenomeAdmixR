@@ -398,3 +398,24 @@ int draw_random_founder(const std::vector<double>& v) {
     }
     return(v.back());
 }
+
+// [[Rcpp::export]]
+arma::mat calculate_allele_spectrum_cpp(NumericVector v1,
+                                        NumericVector markers,
+                                        bool progress_bar)
+{
+    std::vector< Fish > Pop;
+
+    Pop = convert_NumericVector_to_fishVector(input_population);
+    std::vector<int> founder_labels;
+    for(auto it = Pop.begin(); it != Pop.end(); ++it) {
+        update_founder_labels((*it).chromosome1, founder_labels);
+        update_founder_labels((*it).chromosome2, founder_labels);
+    }
+
+    arma::mat frequencies = update_all_frequencies_tibble(Pop, track_markers, founder_labels);
+
+    return frequencies;
+}
+
+

@@ -19,6 +19,7 @@
 
 #include <unistd.h> //for sleep
 #include "Fish.h"
+#include "helper_functions.h"
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -120,52 +121,20 @@ NumericMatrix allele_spectrum(const std::vector<Fish>& v,
     return spectrum;
 }
 
-
-// [[Rcpp::export]]
-NumericMatrix calculate_allele_spectrum_cpp(NumericVector v1,
-                                            double step_size,
+// old code
+NumericMatrix calculate_allele_spectrum_cpp_old(NumericVector v1,
+                                            NumericVector markers,
                                             bool progress_bar)
 {
     std::vector< Fish > Pop;
 
-    std::vector<double> v = Rcpp::as<std::vector<double> >(v1);
-
-    Fish temp;
-    int indic_chrom = 1;
-    bool add_indiv = false;
-
-    int max_num_ancestor = -1;
-
-    for(int i = 0; i < (v.size() - 1); i += 2) {
-        junction temp_j;
-        temp_j.pos = v[i];
-        if(i+1 > v.size()) break;
-        temp_j.right = v[i+1];
-
-        if(temp_j.right > max_num_ancestor) max_num_ancestor = temp_j.right;
-
-        if(indic_chrom == 1) {
-            temp.chromosome1.push_back(temp_j);
-        } else {
-            temp.chromosome2.push_back(temp_j);
-        }
-
-        if(temp_j.right == -1) {
-            if(indic_chrom == 1) {
-                indic_chrom = 2;
-            } else {
-                add_indiv = true;
-            }
-        }
-
-        if(add_indiv) {
-            Pop.push_back(temp);
-            add_indiv = false;
-            indic_chrom = 1;
-            temp.chromosome1.clear();
-            temp.chromosome2.clear();
-        }
+    Pop = convert_NumericVector_to_fishVector(input_population);
+    std::vector<int> founder_labels;
+    for(auto it = Pop.begin(); it != Pop.end(); ++it) {
+        update_founder_labels((*it).chromosome1, founder_labels);
+        update_founder_labels((*it).chromosome2, founder_labels);
     }
+
     NumericMatrix output = allele_spectrum(Pop, step_size, max_num_ancestor, progress_bar);
     
     return output;
