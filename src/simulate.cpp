@@ -98,6 +98,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                 arma::mat local_mat = update_frequency_tibble(Pop,
                                                               track_markers[i],
                                                               founder_labels);
+
+                Rcout << "translating local_mat to x\n";
                 for(int j = 0; j < local_mat.size(); ++j) {
                     for(int k = 0; k < 3; ++k) {
                         x(j, k) = local_mat(j, k);
@@ -215,7 +217,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     if(track_frequency) {
         //Rcout << "Preparing frequencies_table\n";
         int number_entries = track_markers.size();
-        arma::cube x(total_runtime, number_of_alleles, number_entries); // n_row, n_col, n_slices, type
+        //arma::cube x(total_runtime, number_of_alleles, number_entries); // n_row, n_col, n_slices, type
+        arma::cube x(number_of_markers * number_of_alleles, 3, total_runtime); // 3 columns: loc, anc, type
         frequencies_table = x;
     }
 
@@ -238,7 +241,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                       multiplicative_selection,
                                                       number_of_alleles,
                                                       founder_labels);
-
+    Rcout << "finished simulation\n";
     arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, founder_labels);
 
     return List::create( Named("population") = convert_to_list(outputPop),
