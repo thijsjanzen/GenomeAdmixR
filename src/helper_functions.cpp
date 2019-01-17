@@ -81,10 +81,10 @@ void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels) {
     for(auto i = chrom.begin(); i != chrom.end(); ++i) {
         if(founder_labels.empty()) {
-            founder_labels.push_back((*i).right);
+            if((*i).right != -1) founder_labels.push_back((*i).right);
         } else {
             if(find_index(founder_labels, (*i).right) == -1) {
-                founder_labels.push_back((*i).right);
+                if((*i).right != -1) founder_labels.push_back((*i).right);
             }
         }
     }
