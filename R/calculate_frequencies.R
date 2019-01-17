@@ -30,7 +30,7 @@ calculate_marker_frequency <- function(pop, location) {
 }
 
 calculate_allele_frequencies <- function(source_pop,
-                                         step_size,
+                                         locations = seq(0, 1, length.out = 100),
                                          progress_bar = TRUE) {
 
   source_pop <- check_input_pop(source_pop)
@@ -38,7 +38,7 @@ calculate_allele_frequencies <- function(source_pop,
   pop_for_cpp <- population_to_vector(source_pop)
 
   frequency_table <- calculate_allele_spectrum_cpp(pop_for_cpp,
-                                                   step_size,
+                                                   locations,
                                                    progress_bar)
 
   output <- tibble::as.tibble(frequency_table)

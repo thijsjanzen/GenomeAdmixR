@@ -114,11 +114,11 @@ plot_difference_frequencies <- function(results,
 }
 
 plot_frequencies <- function(result,
-                             step_size = 0.01,
+                             locations = seq(0, 1, length.out = 100),
                              progress_bar = FALSE) {
 
   to_plot <- calculate_allele_frequencies(result,
-                                          step_size,
+                                          locations,
                                           progress_bar)
 
   p1 <- ggplot2::ggplot(to_plot,
