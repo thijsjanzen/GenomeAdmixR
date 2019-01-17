@@ -72,10 +72,10 @@ void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels) {
     for(auto i = chrom.begin(); i != chrom.end(); ++i) {
         if(founder_labels.empty()) {
-            founder_labels.push_back((*i).right)
+            founder_labels.push_back((*i).right);
         } else {
             if(std::find(founder_labels.begin(), founder_labels.end(), (*i).right) == founder_labels.end()) {
-                founder_labels.push_back((*i).right)
+                founder_labels.push_back((*i).right);
             }
         }
     }
@@ -184,7 +184,7 @@ arma::mat update_all_frequencies(const std::vector< Fish >& pop,
        // and we have to put that in the right place in the output matrix
        int start = i * markers.size();
        int end = start + markers.size();
-       for(int j = start, j < end; ++j) {
+       for(int j = start; j < end; ++j) {
            for(int k = 0; k < 3; ++k) {
                output(j, k) = local_mat(j - start, k);
            }
