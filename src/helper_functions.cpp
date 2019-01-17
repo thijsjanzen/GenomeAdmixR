@@ -413,7 +413,7 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
         update_founder_labels((*it).chromosome2, founder_labels);
     }
 
-    arma::mat frequencies = update_all_frequencies_tibble(Pop, track_markers, founder_labels);
+    arma::mat frequencies = update_all_frequencies_tibble(Pop, markers, founder_labels);
 
     return frequencies;
 }
