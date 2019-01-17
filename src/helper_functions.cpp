@@ -173,24 +173,24 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
                                         const NumericVector& markers,
                                         const std::vector<int>& founder_labels) {
 
-    Rcout << "this is update_all_frequencies_tibble\n";
+    //Rcout << "this is update_all_frequencies_tibble\n";
     int number_of_alleles = founder_labels.size();
     Rcout << number_of_alleles << "\n";
     arma::mat output(markers.size() * number_of_alleles, 3);
 
     for(int i = 0; i < markers.size(); ++i) {
-        Rcout << "collect local_mat\n";
+        //Rcout << "collect local_mat\n";
         arma::mat local_mat = update_frequency_tibble(pop,
                                                  markers[i],
                                                  founder_labels);
        // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
        // and we have to put that in the right place in the output matrix
-        Rcout << "now we feed local mat to output:\n";
+        //Rcout << "now we feed local mat to output:\n";
         int start = i * number_of_alleles;
         int end = start + number_of_alleles;
         for(int j = start; j < end; ++j) {
            for(int k = 0; k < 3; ++k) {
-               Rcout << j << "\t" << k << "\t" << j - start << "\n";
+              // Rcout << j << "\t" << k << "\t" << j - start << "\n";
                output(j, k) = local_mat(j - start, k);
            }
         }
