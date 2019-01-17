@@ -187,7 +187,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
        // and we have to put that in the right place in the output matrix
         Rcout << "now we feed local mat to output:\n";
         int start = i * markers.size();
-        int end = start + markers.size();
+        int end = start + number_of_alleles;
         for(int j = start; j < end; ++j) {
            for(int k = 0; k < 3; ++k) {
                Rcout << j << "\t" << k << "\t" << j - start << "\t" << markers.size() << "\t" << local_mat.size() << "\n";
