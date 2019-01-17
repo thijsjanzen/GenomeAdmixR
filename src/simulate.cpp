@@ -90,10 +90,17 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             for(int i = 0; i < track_markers.size(); ++i) {
                 arma::mat x = frequencies.slice(i);
                 if(track_markers[i] < 0) break;
-                NumericVector v = update_frequency(Pop, track_markers[i], num_alleles);
-                for(int j = 0; j < v.size(); ++j) {
-                    x(t, j) = v(j);
+                //NumericVector v = update_frequency(Pop, track_markers[i], num_alleles);
+                //for(int j = 0; j < v.size(); ++j) {
+                //    x(t, j) = v(j);
+                //}
+                arma::mat local_mat = update_frequency_tibble(Pop, track_markers, founder_labels);
+                for(int j = 0; j < local_mat.size(); ++j) {
+                    for(int k = 0; k < 3; ++k) {
+                        x(j, k) = local_mat(j, k);
+                    }
                 }
+
                 frequencies.slice(i) = x;
             }
         }

@@ -79,13 +79,20 @@ simulate_admixture <- function(input_population = NA,
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 
-  initial_freq_tibble <- create_tibble_from_freq_mat(
-                              selected_pop$initial_frequencies,
-                              markers)
+  #initial_freq_tibble <- create_tibble_from_freq_mat(
+  #                            selected_pop$initial_frequencies,
+  #                            markers)
 
-  final_freq_tibble   <- create_tibble_from_freq_mat(
-                              selected_pop$final_frequencies,
-                              markers)
+  #final_freq_tibble   <- create_tibble_from_freq_mat(
+  #                            selected_pop$final_frequencies,
+  #                            markers)
+
+  initial_freq_tibble <- tibble::as.tibble(selected_pop$initial_frequencies)
+  colnames(initial_freq_tibble) <- c("location", "ancestor", "frequency")
+
+  final_freq_tibble <- tibble::as.tibble(selected_pop$final_frequencies)
+  colnames(final_freq_tibble) <- c("location", "ancestor", "frequency")
+
 
   output <- list()
   if(track_frequency == FALSE && track_junctions == FALSE) {
