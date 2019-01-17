@@ -125,6 +125,7 @@ int find_index(const std::vector<int>& v, int value) {
     for(int i = 0; i < v.size(); ++i) {
         if(v[i] == value) return i;
     }
+    Rcout << "ERROR! Could not find ancestry label, returning -1, expect out of range error soon\n";
     return -1;
 }
 
@@ -133,7 +134,7 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   double m,
                                   const std::vector<int>& founder_labels) {
 
-   int num_alleles = founder_labels.size();
+    int num_alleles = founder_labels.size();
     arma::mat allele_matrix(num_alleles,3);
     for(int i = 0; i < num_alleles; ++i) {
         allele_matrix(i, 0) = m;
