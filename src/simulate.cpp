@@ -89,20 +89,23 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
         if(track_frequency) {
             //Rcout << "track frequency start\n";
             for(int i = 0; i < track_markers.size(); ++i) {
-                arma::mat x = frequencies.slice(i);
                 if(track_markers[i] < 0) break;
                 arma::mat local_mat = update_frequency_tibble(Pop,
                                                               track_markers[i],
                                                               founder_labels,
                                                               t);
 
+                // now we have to find where to copy local_mat into frequencies
+                int time_block = track_markers.size() * founder_labels.size(); // number of markers times number of alleles
+
+                int start_add_time = t * time_block;
+                int start_add_marker = i * founder_labels.size() + start_add_time;
+
                 for(int j = 0; j < founder_labels.size(); ++j) {
-                    for(int k = 1; k < 4; ++k) {
-                        x(j, k - 1) = local_mat(j, k);
+                    for(int k = 0; k < 4; ++k) {
+                       frequencies(start_add_marker + j, k)  = local_mat(j, k);
                     }
                 }
-
-                frequencies.slice(i) = x;
             }
         }
 
@@ -208,14 +211,14 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         }
     }
 
-    arma::cube frequencies_table;
+    arma::mat frequencies_table;
 
     if(track_frequency) {
         //Rcout << "Preparing frequencies_table\n";
        // int number_entries = track_markers.size();
         int number_of_markers = track_markers.size();
         //arma::cube x(total_runtime, number_of_alleles, number_entries); // n_row, n_col, n_slices, type
-        arma::cube x(number_of_markers * number_of_alleles, 3, total_runtime); // 4 columns: time, loc, anc, type
+        arma::mat x(number_of_markers * number_of_alleles * total_runtime, 4); // 4 columns: time, loc, anc, type
         frequencies_table = x;
     }
 
