@@ -8,7 +8,7 @@
  This function plots the frequency of all ancestors after performing a simulation.
 }
 \usage{
-plot_frequencies(results, step_size = 0.01)
+plot_frequencies(results, locations, progress_bar)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,8 +16,8 @@ plot_frequencies(results, step_size = 0.01)
     An object which is the result of \code{select_population} or \code{create_population_selection}, being a list with four properties: \code{population}, \code{frequencies}, \code{initial_frequencies} and \code{final frequencies}
 }
 
-  \item{step_size}{
-  Distance between markers, a smaller step_size provides a more complete overview, but is also more computationally heavy.
+  \item{locations}{
+  A vector indicating the locations (in Morgan) where to calculate the allele frequencies.
 }
 \item{progress_bar}{
    Displays a progress_bar if TRUE. Default value is FALSE

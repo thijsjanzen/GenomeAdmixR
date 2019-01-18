@@ -65,12 +65,10 @@ test_that("calculate_allele_frequencies", {
 
   testthat::expect_true(verify_population(sourcepop))
 
-  freq_output <- calculate_allele_frequencies(sourcepop$population,
-                                              step_size = 0.01)
+  freq_output <- calculate_allele_frequencies(sourcepop$population)
 
   testthat::expect_error(
-              calculate_allele_frequencies(sourcepop$initial_frequency,
-                                                       step_size = 0.01)
+              calculate_allele_frequencies(sourcepop$initial_frequency)
                         )
 
 
@@ -93,8 +91,7 @@ test_that("calculate_allele_frequencies", {
 
   testthat::expect_true(verify_population(sourcepop))
 
-  freq_output <- calculate_allele_frequencies(sourcepop$population,
-                                              step_size = 0.01)
+  freq_output <- calculate_allele_frequencies(sourcepop$population)
 
   testthat::expect_equal(length(unique(freq_output$ancestor)),
                          number_of_founders)

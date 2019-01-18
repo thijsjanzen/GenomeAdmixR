@@ -127,7 +127,7 @@ plot_frequencies <- function(result,
                           ggplot2::aes(x = to_plot$location,
                                        y = to_plot$frequency,
                                        colour = as.factor(to_plot$ancestor))) +
-        geom_step()
+        ggplot2::geom_step()
 
   p1 <- p1 +
     ggplot2::xlab("Location (Morgan)") +

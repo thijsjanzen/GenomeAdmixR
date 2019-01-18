@@ -8,15 +8,15 @@
   Calculate for a number of regularly spaced markers the relative frequency of each ancestor in the population.
 }
 \usage{
-calculate_allele_frequencies(source_pop, step_size, progress_bar)
+calculate_allele_frequencies(source_pop, locations, progress_bar)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{source_pop}{
   Population for which to estimate allele frequencies
 }
-  \item{step_size}{
-  Distance between markers, a smaller step_size provides a more complete overview, but is also more computationally heavy.
+  \item{locations}{
+  A vector indicating the locations (in Morgan) where to calculate the allele frequencies.
 }
 \item{progress_bar}{
    Displays a progress_bar if TRUE. Default value is TRUE
