@@ -50,7 +50,8 @@ void update_founder_labels(const std::vector<junction> chrom,
 
 arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   double m,
-                                  const std::vector<int>& founder_labels);
+                                  const std::vector<int>& founder_labels,
+                                  int t);
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
                                         const NumericVector& markers,
