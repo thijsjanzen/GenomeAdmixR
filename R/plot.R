@@ -13,19 +13,19 @@ joyplot_frequencies <- function(frequencies,
                          y = as.factor(vz$time),
                          height = vz$frequency,
                          fill = vz$ancestor)) +
-            ggridges::geom_ridgeline(scale = 1.3) +
-            ggplot2::ylab("Time")
-    return(p1)
+            ggridges::geom_ridgeline(scale = 1.3)
   } else {
     vy <- subset(vz, vz$ancestor == picked_ancestor)
     p1 <- ggplot2::ggplot(vy, ggplot2::aes(x = vy$location,
                          y = as.factor(vy$time),
                          height = vy$frequency)) +
             ggridges::geom_ridgeline(scale = 1.3,
-                                     fill = "lightblue") +
-            ggplot2::ylab("Time")
-    return(p1)
+                                     fill = "lightblue")
   }
+  p1 <- p1 +
+        ggplot2::labs(fill = "Ancestor")  +
+    ggplot2::ylab("Time") +
+    ggplot2::xlab("Location")
 }
 
 plot_start_end <- function(results,

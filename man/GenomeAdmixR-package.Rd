@@ -6,6 +6,7 @@
  This package simulates admixture of ancestry
 }
 \description{
+   Version 0.59 - Updated frequency code under the hood \cr
    Version 0.58 - renamed to GenomeAdmixR \cr
    Version 0.58 - collapsed and improved many functions \cr
    Version 0.57 - Added function to generate admixed individuals \cr
