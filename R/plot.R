@@ -3,6 +3,7 @@ joyplot_frequencies <- function(frequencies,
                                 picked_ancestor = "ALL"
                                 )
 {
+  time_points <- floor(time_points)
   vz <- subset(frequencies,
                frequencies$time %in% time_points)
   vz$ancestor <- as.factor(vz$ancestor)
@@ -80,7 +81,7 @@ plot_difference_frequencies <- function(results,
   colnames(a1) <- c("time"    ,  "location" , "ancestor" , "frequency_before")
   colnames(a2) <- c("time"    ,  "location" , "ancestor" , "frequency_after")
 
-  ax <- dplyr::full_join(a1,a2, by = c("time", "location", "ancestor"))
+  ax <- dplyr::full_join(a1,a2, by = c("location", "ancestor"))
 
   ax_m <- dplyr::mutate(ax,
                         "diff_frequency" =
@@ -89,18 +90,20 @@ plot_difference_frequencies <- function(results,
   if(picked_ancestor[[1]] == "ALL") {
     to_plot <- ax_m
 
-    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$location,
-                                                y = to_plot$diff_frequency,
-                                                colour = to_plot$ancestor)) +
+    p1 <- ggplot2::ggplot(to_plot,
+                          ggplot2::aes(x = to_plot$location,
+                                       y = to_plot$diff_frequency,
+                                       colour = as.factor(to_plot$ancestor))) +
       ggplot2::geom_step()
   } else {
 
     to_plot <- dplyr::filter(ax_m,
                              ax_m$ancestor %in% picked_ancestor)
 
-    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$location,
-                                                y = to_plot$diff_frequency,
-                                                colour = to_plot$ancestor)) +
+    p1 <- ggplot2::ggplot(to_plot,
+                          ggplot2::aes(x = to_plot$location,
+                                       y = to_plot$diff_frequency,
+                                       colour = as.factor(to_plot$ancestor))) +
       ggplot2::geom_step()
   }
 

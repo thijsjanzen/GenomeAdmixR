@@ -46,8 +46,8 @@ simulate_admixture <- function(input_population = NA,
   }
 
   if(is.matrix(select_matrix)) {
-    cat("Found a selection matrix, performing simulation\n
-         including selection\n")
+    cat("Found a selection matrix, performing simulation\n")
+    cat("including selection\n")
     if (sum(is.na(select_matrix))) {
       stop("Can't start, there are NA values in the selection matrix!\n")
     }
