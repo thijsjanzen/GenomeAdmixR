@@ -91,47 +91,6 @@ void update_founder_labels(const std::vector<junction> chrom,
     return;
 }
 
-NumericVector update_frequency(const std::vector< Fish >& v,
-                               double m,
-                               int num_alleles) {
-
-    NumericVector freq(num_alleles, 0.0);
-
-    for(auto it = v.begin(); it != v.end(); ++it) {
-        for(auto i = ((*it).chromosome1.begin()+1); i != (*it).chromosome1.end(); ++i) {
-            if((*i).pos > m) {
-                int index = (*(i-1)).right;
-                if(index >= num_alleles || index < 0) {
-                    Rcout << "ERROR!!\n";
-                    Rcout << "trying to access NumericVector freq outside bounds\n";
-                }
-                freq(index)++;
-                break;
-            }
-        }
-
-        for(auto i = ((*it).chromosome2.begin()+1); i != (*it).chromosome2.end(); ++i) {
-            if((*i).pos > m) {
-                int index = (*(i-1)).right;
-                if(index >= num_alleles || index < 0) {
-                    Rcout << "ERROR!!\n";
-                    Rcout << "trying to access NumericVector freq outside bounds\n";
-                }
-                freq(index)++;
-                break;
-            }
-        }
-    }
-
-    for(int i = 0; i < freq.size(); ++i) {
-        freq(i) = freq(i) * 1.0 / (2*v.size());
-    }
-
-    return(freq);
-}
-
-
-
 arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   double m,
                                   const std::vector<int>& founder_labels,
@@ -203,23 +162,6 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
         }
     }
    return(output);
-}
-
-arma::mat update_all_frequencies(const std::vector< Fish >& pop,
-                                 const NumericVector& markers,
-                                 int number_of_alleles) {
-
-    arma::mat output(markers.size(), number_of_alleles);
-
-    for(int i = 0; i < markers.size(); ++i) {
-        NumericVector v = update_frequency(pop,
-                                           markers[i],
-                                           number_of_alleles);
-        for(int j = 0; j < v.size(); ++j) {
-            output(i, j) = v(j);
-        }
-    }
-    return(output);
 }
 
 double calc_mean_junctions(const std::vector< Fish> & pop) {
@@ -425,4 +367,63 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
     return frequencies;
 }
 
+/* Old code
 
+NumericVector update_frequency(const std::vector< Fish >& v,
+                               double m,
+                               int num_alleles) {
+
+    NumericVector freq(num_alleles, 0.0);
+
+    for(auto it = v.begin(); it != v.end(); ++it) {
+        for(auto i = ((*it).chromosome1.begin()+1); i != (*it).chromosome1.end(); ++i) {
+            if((*i).pos > m) {
+                int index = (*(i-1)).right;
+                if(index >= num_alleles || index < 0) {
+                    Rcout << "ERROR!!\n";
+                    Rcout << "trying to access NumericVector freq outside bounds\n";
+                }
+                freq(index)++;
+                break;
+            }
+        }
+
+        for(auto i = ((*it).chromosome2.begin()+1); i != (*it).chromosome2.end(); ++i) {
+            if((*i).pos > m) {
+                int index = (*(i-1)).right;
+                if(index >= num_alleles || index < 0) {
+                    Rcout << "ERROR!!\n";
+                    Rcout << "trying to access NumericVector freq outside bounds\n";
+                }
+                freq(index)++;
+                break;
+            }
+        }
+    }
+
+    for(int i = 0; i < freq.size(); ++i) {
+        freq(i) = freq(i) * 1.0 / (2*v.size());
+    }
+
+    return(freq);
+}
+
+ arma::mat update_all_frequencies(const std::vector< Fish >& pop,
+ const NumericVector& markers,
+ int number_of_alleles) {
+
+ arma::mat output(markers.size(), number_of_alleles);
+
+ for(int i = 0; i < markers.size(); ++i) {
+ NumericVector v = update_frequency(pop,
+ markers[i],
+ number_of_alleles);
+ for(int j = 0; j < v.size(); ++j) {
+ output(i, j) = v(j);
+ }
+ }
+ return(output);
+ }
+
+
+*/

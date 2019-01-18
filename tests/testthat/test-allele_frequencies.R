@@ -92,6 +92,7 @@ test_that("calculate_allele_frequencies", {
   testthat::expect_true(verify_population(sourcepop))
 
   freq_output <- calculate_allele_frequencies(sourcepop$population)
+  plot_frequencies(sourcepop)
 
   testthat::expect_equal(length(unique(freq_output$ancestor)),
                          number_of_founders)
