@@ -42,7 +42,7 @@ calculate_allele_frequencies <- function(source_pop,
                                                    progress_bar)
 
   output <- tibble::as.tibble(frequency_table)
-  colnames(output) <- c("location", "ancestor", "frequency")
+  colnames(output) <- c("time", "location", "ancestor", "frequency")
 
   return(output)
 }

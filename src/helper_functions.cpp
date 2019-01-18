@@ -420,7 +420,7 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
     }
     //Rcout << "number of alleles: " << founder_labels.size() << "\n";
 
-    arma::mat frequencies = update_all_frequencies_tibble(Pop, markers, founder_labels);
+    arma::mat frequencies = update_all_frequencies_tibble(Pop, markers, founder_labels, 0);
 
     return frequencies;
 }
