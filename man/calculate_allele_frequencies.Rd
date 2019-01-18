@@ -43,7 +43,6 @@ calculate_allele_frequencies(source_pop, locations, progress_bar)
                                 seed = 666)
 
  freq_output <- calculate_allele_frequencies(wildpop,
-                                            step_size = 0.001,
                                             progress_bar = TRUE)
 
   require(ggplot2)

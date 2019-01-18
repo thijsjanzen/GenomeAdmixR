@@ -8,11 +8,11 @@
  This function plots the frequency of all ancestors after performing a simulation.
 }
 \usage{
-plot_frequencies(results, locations, progress_bar)
+plot_frequencies(result, locations = seq(0, 1, length.out = 100), progress_bar = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{results}{
+  \item{result}{
     An object which is the result of \code{select_population} or \code{create_population_selection}, being a list with four properties: \code{population}, \code{frequencies}, \code{initial_frequencies} and \code{final frequencies}
 }
 
@@ -43,6 +43,6 @@ plot_frequencies(results, locations, progress_bar)
                                      select_matrix,
                                      seed = 1234)
   require(ggplot2)
-  plot_frequencies(selected_pop, 0.01)
+  plot_frequencies(selected_pop)
 }
 

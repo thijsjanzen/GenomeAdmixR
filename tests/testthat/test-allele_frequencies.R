@@ -53,7 +53,7 @@ test_that("calculate_allele_frequencies", {
   }
 
   v <- mean(colMeans(found))
-  expect_equal(v, 0.25, tolerance = 0.05)
+  testthat::expect_equal(v, 0.25, tolerance = 0.05)
 
 
   number_of_founders <- 20
@@ -100,7 +100,7 @@ test_that("calculate_allele_frequencies", {
     dplyr::group_by(as.factor(ancestor)) %>%
     dplyr::summarise("mean_freq" = mean(frequency))
 
-  testthat::expect_equal(sum(b$mean_freq), 1, tolerance = 0.01)
+  testthat::expect_equal(sum(b$mean_freq), 1, tolerance = 0.05)
   testthat::expect_equal(mean(b$mean_freq),
                          1 / number_of_founders,
                          tolerance = 0.01)
