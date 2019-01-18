@@ -55,7 +55,8 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
                                         const NumericVector& markers,
-                                        const std::vector<int>& founder_labels);
+                                        const std::vector<int>& founder_labels,
+                                        int t);
 
 
 
