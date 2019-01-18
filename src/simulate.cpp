@@ -98,7 +98,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
                 for(int j = 0; j < founder_labels.size(); ++j) {
                     for(int k = 1; k < 4; ++k) {
-                        x(j, k) = local_mat(j, k);
+                        x(j, k - 1) = local_mat(j, k);
                     }
                 }
 
