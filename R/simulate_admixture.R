@@ -12,6 +12,15 @@ simulate_admixture <- function(input_population = NA,
                                multiplicative_selection = TRUE) {
 
   if(is.list(input_population)) {
+    # if a list of individuals is given, the class is often wrong
+    # let's check if that is the case
+    if(!is(input_population, "population")) {
+      all_are_individuals <- sapply(input_population, class)
+      if(sum(all_are_individuals == "individual") ==
+            length(all_are_individuals)) {
+        class(input_population) <- "population"
+      }
+    }
 
     if(is(input_population$population, "population")) {
       input_population <- input_population$population
@@ -37,6 +46,8 @@ simulate_admixture <- function(input_population = NA,
   }
 
   if(is.matrix(select_matrix)) {
+    cat("Found a selection matrix, performing simulation\n
+         including selection\n")
     if (sum(is.na(select_matrix))) {
       stop("Can't start, there are NA values in the selection matrix!\n")
     }
@@ -88,10 +99,10 @@ simulate_admixture <- function(input_population = NA,
   #                            markers)
 
   initial_freq_tibble <- tibble::as.tibble(selected_pop$initial_frequencies)
-  colnames(initial_freq_tibble) <- c("location", "ancestor", "frequency")
+  colnames(initial_freq_tibble) <- c("time", "location", "ancestor", "frequency")
 
   final_freq_tibble <- tibble::as.tibble(selected_pop$final_frequencies)
-  colnames(final_freq_tibble) <- c("location", "ancestor", "frequency")
+  colnames(final_freq_tibble) <- c("time", "location", "ancestor", "frequency")
 
 
   output <- list()

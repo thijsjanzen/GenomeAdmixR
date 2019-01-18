@@ -91,16 +91,10 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             for(int i = 0; i < track_markers.size(); ++i) {
                 arma::mat x = frequencies.slice(i);
                 if(track_markers[i] < 0) break;
-                //NumericVector v = update_frequency(Pop, track_markers[i], num_alleles);
-                //for(int j = 0; j < v.size(); ++j) {
-                //    x(t, j) = v(j);
-                //}
                 arma::mat local_mat = update_frequency_tibble(Pop,
                                                               track_markers[i],
                                                               founder_labels);
 
-                // Rcout << "translating local_mat to x\n";
-                // Rcout << x.size() << "\t" << local_mat.size() << "\n";
                 for(int j = 0; j < founder_labels.size(); ++j) {
                     for(int k = 0; k < 3; ++k) {
                         x(j, k) = local_mat(j, k);
@@ -224,7 +218,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         frequencies_table = x;
     }
 
-    arma::mat initial_frequencies = update_all_frequencies_tibble(Pop, track_markers, founder_labels);
+    arma::mat initial_frequencies = update_all_frequencies_tibble(Pop, track_markers, founder_labels, 0);
   //  Rcout << "collected initial frequencies\n";
 
     std::vector<double> junctions;
@@ -244,7 +238,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                       number_of_alleles,
                                                       founder_labels);
     //Rcout << "finished simulation\n";
-    arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, founder_labels);
+    arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, founder_labels, total_runtime);
 
     return List::create( Named("population") = convert_to_list(outputPop),
                          Named("frequencies") = frequencies_table,

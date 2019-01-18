@@ -43,7 +43,7 @@ plot_start_end <- function(results,
 
     p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$location,
                               y = to_plot$frequency,
-                              colour = to_plot$ancestor,
+                              colour = as.factor(to_plot$ancestor),
                               group = interaction(to_plot$ancestor,
                                                   to_plot$timepoint))) +
       ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
@@ -54,7 +54,7 @@ plot_start_end <- function(results,
 
     p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$location,
                               y = to_plot$frequency,
-                              colour = to_plot$ancestor,
+                              colour = as.factor(to_plot$ancestor),
                               group = interaction(to_plot$ancestor,
                                                   to_plot$timepoint))) +
       ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
@@ -65,7 +65,6 @@ plot_start_end <- function(results,
     ggplot2::ylab("Frequency") +
     ggplot2::labs(col = "Ancestor",
          lty = "Time Point")
-
 
   return(p1)
 }

@@ -134,14 +134,16 @@ NumericVector update_frequency(const std::vector< Fish >& v,
 
 arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   double m,
-                                  const std::vector<int>& founder_labels) {
+                                  const std::vector<int>& founder_labels,
+                                  int t) {
 
     int num_alleles = founder_labels.size();
-    arma::mat allele_matrix(num_alleles,3);
+    arma::mat allele_matrix(num_alleles, 4);
     for(int i = 0; i < num_alleles; ++i) {
-        allele_matrix(i, 0) = m;
-        allele_matrix(i, 1) = founder_labels[i];
-        allele_matrix(i, 2) = 0;
+        allele_matrix(i, 0) = t;
+        allele_matrix(i, 1) = m;
+        allele_matrix(i, 2) = founder_labels[i];
+        allele_matrix(i, 3) = 0;
     }
 
    for(auto it = v.begin(); it != v.end(); ++it) {
@@ -149,7 +151,7 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
            if((*i).pos > m) {
                int local_anc = (*(i-1)).right;
                int index = find_index(founder_labels, local_anc);
-               allele_matrix(index, 2)++;
+               allele_matrix(index, 3)++;
                break;
            }
        }
@@ -158,14 +160,14 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
            if((*i).pos > m) {
                int local_anc = (*(i-1)).right;
                int index = find_index(founder_labels, local_anc);
-               allele_matrix(index, 2)++;
+               allele_matrix(index, 3)++;
                break;
            }
        }
    }
 
    for(int i = 0; i < num_alleles; ++i) {
-       allele_matrix(i, 2) *= 1.0 / (2 * v.size());
+       allele_matrix(i, 3) *= 1.0 / (2 * v.size());
    }
 
    return(allele_matrix);
