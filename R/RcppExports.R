@@ -9,8 +9,8 @@ simulate_cpp <- function(input_population, select, pop_size, number_of_founders,
     .Call('_GenomeAdmixR_simulate_cpp', PACKAGE = 'GenomeAdmixR', input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection)
 }
 
-create_pop_admixed_cpp <- function(num_individuals, num_ancestors, population_size, size_in_morgan) {
-    .Call('_GenomeAdmixR_create_pop_admixed_cpp', PACKAGE = 'GenomeAdmixR', num_individuals, num_ancestors, population_size, size_in_morgan)
+simulate_migration_cpp <- function(input_population_1, input_population_2, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate) {
+    .Call('_GenomeAdmixR_simulate_migration_cpp', PACKAGE = 'GenomeAdmixR', input_population_1, input_population_2, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate)
 }
 
 test_fish_functions <- function() {
