@@ -30,7 +30,8 @@ calculate_marker_frequency <- function(pop, location) {
 }
 
 calculate_allele_frequencies <- function(source_pop,
-                                         locations = seq(0, 1, length.out = 100),
+                                         locations = seq(0, 1,
+                                                         length.out = 100),
                                          progress_bar = TRUE) {
 
   source_pop <- check_input_pop(source_pop)

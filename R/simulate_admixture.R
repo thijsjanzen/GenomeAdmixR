@@ -99,7 +99,10 @@ simulate_admixture <- function(input_population = NA,
   #                            markers)
 
   initial_freq_tibble <- tibble::as.tibble(selected_pop$initial_frequencies)
-  colnames(initial_freq_tibble) <- c("time", "location", "ancestor", "frequency")
+  colnames(initial_freq_tibble) <- c("time",
+                                     "location",
+                                     "ancestor",
+                                     "frequency")
 
   final_freq_tibble <- tibble::as.tibble(selected_pop$final_frequencies)
   colnames(final_freq_tibble) <- c("time", "location", "ancestor", "frequency")
