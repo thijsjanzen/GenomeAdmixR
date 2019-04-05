@@ -312,8 +312,11 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
 
         for(int j = 0; j < 2; ++j) {
             for(int i = 0; i < pop_size[j]; ++i) {
-                int founder_1 = draw_random_founder(starting_freqs_1);
-                int founder_2 = draw_random_founder(starting_freqs_2);
+                focal_freqs = starting_freqs_1;
+                if(j == 1) focal_freqs = starting_freqs_2;
+
+                int founder_1 = draw_random_founder(focal_freqs);
+                int founder_2 = draw_random_founder(focal_freqs);
 
                 Fish p1 = Fish( founder_1 );
                 Fish p2 = Fish( founder_2 );
@@ -338,7 +341,8 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
         frequencies_table = x;
     }
 
-    arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1, Pop_2, track_markers, founder_labels, 0);
+    arma::mat initial_frequencies;
+    // initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1, Pop_2, track_markers, founder_labels, 0);
     Rcout << "collected initial frequencies\n"; R_FlushConsole();
 
     std::vector<double> junctions;
@@ -346,7 +350,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     std::vector< std::vector< Fish> > output_populations;
     arma::mat final_frequencies;
     /*
-    std::vector< std::vector< Fish> > output_populations = simulate_two_populations(Pop_1,
+     output_populations = simulate_two_populations(Pop_1,
                                                                                 Pop_2,
                                                                                 select,
                                                                                 pop_size,
@@ -363,7 +367,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
                                                                                 founder_labels,
                                                                                 migration_rate);
     Rcout << "finished simulation\n";
-    arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
+    final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
                                                                          output_populations[1],
                                                                          track_markers, founder_labels, total_runtime);
 */
