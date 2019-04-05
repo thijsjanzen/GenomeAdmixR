@@ -272,6 +272,8 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     int number_of_alleles = number_of_founders;
     std::vector<int> founder_labels;
 
+    /*
+
     if(input_population_1[0] > -1e4) {
         Rcout << "Found input populations! converting!\n";  R_FlushConsole();
         Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
@@ -330,7 +332,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
         }
         Rcout << "done\n"; R_FlushConsole();
     }
-
+*/
     arma::mat frequencies_table;
 
     if(track_frequency) {
