@@ -429,7 +429,7 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
 
         std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1,      pop_2, pop_size[0],
                                                                fitness_pop_1, fitness_pop_2,
-                                                               max_fitness_pop_1, mmax_fitness_pop_2,
+                                                               max_fitness_pop_1, max_fitness_pop_2,
                                                                select, use_selection, multiplicative_selection,
                                                                migration_rate, new_fitness_pop_1, new_max_fitness_pop_1,
                                                                morgan);
