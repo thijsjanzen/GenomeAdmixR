@@ -293,9 +293,9 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     } else {
         Rcout << "generating initial population\n";  R_FlushConsole();
         std::vector<double> starting_freqs = as< std::vector<double> >(starting_proportions);
-        std::vector<double> starting_freqs_1, std::vector<double> starting_freqs_2;
+        std::vector<double> starting_freqs_1, starting_freqs_2;
 
-        bool freqs_1 = TRUE
+        bool freqs_1 = TRUE;
         for(int i = 0; i < starting_freqs.size(); ++i){
             double focal_freq = starting_freqs[i];
             if(focal_freq >= 0.0) {
