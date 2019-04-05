@@ -115,8 +115,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
   init_freq <- c()
   for(i in 1:2) {
     local <- initial_frequencies[[i]]
-    if(is.na(local)) {
-      init_freq <- c(init_freq, c(0.5, 0.5))
+    if(length(local) != number_of_founders) {
+      init_freq <- c(init_freq, rep(1/number_of_founders, number_of_founders))
     } else {
       init_freq <- c(init_freq, local)
     }
