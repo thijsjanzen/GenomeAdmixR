@@ -266,6 +266,11 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             double migration_rate)
 {
     Rcout << "simulate_cpp: " << multiplicative_selection << "\n"; R_FlushConsole();
+    bool test = TRUE;
+    if(test) {
+        return(List::create( Named("population_1") = test));
+    }
+
 
     std::vector< Fish > Pop_1;
     std::vector< Fish > Pop_2;
