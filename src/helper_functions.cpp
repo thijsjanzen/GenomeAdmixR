@@ -172,7 +172,7 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
                                  int t,
                                  int pop_indicator) {
 
-    int number_of_alleles = founder_labels.size();
+     int number_of_alleles = founder_labels.size();
      arma::mat output(markers.size() * number_of_alleles, 5);
 
      for(int i = 0; i < markers.size(); ++i) {
@@ -202,7 +202,7 @@ arma::mat update_frequency_tibble_dual_pop(const std::vector< Fish >& pop_1,
                                                  double marker,
                                                  const std::vector<int>& founder_labels,
                                                  int t) {
-    std::vector<double> markers; markers.push_back(marker);
+    NumericVector markers; markers.push_back(marker);
 
     arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1);
     arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2);
