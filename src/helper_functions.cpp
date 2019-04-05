@@ -197,6 +197,21 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
      return(output);
 }
 
+arma::mat update_frequency_tibble_dual_pop(const std::vector< Fish >& pop_1,
+                                                 const std::vector< Fish >& pop_2,
+                                                 double marker,
+                                                 const std::vector<int>& founder_labels,
+                                                 int t) {
+    std::vector<double> markers; markers.push_back(marker);
+
+    arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1);
+    arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2);
+
+    arma::mat output = arma::join_cols(output_1, output_2);
+
+    return(output);
+}
+
 arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_1,
                                                  const std::vector< Fish >& pop_2,
                                                  const NumericVector& markers,
