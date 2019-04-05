@@ -111,12 +111,22 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
   set.seed(seed)
 
+  init_freq <- c()
+  for(i in 1:2) {
+    local <- initial_frequencies[[i]]
+    if(is.na(local)) {
+      init_freq <- c(init_freq, c(0.5, 0.5))
+    } else {
+      init_freq <- c(init_freq, local)
+    }
+  }
+
   selected_pop <- simulate_migration_cpp( input_population_1,
                                 input_population_2,
                                 select_matrix,
                                 pop_size,
                                 number_of_founders,
-                                initial_frequencies,
+                                init_freq,
                                 total_runtime,
                                 morgan,
                                 progress_bar,

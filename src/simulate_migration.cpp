@@ -173,7 +173,7 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
        // if(track_junctions) junctions.push_back(calc_mean_junctions(Pop));
 
         if(track_frequency) {
-            //Rcout << "track frequency start\n";
+            Rcout << "track frequency start\n"; R_FlushConsole();
             for(int i = 0; i < track_markers.size(); ++i) {
                 if(track_markers[i] < 0) break;
 
@@ -190,7 +190,7 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
 
                 for(int j = 0; j < founder_labels.size(); ++j) {
                     for(int k = 0; k < 4; ++k) {
-                        frequencies(start_add_marker + j, k)  = local_mat(j, k);
+                   //     frequencies(start_add_marker + j, k)  = local_mat(j, k);
                     }
                 }
             }
