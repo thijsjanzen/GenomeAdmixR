@@ -343,6 +343,8 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
 
     std::vector<double> junctions;
     Rcout << "starting simulation\n"; R_FlushConsole();
+    std::vector< std::vector< Fish> > output_populations;
+    arma::mat final_frequencies;
     /*
     std::vector< std::vector< Fish> > output_populations = simulate_two_populations(Pop_1,
                                                                                 Pop_2,
