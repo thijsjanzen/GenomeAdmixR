@@ -275,7 +275,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
     int number_of_alleles = number_of_founders;
     std::vector<int> founder_labels;
 
-    
+
 
     if(input_population_1[0] > -1e4) {
         Rcout << "Found input populations! converting!\n";  R_FlushConsole();
@@ -317,7 +317,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
 
         for(int j = 0; j < 2; ++j) {
             for(int i = 0; i < pop_size[j]; ++i) {
-                focal_freqs = starting_freqs_1;
+                std::vector< double > focal_freqs = starting_freqs_1;
                 if(j == 1) focal_freqs = starting_freqs_2;
 
                 int founder_1 = draw_random_founder(focal_freqs);
