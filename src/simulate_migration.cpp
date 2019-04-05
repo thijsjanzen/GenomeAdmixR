@@ -113,6 +113,8 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
 
     Rcout << "simulate_population: " << multiplicative_selection << "\n";
 
+    bool test = TRUE;
+
     bool use_selection = FALSE;
     if(select(1, 1) >= 0) use_selection = TRUE;
 
@@ -124,6 +126,12 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
     std::vector<double> fitness_pop_1, fitness_pop_2;
 
     Rcout << "calculating fitness if necessary\n";
+
+    if(test) {
+        std::vector< std::vector< Fish >> output;
+        return(output);
+    }
+
 
     if(use_selection) {
         for(int j = 0; j < select.nrow(); ++j) {
