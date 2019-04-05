@@ -13,6 +13,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                multiplicative_selection = TRUE,
                                migration_rate = 0.0) {
 
+  cat("starting simulation incl migration\n")
   if(is.list(input_population_1)) {
     # if a list of individuals is given, the class is often wrong
     # let's check if that is the case
@@ -120,6 +121,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
       init_freq <- c(init_freq, local)
     }
   }
+  cat("prep work done, diving into c++!\n")
 
   selected_pop <- simulate_migration_cpp( input_population_1,
                                 input_population_2,
@@ -135,6 +137,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                 track_junctions,
                                 multiplicative_selection,
                                 migration_rate)
+
+  cat("we are back from c++, post-processing in R\n")
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)
