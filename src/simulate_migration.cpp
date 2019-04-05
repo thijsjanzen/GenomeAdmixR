@@ -352,8 +352,12 @@ List simulate_migration_cpp(NumericVector input_population_1,
 
 
     arma::mat initial_frequencies;
-    // initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1, Pop_2, track_markers, founder_labels, 0);
+    initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1, Pop_2, track_markers, founder_labels, 0);
     Rcout << "collected initial frequencies\n"; R_FlushConsole();
+
+    if(test) {
+        return(List::create( Named("population_1") = test));
+    }
 
     std::vector<double> junctions;
     Rcout << "starting simulation\n"; R_FlushConsole();
@@ -383,9 +387,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
 */
     Rcout << "simulation done\n"; R_FlushConsole();
 
-    if(test) {
-        return(List::create( Named("population_1") = test));
-    }
+
 
     return List::create( Named("population_1") = convert_to_list(output_populations[0]),
                          Named("population_2") = convert_to_list(output_populations[1]),
