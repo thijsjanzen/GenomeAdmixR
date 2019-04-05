@@ -250,12 +250,12 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
 
 
 // [[Rcpp::export]]
-List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
-                            Rcpp::NumericVector input_population_2,
+List simulate_migration_cpp(NumericVector input_population_1,
+                            NumericVector input_population_2,
                             NumericMatrix select,
-                            Rcpp::NumericVector pop_size,
+                            NumericVector pop_size,
                             int number_of_founders,
-                            Rcpp::NumericVector starting_proportions,
+                            NumericVector starting_proportions,
                             int total_runtime,
                             double morgan,
                             bool progress_bar,
