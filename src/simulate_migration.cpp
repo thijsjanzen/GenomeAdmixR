@@ -173,7 +173,7 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
     }
     R_FlushConsole();
 
-    
+
 
     for(int t = 0; t < total_runtime; ++t) {
 
@@ -388,9 +388,9 @@ List simulate_migration_cpp(NumericVector input_population_1,
                                                                          track_markers, founder_labels, total_runtime);
 
     Rcout << "simulation done\n"; R_FlushConsole();
-    if(test) {
-        return(List::create( Named("population_1") = test));
-    }
+   // if(test) {
+   //     return(List::create( Named("population_1") = test));
+   // }
 
 
     return List::create( Named("population_1") = convert_to_list(output_populations[0]),
