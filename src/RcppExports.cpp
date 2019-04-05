@@ -75,14 +75,11 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _GenomeAdmixR_create_pop_admixed_cpp(SEXP, SEXP, SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_GenomeAdmixR_calculate_allele_spectrum_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_allele_spectrum_cpp, 3},
     {"_GenomeAdmixR_simulate_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_cpp, 12},
     {"_GenomeAdmixR_simulate_migration_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_migration_cpp, 14},
     {"_GenomeAdmixR_test_fish_functions", (DL_FUNC) &_GenomeAdmixR_test_fish_functions, 0},
-    {"_GenomeAdmixR_create_pop_admixed_cpp",        (DL_FUNC) &_GenomeAdmixR_create_pop_admixed_cpp,         4},
     {NULL, NULL, 0}
 };
 
