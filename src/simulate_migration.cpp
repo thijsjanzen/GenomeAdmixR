@@ -267,16 +267,16 @@ List simulate_migration_cpp(NumericVector input_population_1,
 {
     Rcout << "simulate_cpp: " << multiplicative_selection << "\n"; R_FlushConsole();
     bool test = TRUE;
-    if(test) {
-        return(List::create( Named("population_1") = test));
-    }
+
 
 
     std::vector< Fish > Pop_1;
     std::vector< Fish > Pop_2;
     int number_of_alleles = number_of_founders;
     std::vector<int> founder_labels;
-
+    if(test) {
+        return(List::create( Named("population_1") = test));
+    }
     /*
 
     if(input_population_1[0] > -1e4) {
