@@ -127,12 +127,6 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
 
     Rcout << "calculating fitness if necessary\n";
 
-    if(test) {
-        std::vector< std::vector< Fish >> output;
-        return(output);
-    }
-
-
     if(use_selection) {
         for(int j = 0; j < select.nrow(); ++j) {
             if(select(j, 4) < 0) break; // these entries are only for tracking, not for selection calculations
@@ -178,6 +172,11 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
         Rcout << "*";
     }
     R_FlushConsole();
+
+    if(test) {
+        std::vector< std::vector< Fish >> output;
+        return(output);
+    }
 
     for(int t = 0; t < total_runtime; ++t) {
 
