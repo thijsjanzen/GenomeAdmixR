@@ -293,11 +293,27 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     } else {
         Rcout << "generating initial population\n";  R_FlushConsole();
         std::vector<double> starting_freqs = as< std::vector<double> >(starting_proportions);
+        std::vector<double> starting_freqs_1, std::vector<double> starting_freqs_2;
+
+        bool freqs_1 = TRUE
+        for(int i = 0; i < starting_freqs.size(); ++i){
+            double focal_freq = starting_freqs[i];
+            if(focal_freq >= 0.0) {
+                if(freqs_1) {
+                    starting_freqs_1.push_back(focal_freq);
+                } else{
+                    starting_freqs_2.push_back(focal_freq);
+                }
+            } else {
+                freqs_1 = FALSE;
+            }
+        }
+
 
         for(int j = 0; j < 2; ++j) {
             for(int i = 0; i < pop_size[j]; ++i) {
-                int founder_1 = draw_random_founder(starting_freqs);
-                int founder_2 = draw_random_founder(starting_freqs);
+                int founder_1 = draw_random_founder(starting_freqs_1);
+                int founder_2 = draw_random_founder(starting_freqs_2);
 
                 Fish p1 = Fish( founder_1 );
                 Fish p2 = Fish( founder_2 );
