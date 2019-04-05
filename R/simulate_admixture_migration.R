@@ -111,7 +111,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
   set.seed(seed)
 
-  selected_pop <- simulate_cpp( input_population_1,
+  selected_pop <- simulate_migration_cpp( input_population_1,
                                 input_population_2,
                                 select_matrix,
                                 pop_size,
