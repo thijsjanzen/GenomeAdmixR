@@ -331,7 +331,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     arma::mat frequencies_table;
 
     if(track_frequency) {
-        Rcout << "Preparing frequencies_table\n";
+        Rcout << "Preparing frequencies_table\n"; R_FlushConsole();
         int number_of_markers = track_markers.size();
         //arma::cube x(total_runtime, number_of_alleles, number_entries); // n_row, n_col, n_slices, type
         arma::mat x(number_of_markers * number_of_alleles * total_runtime, 5); // 4 columns: time, loc, anc, type, population
@@ -339,10 +339,11 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     }
 
     arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1, Pop_2, track_markers, founder_labels, 0);
-    Rcout << "collected initial frequencies\n";
+    Rcout << "collected initial frequencies\n"; R_FlushConsole();
 
     std::vector<double> junctions;
-    Rcout << "starting simulation\n";
+    Rcout << "starting simulation\n"; R_FlushConsole();
+    /*
     std::vector< std::vector< Fish> > output_populations = simulate_two_populations(Pop_1,
                                                                                 Pop_2,
                                                                                 select,
@@ -363,7 +364,8 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
                                                                          output_populations[1],
                                                                          track_markers, founder_labels, total_runtime);
-
+*/
+    Rcout << "simulation done\n"; R_FlushConsole();
     return List::create( Named("population_1") = convert_to_list(output_populations[0]),
                          Named("population_2") = convert_to_list(output_populations[1]),
                          Named("frequencies") = frequencies_table,
