@@ -295,7 +295,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                parent2 = pop_2[ draw_prop_fitness(fitness_migr, max_fitness_migr) ];
                while(parent1 == parent2) parent2 = pop_2[ draw_prop_fitness(fitness_migr, max_fitness_migr) ];
            } else {
-               parent2 = pop_2[ random_number( (int)pop_1.size() ];
+               parent2 = pop_2[ random_number( (int)pop_1.size()  )];
                while(parent1 == parent2) pop_2[ random_number( (int)pop_1.size() )];
            }
       } else {
@@ -303,7 +303,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
               parent1 = pop_1[ draw_prop_fitness(fitness_source, max_fitness_source) ];
                while(parent1 == parent2) parent1 = pop_1[ draw_prop_fitness(fitness_source, max_fitness_source) ];
           } else {
-              parent1 = pop_1[ random_number( (int)pop_1.size() ];
+              parent1 = pop_1[ random_number( (int)pop_1.size() )];
               while(parent1 == parent2) parent1 = pop_1[ random_number( (int)pop_1.size() )];
           }
       }
@@ -322,7 +322,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
 }
 
 
-std::vector< std::vector< Fish >  >simulate_two_populations(const std::vector< Fish>& source_pop_1,
+std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fish>& source_pop_1,
                                              const std::vector< Fish>& source_pop_2,
                                              const NumericMatrix& select,
                                              const NumericVector& pop_size,
@@ -428,25 +428,25 @@ std::vector< std::vector< Fish >  >simulate_two_populations(const std::vector< F
         std::vector<double> new_fitness_pop_1, new_fitness_pop_2;
 
         std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1,      pop_2, pop_size[0],
-                                                               fitness[0], fitness[1],
-                                                               max_fitness[0], max_fitness[1],
+                                                               fitness_pop_1, fitness_pop_2,
+                                                               max_fitness_pop_1, mmax_fitness_pop_2,
                                                                select, use_selection, multiplicative_selection,
                                                                migration_rate, new_fitness_pop_1, new_max_fitness_pop_1,
                                                                morgan);
 
         std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2,      pop_1, pop_size[1],
-                                                               fitness[1], fitness[0],
-                                                               max_fitness[1], max_fitness[0],
+                                                               fitness_pop_2, fitness_pop_1,
+                                                               max_fitness_pop_2, max_fitness_pop_1,
                                                                select, use_selection, multiplicative_selection,
                                                                migration_rate, new_fitness_pop_2, new_max_fitness_pop_2,
                                                                morgan);
 
         pop_1 = new_generation_pop_1;
         pop_2 = new_generation_pop_2;
-        fitness[0] = new_fitness_pop_1;
-        fitness[1] = new_fitness_pop_2;
-        max_fitness[0] = new_max_fitness_pop_1;
-        max_fitness[1] = new_max_fitness_pop_2;
+        fitness_pop_1 = new_fitness_pop_1;
+        fitness_pop_2 = new_fitness_pop_2;
+        max_fitness_pop_1 = new_max_fitness_pop_1;
+        max_fitness_pop_2 = new_max_fitness_pop_2;
 
         if(t % updateFreq == 0 && progress_bar) {
             Rcout << "**";
@@ -464,6 +464,7 @@ std::vector< std::vector< Fish >  >simulate_two_populations(const std::vector< F
         Rcpp::checkUserInterrupt();
     }
     if(progress_bar) Rcout << "\n";
+    std::vector< std::vector< Fish >> output;
     output.push_back(pop_1);
     output.push_back(pop_2);
     return(output);
@@ -571,7 +572,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
                                                                          track_markers, founder_labels, total_runtime);
 
     return List::create( Named("population_1") = convert_to_list(output_populations[0]),
-                         Named("population_2") = convert_to_list(output_populations[1])
+                         Named("population_2") = convert_to_list(output_populations[1]),
                          Named("frequencies") = frequencies_table,
                          Named("initial_frequencies") = initial_frequencies,
                          Named("final_frequencies") = final_frequencies,
