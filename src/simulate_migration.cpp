@@ -111,7 +111,7 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
                                              const std::vector<int>& founder_labels,
                                              double migration_rate) {
 
-    //Rcout << "simulate_population: " << multiplicative_selection << "\n";
+    Rcout << "simulate_population: " << multiplicative_selection << "\n";
 
     bool use_selection = FALSE;
     if(select(1, 1) >= 0) use_selection = TRUE;
@@ -122,6 +122,8 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
 
     double max_fitness_pop_1, max_fitness_pop_2;
     std::vector<double> fitness_pop_1, fitness_pop_2;
+
+    Rcout << "calculating fitness if necessary\n";
 
     if(use_selection) {
         for(int j = 0; j < select.nrow(); ++j) {
@@ -167,6 +169,7 @@ std::vector< std::vector< Fish >> simulate_two_populations(const std::vector< Fi
         Rcout << "0--------25--------50--------75--------100\n";
         Rcout << "*";
     }
+    R_FlushConsole();
 
     for(int t = 0; t < total_runtime; ++t) {
 
@@ -262,7 +265,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
                             bool multiplicative_selection,
                             double migration_rate)
 {
-    Rcout << "simulate_cpp: " << multiplicative_selection << "\n";
+    Rcout << "simulate_cpp: " << multiplicative_selection << "\n"; R_FlushConsole();
 
     std::vector< Fish > Pop_1;
     std::vector< Fish > Pop_2;
@@ -270,7 +273,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     std::vector<int> founder_labels;
 
     if(input_population_1[0] > -1e4) {
-        Rcout << "Found input populations! converting!\n";
+        Rcout << "Found input populations! converting!\n";  R_FlushConsole();
         Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
         Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
 
@@ -286,8 +289,9 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
         }
 
         number_of_alleles = founder_labels.size();
-        Rcout << "Number of alleles is " << number_of_alleles << "\n";
+        Rcout << "Number of alleles is " << number_of_alleles << "\n";  R_FlushConsole();
     } else {
+        Rcout << "generating initial population\n";  R_FlushConsole();
         std::vector<double> starting_freqs = as< std::vector<double> >(starting_proportions);
 
         for(int j = 0; j < 2; ++j) {
@@ -305,6 +309,7 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
                 founder_labels.push_back(i);
             }
         }
+        Rcout << "done\n"; R_FlushConsole();
     }
 
     arma::mat frequencies_table;
@@ -318,10 +323,10 @@ List simulate_migration_cpp(Rcpp::NumericVector input_population_1,
     }
 
     arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1, Pop_2, track_markers, founder_labels, 0);
-      Rcout << "collected initial frequencies\n";
+    Rcout << "collected initial frequencies\n";
 
     std::vector<double> junctions;
-      Rcout << "starting simulation\n";
+    Rcout << "starting simulation\n";
     std::vector< std::vector< Fish> > output_populations = simulate_two_populations(Pop_1,
                                                                                 Pop_2,
                                                                                 select,
