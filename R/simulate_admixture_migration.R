@@ -124,7 +124,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                 markers,
                                 track_junctions,
                                 multiplicative_selection,
-                                migration)
+                                migration_rate)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)
