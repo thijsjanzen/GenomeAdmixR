@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <numeric>
 #include <cmath>
+#include <assert.h>
 
 #include <vector>
 #include <algorithm>
@@ -196,6 +197,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     for(int t = 0; t < total_runtime; ++t) {
       // add code in the future to track junctions
        // if(track_junctions) junctions.push_back(calc_mean_junctions(Pop));
+        Rcout << "track frequency is used: " << track_frequency << "\n";
         if(track_frequency) {
             Rcout << "track frequency start\n"; R_FlushConsole();
             for(int i = 0; i < track_markers.size(); ++i) {
@@ -222,21 +224,22 @@ std::vector< std::vector< Fish > > simulate_two_populations(
 
         double new_max_fitness_pop_1, new_max_fitness_pop_2;
         std::vector<double> new_fitness_pop_1, new_fitness_pop_2;
-
+        assert(pop_size.size() == 2);
+        Rcout << "starting nex_pop_migr pop 1\n";
         std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1, pop_2, pop_size[0],
                                                                fitness_pop_1, fitness_pop_2,
                                                                max_fitness_pop_1, max_fitness_pop_2,
                                                                select, use_selection, multiplicative_selection,
                                                                migration_rate, new_fitness_pop_1, new_max_fitness_pop_1,
                                                                morgan);
-
+        Rcout << "starting nex_pop_migr pop 2\n";
         std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2, pop_1, pop_size[1],
                                                                fitness_pop_2, fitness_pop_1,
                                                                max_fitness_pop_2, max_fitness_pop_1,
                                                                select, use_selection, multiplicative_selection,
                                                                migration_rate, new_fitness_pop_2, new_max_fitness_pop_2,
                                                                morgan);
-
+        Rcout << "updating vectors\n";
         pop_1 = new_generation_pop_1;
         pop_2 = new_generation_pop_2;
         fitness_pop_1 = new_fitness_pop_1;
@@ -248,6 +251,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
             Rcout << "**";
         }
 
+        Rcout << "checking for fixation\n";
         if(is_fixed(pop_1) && is_fixed(pop_2)) {
             Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
             R_FlushConsole();
