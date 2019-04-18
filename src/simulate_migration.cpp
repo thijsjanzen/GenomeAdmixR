@@ -24,6 +24,44 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
+Fish draw_parent(const std::vector< Fish>& pop_1,
+                 const std::vector< Fish>& pop_2,
+                 double migration_rate,
+                 bool use_selection,
+                 std::vector< double > fitness_source,
+                 std::vector< double > fitness_migr,
+                 double max_fitness_source,
+                 double max_fitness_migr) {
+
+    Fish parent;
+    Rcout << "start draw_parent\n";
+
+    if(uniform() < migration_rate) {
+        // migration
+        int index;
+
+        if(use_selection) {
+            index = draw_prop_fitness(fitness_migr, max_fitness_migr);
+        } else {
+            index = random_number( (int)pop_2.size() );
+        }
+        assert(index < pop_2.size());
+        parent = pop_2[index];
+    } else {
+        int index;
+        if(use_selection)  {
+            index = draw_prop_fitness(fitness_source, max_fitness_source);
+        } else {
+            index = random_number( (int)pop_1.size() );
+        }
+        assert(index < pop_1.size());
+        parent = pop_1[index];
+    }
+    Rcout << "end draw_parent\n";
+    return(parent);
+}
+
+
 
 std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                   const std::vector< Fish>& pop_2,
@@ -44,71 +82,33 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
     new_fitness.clear();
     new_max_fitness = -1.0;
     for(int i = 0; i < pop_size; ++i)  {
-        Fish parent1;
-        Fish parent2;
+        Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
+                                   use_selection,
+                                   fitness_source, fitness_migr,
+                                   max_fitness_source, max_fitness_migr);
+        Fish parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                   use_selection,
+                                   fitness_source, fitness_migr,
+                                   max_fitness_source, max_fitness_migr);
 
-        if(uniform() < migration_rate) {
-            // migration
-            if(use_selection)  {
-                parent1 = pop_2[ draw_prop_fitness(fitness_migr,
-                                                   max_fitness_migr)
-                                ];
-            } else {
-                parent1 = pop_2[ random_number( (int)pop_1.size() ) ];
-            }
-        } else {
-            if(use_selection)  {
-                parent1 = pop_1[ draw_prop_fitness(fitness_source,
-                                                   max_fitness_source)
-                                ];
-            } else {
-                parent1 = pop_1[ random_number( (int)pop_1.size() ) ];
-            }
+        while(parent1 == parent2) {
+            parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                  use_selection,
+                                  fitness_source, fitness_migr,
+                                  max_fitness_source, max_fitness_migr);
         }
+        Rcout << "mate\n";
+        Fish kid = mate(parent1, parent2, size_in_morgan);
 
-       if(uniform() < migration_rate) {
-           if(use_selection) {
-               parent2 = pop_2[ draw_prop_fitness(fitness_migr,
-                                                  max_fitness_migr)
-                              ];
-               while(parent1 == parent2) {
-                 parent2 = pop_2[ draw_prop_fitness(fitness_migr,
-                                                    max_fitness_migr)
-                                ];
-               }
-           } else {
-               parent2 = pop_2[ random_number( (int)pop_1.size()  )];
-               while(parent1 == parent2) {
-                 pop_2[ random_number( (int)pop_1.size() )];
-               }
-           }
-      } else {
-        if(use_selection)  {
-          parent1 = pop_1[ draw_prop_fitness(fitness_source,
-                                             max_fitness_source)
-                          ];
-          while(parent1 == parent2) {
-            parent1 = pop_1[ draw_prop_fitness(fitness_source,
-                                               max_fitness_source)
-                            ];
-          }
-        } else {
-          parent1 = pop_1[ random_number( (int)pop_1.size() )];
-          while(parent1 == parent2) {
-            parent1 = pop_1[ random_number( (int)pop_1.size() )];
-          }
-        }
-      }
 
-      Fish kid = mate(parent1, parent2, size_in_morgan);
 
-      new_generation.push_back(kid);
+        Rcout << "update fitness and max fitness\n"'
+        double fit = -2.0;
+        if(use_selection) fit = calculate_fitness(kid, select, multiplicative_selection);
+        if(fit > new_max_fitness) new_max_fitness = fit;
 
-      double fit = -2.0;
-      if(use_selection) fit = calculate_fitness(kid, select, multiplicative_selection);
-      if(fit > new_max_fitness) new_max_fitness = fit;
-
-      new_fitness.push_back(fit);
+        new_fitness.push_back(fit);
+        new_generation.push_back(kid);
     }
     return new_generation;
 }
