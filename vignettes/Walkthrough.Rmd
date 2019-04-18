@@ -47,8 +47,8 @@ In order to create an iso-female line, two random individuals are drawn from the
 ```{r create isofemale}
 isofemale <- create_iso_female(source_pop = wildpop,
                                n = 1,
-                               inbreeding_pop_size = 100,
-                               run_time = 2000,
+                               inbreeding_pop_size = 1000,
+                               run_time = 200,
                                morgan = 1)
 ```
 
@@ -63,8 +63,8 @@ plot(isofemale[[1]])
 Because we have chosen 4 ancestors, these plots are not terribly informative, let's try a toy example:
 ```{r toyexample}
 wildpop =  simulate_admixture(pop_size = 100, 
-                             number_of_founders = 2,
-                             total_runtime = 10, 
+                             number_of_founders = 4,
+                             total_runtime = 100, 
                              morgan = 1, 
                              seed = 666)
 

@@ -51,17 +51,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // simulate_migration_cpp
-List simulate_migration_cpp(Rcpp::NumericVector input_population_1, Rcpp::NumericVector input_population_2, NumericMatrix select, Rcpp::NumericVector pop_size, int number_of_founders, Rcpp::NumericVector starting_proportions, int total_runtime, double morgan, bool progress_bar, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, double migration_rate);
+List simulate_migration_cpp(NumericVector input_population_1, NumericVector input_population_2, NumericMatrix select, NumericVector pop_size, int number_of_founders, NumericVector starting_proportions, int total_runtime, double morgan, bool progress_bar, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, double migration_rate);
 RcppExport SEXP _GenomeAdmixR_simulate_migration_cpp(SEXP input_population_1SEXP, SEXP input_population_2SEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP number_of_foundersSEXP, SEXP starting_proportionsSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP progress_barSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP, SEXP migration_rateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type input_population_1(input_population_1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type input_population_2(input_population_2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type input_population_1(input_population_1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type input_population_2(input_population_2SEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type select(selectSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type pop_size(pop_sizeSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pop_size(pop_sizeSEXP);
     Rcpp::traits::input_parameter< int >::type number_of_founders(number_of_foundersSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type starting_proportions(starting_proportionsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type starting_proportions(starting_proportionsSEXP);
     Rcpp::traits::input_parameter< int >::type total_runtime(total_runtimeSEXP);
     Rcpp::traits::input_parameter< double >::type morgan(morganSEXP);
     Rcpp::traits::input_parameter< bool >::type progress_bar(progress_barSEXP);
