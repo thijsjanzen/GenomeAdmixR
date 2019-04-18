@@ -100,9 +100,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
         Rcout << "mate\n";
         Fish kid = mate(parent1, parent2, size_in_morgan);
 
-
-
-        Rcout << "update fitness and max fitness\n"'
+        Rcout << "update fitness and max fitness\n";
         double fit = -2.0;
         if(use_selection) fit = calculate_fitness(kid, select, multiplicative_selection);
         if(fit > new_max_fitness) new_max_fitness = fit;
