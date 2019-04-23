@@ -4,7 +4,13 @@ check_input_pop <- function(pop) {
       if(is(pop$population, "population")) {
         pop <- pop$population
       } else{
-        stop("Input object is not of class 'population'")
+        if(is(pop$population_1, "population")) {
+          cat("Warning, only population 1 is processed\n
+              explicitly pass a population to remedy this\n")
+          pop <- pop$population_1
+        } else {
+          stop("Input object is not of class 'population'")
+        }
       }
     } else {
       stop("Input object is not of class 'population'")

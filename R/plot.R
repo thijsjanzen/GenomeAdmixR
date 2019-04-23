@@ -1,8 +1,15 @@
 joyplot_frequencies <- function(frequencies,
                                 time_points,
-                                picked_ancestor = "ALL"
+                                picked_ancestor = "ALL",
+                                picked_population = 1
                                 )
 {
+  if("population" %in% colnames(frequencies)) {
+    frequencies <- subset(frequencies,
+                          frequencies$population == picked_population)
+  }
+
+
   time_points <- floor(time_points)
   vz <- subset(frequencies,
                frequencies$time %in% time_points)
@@ -29,10 +36,19 @@ joyplot_frequencies <- function(frequencies,
 }
 
 plot_start_end <- function(results,
-                           picked_ancestor = "ALL") {
+                           picked_ancestor = "ALL",
+                           picked_population = 1) {
+
 
   a1 <- results$initial_frequency
   a2 <- results$final_frequency
+
+  if("population" %in% colnames(a1)) {
+    a1 <- subset(a1,
+                 a1$population == picked_population)
+    a2 <- subset(a2,
+                 a2$population == picked_population)
+  }
 
   a1_m <- dplyr::mutate(a1, timepoint = "start")
   a2_m <- dplyr::mutate(a2, timepoint = "end")
@@ -71,11 +87,20 @@ plot_start_end <- function(results,
 }
 
 plot_difference_frequencies <- function(results,
-                                        picked_ancestor = "ALL") {
+                                        picked_ancestor = "ALL",
+                                        picked_population = 1) {
 
   a1 <- results$initial_frequency
-  a1 <- dplyr::select(a1, c("time","location","ancestor","frequency"))
   a2 <- results$final_frequency
+
+  if("population" %in% colnames(a1)) {
+    a1 <- subset(a1,
+                 a1$population == picked_population)
+    a2 <- subset(a2,
+                 a2$population == picked_population)
+  }
+
+  a1 <- dplyr::select(a1, c("time","location","ancestor","frequency"))
   a2 <- dplyr::select(a2, c("time","location","ancestor","frequency"))
 
   colnames(a1) <- c("time"    ,  "location" , "ancestor" , "frequency_before")

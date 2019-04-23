@@ -138,7 +138,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
   colnames(initial_freq_tibble) <- c("time",
                                      "location",
                                      "ancestor",
-                                     "frequency")
+                                     "frequency",
+                                     "population")
 
   final_freq_tibble <- tibble::as.tibble(selected_pop$final_frequencies)
   colnames(final_freq_tibble) <- c("time", "location", "ancestor", "frequency", "population")
