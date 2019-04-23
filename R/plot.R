@@ -162,6 +162,37 @@ plot_frequencies <- function(result,
   return(p1)
 }
 
+plot_over_time <- function(frequencies,
+                           focal_location) {
+
+  p1 <- c()
+  to_plot <- subset(frequencies, frequencies$location == focal_location)
+  if(length(to_plot$time) == 0) {
+    cat("No data to plot, are you sure that the focal location\nis within the
+        vector of molecular markers?\n")
+  }
+
+  if("population" %in% colnames(frequencies)) {
+    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$time,
+                                       y = to_plot$frequency,
+                                       col = interaction(to_plot$ancestor,
+                                                         to_plot$population))) +
+          ggplot2::geom_step()
+  } else {
+    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$time,
+                                                y = to_plot$frequency,
+                                                col = to_plot$ancestor)) +
+      ggplot2::geom_step()
+  }
+
+  p1 <- p1 +
+    ggplot2::xlab("Time (Generations") +
+    ggplot2::ylab("Frequency") +
+    ggplot2::labs(col = "Ancestor")
+
+  return(p1)
+}
+
 
 calculate_dist_junctions <- function(pop) {
   get_num_junctions <- function(indiv) {
