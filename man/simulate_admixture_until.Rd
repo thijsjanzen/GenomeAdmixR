@@ -84,6 +84,7 @@ A list with: \code{Population_1} a population object containing all individuals 
   Thijs Janzen
 }
 \examples{
+\dontrun{
   # should generate FST values around 0:
   example_pop <- simulate_admixture_until(pop_size = 100,
                                  number_of_founders = 2,
@@ -97,4 +98,5 @@ A list with: \code{Population_1} a population object containing all individuals 
                                  random_markers = TRUE,
                                  overlap = 1,
                                  multiplicative_selection = TRUE)
+                                 }
 }

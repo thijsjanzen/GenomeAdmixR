@@ -74,7 +74,7 @@
   \item{multiplicative_selection}{
     Default: TRUE. If TRUE, fitness is calculated for multiple markers by multiplying fitness values for each marker. If FALSE, fitness is calculated by adding fitness values for each marker.
   }
-  \item{migration rate}{
+  \item{migration_rate}{
     Rate of migration between the two populations. Migration is implemented such that with probability m (migration rate) one of the two parents of a new offspring is from the other population, with probability 1-m both parents are of the focal population.
   }
 }
@@ -88,8 +88,10 @@
 }
 
 \examples{
+\dontrun{
   wildpop <- simulate_admixture_migration(pop_size = 10,
                                 total_runtime = 3,
                                 morgan = 1,
                                 seed = 123)
+                                }
 }
