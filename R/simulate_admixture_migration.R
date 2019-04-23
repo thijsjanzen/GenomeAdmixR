@@ -63,11 +63,11 @@ simulate_admixture_migration <- function(input_population_1 = NA,
   }
 
   if(sum(initial_frequencies[[1]]) != 1) {
-    initial_frequencies[[1]] <- initial_frequencies[[1]] / sum(initial_frequencies)
+    initial_frequencies[[1]] <- initial_frequencies[[1]] / sum(initial_frequencies[[1]])
     cat("starting frequencies were normalized to 1\n")
   }
   if(sum(initial_frequencies[[2]]) != 1) {
-    initial_frequencies[[2]] <- initial_frequencies[[2]] / sum(initial_frequencies)
+    initial_frequencies[[2]] <- initial_frequencies[[2]] / sum(initial_frequencies[[2]])
     cat("starting frequencies were normalized to 1\n")
   }
 
