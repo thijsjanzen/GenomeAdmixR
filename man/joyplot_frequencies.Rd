@@ -37,6 +37,7 @@ joyplot_frequencies(frequencies,
 }
 
 \examples{
+\dontrun{
   s <- 0.01
   select_matrix <- matrix(nrow = 1, ncol = 5)
   select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
@@ -59,6 +60,6 @@ joyplot_frequencies(frequencies,
                     0:11, picked_ancestor = "ALL") +
                     ggplot2::xlab("Location") +
                     ggplot2::ylab("Generations")
-
+}
 }
 

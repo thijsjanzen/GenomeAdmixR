@@ -27,7 +27,7 @@ test_that("simulate_migration", {
   s <- 0.1
   select_matrix[1, ] <- c(0.5, 0.5, 0.5+0.5*s, 0.5+s, 0)
 
-  markers <- seq(from = 0.2, to = 0.6, by = 0.001)
+  markers <- seq(from = 0.0, to = 0.51, by = 0.001)
 
   vy <- simulate_admixture_migration(seed = 42,
                                      migration_rate = 0.01,
@@ -39,18 +39,17 @@ test_that("simulate_migration", {
 
   found <- c()
   for(loc in unique(vy$final_frequency$location)) {
-    a <- vy$final_frequency %>%
-      filter(location == loc) %>%
-      filter(ancestor == 0)
+    a <- subset(vy$final_frequency, vy$final_frequency$location == loc &
+                  vy$final_frequency$ancestor == 0)
     b <- mean(a$frequency)
     found <- rbind(found, c(loc, b))
   }
   a1 <- subset(found, found[,1] < 0.4)
   a2 <- subset(found, found[,1] == 0.5)
 
-  b1 <- t.test(a1[,2]- 0.5)
+  #b1 <- t.test(a1[,2] - 0.5)
   testthat::expect_equal(a2[2], 1)
-  testthat::expect_gte(b1$p.value, 0.05)
+  testthat::expect_equal(mean(a1[,2]), 0.5, tolerance = 0.1)
 
   testthat::expect_silent(
     plot_difference_frequencies(vy)

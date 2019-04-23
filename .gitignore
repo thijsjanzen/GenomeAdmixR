@@ -7,3 +7,6 @@ src/*.so
 src/*.dll
 *.gcno
 *.gcda
+*.pop
+codecov.R
+tests/testthat/Rplots.pdf

@@ -2,18 +2,12 @@ context("simulate_admixture_until")
 
 test_that("simulate_admixture_until", {
 
-  vx <- simulate_admixture_until(pop_size = 1000,
-                                 number_of_founders = 2,
-                                 total_runtime = 1000,
+  vx <- simulate_admixture_until(total_runtime = 1000,
                                  morgan = 1,
                                  seed = 42,
                                  generations_between_update = 100,
                                  critical_fst = 0.1,
-                                 sampled_individuals = 100,
-                                 number_of_markers = 100,
-                                 random_markers = TRUE,
-                                 overlap = 1,
-                                 multiplicative_selection = TRUE)
+                                 migration_rate = 0.0)
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,

@@ -89,9 +89,19 @@
 
 \examples{
 \dontrun{
-  wildpop <- simulate_admixture_migration(pop_size = 10,
-                                total_runtime = 3,
-                                morgan = 1,
-                                seed = 123)
+  select_matrix <- matrix(NA, nrow=1, ncol=5)
+
+  s <- 0.1
+  select_matrix[1, ] <- c(0.5, 0.5, 0.5+0.5*s, 0.5+s, 0)
+
+  markers <- seq(from = 0.2, to = 0.6, by = 0.001)
+
+  vy <- simulate_admixture_migration(seed = 42,
+                                     migration_rate = 0.01,
+                                     initial_frequencies = list(c(1,0),
+                                                                c(0,1)),
+                                     select_matrix = select_matrix,
+                                     total_runtime = 100,
+                                     markers = markers)
                                 }
 }

@@ -42,7 +42,7 @@ plot_frequencies(result, locations = seq(0, 1, length.out = 100), progress_bar =
                                      morgan = 1,
                                      select_matrix,
                                      seed = 1234)
-  require(ggplot2)
+
   plot_frequencies(selected_pop)
 }
 
