@@ -37,6 +37,7 @@
                                      number_of_founders = 10,
                                      total_runtime = 11,
                                      morgan = 1,
+                                     markers = 0.5,
                                      select_matrix,
                                      seed = 1234)
   require(ggplot2)

@@ -179,9 +179,10 @@ plot_over_time <- function(frequencies,
                                                          to_plot$population))) +
           ggplot2::geom_step()
   } else {
-    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$time,
-                                                y = to_plot$frequency,
-                                                col = to_plot$ancestor)) +
+    p1 <- ggplot2::ggplot(to_plot,
+                          ggplot2::aes(x = to_plot$time,
+                                       y = to_plot$frequency,
+                                       col = as.factor(to_plot$ancestor))) +
       ggplot2::geom_step()
   }
 

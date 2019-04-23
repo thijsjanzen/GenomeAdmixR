@@ -1,17 +1,17 @@
 simulate_admixture_migration <- function(input_population_1 = NA,
                                          input_population_2 = NA,
-                               pop_size = c(100, 100),
-                               initial_frequencies = list(c(1.0, 0),
-                                                          c(0, 1.0)),
-                               total_runtime = 100,
-                               morgan = 1,
-                               seed,
-                               select_matrix = NA,
-                               markers = NA,
-                               progress_bar = TRUE,
-                               track_junctions = FALSE,
-                               multiplicative_selection = TRUE,
-                               migration_rate = 0.0) {
+                                         pop_size = c(100, 100),
+                                         initial_frequencies = list(c(1.0, 0),
+                                                                    c(0, 1.0)),
+                                         total_runtime = 100,
+                                         morgan = 1,
+                                         seed,
+                                         select_matrix = NA,
+                                         markers = NA,
+                                         progress_bar = TRUE,
+                                         track_junctions = FALSE,
+                                         multiplicative_selection = TRUE,
+                                         migration_rate = 0.0) {
 
   cat("starting simulation incl migration\n")
   if(is.list(input_population_1)) {
@@ -30,7 +30,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     }
 
     if(is(input_population_1, "population")) {
-      input_population_1 <- population_to_vector(input_population)
+      input_population_1 <- population_to_vector(input_population_1)
     } else {
       input_population_1 <- c(-1e6, -1e6)
     }
@@ -54,7 +54,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     }
 
     if(is(input_population_2, "population")) {
-      input_population_2 <- population_to_vector(input_population)
+      input_population_2 <- population_to_vector(input_population_2)
     } else {
       input_population_2 <- c(-1e6, -1e6)
     }

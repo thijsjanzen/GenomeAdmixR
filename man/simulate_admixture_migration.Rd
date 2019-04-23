@@ -8,7 +8,7 @@
   Individual based simulation of the breakdown of contiguous ancestry blocks, with or without selection. Simulations can be started from scratch, or from a predefined input population. Two populations are simulated, connected by migration
 }
 \usage{
-  simulate_admixture(input_population_1 = NA,
+  simulate_admixture_migration(input_population_1 = NA,
                      input_population_2 = NA,
                      pop_size = c(100, 100),
                      initial_frequencies = list(c(1.0, 0),

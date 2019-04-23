@@ -8,7 +8,10 @@
  This function plots the distribution of allele frequencies within a region over time, making use of a 'joyplot'
 }
 \usage{
-joyplot_frequencies(frequencies, time_points, picked_ancestor = "ALL", picked_population = 1)
+joyplot_frequencies(frequencies,
+                    time_points,
+                    picked_ancestor = "ALL",
+                    picked_population = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
