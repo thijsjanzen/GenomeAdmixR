@@ -8,7 +8,7 @@
  This function plots the distribution of allele frequencies within a region over time, making use of a 'joyplot'
 }
 \usage{
-joyplot_frequencies(frequencies, time_points, picked_ancestor)
+joyplot_frequencies(frequencies, time_points, picked_ancestor = "ALL", picked_population = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,6 +21,9 @@ joyplot_frequencies(frequencies, time_points, picked_ancestor)
   \item{picked_ancestor}{
     Default is "ALL", where different colors indicate different ancestors. Alternatively, for clarity, the user can specify a specific ancestral allele, and only that allele is plotted
 }
+  \item{picked_population}{
+    If multiple populations were simulated (in the case of \code{simulate_admixture_migration}), which population should be plotted? Default is population_1.
+  }
 }
 \value{
   a ggplot2 object

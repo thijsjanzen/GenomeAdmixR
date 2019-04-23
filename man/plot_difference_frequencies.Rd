@@ -8,7 +8,7 @@
  This function plots the change in frequency of one or multiple ancestors after performing a simulation.
 }
 \usage{
-plot_difference_frequencies(results, picked_ancestor = "ALL")
+plot_difference_frequencies(results, picked_ancestor = "ALL",picked_population = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,6 +19,9 @@ plot_difference_frequencies(results, picked_ancestor = "ALL")
   \item{picked_ancestor}{
     Default is "ALL", where different colors indicate different ancestors. Alternatively, for clarity, the user can specify a specific ancestral allele, and only that allele is plotted
 }
+\item{picked_population}{
+    If multiple populations were simulated (in the case of \code{simulate_admixture_migration}), which population should be plotted? Default is population_1.
+  }
 }
 \value{
   a ggplot2 object

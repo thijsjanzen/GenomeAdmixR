@@ -13,6 +13,8 @@ A package under construction to simulate genetic admixture in relation to isofem
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
 
 # Version history
+Version 0.61 - Added plot_over_time <br />
+Version 0.60 - Added admixture with migration <br />
 Version 0.59 - Updated underlying code tracking frequencies <br />
 Version 0.58 - Removed many old functions, and improved usability for many existing functions <br />
 Version 0.58 - Renamed to GenomeAdmixR <br />

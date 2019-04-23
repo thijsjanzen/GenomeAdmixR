@@ -21,8 +21,8 @@
 \alias{create_tibble_from_freq_table}
 \alias{create_tibble_from_freq_mat}
 \alias{simulate_cpp}
-\alias{create_pop_admixed_cpp}
 \alias{check_input_pop}
+\alias{simulate_migration_cpp}
 
 \description{Internal GenomeAdmixR functions}
 \details{These are not to be called by the user}

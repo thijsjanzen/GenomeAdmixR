@@ -82,7 +82,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
     new_fitness.clear();
     new_max_fitness = -1.0;
     for(int i = 0; i < pop_size; ++i)  {
-        Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
+        Fish parent1 = draw_parent(pop_1, pop_2, 0.0,
                                    use_selection,
                                    fitness_source, fitness_migr,
                                    max_fitness_source, max_fitness_migr);
@@ -131,8 +131,6 @@ std::vector< std::vector< Fish > > simulate_two_populations(
                                       double migration_rate) {
 
     // Rcout << "simulate_population: " << multiplicative_selection << "\n";
-
-    bool test = TRUE;
 
     bool use_selection = FALSE;
     if(select(1, 1) >= 0) use_selection = TRUE;
@@ -290,8 +288,6 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             double migration_rate)
 {
     // Rcout << "simulate_cpp: " << multiplicative_selection << "\n"; R_FlushConsole();
-    bool test = TRUE;
-
     std::vector< Fish > Pop_1;
     std::vector< Fish > Pop_2;
     int number_of_alleles = -1;

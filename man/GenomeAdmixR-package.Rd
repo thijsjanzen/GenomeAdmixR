@@ -6,6 +6,8 @@
  This package simulates admixture of ancestry
 }
 \description{
+   Version 0.61 - Added plot_over_time \cr
+   Version 0.60 - Added admixture with migration \cr
    Version 0.59 - Updated frequency code under the hood \cr
    Version 0.58 - renamed to GenomeAdmixR \cr
    Version 0.58 - collapsed and improved many functions \cr
