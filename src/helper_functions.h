@@ -1,6 +1,6 @@
 //
 //  helper_functions.hpp
-//  
+//
 //
 //  Created by Thijs Janzen on 20/11/2018.
 //
@@ -44,7 +44,7 @@ double calculate_fitness(const Fish& focal,
                          const NumericMatrix& select,
                          bool multiplicative_selection);
 
-int draw_random_founder(const std::vector<double>& v);
+int draw_random_founder(const NumericVector& v);
 void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels);
 

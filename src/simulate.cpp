@@ -196,10 +196,9 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         number_of_alleles = founder_labels.size();
         //Rcout << "Number of alleles is " << number_of_alleles << "\n";
     } else {
-        std::vector<double> starting_freqs = as< std::vector<double> >(starting_proportions);
         for(int i = 0; i < pop_size; ++i) {
-            int founder_1 = draw_random_founder(starting_freqs);
-            int founder_2 = draw_random_founder(starting_freqs);
+            int founder_1 = draw_random_founder(starting_proportions);
+            int founder_2 = draw_random_founder(starting_proportions);
 
             Fish p1 = Fish( founder_1 );
             Fish p2 = Fish( founder_2 );

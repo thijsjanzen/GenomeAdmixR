@@ -138,7 +138,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
                                         const std::vector<int>& founder_labels,
                                         int t) {
 
-    Rcout << "this is update_all_frequencies_tibble\n"; R_FlushConsole();
+   // Rcout << "this is update_all_frequencies_tibble\n"; R_FlushConsole();
     int number_of_alleles = founder_labels.size();
   //  Rcout << number_of_alleles << "\n";
     arma::mat output(markers.size() * number_of_alleles, 4);
@@ -171,7 +171,7 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
                                  const std::vector<int>& founder_labels,
                                  int t,
                                  int pop_indicator) {
-     Rcout << "start record_frequencies_pop\n"; R_FlushConsole();
+    // Rcout << "start record_frequencies_pop\n"; R_FlushConsole();
      int number_of_alleles = founder_labels.size();
      arma::mat output(markers.size() * number_of_alleles, 5);
 
@@ -181,7 +181,7 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
                                                        markers[i],
                                                        founder_labels,
                                                        t);
-         // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq, pop]
+         // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
          // and we have to put that in the right place in the output matrix
          // Rcout << "now we feed local mat to output:\n";
          int start = i * number_of_alleles;
@@ -189,12 +189,14 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
          for(int j = start; j < end; ++j) {
              for(int k = 0; k < 4; ++k) {
                  //Rcout << j << "\t" << k << "\t" << j - start << "\n";
+                 //Rcout << "writing to: " << output(j, k) << "\n";
+                 //Rcout << "writing from: " << local_mat(j - start, k) << "\n";
                  output(j, k) = local_mat(j - start, k);
              }
              output(j, 4) = pop_indicator;
          }
      }
-     Rcout << "end record_frequencies_pop\n"; R_FlushConsole();
+    // Rcout << "end record_frequencies_pop\n"; R_FlushConsole();
      return(output);
 }
 
@@ -203,14 +205,14 @@ arma::mat update_frequency_tibble_dual_pop(const std::vector< Fish >& pop_1,
                                                  double marker,
                                                  const std::vector<int>& founder_labels,
                                                  int t) {
-    Rcout << "start update_frequency_tibble_dual_pop\n"; R_FlushConsole();
+    //Rcout << "start update_frequency_tibble_dual_pop\n"; R_FlushConsole();
     NumericVector markers; markers.push_back(marker);
 
     arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1);
     arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2);
 
     arma::mat output = arma::join_cols(output_1, output_2);
-    Rcout << "end update_frequency_tibble_dual_pop\n";
+    //Rcout << "end update_frequency_tibble_dual_pop\n";
     return(output);
 }
 
@@ -219,12 +221,14 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_
                                                  const NumericVector& markers,
                                                  const std::vector<int>& founder_labels,
                                                  int t) {
-    Rcout << "start update_all_frequencies_tibble_dual_pop\n"; R_FlushConsole();
+    //Rcout << "start update_all_frequencies_tibble_dual_pop\n"; R_FlushConsole();
     arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1);
+    //Rcout << "starting on output_2\n";
     arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2);
 
+    //Rcout << "joining by column\n";
     arma::mat output = arma::join_cols(output_1, output_2);
-    Rcout << "end update_all_frequencies_tibble_dual_pop\n"; R_FlushConsole();
+    //Rcout << "end update_all_frequencies_tibble_dual_pop\n"; R_FlushConsole();
     return(output);
 }
 
@@ -338,9 +342,6 @@ List convert_to_list(const std::vector<Fish>& v) {
     return output;
 }
 
-
-
-
 double calculate_fitness(const Fish& focal,
                          const NumericMatrix& select,
                          bool multiplicative_selection) {
@@ -400,7 +401,7 @@ double calculate_fitness(const Fish& focal,
     return(fitness);
 }
 
-int draw_random_founder(const std::vector<double>& v) {
+int draw_random_founder(const NumericVector& v) {
     double r = uniform();
     for(int i = 0; i < v.size(); ++i) {
         r -= v[i];
@@ -408,7 +409,7 @@ int draw_random_founder(const std::vector<double>& v) {
             return(i);
         }
     }
-    return(v.back());
+    return(v[v.size() - 1]);
 }
 
 // [[Rcpp::export]]

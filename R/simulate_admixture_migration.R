@@ -1,8 +1,8 @@
 simulate_admixture_migration <- function(input_population_1 = NA,
                                          input_population_2 = NA,
                                pop_size = c(100, 100),
-                               number_of_founders = 2,
-                               initial_frequencies = list(NA, NA),
+                               initial_frequencies = list(c(1.0, 0),
+                                                          c(0, 1.0)),
                                total_runtime = 100,
                                morgan = 1,
                                seed,
@@ -62,16 +62,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     input_population_2 <- c(-1e6, -1e6)
   }
 
-
-  if(sum(is.na(initial_frequencies[[1]]))) {
-    initial_frequencies[[1]] <- rep(1.0 / number_of_founders,
-                               times = number_of_founders)
-  }
-  if(sum(is.na(initial_frequencies[[2]]))) {
-    initial_frequencies[[2]] <- rep(1.0 / number_of_founders,
-                                  times = number_of_founders)
-  }
-
   if(sum(initial_frequencies[[1]]) != 1) {
     initial_frequencies[[1]] <- initial_frequencies[[1]] / sum(initial_frequencies)
     cat("starting frequencies were normalized to 1\n")
@@ -112,23 +102,24 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
   set.seed(seed)
 
-  init_freq <- c()
-  for(i in 1:2) {
-    local <- initial_frequencies[[i]]
-    if(length(local) != number_of_founders) {
-      init_freq <- c(init_freq, rep(1/number_of_founders, number_of_founders))
-    } else {
-      init_freq <- c(init_freq, local)
+  init_freq_matrix <- matrix(nrow = length(initial_frequencies),
+                      ncol = length(initial_frequencies[[1]]))
+
+  for(i in 1:length(initial_frequencies)) {
+    for(j in 1:length(initial_frequencies[[i]])) {
+      init_freq_matrix[i, j] <- initial_frequencies[[i]][j]
     }
   }
+
+
+
   cat("prep work done, diving into c++!\n")
 
   selected_pop <- simulate_migration_cpp( input_population_1,
                                 input_population_2,
                                 select_matrix,
                                 pop_size,
-                                number_of_founders,
-                                init_freq,
+                                init_freq_matrix,
                                 total_runtime,
                                 morgan,
                                 progress_bar,
