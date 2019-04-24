@@ -1,6 +1,6 @@
 //
 //  Fish.cpp
-//  
+//
 //
 //  Created by Thijs Janzen on 02/11/2017.
 //
@@ -251,7 +251,7 @@ Fish mate(const Fish& A, const Fish& B, double numRecombinations)
             break;
         }
     }
-    
+
     return offspring;
 }
 
@@ -304,7 +304,7 @@ Fish::Fish(const std::vector<junction>& A,
 }
 
 bool chromosomes_are_same(const std::vector< junction >& c1,
-                         const std::vector< junction >& c2) {
+                          const std::vector< junction >& c2) {
 
     if(c1.size() != c2.size()) return false;
 
