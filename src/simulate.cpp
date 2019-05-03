@@ -5,7 +5,6 @@
 //  Created by Thijs Janzen on 28/02/2018.
 //
 //
-
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -146,7 +145,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             Rcout << "**";
         }
 
-        if(is_fixed(Pop)) {
+        if(t > 2 && is_fixed(Pop)) {
             Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
             R_FlushConsole();
             return(Pop);

@@ -10,3 +10,4 @@ src/*.dll
 *.pop
 codecov.R
 tests/testthat/Rplots.pdf
+codecov.R
