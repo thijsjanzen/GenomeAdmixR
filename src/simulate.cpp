@@ -184,7 +184,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     std::vector<int> founder_labels;
 
     if(input_population[0] > -1e4) {
-        //Rcout << "Found input population! converting!\n";
+      //  Rcout << "Found input population! converting!\n";
         Pop = convert_NumericVector_to_fishVector(input_population);
 
         number_of_founders = 0;
@@ -193,7 +193,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
             update_founder_labels((*it).chromosome2, founder_labels);
         }
         number_of_alleles = founder_labels.size();
-        //Rcout << "Number of alleles is " << number_of_alleles << "\n";
+       // Rcout << "Number of alleles is " << number_of_alleles << "\n";
     } else {
         for(int i = 0; i < pop_size; ++i) {
             int founder_1 = draw_random_founder(starting_proportions);

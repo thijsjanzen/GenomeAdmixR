@@ -91,7 +91,7 @@ simulate_admixture_until(input_population_1 = NA,
   \item{sampled_individuals}{
     Number of individuals to be sampled at random from the population to estimate Fst
   }
-  \item{number of markers}{
+  \item{number_of_markers}{
     Number of markers to be used to estimate Fst.
   }
   \item{random_markers}{

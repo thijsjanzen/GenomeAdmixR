@@ -50,9 +50,9 @@ calculate_average_LD <- function(alleles_pos_1, alleles_pos_2) {
 }
 
 calculate_LD <- function(pop,
-                         sampled_individuals,
-                         number_of_markers,
-                         random_markers) {
+                         sampled_individuals = 10,
+                         number_of_markers = 100,
+                         random_markers = TRUE) {
 
   pop <- check_input_pop(pop)
 

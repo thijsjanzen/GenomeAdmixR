@@ -8,8 +8,8 @@
   This function calculates two matrices, once containing all pairwise LD values, one containing all pairwise r statistics
 }
 \usage{
-calculate_LD(pop, sampled_individuals,
-                    number_of_markers, random_markers)
+calculate_LD(pop, sampled_individuals = 10,
+                    number_of_markers = 100, random_markers = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

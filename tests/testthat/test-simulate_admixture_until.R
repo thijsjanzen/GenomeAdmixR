@@ -32,9 +32,9 @@ test_that("simulate_admixture_until", {
                                                             c(1,1)),
                                  morgan = 1,
                                  seed = 42,
-                                 generations_between_update = 100,
+                                 generations_between_update = 10,
                                  critical_fst = 0.1,
-                                 migration_rate = 0.01)
+                                 migration_rate = 0.001)
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,
