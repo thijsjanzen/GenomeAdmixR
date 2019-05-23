@@ -72,7 +72,6 @@ test_that("calculate_allele_frequencies", {
                         )
 
 
-  require(dplyr)
   b <- freq_output %>%
     dplyr::group_by(as.factor(ancestor)) %>%
     dplyr::summarise("mean_freq" = mean(frequency))
