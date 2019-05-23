@@ -1,10 +1,12 @@
 # GenomeAdmixR
-Genetic admixture simulation
 
-[![Build Status](https://travis-ci.org/thijsjanzen/GenomeAdmixR.svg?branch=master)](https://travis-ci.org/thijsjanzen/GenomeAdmixR)
-[![codecov](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
+[![](http://cranlogs.r-pkg.org/badges/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 
+Branch|[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)|[![AppVeyor logo](pics/AppVeyor.png)](https://www.appveyor.com)|[![Codecov logo](pics/Codecov.png)](https://www.codecov.io)
+---|---|---|---
+master|[![Build Status](https://travis-ci.org/thijsjanzen/GenomeAdmixR.svg?branch=master)](https://travis-ci.org/thijsjanzen/GenomeAdmixR)|[![Build status](https://ci.appveyor.com/api/projects/status/vrfuo3dednjl52tr?svg=true)](https://ci.appveyor.com/project/thijsjanzen/genomeadmixr)|[![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
 
 # What is GenomeAdmixR?
 A package under construction to simulate genetic admixture in relation to isofemale lines
