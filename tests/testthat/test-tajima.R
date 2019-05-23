@@ -106,7 +106,6 @@ testthat::test_that("tajima", {
     sim_data[[i]] <- x
   }
 
-  require(strataG)
   D2 <- strataG::tajimasD(sim_data)
 
  # testthat::expect_equal(D1$D, D2[1], tolerance = 0.1)

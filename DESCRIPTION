@@ -20,8 +20,9 @@ Suggests: testit,
           magrittr, 
           dplyr, 
           junctions, 
-          ovr, 
-          ggridges
+          covr, 
+          ggridges,
+          strataG
 LinkingTo: Rcpp, 
            RcppArmadillo
 SystemRequirements: C++11
