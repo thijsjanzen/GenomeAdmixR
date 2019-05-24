@@ -78,8 +78,8 @@ test_that("calculate_allele_frequencies", {
 
   testthat::expect_equal(mean(b$mean_freq),
                          1 / number_of_founders,
-                         tolerance = 0.01)
-  testthat::expect_equal(sum(b$mean_freq), 1, tolerance = 0.01)
+                         tolerance = 1 / number_of_founders)
+  testthat::expect_equal(sum(b$mean_freq), 1, tolerance = 1 / number_of_founders)
 
   number_of_founders <- 5
   sourcepop <- simulate_admixture(pop_size = 1000,

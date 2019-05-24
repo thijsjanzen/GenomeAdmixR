@@ -1,5 +1,6 @@
 library("covr")
-covr::codecov(type = "tests", quiet = FALSE)
+#setwd("/Users/janzen/MEGasync/GitHub/GenomeAdmixR/")
+covr::codecov(type = "tests", token = "d40809f7-5a82-4f09-a357-bbdbf618ea62", quiet = FALSE)
 
-#library(goodpractice)
-#goodpractice::gp(quiet = FALSE)
+library(goodpractice)
+goodpractice::gp(quiet = FALSE)

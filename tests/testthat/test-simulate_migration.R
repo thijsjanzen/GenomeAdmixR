@@ -68,4 +68,30 @@ test_that("simulate_migration", {
     vv <- joyplot_frequencies(vy$frequencies, time_points = c(0, 10, 50))
   )
 
+
+  markers <- seq(from = 0.0, to = 1, by = 0.1)
+
+  vy <- simulate_admixture_migration(seed = 42,
+                                     migration_rate = 0.0,
+                                     initial_frequencies = list(c(1,1,0,0),
+                                                                c(0,0,1,1)),
+                                     total_runtime = 100,
+                                     markers = markers)
+
+  a1 <- subset(vy$final_frequency, vy$final_frequency$population == 1)
+  # this population should only have ancestors 0 and 1
+  b1 <- a1 %>%
+    group_by(ancestor) %>%
+      summarise("mean_freq" = mean(frequency))
+
+  testthat::expect_equal(b1$mean_freq[3], 0)
+  testthat::expect_equal(b1$mean_freq[4], 0)
+
+  a2 <- subset(vy$final_frequency, vy$final_frequency$population == 2)
+  b2 <- a2 %>%
+    group_by(ancestor) %>%
+    summarise("mean_freq" = mean(frequency))
+
+  testthat::expect_equal(b2$mean_freq[1], 0)
+  testthat::expect_equal(b2$mean_freq[2], 0)
 })
