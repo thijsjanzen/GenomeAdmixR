@@ -12,6 +12,7 @@ addons:
     sources:
       - sourceline: 'ppa:opencpu/imagemagick'
     packages:
+      - libgsl-dev
       - gsl-bin 
       - libgsl2
       - gdal-bin	
