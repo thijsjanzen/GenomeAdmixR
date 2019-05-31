@@ -5,6 +5,16 @@ os:
   - osx
   - linux
 
+apt:
+    update: true
+    sources:
+      - sourceline: 'ppa:opencpu/imagemagick'
+    packages:
+      - libgsl0-dev
+      - libcurl4-openssl-dev
+
+
+
 r_github_packages:
   - jimhester/lintr
   - jimhester/covr
