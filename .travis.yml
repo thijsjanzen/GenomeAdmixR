@@ -1,48 +1,22 @@
 language: r
 cache: packages
-warnings_are_errors: false
 
 os: 
   - osx
   - linux
 
-addons:
-  apt:
-    update: true
-    sources:
-      - sourceline: 'ppa:opencpu/imagemagick'
-    packages:
-      - libgsl-dev
-      - gsl-bin 
-      - libgsl2
-      - gdal-bin	
-      - libgdal1-dev	
-      - libproj-dev	  
-      - r-cran-rgdal
-      - libmagick++-dev
-      - libudunits2-dev
-      - librsvg2-dev
-      - libwebp-dev
-      - libpoppler-cpp-dev
-      - libtesseract-dev
-      - libleptonica-dev
-      - tesseract-ocr-eng
-      - libfftw3-dev
-      - cargo
-
+r_github_packages:
+  - jimhester/lintr
+  - jimhester/covr
+  - MangoTheCat/goodpractice
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository -y ppa:opencpu/imagemagick; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libmagick++-dev; fi
 
-r_github_packages:
-  - jimhester/lintr
-  - r-lib/covr
-  - MangoTheCat/goodpractice
-
 after_success:
   - Rscript -e 'lintr::lint_package()'
- # - travis_wait Rscript -e 'library(goodpractice); gp()'
-  - travis_wait 60 Rscript codecov.R;
- # - travis_wait 30 Rscript -e 'covr::codecov()'
+#  - Rscript -e 'library(covr); codecov()'
+#  - Rscript -e 'library(goodpractice); gp()'
+
