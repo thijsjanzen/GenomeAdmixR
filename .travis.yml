@@ -8,8 +8,7 @@ os:
 addons:
   apt:
     packages:
-    - libgsl-dev
-    - gsl-bin
+    - libcurl4-openssl-dev
     - libgsl0-dev
   
 r_binary_packages:
