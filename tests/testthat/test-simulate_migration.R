@@ -80,18 +80,26 @@ test_that("simulate_migration", {
 
   a1 <- subset(vy$final_frequency, vy$final_frequency$population == 1)
   # this population should only have ancestors 0 and 1
-  b1 <- a1 %>%
-    group_by(ancestor) %>%
-      summarise("mean_freq" = mean(frequency))
 
-  testthat::expect_equal(b1$mean_freq[3], 0)
-  testthat::expect_equal(b1$mean_freq[4], 0)
+  bv <- c()
+  cnt <- 1
+  for(i in unique(a1$ancestor)) {
+    b1 <- subset(a1 ,a1$ancestor == i)
+    bv[cnt] <- mean(b1$frequency)
+    cnt <- cnt + 1
+  }
+
+  testthat::expect_equal(bv[3], 0)
+  testthat::expect_equal(bv[4], 0)
 
   a2 <- subset(vy$final_frequency, vy$final_frequency$population == 2)
-  b2 <- a2 %>%
-    group_by(ancestor) %>%
-    summarise("mean_freq" = mean(frequency))
-
-  testthat::expect_equal(b2$mean_freq[1], 0)
-  testthat::expect_equal(b2$mean_freq[2], 0)
+  bv <- c()
+  cnt <- 1
+  for(i in unique(a2$ancestor)) {
+    b1 <- subset(a2 ,a2$ancestor == i)
+    bv[cnt] <- mean(b1$frequency)
+    cnt <- cnt + 1
+  }
+  testthat::expect_equal(bv[1], 0)
+  testthat::expect_equal(bv[2], 0)
 })
