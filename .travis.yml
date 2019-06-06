@@ -29,7 +29,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libmagick++-dev; fi
   # GSL
-  - if [[ "$TRAVIS_OS_NAME" == "mac" ]]; then sudo brew install gsl; fi
+  - if [[ "$TRAVIS_OS_NAME" != "linux" ]]; then sudo brew install gsl; fi
 
 after_success:
   - Rscript -e 'lintr::lint_package()'
