@@ -11,8 +11,8 @@ addons:
     - libcurl4-openssl-dev
     - libgsl0-dev
   
-r_binary_packages:
-  - gsl
+#r_binary_packages:
+#  - gsl
 
 r_github_packages:
   - jimhester/lintr
