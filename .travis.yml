@@ -9,7 +9,7 @@ addons:
   apt:
     packages:
     - libcurl4-openssl-dev
-    - libgsl0-dev
+    - libgsl10-dev
   
 #r_binary_packages:
 #  - gsl
