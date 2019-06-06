@@ -3,7 +3,7 @@ dist: xenial
 cache: packages
 
 os: 
-  # - osx
+  - osx
   - linux
   
 addons:
