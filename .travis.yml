@@ -1,7 +1,7 @@
 language: r
 dist: xenial
 cache: packages
-
+compiler: clang
 
 os: 
   - osx
