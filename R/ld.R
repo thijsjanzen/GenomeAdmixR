@@ -1,6 +1,7 @@
+#nolint start
 calculate_average_LD <- function(alleles_pos_1, alleles_pos_2) {
 
-  all_alleles <- c( as.vector(alleles_pos_1), as.vector(alleles_pos_2))
+  all_alleles <- c(as.vector(alleles_pos_1), as.vector(alleles_pos_2))
   all_alleles <- sort(unique(all_alleles))
 
   LD <- 0
@@ -101,3 +102,4 @@ calculate_LD <- function(pop,
               "rsq_matrix" = rsq_matrix,
               "dist_matrix" = dist_matrix))
 }
+#nolint end
