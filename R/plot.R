@@ -4,7 +4,7 @@ joyplot_frequencies <- function(frequencies,
                                 picked_population = 1
                                 )
 {
-  if("population" %in% colnames(frequencies)) {
+  if ("population" %in% colnames(frequencies)) {
     frequencies <- subset(frequencies,
                           frequencies$population == picked_population)
   }
@@ -15,7 +15,7 @@ joyplot_frequencies <- function(frequencies,
                frequencies$time %in% time_points)
   vz$ancestor <- as.factor(vz$ancestor)
 
-  if(picked_ancestor == "ALL") {
+  if (picked_ancestor == "ALL") {
     p1 <- ggplot2::ggplot(vz, ggplot2::aes(x = vz$location,
                          y = as.factor(vz$time),
                          height = vz$frequency,
@@ -43,7 +43,7 @@ plot_start_end <- function(results,
   a1 <- results$initial_frequency
   a2 <- results$final_frequency
 
-  if("population" %in% colnames(a1)) {
+  if ("population" %in% colnames(a1)) {
     a1 <- subset(a1,
                  a1$population == picked_population)
     a2 <- subset(a2,
@@ -55,7 +55,7 @@ plot_start_end <- function(results,
 
   to_plot_m <- rbind(a1_m, a2_m)
 
-  if(picked_ancestor[[1]] == "ALL") {
+  if (picked_ancestor[[1]] == "ALL") {
     to_plot <- to_plot_m
 
     p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$location,
@@ -93,18 +93,18 @@ plot_difference_frequencies <- function(results,
   a1 <- results$initial_frequency
   a2 <- results$final_frequency
 
-  if("population" %in% colnames(a1)) {
+  if ("population" %in% colnames(a1)) {
     a1 <- subset(a1,
                  a1$population == picked_population)
     a2 <- subset(a2,
                  a2$population == picked_population)
   }
 
-  a1 <- dplyr::select(a1, c("time","location","ancestor","frequency"))
-  a2 <- dplyr::select(a2, c("time","location","ancestor","frequency"))
+  a1 <- dplyr::select(a1, c("time", "location", "ancestor", "frequency"))
+  a2 <- dplyr::select(a2, c("time", "location", "ancestor", "frequency"))
 
-  colnames(a1) <- c("time"    ,  "location" , "ancestor" , "frequency_before")
-  colnames(a2) <- c("time"    ,  "location" , "ancestor" , "frequency_after")
+  colnames(a1) <- c("time",  "location", "ancestor", "frequency_before")
+  colnames(a2) <- c("time",  "location", "ancestor", "frequency_after")
 
   ax <- dplyr::full_join(a1,a2, by = c("location", "ancestor"))
 
@@ -112,7 +112,7 @@ plot_difference_frequencies <- function(results,
                         "diff_frequency" =
                           ax$frequency_after - ax$frequency_before)
 
-  if(picked_ancestor[[1]] == "ALL") {
+  if (picked_ancestor[[1]] == "ALL") {
     to_plot <- ax_m
 
     p1 <- ggplot2::ggplot(to_plot,
@@ -167,12 +167,12 @@ plot_over_time <- function(frequencies,
 
   p1 <- c()
   to_plot <- subset(frequencies, frequencies$location == focal_location)
-  if(length(to_plot$time) == 0) {
+  if (length(to_plot$time) == 0) {
     cat("No data to plot, are you sure that the focal location\nis within the
         vector of molecular markers?\n")
   }
 
-  if("population" %in% colnames(frequencies)) {
+  if ("population" %in% colnames(frequencies)) {
     p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$time,
                                        y = to_plot$frequency,
                                        col = interaction(to_plot$ancestor,

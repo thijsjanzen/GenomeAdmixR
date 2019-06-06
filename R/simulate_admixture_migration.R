@@ -14,22 +14,22 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          migration_rate = 0.0) {
 
   cat("starting simulation incl migration\n")
-  if(is.list(input_population_1)) {
+  if (is.list(input_population_1)) {
     # if a list of individuals is given, the class is often wrong
     # let's check if that is the case
-    if(!is(input_population_1, "population")) {
+    if (!is(input_population_1, "population")) {
       all_are_individuals <- sapply(input_population_1, class)
-      if(sum(input_population_1 == "individual") ==
+      if (sum(all_are_individuals == "individual") ==
          length(input_population_1)) {
         class(input_population_1) <- "population"
       }
     }
 
-    if(is(input_population_1$population, "population")) {
+    if (is(input_population_1$population, "population")) {
       input_population_1 <- input_population_1$population
     }
 
-    if(is(input_population_1, "population")) {
+    if (is(input_population_1, "population")) {
       input_population_1 <- population_to_vector(input_population_1)
     } else {
       input_population_1 <- c(-1e6, -1e6)
@@ -38,10 +38,10 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     input_population_1 <- c(-1e6, -1e6)
   }
 
-  if(is.list(input_population_2)) {
+  if (is.list(input_population_2)) {
     # if a list of individuals is given, the class is often wrong
     # let's check if that is the case
-    if(!is(input_population_2, "population")) {
+    if (!is(input_population_2, "population")) {
       all_are_individuals <- sapply(input_population_2, class)
       if(sum(input_population_2 == "individual") ==
          length(input_population_2)) {
@@ -49,11 +49,11 @@ simulate_admixture_migration <- function(input_population_1 = NA,
       }
     }
 
-    if(is(input_population_2$population, "population")) {
+    if (is(input_population_2$population, "population")) {
       input_population_2 <- input_population_2$population
     }
 
-    if(is(input_population_2, "population")) {
+    if (is(input_population_2, "population")) {
       input_population_2 <- population_to_vector(input_population_2)
     } else {
       input_population_2 <- c(-1e6, -1e6)
@@ -62,17 +62,18 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     input_population_2 <- c(-1e6, -1e6)
   }
 
-  if(sum(initial_frequencies[[1]]) != 1) {
-    initial_frequencies[[1]] <- initial_frequencies[[1]] / sum(initial_frequencies[[1]])
+  if (sum(initial_frequencies[[1]]) != 1) {
+    initial_frequencies[[1]] <-
+      initial_frequencies[[1]] / sum(initial_frequencies[[1]])
     cat("starting frequencies were normalized to 1\n")
   }
-  if(sum(initial_frequencies[[2]]) != 1) {
+  if (sum(initial_frequencies[[2]]) != 1) {
     initial_frequencies[[2]] <- initial_frequencies[[2]] / sum(initial_frequencies[[2]])
     cat("starting frequencies were normalized to 1\n")
   }
 
 
-  if(is.matrix(select_matrix)) {
+  if (is.matrix(select_matrix)) {
     cat("Found a selection matrix, performing simulation\n")
     cat("including selection\n")
     if (sum(is.na(select_matrix))) {
@@ -85,11 +86,11 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     }
     } else {
       if(is.na(select_matrix)) {
-        select_matrix <- matrix(-1, nrow=2,ncol=2)
+        select_matrix <- matrix(-1, nrow=2, ncol=2)
       }
   }
 
-  if(length(markers) == 1) {
+  if (length(markers) == 1) {
     if(is.na(markers))  {
       markers <- c(-1, -1)
       track_frequency <- FALSE
@@ -105,13 +106,13 @@ simulate_admixture_migration <- function(input_population_1 = NA,
   init_freq_matrix <- matrix(nrow = length(initial_frequencies),
                       ncol = length(initial_frequencies[[1]]))
 
-  for(i in 1:length(initial_frequencies)) {
-    for(j in 1:length(initial_frequencies[[i]])) {
+  for (i in 1:length(initial_frequencies)) {
+    for (j in 1:length(initial_frequencies[[i]])) {
       init_freq_matrix[i, j] <- initial_frequencies[[i]][j]
     }
   }
 
-  selected_pop <- simulate_migration_cpp( input_population_1,
+  selected_pop <- simulate_migration_cpp(input_population_1,
                                 input_population_2,
                                 select_matrix,
                                 pop_size,
@@ -136,7 +137,11 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                      "population")
 
   final_freq_tibble <- tibble::as.tibble(selected_pop$final_frequencies)
-  colnames(final_freq_tibble) <- c("time", "location", "ancestor", "frequency", "population")
+  colnames(final_freq_tibble) <- c("time",
+                                   "location",
+                                   "ancestor",
+                                   "frequency",
+                                   "population")
 
 
   output <- list()
@@ -151,9 +156,13 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                    "junctions" = selected_pop$junctions)
   }
 
-  if(track_frequency == TRUE && track_junctions == FALSE) {
+  if (track_frequency == TRUE && track_junctions == FALSE) {
     frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time","location","ancestor","frequency", "population")
+    colnames(frequencies_tibble) <- c("time",
+                                      "location",
+                                      "ancestor",
+                                      "frequency",
+                                        "population")
 
     output <- list("population_1" = selected_popstruct_1,
                    "population_2" = selected_popstruct_2,
@@ -162,9 +171,13 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                    "final_frequency" = final_freq_tibble)
   }
 
-  if(track_frequency == TRUE && track_junctions == TRUE) {
+  if (track_frequency == TRUE && track_junctions == TRUE) {
     frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time","location","ancestor","frequency", "population")
+    colnames(frequencies_tibble) <- c("time",
+                                      "location",
+                                      "ancestor",
+                                      "frequency",
+                                      "population")
 
     output <- list("population_1" = selected_popstruct_1,
                    "population_2" = selected_popstruct_2,

@@ -21,7 +21,7 @@ plot.individual <- function(x, ...) {
   alleles_chrom1 <- unique(x$chromosome1[, 2])
   alleles_chrom2 <- unique(x$chromosome2[, 2])
   num_colors <- 1 + max(alleles_chrom1, alleles_chrom2)
-  if(num_colors > 20) num_colors <- 20
+  if (num_colors > 20) num_colors <- 20
   color_palette <- grDevices::rainbow(num_colors)
 
   par(mfrow = c(2, 1))
@@ -125,33 +125,33 @@ create_pop_class <- function(pop) {
 
 verify_individual <- function(indiv) {
 
-  if(!is(indiv, "individual")) return(FALSE)
+  if (!is(indiv, "individual")) return(FALSE)
 
-  if(indiv$chromosome1[1,1] != 0) {
+  if (indiv$chromosome1[1, 1] != 0) {
      cat("Chromosome doesn't start at 0\n")
      return(FALSE)
   }
-  if(tail(indiv$chromosome1,1)[2] != -1) {
+  if (tail(indiv$chromosome1, 1)[2] != -1) {
     cat("Chromosome doesn't end with -1\n")
     return(FALSE)
   }
 
-  if(max(abs(indiv$chromosome1[,2])) > 10000) {
+  if (max(abs(indiv$chromosome1[, 2])) > 10000) {
     cat("Memory error recorded in chromosome\n")
     return(FALSE)
   }
 
-  if(indiv$chromosome2[1,1] != 0) {
+  if (indiv$chromosome2[1, 1] != 0) {
     cat("Chromosome doesn't start at 0\n")
     return(FALSE)
   }
 
-  if(tail(indiv$chromosome2,1)[2] != -1) {
+  if (tail(indiv$chromosome2, 1)[2] != -1) {
     cat("Chromosome doesn't end with -1\n")
     return(FALSE)
   }
 
-  if(max(abs(indiv$chromosome2[,2])) > 10000) {
+  if (max(abs(indiv$chromosome2[, 2])) > 10000) {
     cat("Memory error recorded in chromosome\n")
     return(FALSE)
   }
@@ -161,19 +161,18 @@ verify_individual <- function(indiv) {
 
 verify_population <- function(pop) {
 
-  if(!is(pop, "population"))  {
-    if(!is(pop$population, "population")) {
+  if (!is(pop, "population"))  {
+    if (!is(pop$population, "population")) {
       return(FALSE)
     } else {
       return(verify_population(pop$population))
     }
   }
   v <- unlist(lapply(pop, verify_individual))
-  if(sum(v) != length(v)) return(FALSE)
+  if (sum(v) != length(v)) return(FALSE)
 
   return(TRUE)
 }
-
 
 findtype <- function(chrom, pos) {
 

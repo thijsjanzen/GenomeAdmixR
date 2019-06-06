@@ -18,19 +18,20 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      number_of_markers = 100,
                                      random_markers = TRUE) {
 
-  pops <- simulate_admixture_migration(input_population_1 = input_population_1,
-                                       input_population_2 = input_population_2,
-                                       pop_size = pop_size,
-                                       initial_frequencies = initial_frequencies,
-                                       total_runtime = generations_between_update,
-                                       seed = seed,
-                                       morgan = morgan,
-                                       select_matrix = select_matrix,
-                                       markers = markers,
-                                       progress_bar = progress_bar,
-                                       track_junctions = track_junctions,
-                                       multiplicative_selection = multiplicative_selection,
-                                       migration_rate = migration_rate)
+  pops <- simulate_admixture_migration(
+    input_population_1 = input_population_1,
+    input_population_2 = input_population_2,
+    pop_size = pop_size,
+    initial_frequencies = initial_frequencies,
+    total_runtime = generations_between_update,
+    seed = seed,
+    morgan = morgan,
+    select_matrix = select_matrix,
+    markers = markers,
+    progress_bar = progress_bar,
+    track_junctions = track_junctions,
+    multiplicative_selection = multiplicative_selection,
+    migration_rate = migration_rate)
 
   fst <- calculate_fst(pops$population_1, pops$population_2,
                        sampled_individuals = sampled_individuals,
@@ -43,20 +44,21 @@ simulate_admixture_until <- function(input_population_1 = NA,
 
   total_generations <- generations_between_update
 
-  while(fst < critical_fst && total_generations < total_runtime) {
-    pops <- simulate_admixture_migration(input_population_1 = pops$population_1,
-                                         input_population_2 = pops$population_2,
-                                         pop_size = pop_size,
-                                         initial_frequencies = initial_frequencies,
-                                         total_runtime = generations_between_update,
-                                         morgan = morgan,
-                                         seed = seed + cnt,
-                                         select_matrix = select_matrix,
-                                         markers = markers,
-                                         progress_bar = progress_bar,
-                                         track_junctions = track_junctions,
-                                         multiplicative_selection = multiplicative_selection,
-                                         migration_rate = migration_rate)
+  while (fst < critical_fst && total_generations < total_runtime) {
+    pops <- simulate_admixture_migration(
+      input_population_1 = pops$population_1,
+      input_population_2 = pops$population_2,
+      pop_size = pop_size,
+      initial_frequencies = initial_frequencies,
+      total_runtime = generations_between_update,
+      morgan = morgan,
+      seed = seed + cnt,
+      select_matrix = select_matrix,
+      markers = markers,
+      progress_bar = progress_bar,
+      track_junctions = track_junctions,
+      multiplicative_selection = multiplicative_selection,
+      migration_rate = migration_rate)
 
     cnt <- cnt + 2
     fst <- calculate_fst(pops$population_1, pops$population_2,
@@ -65,7 +67,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                          random_markers = TRUE)
 
     total_generations <- total_generations + generations_between_update
-    cat(total_generations,"\t", fst ,"\n")
+    cat(total_generations, "\t", fst ,"\n")
   }
   return(list("Population_1" = pops$population_1,
               "Population_2" = pops$population_2,
