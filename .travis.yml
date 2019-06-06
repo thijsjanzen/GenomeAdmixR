@@ -4,7 +4,7 @@ cache: packages
 compiler: clang
 
 os: 
-  - osx
+  # - osx
   - linux
   
 addons:
