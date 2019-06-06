@@ -11,6 +11,7 @@ addons:
     packages:
     - libcurl4-openssl-dev
     - libgsl-dev
+    - libudunits2-dev
 
 #r_binary_packages:
 #  - gsl
