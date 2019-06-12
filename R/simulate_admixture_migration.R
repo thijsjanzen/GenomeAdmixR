@@ -116,7 +116,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     if (!methods::is(input_population_2, "population")) {
       all_are_individuals <- vapply(input_population_2, class,
                                     FUN.VALUE = "character")
-      if(sum(input_population_2 == "individual") ==
+      if (sum(input_population_2 == "individual") ==
          length(input_population_2)) {
         class(input_population_2) <- "population"
       }
@@ -158,7 +158,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
            are you sure you provided all fitnesses?\n")
     }
     } else {
-      if(is.na(select_matrix)) {
+      if (is.na(select_matrix)) {
         select_matrix <- matrix(-1, nrow = 2, ncol = 2)
       }
   }

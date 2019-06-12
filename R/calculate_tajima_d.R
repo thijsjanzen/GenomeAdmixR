@@ -52,13 +52,13 @@ calculate_tajima_d <- function(pop,
   n <- 2 * number_of_sampled_individuals
   tmp <- 1:(n - 1)
   a1 <- sum(1 / tmp)
-  a2 <- sum(1 / tmp^2)
+  a2 <- sum(1 / tmp ^ 2)
   b1 <- (n + 1) / (3 * (n - 1))
-  b2 <- 2 * (n^2 + n + 3) / (9 * n * (n - 1))
+  b2 <- 2 * (n ^ 2 + n + 3) / (9 * n * (n - 1))
   c1 <- b1 - 1 / a1
-  c2 <- b2 - (n + 2) / (a1 * n) + a2 / a1^2
+  c2 <- b2 - (n + 2) / (a1 * n) + a2 / a1 ^ 2
   e1 <- c1 / a1
-  e2 <- c2 / (a1^2 + a2)
+  e2 <- c2 / (a1 ^ 2 + a2)
 
   pi <- 0 #average number of pairwise differences
   cnt <- 0

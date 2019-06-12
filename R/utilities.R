@@ -1,11 +1,11 @@
 #' @keywords internal
 check_input_pop <- function(pop) {
-  if(!methods::is(pop, "population")) {
-    if(is.list(pop)) {
-      if(methods::is(pop$population, "population")) {
+  if (!methods::is(pop, "population")) {
+    if (is.list(pop)) {
+      if (methods::is(pop$population, "population")) {
         pop <- pop$population
       } else{
-        if(methods::is(pop$population_1, "population")) {
+        if (methods::is(pop$population_1, "population")) {
           cat("Warning, only population 1 is processed\n
               explicitly pass a population to remedy this\n")
           pop <- pop$population_1
@@ -38,17 +38,17 @@ increase_ancestor <- function(population, increment = 20) {
   increase_indiv <- function(indiv) {
 
     # -1 indicates the end, no increment there!
-    positive <- which(indiv$chromosome1[,2] > -1)
+    positive <- which(indiv$chromosome1[, 2] > -1)
     indiv$chromosome1[positive, 2] <- indiv$chromosome1[positive, 2] + increment
 
     # -1 indicates the end, no increment there!
-    positive <- which(indiv$chromosome2[,2] > -1)
+    positive <- which(indiv$chromosome2[, 2] > -1)
     indiv$chromosome2[positive, 2] <- indiv$chromosome2[positive, 2] + increment
     return(indiv)
   }
 
-  if(!methods::is(population, "population")) {
-    if(methods::is(population$population, "population")) {
+  if (!methods::is(population, "population")) {
+    if (methods::is(population$population, "population")) {
       population <- population$population
     }
   }
@@ -144,7 +144,7 @@ plot.individual <- function(x, ...) {
   num_colors <- 1 + max(alleles_chrom1, alleles_chrom2)
   if (num_colors > 20) num_colors <- 20
   color_palette <- grDevices::rainbow(num_colors)
-  opar <- graphics::par('mar','mfrow')
+  opar <- graphics::par("mar", "mfrow")
 
   graphics::par(mfrow = c(2, 1))
   graphics::par(mar = c(2, 2, 2, 2))

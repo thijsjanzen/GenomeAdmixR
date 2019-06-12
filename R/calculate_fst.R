@@ -91,4 +91,3 @@ create_loci_matrix <- function(pop1,
 
   return(all_loci)
 }
-

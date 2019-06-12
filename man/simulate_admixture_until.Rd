@@ -41,7 +41,8 @@ crossovers during meiosis)}
 
 \item{select_matrix}{Selection matrix indicating the markers which are
 under selection. If not provided by the user, the simulation proceeds
-neutrally. If provided, each row in the matrix should contain five entries: \code{location}{ location of the marker under selection (in Morgan) }
+neutrally. If provided, each row in the matrix should contain five entries:
+\code{location}{ location of the marker under selection (in Morgan) }
 \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
 \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 represents the mutant allele A}}

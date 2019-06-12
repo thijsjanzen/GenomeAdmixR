@@ -7,50 +7,52 @@ test_that("simulate_migration", {
   testthat::expect_true(verify_population(vx$population_1))
   testthat::expect_true(verify_population(vx$population_2))
 
+  vz <- simulate_admixture_migration(input_population_1 = vx$population_1[[1]],
+                                     input_population_2 = vx$population_2[[2]],
+                                     seed = 5)
 
   markers <- seq(from = 0.4, to = 0.6, length.out = 100)
   vy <- simulate_admixture_migration(seed = 42,
                                      migration_rate = 0.01,
-                                     initial_frequencies = list(c(1,1,0,0),
-                                                                c(0,0,1,1)),
+                                     initial_frequencies = list(c(1, 1, 0, 0),
+                                                                c(0, 0, 1, 1)),
                                      total_runtime = 100,
                                      markers = markers)
 
   testthat::expect_true(verify_population(vy$population_1))
   testthat::expect_true(verify_population(vy$population_2))
 
-  testthat::expect_true( length(markers) ==
-                           length(unique(vy$frequencies$location)) )
+  testthat::expect_true(length(markers) ==
+                        length(unique(vy$frequencies$location)))
 
 
-  select_matrix <- matrix(NA, nrow=1, ncol=5)
+  select_matrix <- matrix(NA, nrow = 1, ncol = 5)
 
   s <- 0.1
-  select_matrix[1, ] <- c(0.5, 0.5, 0.5+0.5*s, 0.5+s, 0)
+  select_matrix[1, ] <- c(0.5, 0.5, 0.5 + 0.5 * s, 0.5 + s, 0)
 
   markers <- seq(from = 0.0, to = 0.51, by = 0.001)
 
   vy <- simulate_admixture_migration(seed = 42,
                                      migration_rate = 0.01,
-                                     initial_frequencies = list(c(1,0),
-                                                                c(0,1)),
+                                     initial_frequencies = list(c(1, 0),
+                                                                c(0, 1)),
                                      select_matrix = select_matrix,
                                      total_runtime = 100,
                                      markers = markers)
 
   found <- c()
-  for(loc in unique(vy$final_frequency$location)) {
+  for (loc in unique(vy$final_frequency$location)) {
     a <- subset(vy$final_frequency, vy$final_frequency$location == loc &
                   vy$final_frequency$ancestor == 0)
     b <- mean(a$frequency)
     found <- rbind(found, c(loc, b))
   }
-  a1 <- subset(found, found[,1] < 0.4)
-  a2 <- subset(found, found[,1] == 0.5)
+  a1 <- subset(found, found[, 1] < 0.4)
+  a2 <- subset(found, found[, 1] == 0.5)
 
-  #b1 <- t.test(a1[,2] - 0.5)
   testthat::expect_equal(a2[2], 1)
-  testthat::expect_equal(mean(a1[,2]), 0.5, tolerance = 0.1)
+  testthat::expect_equal(mean(a1[, 2]), 0.5, tolerance = 0.1)
 
   testthat::expect_silent(
     plot_difference_frequencies(vy)
@@ -74,8 +76,8 @@ test_that("simulate_migration", {
 
   vy <- simulate_admixture_migration(seed = 42,
                                      migration_rate = 0.0,
-                                     initial_frequencies = list(c(1,1,0,0),
-                                                                c(0,0,1,1)),
+                                     initial_frequencies = list(c(1, 1, 0, 0),
+                                                                c(0, 0, 1, 1)),
                                      total_runtime = 100,
                                      markers = markers)
 
@@ -84,8 +86,8 @@ test_that("simulate_migration", {
 
   bv <- c()
   cnt <- 1
-  for(i in unique(a1$ancestor)) {
-    b1 <- subset(a1 ,a1$ancestor == i)
+  for (i in unique(a1$ancestor)) {
+    b1 <- subset(a1, a1$ancestor == i)
     bv[cnt] <- mean(b1$frequency)
     cnt <- cnt + 1
   }
@@ -96,8 +98,8 @@ test_that("simulate_migration", {
   a2 <- subset(vy$final_frequency, vy$final_frequency$population == 2)
   bv <- c()
   cnt <- 1
-  for(i in unique(a2$ancestor)) {
-    b1 <- subset(a2 ,a2$ancestor == i)
+  for (i in unique(a2$ancestor)) {
+    b1 <- subset(a2, a2$ancestor == i)
     bv[cnt] <- mean(b1$frequency)
     cnt <- cnt + 1
   }

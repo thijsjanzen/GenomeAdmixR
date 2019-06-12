@@ -3,7 +3,7 @@ context("selection two alleles")
 test_that("select population two_alleles", {
   select_matrix <- matrix(ncol = 5, nrow = 1)
   s <- 0.1
-  select_matrix[1, ] <- c(0.05, 1.0, 1+0.5*s, 1+s, 0)
+  select_matrix[1, ] <- c(0.05, 1.0, 1 + 0.5 * s, 1 + s, 0)
 
   selected_pop <- simulate_admixture(pop_size = 100,
                                      number_of_founders = 10,
@@ -44,7 +44,7 @@ test_that("select on population", {
 
   select_matrix <- matrix(ncol = 5, nrow = 1)
   s <- 0.1
-  select_matrix[1, ] <- c(0.05, 1.0, 1+0.5*s, 1+s, 0)
+  select_matrix[1, ] <- c(0.05, 1.0, 1 + 0.5 * s, 1 + s, 0)
 
   selected_pop <- simulate_admixture(input_population = sourcepop,
                                      select_matrix = select_matrix,
@@ -71,8 +71,8 @@ test_that("select on population", {
 test_that("select population two_alleles multiple markers", {
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.1
-  select_matrix[1, ] <- c(0.25, 1.0, 1+0.5*s, 1+s, 0)
-  select_matrix[2, ] <- c(0.75, 1.0, 1, 1+s,  1)
+  select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
+  select_matrix[2, ] <- c(0.75, 1.0, 1, 1 + s,  1)
 
   selected_pop <- simulate_admixture(pop_size = 100,
                                      number_of_founders = 10,
@@ -116,8 +116,8 @@ test_that("select population two_alleles multiple markers", {
 test_that("select population two_alleles regions", {
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.1
-  select_matrix[1, ] <- c(0.25, 1.0, 1+0.5*s, 1+s, 0)
-  select_matrix[2, ] <- c(0.75, 1.0, 1, 1+s,  1)
+  select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
+  select_matrix[2, ] <- c(0.75, 1.0, 1, 1 + s,  1)
 
   markers <- seq(from = 0.2, to = 0.3, length.out = 21)
 
@@ -186,12 +186,12 @@ test_that("selection abuse", {
 
   select_matrix <- matrix(ncol = 5, nrow = 3)
   s <- 0.1
-  select_matrix[1, ] <- c(0.05, 1.0, 1+0.5*s, 1+s, 0)
-  select_matrix[2, ] <- c(0.15, 1.0, 1+0.5*s, 1+s, 0)
+  select_matrix[1, ] <- c(0.05, 1.0, 1 + 0.5 * s, 1 + s, 0)
+  select_matrix[2, ] <- c(0.15, 1.0, 1 + 0.5 * s, 1 + s, 0)
 
   testthat::expect_error(
       simulate_admixture(input_population = sourcepop,
-                         select_matrix =select_matrix,
+                         select_matrix = select_matrix,
                         pop_size = 1000,
                         total_runtime = 1000,
                         morgan = 1,
@@ -200,7 +200,7 @@ test_that("selection abuse", {
   )
 
   testthat::expect_error(
-    simulate_admixture(select_matrix =select_matrix,
+    simulate_admixture(select_matrix = select_matrix,
                        pop_size = 1000,
                        total_runtime = 1000,
                        morgan = 1,
@@ -215,7 +215,7 @@ test_that("selection abuse", {
 
   testthat::expect_error(
     simulate_admixture(input_population = sourcepop,
-                       select_matrix =select_matrix,
+                       select_matrix = select_matrix,
                        pop_size = 1000,
                        total_runtime = 1000,
                        morgan = 1,
@@ -224,7 +224,7 @@ test_that("selection abuse", {
   )
 
   testthat::expect_error(
-    simulate_admixture(select_matrix =select_matrix,
+    simulate_admixture(select_matrix = select_matrix,
                        pop_size = 100,
                        total_runtime = 10,
                        morgan = 1,
@@ -235,16 +235,16 @@ test_that("selection abuse", {
 
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.1
-  select_matrix[1, ] <- c(0.05, 1.0, 1+0.5*s, 1+s, 0)
-  select_matrix[2, ] <- c(0.15, 1.0, 1+0.5*s, 1+s, 0)
+  select_matrix[1, ] <- c(0.05, 1.0, 1 + 0.5 * s, 1 + s, 0)
+  select_matrix[2, ] <- c(0.15, 1.0, 1 + 0.5 * s, 1 + s, 0)
 
   select_matrix <- matrix(ncol = 3, nrow = 1)
   s <- 0.1
-  select_matrix[1,] <- c(0.5, 0.1, 0.2)
+  select_matrix[1, ] <- c(0.5, 0.1, 0.2)
 
   testthat::expect_error(
     simulate_admixture(input_population = sourcepop,
-                       select_matrix =select_matrix,
+                       select_matrix = select_matrix,
                        pop_size = 1000,
                        total_runtime = 1000,
                        morgan = 1,
@@ -253,7 +253,7 @@ test_that("selection abuse", {
 
   testthat::expect_error(
     simulate_admixture(input_population = sourcepop,
-                       select_matrix =select_matrix,
+                       select_matrix = select_matrix,
                        pop_size = 100,
                        number_of_founders = 10,
                        total_runtime = 10,

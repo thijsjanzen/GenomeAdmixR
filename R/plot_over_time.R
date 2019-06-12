@@ -29,7 +29,7 @@ plot_over_time <- function(frequencies,
   p1 <- c()
   to_plot <- subset(frequencies, frequencies$location == focal_location)
   if (length(to_plot$time) == 0) {
-    cat("No data to plot, are you sure that the focal location\nis within the
+    exit("No data to plot, are you sure that the focal location\nis within the
         vector of molecular markers?\n")
   }
 

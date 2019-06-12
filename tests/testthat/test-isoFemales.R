@@ -85,8 +85,8 @@ test_that("create_population_from_isofemales", {
 test_that("cpp classes", {
   test_fish_functions()
 
-  a <- matrix(c(0.1,1, 2, 2), nrow = 2)
-  b <- matrix(c(0,1,1,-1), nrow = 2)
+  a <- matrix(c(0.1, 1, 2, 2), nrow = 2)
+  b <- matrix(c(0, 1, 1, -1), nrow = 2)
   indiv <- list(chromosome1 = a, chromosome2 = a)
   class(indiv) <- "individual"
 
@@ -102,7 +102,7 @@ test_that("cpp classes", {
                           "Chromosome doesn't start at 0")
 
   a <- matrix(c(0.0, 1, 2, 2), nrow = 2)
-  b <- matrix(c(0,1,1,-1), nrow = 2)
+  b <- matrix(c(0, 1, 1, -1), nrow = 2)
   indiv <- list(chromosome1 = b, chromosome2 = a)
   class(indiv) <- "individual"
   testthat::expect_output(v <- verify_individual(indiv),
@@ -124,5 +124,4 @@ test_that("cpp classes", {
   indiv$chromosome1 <- b
   testthat::expect_output(v <- verify_individual(indiv),
                           "Memory error recorded in chromosome")
-
 })

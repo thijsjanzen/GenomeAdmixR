@@ -65,8 +65,8 @@ calculate_ld <- function(pop,
   for (x in seq_along(markers)) {
     for (y in seq_len(x)) {
       if (x != y) {
-        index1 <- c( (x - 1) * 2 + 1, (x - 1) * 2 + 2)
-        index2 <- c( (y - 1) * 2 + 1, (y - 1) * 2 + 2)
+        index1 <- c((x - 1) * 2 + 1, (x - 1) * 2 + 2)
+        index2 <- c((y - 1) * 2 + 1, (y - 1) * 2 + 2)
         g1 <- all_loci[, index1]
         g2 <- all_loci[, index2]
 

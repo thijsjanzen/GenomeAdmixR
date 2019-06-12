@@ -4,8 +4,7 @@ test_that("expected_number_junctions", {
   test_expected_junction_number <- function(pop_size,
                                             run_time,
                                             morgan,
-                                            replicates)
-  {
+                                            replicates) {
     cat(pop_size, run_time, morgan, "\n")
     found <- c()
     for (r in 1:replicates) {
@@ -28,7 +27,7 @@ test_that("expected_number_junctions", {
                                                t = run_time)
 
     testthat::expect_equal(mean(found), expected, tolerance = 1)
-    cat(pop_size, run_time, morgan, mean(found), expected,"\n")
+    cat(pop_size, run_time, morgan, mean(found), expected, "\n")
   }
 
   test_expected_junction_number(pop_size = 100, run_time = 20,

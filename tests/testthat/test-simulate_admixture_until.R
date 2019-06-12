@@ -28,8 +28,8 @@ test_that("simulate_admixture_until", {
 
   vx <- simulate_admixture_until(total_runtime = 1000,
                                  pop_size = c(100, 100),
-                                 initial_frequencies = list(c(1,1),
-                                                            c(1,1)),
+                                 initial_frequencies = list(c(1, 1),
+                                                            c(1, 1)),
                                  morgan = 1,
                                  seed = 42,
                                  generations_between_update = 10,

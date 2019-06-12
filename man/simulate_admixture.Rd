@@ -63,7 +63,9 @@ ancestral allele at that location in that generation, and finally, the
 frequency of that allele.
 }
 \description{
-Individual based simulation of the breakdown of contiguous ancestry blocks, with or without selection. Simulations can be started from scratch, or from a predefined input population.
+Individual based simulation of the breakdown of contiguous
+ancestry blocks, with or without selection. Simulations can be started from
+scratch, or from a predefined input population.
 }
 \examples{
 \dontrun{

@@ -1,11 +1,11 @@
 context("simulate_Admixture")
 
 test_that("simulate_admixture", {
-  select_matrix <- matrix(NA, nrow=2, ncol=5)
+  select_matrix <- matrix(NA, nrow = 2, ncol = 5)
 
   s <- 0.1
-  select_matrix[1, ] <- c(0.5, 0.5, 0.5+0.5*s, 0.5+s, 0)
-  select_matrix[2, ] <- c(0.6, 0.5, 0.5+0.5*s, 0.5+s, 0)
+  select_matrix[1, ] <- c(0.5, 0.5, 0.5 + 0.5 * s, 0.5 + s, 0)
+  select_matrix[2, ] <- c(0.6, 0.5, 0.5 + 0.5 * s, 0.5 + s, 0)
 
   vx <- simulate_admixture(pop_size = 100,
                            number_of_founders = 2,
@@ -23,7 +23,7 @@ test_that("simulate_admixture", {
                            select_matrix = select_matrix,
                            multiplicative_selection = TRUE)
   are_equal <- all.equal(vx$population, vy$population)
-  if(length(are_equal) > 1) are_equal <- FALSE
+  if (length(are_equal) > 1) are_equal <- FALSE
 
   testthat::expect_true(!are_equal)
 })
@@ -41,7 +41,7 @@ test_that("simulate admixture use", {
                            track_junctions = FALSE,
                            multiplicative_selection = TRUE)
 
-  select_matrix <- matrix(NA, nrow=1, ncol=5)
+  select_matrix <- matrix(NA, nrow = 1, ncol = 5)
   testthat::expect_error(simulate_admixture(pop_size = 100,
                                             number_of_founders = 2,
                                             total_runtime = 100,
@@ -52,7 +52,7 @@ test_that("simulate admixture use", {
                                             track_junctions = FALSE,
                                             multiplicative_selection = TRUE))
 
-  select_matrix <- matrix(NA, nrow=1,ncol=3)
+  select_matrix <- matrix(NA, nrow = 1, ncol = 3)
   testthat::expect_error(simulate_admixture(pop_size = 100,
                                             number_of_founders = 2,
                                             total_runtime = 100,
@@ -85,7 +85,6 @@ test_that("simulate admixture use", {
                            track_junctions = TRUE,
                            multiplicative_selection = TRUE)
 
-
   vx <- simulate_admixture(pop_size = 100,
                            number_of_founders = 2,
                            total_runtime = 100,
@@ -116,14 +115,10 @@ test_that("simulate admixture use", {
                            seed = 42,
                            markers = markers)
 
-
-
-
   # code coverage for displaying functions:
   vx$population
   vx$population[[1]]
   plot(vx$population[[1]])
   print(vx$population)
   print(vx$population[[1]])
-
 })

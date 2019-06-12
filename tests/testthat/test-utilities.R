@@ -7,9 +7,21 @@ test_that("utilities", {
     plot_chromosome(vx$population[[1]]$chromosome1)
   )
 
-  vx <- simulate_admixture(total_runtime = 100, seed = 1, number_of_founders = 2,
-                           markers = seq(0,1,by=0.01))
+  vx <- simulate_admixture(total_runtime = 100,
+                           seed = 1,
+                           number_of_founders = 2,
+                           markers = seq(0, 1, by = 0.01))
   testthat::expect_silent(
     plot_over_time(vx$frequencies, focal_location = 0.5)
+  )
+
+  vy <- simulate_admixture_migration(migration_rate = 0.01, seed = 4)
+  testthat::expect_error(plot_over_time(vy$frequencies, focal_location = 0.5))
+
+  vy <- simulate_admixture_migration(migration_rate = 0.01, seed = 4,
+                                     markers = 0.5)
+
+  testthat::expect_silent(
+    plot_over_time(vy$frequencies, focal_location = 0.5)
   )
 })
