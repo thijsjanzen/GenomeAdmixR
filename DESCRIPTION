@@ -1,7 +1,7 @@
 Package: GenomeAdmixR
 Type: Package
 Title: Simulate Admixture of Genomes
-Version: 0.61
+Version: 0.62
 Date: 2019-11-06
 Authors@R: c(person("Thijs","Janzen", email = "thijsjanzen@gmail.com", role=c("aut","cre")),
              person("Fernando","Diaz G.", email="ferdiazfer@gmail.com", role=c("ctb")),
