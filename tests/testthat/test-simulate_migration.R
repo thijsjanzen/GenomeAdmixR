@@ -19,7 +19,8 @@ test_that("simulate_migration", {
   testthat::expect_true(verify_population(vy$population_1))
   testthat::expect_true(verify_population(vy$population_2))
 
-  testthat::expect_true( length(markers) == length(unique(vy$frequencies$location)) )
+  testthat::expect_true( length(markers) ==
+                           length(unique(vy$frequencies$location)) )
 
 
   select_matrix <- matrix(NA, nrow=1, ncol=5)

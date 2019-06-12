@@ -11,32 +11,56 @@ simulate_admixture(input_population = NA, pop_size = 100,
   multiplicative_selection = TRUE)
 }
 \arguments{
-\item{input_population}{Potential earlier simulated population used as starting point for the simulation. If not provided by the user, the simulation starts from scratch.}
+\item{input_population}{Potential earlier simulated population used as
+starting point for the simulation. If not provided by the user, the
+simulation starts from scratch.}
 
-\item{pop_size}{Vector containing the number of individuals in both populations.}
+\item{pop_size}{Vector containing the number of individuals in both
+populations.}
 
 \item{number_of_founders}{Number of unique ancestors}
 
-\item{initial_frequencies}{A vector describing the initial frequency of each ancestor. By default, equal frequencies are assumed. If a vector not summing to 1 is provided, the vector is normalized.}
+\item{initial_frequencies}{A vector describing the initial frequency of each
+ancestor. By default, equal frequencies are assumed. If a vector not summing
+to 1 is provided, the vector is normalized.}
 
 \item{total_runtime}{Number of generations}
 
-\item{morgan}{Length of the chromosome in Morgan (e.g. the number of crossovers during meiosis)}
+\item{morgan}{Length of the chromosome in Morgan (e.g. the number of
+crossovers during meiosis)}
 
 \item{seed}{Seed of the pseudo-random number generator}
 
-\item{select_matrix}{Selection matrix indicating the markers which are under selection. If not provided by the user, the simulation proceeds neutrally. If provided, each row in the matrix should contain five entries: \code{location}{ location of the marker under selection (in Morgan) } \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)} \code{fitness of homozygote mutant (AA)} \code{Ancestral type that representes the mutant allele A}}
+\item{select_matrix}{Selection matrix indicating the markers which are under
+selection. If not provided by the user, the simulation proceeds neutrally. If
+provided, each row in the matrix should contain five entries:
+\code{location}{ location of the marker under selection (in Morgan) }
+\code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
+\code{fitness of homozygote mutant (AA)} \code{Ancestral type that
+represents the mutant allele A}}
 
-\item{markers}{A vector of locations of markers (relative locations in [0, 1]). If a vector is provided, ancestry at these marker positions is tracked for every generation.}
+\item{markers}{A vector of locations of markers (relative locations in
+[0, 1]). If a vector is provided, ancestry at these marker positions is
+tracked for every generation.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
 
-\item{track_junctions}{Track the average number of junctions over time if TRUE}
+\item{track_junctions}{Track the average number of junctions over time if
+TRUE}
 
-\item{multiplicative_selection}{Default: TRUE. If TRUE, fitness is calculated for multiple markers by multiplying fitness values for each marker. If FALSE, fitness is calculated by adding fitness values for each marker.}
+\item{multiplicative_selection}{Default: TRUE. If TRUE, fitness is calculated
+for multiple markers by multiplying fitness values for each marker. If FALSE,
+fitness is calculated by adding fitness values for each marker.}
 }
 \value{
-A list with: \code{population} a population object, and three tibbles with allele frequencies (only contain values of a vector was provided to the argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and \code{final_frequencies}. Each tibble contains four columns, \code{time}, \code{location}, \code{ancestor} and \code{frequency}, which indicates the number of generations, the location along the chromosome of the marker, the ancestral allele at that location in that generation, and finally, the frequency of that allele.
+A list with: \code{population} a population object, and three tibbles
+with allele frequencies (only contain values of a vector was provided to the
+argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and
+\code{final_frequencies}. Each tibble contains four columns, \code{time},
+\code{location}, \code{ancestor} and \code{frequency}, which indicates the
+number of generations, the location along the chromosome of the marker, the
+ancestral allele at that location in that generation, and finally, the
+frequency of that allele.
 }
 \description{
 Individual based simulation of the breakdown of contiguous ancestry blocks, with or without selection. Simulations can be started from scratch, or from a predefined input population.

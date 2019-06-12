@@ -7,17 +7,25 @@
 plot_start_end(results, picked_ancestor = "ALL", picked_population = 1)
 }
 \arguments{
-\item{results}{An object which is the result of \code{select_population} or \code{create_population_selection}, being a list with four properties: \code{population}, \code{frequencies}, \code{initial_frequencies} and \code{final frequencies}}
+\item{results}{An object which is the result of \code{select_population} or
+\code{create_population_selection}, being a list with four properties:
+\code{population}, \code{frequencies}, \code{initial_frequencies} and
+\code{final frequencies}}
 
-\item{picked_ancestor}{Default is "ALL", where different colors indicate different ancestors. Alternatively, for clarity, the user can specify a specific ancestral allele, and only that allele is plotted}
+\item{picked_ancestor}{Default is "ALL", where different colors indicate
+different ancestors. Alternatively, for clarity, the user can specify a
+specific ancestral allele, and only that allele is plotted}
 
-\item{picked_population}{If multiple populations were simulated (in the case of \code{simulate_admixture_migration}), which population should be plotted? Default is population_1.}
+\item{picked_population}{If multiple populations were simulated (in the case
+of \code{simulate_admixture_migration}), which population should be plotted?
+Default is population_1.}
 }
 \value{
 a ggplot object
 }
 \description{
-This function plots the distribution of both the starting and the final frequencies in one plot
+This function plots the distribution of both the starting and
+the final frequencies in one plot
 }
 \examples{
 s <- 0.01

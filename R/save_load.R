@@ -2,8 +2,10 @@
 #' @description Saves a population to file for later use
 #' @param population Object of class \code{population}
 #' @param file_name Name of the file to save the population
-#' @param compression By default, the population is compressed to reduce file size. See for more information \code{saveRDS}
-#' @details This function functions as a wrapper for the base function \code{saveRDS}.
+#' @param compression By default, the population is compressed to reduce file
+#' size. See for more information \code{saveRDS}
+#' @details This function functions as a wrapper for the base function
+#' \code{saveRDS}.
 #' @examples wildpop <- simulate_admixture(pop_size = 10,
 #' number_of_founders = 2,
 #' total_runtime = 3,

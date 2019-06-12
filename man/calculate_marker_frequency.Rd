@@ -7,15 +7,20 @@
 calculate_marker_frequency(pop, location)
 }
 \arguments{
-\item{pop}{Population for which to estimate allele frequencies at the given marker}
+\item{pop}{Population for which to estimate allele frequencies at the
+given marker}
 
-\item{location}{A vector or scalar of location(s) along the chromosome for which allele frequencies are to be calculated. Locations are in Morgan.}
+\item{location}{A vector or scalar of location(s) along the chromosome for
+which allele frequencies are to be calculated. Locations are in Morgan.}
 }
 \value{
-A tibble containing the frequency of each present ancestor at the provided location. Ancestors with frequency = 0 are dropped out of the table. The tibble contains three columns: location, ancestor and frequency.
+A tibble containing the frequency of each present ancestor at the
+provided location. Ancestors with frequency = 0 are dropped out of the table.
+The tibble contains three columns: location, ancestor and frequency.
 }
 \description{
-Calculate the relative frequency of each ancestor in the population at a specific marker location
+Calculate the relative frequency of each ancestor in the
+population at a specific marker location
 }
 \examples{
 \dontrun{

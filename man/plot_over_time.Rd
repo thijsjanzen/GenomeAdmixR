@@ -7,15 +7,20 @@
 plot_over_time(frequencies, focal_location)
 }
 \arguments{
-\item{frequencies}{A tibble containing four columns: \code{time}, \code{location}, \code{ancestor}, \code{frequency}. A fifth colum \code{population} can be included if the tibble is the result of \code{simulate_admixture_migration}.}
+\item{frequencies}{A tibble containing four columns: \code{time},
+\code{location}, \code{ancestor}, \code{frequency}. A fifth colum
+\code{population} can be included if the tibble is the result of
+\code{simulate_admixture_migration}.}
 
-\item{focal_location}{Location (in Morgan) where to plot the allele frequencies.}
+\item{focal_location}{Location (in Morgan) where to plot the allele
+frequencies.}
 }
 \value{
 a ggplot2 object
 }
 \description{
-This function plots the frequency of all ancestors over time at a specific location on the chromosome, after performing a simulation.
+This function plots the frequency of all ancestors over time at
+a specific location on the chromosome, after performing a simulation.
 }
 \examples{
  s <- 0.1

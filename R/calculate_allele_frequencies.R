@@ -1,9 +1,12 @@
 #' Calculate allele frequencies
-#' @description Calculate for a number of regularly spaced markers the relative frequency of each ancestor in the population.
+#' @description Calculate for a number of regularly spaced markers the relative
+#' frequency of each ancestor in the population.
 #' @param source_pop Population for which to estimate allele frequencies
-#' @param locations A vector indicating the locations (in Morgan) where to calculate the allele frequencies.
+#' @param locations A vector indicating the locations (in Morgan) where
+#' to calculate the allele frequencies.
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
-#' @details Markers are equidistantly spaced, with a distance of \code{step_size} in between them.
+#' @details Markers are equidistantly spaced, with a distance of
+#' \code{step_size} in between them.
 #' @return A tibble containing the allele frequencies
 #' @export
 #' @examples

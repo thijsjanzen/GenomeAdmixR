@@ -1,19 +1,56 @@
-#' Individual based simulation of the breakdown of contiguous ancestry blocks in two populations linked by migration
-#' @description IIndividual based simulation of the breakdown of contiguous ancestry blocks, with or without selection. Simulations can be started from scratch, or from a predefined input population. Two populations are simulated, connected by migration
-#' @param input_population_1 Potential earlier simulated population used as starting point for the simulation. If not provided by the user, the simulation starts from scratch.
-#' @param input_population_2 Potential earlier simulated population used as starting point for the simulation. If not provided by the user, the simulation starts from scratch.
-#' @param pop_size Vector containing the number of individuals in both populations.
-#' @param initial_frequencies A list describing the initial frequency of each ancestor in each population. Each entry in the list contains a vector with the frequencies for all ancestor. The length of the vector indicates the number of unique ancestors. If a vector not summing to 1 is provided, the vector is normalized.
+#' Individual based simulation of the breakdown of contiguous ancestry blocks in
+#' two populations linked by migration
+#' @description IIndividual based simulation of the breakdown of contiguous
+#' ancestry blocks, with or without selection. Simulations can be started from
+#' scratch, or from a predefined input population. Two populations are
+#' simulated, connected by migration
+#' @param input_population_1 Potential earlier simulated population used as
+#' starting point for the simulation. If not provided by the user, the
+#' simulation starts from scratch.
+#' @param input_population_2 Potential earlier simulated population used as
+#' starting point for the simulation. If not provided by the user,
+#' the simulation starts from scratch.
+#' @param pop_size Vector containing the number of individuals in both
+#' populations.
+#' @param initial_frequencies A list describing the initial frequency of each
+#' ancestor in each population. Each entry in the list contains a vector with
+#' the frequencies for all ancestor. The length of the vector indicates the
+#' number of unique ancestors. If a vector not summing to 1 is provided, the
+#' vector is normalized.
 #' @param total_runtime  Number of generations
-#' @param morgan Length of the chromosome in Morgan (e.g. the number of crossovers during meiosis)
+#' @param morgan Length of the chromosome in Morgan (e.g. the number of
+#' crossovers during meiosis)
 #' @param seed Seed of the pseudo-random number generator
-#' @param select_matrix Selection matrix indicating the markers which are under selection. If not provided by the user, the simulation proceeds neutrally. If provided, each row in the matrix should contain five entries: \code{location}{ location of the marker under selection (in Morgan) } \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)} \code{fitness of homozygote mutant (AA)} \code{Ancestral type that representes the mutant allele A}
+#' @param select_matrix Selection matrix indicating the markers which are under
+#' selection. If not provided by the user, the simulation proceeds neutrally.
+#' If provided, each row in the matrix should contain five entries:
+#' \code{location}{ location of the marker under selection (in Morgan) }
+#' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
+#' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
+#' representes the mutant allele A}
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
-#' @param markers A vector of locations of markers (relative locations in [0, 1]). If a vector is provided, ancestry at these marker positions is tracked for every generation.
-#' @param track_junctions Track the average number of junctions over time if TRUE
-#' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated for multiple markers by multiplying fitness values for each marker. If FALSE, fitness is calculated by adding fitness values for each marker.
-#' @param migration_rate  Rate of migration between the two populations. Migration is implemented such that with probability m (migration rate) one of the two parents of a new offspring is from the other population, with probability 1-m both parents are of the focal population.
-#' @return A list with: \code{population_1}, \code{population_2} two population objects, and three tibbles with allele frequencies (only contain values of a vector was provided to the argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and \code{final_frequencies}. Each tibble contains five columns, \code{time}, \code{location}, \code{ancestor}, \code{frequency} and \code{population}, which indicates the number of generations, the location along the chromosome of the marker, the ancestral allele at that location in that generation, the frequency of that allele and the population in which it was recorded (1 or 2).
+#' @param markers A vector of locations of markers (relative locations in
+#' [0, 1]). If a vector is provided, ancestry at these marker positions is
+#' tracked for every generation.
+#' @param track_junctions Track the average number of junctions over time if
+#' TRUE
+#' @param multiplicative_selection Default: TRUE. If TRUE, fitness is
+#' calculated for multiple markers by multiplying fitness values for each
+#' marker. If FALSE, fitness is calculated by adding fitness values for each
+#' marker.
+#' @param migration_rate  Rate of migration between the two populations.
+#' Migration is implemented such that with probability m (migration rate) one
+#' of the two parents of a new offspring is from the other population, with
+#' probability 1-m both parents are of the focal population.
+#' @return A list with: \code{population_1}, \code{population_2} two population
+#' objects, and three tibbles with allele frequencies (only contain values of a
+#' vector was provided to the argument \code{markers}: \code{frequencies},
+#' \code{initial_frequencies} and \code{final_frequencies}. Each tibble contains
+#' five columns, \code{time}, \code{location}, \code{ancestor}, \code{frequency}
+#' and \code{population}, which indicates the number of generations, the
+#' location along the chromosome of the marker, the ancestral allele at that
+#' location in that generation, the frequency of that allele and the population
+#' in which it was recorded (1 or 2).
 #' @examples
 #'  \dontrun{
 #' select_matrix <- matrix(NA, nrow=1, ncol=5)
@@ -52,7 +89,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     # if a list of individuals is given, the class is often wrong
     # let's check if that is the case
     if (!methods::is(input_population_1, "population")) {
-      all_are_individuals <- sapply(input_population_1, class)
+      all_are_individuals <- vapply(input_population_1, class,
+                                    FUN.VALUE = "character")
       if (sum(all_are_individuals == "individual") ==
          length(input_population_1)) {
         class(input_population_1) <- "population"
@@ -76,7 +114,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     # if a list of individuals is given, the class is often wrong
     # let's check if that is the case
     if (!methods::is(input_population_2, "population")) {
-      all_are_individuals <- sapply(input_population_2, class)
+      all_are_individuals <- vapply(input_population_2, class,
+                                    FUN.VALUE = "character")
       if(sum(input_population_2 == "individual") ==
          length(input_population_2)) {
         class(input_population_2) <- "population"
@@ -102,7 +141,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     cat("starting frequencies were normalized to 1\n")
   }
   if (sum(initial_frequencies[[2]]) != 1) {
-    initial_frequencies[[2]] <- initial_frequencies[[2]] / sum(initial_frequencies[[2]])
+    initial_frequencies[[2]] <-
+      initial_frequencies[[2]] / sum(initial_frequencies[[2]])
     cat("starting frequencies were normalized to 1\n")
   }
 
@@ -119,12 +159,12 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     }
     } else {
       if(is.na(select_matrix)) {
-        select_matrix <- matrix(-1, nrow=2, ncol=2)
+        select_matrix <- matrix(-1, nrow = 2, ncol = 2)
       }
   }
 
   if (length(markers) == 1) {
-    if(is.na(markers))  {
+    if (is.na(markers))  {
       markers <- c(-1, -1)
       track_frequency <- FALSE
     } else {
@@ -139,8 +179,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
   init_freq_matrix <- matrix(nrow = length(initial_frequencies),
                       ncol = length(initial_frequencies[[1]]))
 
-  for (i in 1:length(initial_frequencies)) {
-    for (j in 1:length(initial_frequencies[[i]])) {
+  for (i in seq_along(initial_frequencies)) {
+    for (j in seq_along(initial_frequencies[[i]])) {
       init_freq_matrix[i, j] <- initial_frequencies[[i]][j]
     }
   }
@@ -178,12 +218,12 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
 
   output <- list()
-  if(track_frequency == FALSE && track_junctions == FALSE) {
+  if (track_frequency == FALSE && track_junctions == FALSE) {
     output <- list("population_1" = selected_popstruct_1,
                    "population_2" = selected_popstruct_2)
   }
 
-  if(track_frequency == FALSE && track_junctions == TRUE) {
+  if (track_frequency == FALSE && track_junctions == TRUE) {
     output <- list("population_1" = selected_popstruct_1,
                    "population_2" = selected_popstruct_2,
                    "junctions" = selected_pop$junctions)

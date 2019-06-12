@@ -10,5 +10,6 @@ verify_individual(indiv)
 \item{indiv}{object of class 'individual'}
 }
 \description{
-function to verify correctness of an object of class 'individual'
+function to verify correctness of an object of class
+'individual'
 }

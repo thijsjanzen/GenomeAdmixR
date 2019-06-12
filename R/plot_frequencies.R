@@ -1,7 +1,12 @@
 #' Plot the frequencies of all ancestors along the genome.
-#' @description This function plots the frequency of all ancestors after performing a simulation.
-#' @param result An object which is the result of \code{select_population} or \code{create_population_selection}, being a list with four properties: \code{population}, \code{frequencies}, \code{initial_frequencies} and \code{final frequencies}
-#' @param locations A vector indicating the locations (in Morgan) where to calculate the allele frequencies.
+#' @description This function plots the frequency of all ancestors after
+#' performing a simulation.
+#' @param result An object which is the result of \code{select_population} or
+#' \code{create_population_selection}, being a list with four properties:
+#' \code{population}, \code{frequencies}, \code{initial_frequencies} and
+#' \code{final frequencies}
+#' @param locations A vector indicating the locations (in Morgan) where to
+#' calculate the allele frequencies.
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is FALSE
 #' @return a ggplot2 object
 #' @examples s <- 0.1

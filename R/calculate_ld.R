@@ -1,9 +1,13 @@
 #' Calculate linkage disequilibrium statistics
-#' This function calculates two matrices, once containing all pairwise linkage disequilibrium (ld) values, and one matrix containing all pairwise r statistics
+#' This function calculates two matrices, once containing all pairwise
+#' linkage disequilibrium (ld) values, and one matrix containing all pairwise r
+#' statistics
 #' @param pop focal population
-#' @param sampled_individuals Number of individuals randomly sampled to calculate the LD matrices
+#' @param sampled_individuals Number of individuals randomly sampled to
+#' calculate the LD matrices
 #' @param number_of_markers Number of markers used to calculate the ld matrices
-#' @param random_markers If TRUE, markers are randomly spaced along the chromosome, if FALSE, markers are equidistantly spaced along the chromosome.
+#' @param random_markers If TRUE, markers are randomly spaced along the
+#' chromosome, if FALSE, markers are equidistantly spaced along the chromosome.
 #' @return An object containing two items:
 #' \item{ld_matrix}{
 #'   Pairwise ld statistics for all markers
@@ -99,11 +103,11 @@ calculate_average_ld <- function(alleles_pos_1, alleles_pos_2) {
 
       countab <- 0
       for (a in seq_along(alleles_pos_1[, 1])) {
-        if ( (alleles_pos_1[a, 1]) == i && (alleles_pos_2[a, 1] == j)) {
+        if ((alleles_pos_1[a, 1]) == i && (alleles_pos_2[a, 1] == j)) {
           countab <- countab + 1
         }
 
-        if ( (alleles_pos_1[a, 2]) == i && (alleles_pos_2[a, 2] == j)) {
+        if ((alleles_pos_1[a, 2]) == i && (alleles_pos_2[a, 2] == j)) {
           countab <- countab + 1
         }
       }

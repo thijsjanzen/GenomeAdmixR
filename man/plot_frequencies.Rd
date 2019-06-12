@@ -8,9 +8,13 @@ plot_frequencies(result, locations = seq(0, 1, length.out = 100),
   progress_bar = FALSE)
 }
 \arguments{
-\item{result}{An object which is the result of \code{select_population} or \code{create_population_selection}, being a list with four properties: \code{population}, \code{frequencies}, \code{initial_frequencies} and \code{final frequencies}}
+\item{result}{An object which is the result of \code{select_population} or
+\code{create_population_selection}, being a list with four properties:
+\code{population}, \code{frequencies}, \code{initial_frequencies} and
+\code{final frequencies}}
 
-\item{locations}{A vector indicating the locations (in Morgan) where to calculate the allele frequencies.}
+\item{locations}{A vector indicating the locations (in Morgan) where to
+calculate the allele frequencies.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is FALSE}
 }
@@ -18,7 +22,8 @@ plot_frequencies(result, locations = seq(0, 1, length.out = 100),
 a ggplot2 object
 }
 \description{
-This function plots the frequency of all ancestors after performing a simulation.
+This function plots the frequency of all ancestors after
+performing a simulation.
 }
 \examples{
 s <- 0.1

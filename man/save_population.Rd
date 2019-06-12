@@ -11,13 +11,15 @@ save_population(population, file_name, compression = TRUE)
 
 \item{file_name}{Name of the file to save the population}
 
-\item{compression}{By default, the population is compressed to reduce file size. See for more information \code{saveRDS}}
+\item{compression}{By default, the population is compressed to reduce file
+size. See for more information \code{saveRDS}}
 }
 \description{
 Saves a population to file for later use
 }
 \details{
-This function functions as a wrapper for the base function \code{saveRDS}.
+This function functions as a wrapper for the base function
+\code{saveRDS}.
 }
 \examples{
 wildpop <- simulate_admixture(pop_size = 10,

@@ -10,7 +10,8 @@ calculate_allele_frequencies(source_pop, locations = seq(0, 1, length.out
 \arguments{
 \item{source_pop}{Population for which to estimate allele frequencies}
 
-\item{locations}{A vector indicating the locations (in Morgan) where to calculate the allele frequencies.}
+\item{locations}{A vector indicating the locations (in Morgan) where
+to calculate the allele frequencies.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
 }
@@ -18,10 +19,12 @@ calculate_allele_frequencies(source_pop, locations = seq(0, 1, length.out
 A tibble containing the allele frequencies
 }
 \description{
-Calculate for a number of regularly spaced markers the relative frequency of each ancestor in the population.
+Calculate for a number of regularly spaced markers the relative
+frequency of each ancestor in the population.
 }
 \details{
-Markers are equidistantly spaced, with a distance of \code{step_size} in between them.
+Markers are equidistantly spaced, with a distance of
+\code{step_size} in between them.
 }
 \examples{
 \dontrun{

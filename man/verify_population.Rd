@@ -10,5 +10,6 @@ verify_population(pop)
 \item{pop}{object of class 'population'}
 }
 \description{
-function to verify correctness of an object of class 'population'
+function to verify correctness of an object of class
+'population'
 }

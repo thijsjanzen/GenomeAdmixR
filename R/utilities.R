@@ -217,7 +217,8 @@ create_pop_class <- function(pop) {
 
 
 #' verify that an individual is correct
-#' @description function to verify correctness of an object of class 'individual'
+#' @description function to verify correctness of an object of class
+#' 'individual'
 #' @param indiv object of class 'individual'
 #' @export
 verify_individual <- function(indiv) {
@@ -258,7 +259,8 @@ verify_individual <- function(indiv) {
 
 
 #' verify that a population is correct
-#' @description function to verify correctness of an object of class 'population'
+#' @description function to verify correctness of an object of class
+#' 'population'
 #' @param pop object of class 'population'
 #' @export
 verify_population <- function(pop) {

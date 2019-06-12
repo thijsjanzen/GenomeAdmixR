@@ -7,14 +7,17 @@
 plot_chromosome(chrom, xmin = 0, xmax = 1)
 }
 \arguments{
-\item{chrom}{object of type chromosome, typically a table with two columns. The first column indicates the start of an ancestry block (location in Morgan), the second column indicates the ancestry type.}
+\item{chrom}{object of type chromosome, typically a table with two columns.
+The first column indicates the start of an ancestry block (location in
+Morgan), the second column indicates the ancestry type.}
 
 \item{xmin}{minimum value of the range, default = 0.}
 
 \item{xmax}{maximum value of the range, default = 1.}
 }
 \description{
-This function plots a chromosome in the range [xmin, xmax]. Colors indicate different ancestry.
+This function plots a chromosome in the range [xmin, xmax].
+Colors indicate different ancestry.
 }
 \examples{
 wildpop =  simulate_admixture(pop_size = 100,

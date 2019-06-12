@@ -2,13 +2,20 @@
 #' @description Creates isofemale individuals, given a population
 #' @param source_pop Source population from which isofemales are generated
 #' @param n Number of isofemales to be generated
-#' @param inbreeding_pop_size Population size of the population used to generate homozygous individuals
+#' @param inbreeding_pop_size Population size of the population used to generate
+#' homozygous individuals
 #' @param run_time Maximum runtime used for inbreeding
-#' @param morgan Size of the chromosome in Morgan (e.g. the number of crossovers during meiosis)
+#' @param morgan Size of the chromosome in Morgan (e.g. the number of crossovers
+#' during meiosis)
 #' @param seed Random number generator seed
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
-#' @details To create an isofemale, two individuals are randomly picked from the source population. Using these two individuals, a new population is seeded, of size \code{inbreeding_pop_size}. Then, this population is allowed to inbreed until either \code{run_time} is reached, or until all individuals are homozygous and genetically identical, whatever happens first.
-#' @return A list of length \code{n}, where each entry is a fully homozygous isofemale.
+#' @details To create an isofemale, two individuals are randomly picked from
+#' the source population. Using these two individuals, a new population is
+#' seeded, of size \code{inbreeding_pop_size}. Then, this population is allowed
+#' to inbreed until either \code{run_time} is reached, or until all individuals
+#' are homozygous and genetically identical, whatever happens first.
+#' @return A list of length \code{n}, where each entry is a fully homozygous
+#' isofemale.
 #' @examples \dontrun{
 #' wildpop =  simulate_admixture(pop_size = 100,
 #'                               number_of_founders = 10,

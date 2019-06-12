@@ -3,7 +3,9 @@
 \name{calculate_ld}
 \alias{calculate_ld}
 \title{Calculate linkage disequilibrium statistics
-This function calculates two matrices, once containing all pairwise linkage disequilibrium (ld) values, and one matrix containing all pairwise r statistics}
+This function calculates two matrices, once containing all pairwise
+linkage disequilibrium (ld) values, and one matrix containing all pairwise r
+statistics}
 \usage{
 calculate_ld(pop, sampled_individuals = 10, number_of_markers = 100,
   random_markers = TRUE)
@@ -11,11 +13,13 @@ calculate_ld(pop, sampled_individuals = 10, number_of_markers = 100,
 \arguments{
 \item{pop}{focal population}
 
-\item{sampled_individuals}{Number of individuals randomly sampled to calculate the LD matrices}
+\item{sampled_individuals}{Number of individuals randomly sampled to
+calculate the LD matrices}
 
 \item{number_of_markers}{Number of markers used to calculate the ld matrices}
 
-\item{random_markers}{If TRUE, markers are randomly spaced along the chromosome, if FALSE, markers are equidistantly spaced along the chromosome.}
+\item{random_markers}{If TRUE, markers are randomly spaced along the
+chromosome, if FALSE, markers are equidistantly spaced along the chromosome.}
 }
 \value{
 An object containing two items:
@@ -28,7 +32,9 @@ An object containing two items:
 }
 \description{
 Calculate linkage disequilibrium statistics
-This function calculates two matrices, once containing all pairwise linkage disequilibrium (ld) values, and one matrix containing all pairwise r statistics
+This function calculates two matrices, once containing all pairwise
+linkage disequilibrium (ld) values, and one matrix containing all pairwise r
+statistics
 }
 \examples{
 wildpop =  simulate_admixture(pop_size = 100,

@@ -1,7 +1,8 @@
 #' collect the full distribution of junctions in the population
 #' @description calculates the distribution of junctions across the population
 #' @param pop object of the class 'population'
-#' @return vector with two entries per individual, each indicating the number of junctions in the respective chromosomes
+#' @return vector with two entries per individual, each indicating the number of
+#' junctions in the respective chromosomes
 #' @export
 calculate_dist_junctions <- function(pop) {
   get_num_junctions <- function(indiv) {
@@ -16,7 +17,8 @@ calculate_dist_junctions <- function(pop) {
 }
 
 #' plot the distribution of junctions
-#' @description plots the distribution of junctions in the population using base R
+#' @description plots the distribution of junctions in the population using
+#' base R
 #' @param pop of the class 'population'
 #' @export
 plot_dist_junctions <- function(pop) {

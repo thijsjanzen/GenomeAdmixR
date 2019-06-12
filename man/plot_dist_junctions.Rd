@@ -10,5 +10,6 @@ plot_dist_junctions(pop)
 \item{pop}{of the class 'population'}
 }
 \description{
-plots the distribution of junctions in the population using base R
+plots the distribution of junctions in the population using
+base R
 }

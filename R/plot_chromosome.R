@@ -1,6 +1,9 @@
 #' plots a chromosome
-#' @description This function plots a chromosome in the range [xmin, xmax]. Colors indicate different ancestry.
-#' @param chrom  object of type chromosome, typically a table with two columns. The first column indicates the start of an ancestry block (location in Morgan), the second column indicates the ancestry type.
+#' @description This function plots a chromosome in the range [xmin, xmax].
+#' Colors indicate different ancestry.
+#' @param chrom  object of type chromosome, typically a table with two columns.
+#' The first column indicates the start of an ancestry block (location in
+#' Morgan), the second column indicates the ancestry type.
 #' @param xmin minimum value of the range, default = 0.
 #' @param xmax maximum value of the range, default = 1.
 #' @examples
@@ -22,7 +25,7 @@
 plot_chromosome <- function(chrom, xmin = 0, xmax = 1) {
   alleles <- unique(chrom[, 2])
   num_colors <- 1 + max(alleles)
-  if(num_colors > 20) num_colors <- 20
+  if (num_colors > 20) num_colors <- 20
   color_palette <- grDevices::rainbow(num_colors)
 
   graphics::plot(NA,

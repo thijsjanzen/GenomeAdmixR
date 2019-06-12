@@ -1,11 +1,20 @@
 #' Calculate FST
-#' @description The FST value between two populations is calculated, given a number of markers. Markers are superimposed upon the (known) ancestry along the chromosome for all sampled individuals. Markers can be chosen to be regularly spaced, or randomly distributed.
+#' @description The FST value between two populations is calculated, given a
+#' number of markers. Markers are superimposed upon the (known) ancestry along
+#' the chromosome for all sampled individuals. Markers can be chosen to be
+#' regularly spaced, or randomly distributed.
 #' @param pop1 Population object
 #' @param pop2 Population object
-#' @param sampled_individuals Number of individuals to base the FST upon. Individuals are randomly drawn from each population, a lower number speeds up calculations.
-#' @param number_of_markers Number of markers along the chromosome used to calculate FST metrics.
-#' @param random_markers  If TRUE, markers are randomly spaced along the chromosome, if FALSE, markers are equidistantly spaced along the chromosome.
-#' @details Uses the function \code{wc} from the package \code{hierfstat} to calculate the FST. The function \code{wc} computes the Weir and Cockerham F statistic.
+#' @param sampled_individuals Number of individuals to base the FST upon.
+#' Individuals are randomly drawn from each population, a lower number speeds
+#' up calculations.
+#' @param number_of_markers Number of markers along the chromosome used to
+#' calculate FST metrics.
+#' @param random_markers  If TRUE, markers are randomly spaced along the
+#' chromosome, if FALSE, markers are equidistantly spaced along the chromosome.
+#' @details Uses the function \code{wc} from the package \code{hierfstat} to
+#' calculate the FST. The function \code{wc} computes the Weir and Cockerham
+#' F statistic.
 #' @return FST value
 #' @examples
 #' \dontrun{

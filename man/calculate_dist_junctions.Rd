@@ -10,7 +10,8 @@ calculate_dist_junctions(pop)
 \item{pop}{object of the class 'population'}
 }
 \value{
-vector with two entries per individual, each indicating the number of junctions in the respective chromosomes
+vector with two entries per individual, each indicating the number of
+junctions in the respective chromosomes
 }
 \description{
 calculates the distribution of junctions across the population

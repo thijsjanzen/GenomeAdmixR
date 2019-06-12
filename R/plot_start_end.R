@@ -1,8 +1,16 @@
 #' Plot both the starting frequencies and the final frequencies in one plot
-#' @description This function plots the distribution of both the starting and the final frequencies in one plot
-#' @param results An object which is the result of \code{select_population} or \code{create_population_selection}, being a list with four properties: \code{population}, \code{frequencies}, \code{initial_frequencies} and \code{final frequencies}
-#' @param picked_ancestor Default is "ALL", where different colors indicate different ancestors. Alternatively, for clarity, the user can specify a specific ancestral allele, and only that allele is plotted
-#' @param picked_population If multiple populations were simulated (in the case of \code{simulate_admixture_migration}), which population should be plotted? Default is population_1.
+#' @description This function plots the distribution of both the starting and
+#' the final frequencies in one plot
+#' @param results An object which is the result of \code{select_population} or
+#' \code{create_population_selection}, being a list with four properties:
+#' \code{population}, \code{frequencies}, \code{initial_frequencies} and
+#' \code{final frequencies}
+#' @param picked_ancestor Default is "ALL", where different colors indicate
+#' different ancestors. Alternatively, for clarity, the user can specify a
+#' specific ancestral allele, and only that allele is plotted
+#' @param picked_population If multiple populations were simulated (in the case
+#' of \code{simulate_admixture_migration}), which population should be plotted?
+#' Default is population_1.
 #' @return a ggplot object
 #' @examples
 #' s <- 0.01
@@ -44,22 +52,24 @@ plot_start_end <- function(results,
   if (picked_ancestor[[1]] == "ALL") {
     to_plot <- to_plot_m
 
-    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$location,
-                                                y = to_plot$frequency,
-                                                colour = as.factor(to_plot$ancestor),
-                                                group = interaction(to_plot$ancestor,
-                                                                    to_plot$timepoint))) +
+    p1 <- ggplot2::ggplot(to_plot,
+                        ggplot2::aes(x = to_plot$location,
+                                     y = to_plot$frequency,
+                                     colour = as.factor(to_plot$ancestor),
+                                     group = interaction(to_plot$ancestor,
+                                                         to_plot$timepoint))) +
       ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
   } else {
 
     to_plot <- dplyr::filter(to_plot_m,
                              to_plot_m$ancestor %in% picked_ancestor)
 
-    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$location,
-                                                y = to_plot$frequency,
-                                                colour = as.factor(to_plot$ancestor),
-                                                group = interaction(to_plot$ancestor,
-                                                                    to_plot$timepoint))) +
+    p1 <- ggplot2::ggplot(to_plot,
+                          ggplot2::aes(x = to_plot$location,
+                                     y = to_plot$frequency,
+                                     colour = as.factor(to_plot$ancestor),
+                                     group = interaction(to_plot$ancestor,
+                                                         to_plot$timepoint))) +
       ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
   }
 

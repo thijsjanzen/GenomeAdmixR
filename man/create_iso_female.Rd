@@ -12,24 +12,31 @@ create_iso_female(source_pop, n = 1, inbreeding_pop_size = 100,
 
 \item{n}{Number of isofemales to be generated}
 
-\item{inbreeding_pop_size}{Population size of the population used to generate homozygous individuals}
+\item{inbreeding_pop_size}{Population size of the population used to generate
+homozygous individuals}
 
 \item{run_time}{Maximum runtime used for inbreeding}
 
-\item{morgan}{Size of the chromosome in Morgan (e.g. the number of crossovers during meiosis)}
+\item{morgan}{Size of the chromosome in Morgan (e.g. the number of crossovers
+during meiosis)}
 
 \item{seed}{Random number generator seed}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
 }
 \value{
-A list of length \code{n}, where each entry is a fully homozygous isofemale.
+A list of length \code{n}, where each entry is a fully homozygous
+isofemale.
 }
 \description{
 Creates isofemale individuals, given a population
 }
 \details{
-To create an isofemale, two individuals are randomly picked from the source population. Using these two individuals, a new population is seeded, of size \code{inbreeding_pop_size}. Then, this population is allowed to inbreed until either \code{run_time} is reached, or until all individuals are homozygous and genetically identical, whatever happens first.
+To create an isofemale, two individuals are randomly picked from
+the source population. Using these two individuals, a new population is
+seeded, of size \code{inbreeding_pop_size}. Then, this population is allowed
+to inbreed until either \code{run_time} is reached, or until all individuals
+are homozygous and genetically identical, whatever happens first.
 }
 \examples{
 \dontrun{

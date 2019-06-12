@@ -1,7 +1,12 @@
 #' Plot the frequencies of all ancestors over time
-#' @description This function plots the frequency of all ancestors over time at a specific location on the chromosome, after performing a simulation.
-#' @param frequencies  A tibble containing four columns: \code{time}, \code{location}, \code{ancestor}, \code{frequency}. A fifth colum \code{population} can be included if the tibble is the result of \code{simulate_admixture_migration}.
-#' @param focal_location Location (in Morgan) where to plot the allele frequencies.
+#' @description This function plots the frequency of all ancestors over time at
+#' a specific location on the chromosome, after performing a simulation.
+#' @param frequencies  A tibble containing four columns: \code{time},
+#' \code{location}, \code{ancestor}, \code{frequency}. A fifth colum
+#' \code{population} can be included if the tibble is the result of
+#' \code{simulate_admixture_migration}.
+#' @param focal_location Location (in Morgan) where to plot the allele
+#' frequencies.
 #' @return a ggplot2 object
 #' @examples  s <- 0.1
 #' select_matrix <- matrix(nrow = 1, ncol = 5)
@@ -29,10 +34,11 @@ plot_over_time <- function(frequencies,
   }
 
   if ("population" %in% colnames(frequencies)) {
-    p1 <- ggplot2::ggplot(to_plot, ggplot2::aes(x = to_plot$time,
-                                                y = to_plot$frequency,
-                                                col = interaction(to_plot$ancestor,
-                                                                  to_plot$population))) +
+    p1 <- ggplot2::ggplot(to_plot,
+                          ggplot2::aes(x = to_plot$time,
+                                       y = to_plot$frequency,
+                                       col = interaction(to_plot$ancestor,
+                                                         to_plot$population))) +
       ggplot2::geom_step()
   } else {
     p1 <- ggplot2::ggplot(to_plot,

@@ -1,8 +1,16 @@
 #' Plot the change in frequency between the start and end of a simulation
-#' @description This function plots the change in frequency of one or multiple ancestors after performing a simulation.
-#' @param results An object which is the result of \code{select_population} or \code{create_population_selection}, being a list with four properties: \code{population}, \code{frequencies}, \code{initial_frequencies} and \code{final frequencies}
-#' @param picked_ancestor Default is "ALL", where different colors indicate different ancestors. Alternatively, for clarity, the user can specify a specific ancestral allele, and only that allele is plotted
-#' @param picked_population If multiple populations were simulated (in the case of \code{simulate_admixture_migration}), which population should be plotted? Default is population_1.
+#' @description This function plots the change in frequency of one or
+#' multiple ancestors after performing a simulation.
+#' @param results An object which is the result of \code{select_population} or
+#' \code{create_population_selection}, being a list with four properties:
+#' \code{population}, \code{frequencies}, \code{initial_frequencies} and
+#' \code{final frequencies}
+#' @param picked_ancestor Default is "ALL", where different colors indicate
+#' different ancestors. Alternatively, for clarity, the user can specify a
+#' specific ancestral allele, and only that allele is plotted
+#' @param picked_population If multiple populations were simulated (in the case
+#' of \code{simulate_admixture_migration}), which population should be plotted?
+#' Default is population_1.
 #' @return a ggplot2 object4
 #' #' @examples  s <- 0.1
 #' select_matrix <- matrix(nrow = 1, ncol = 5)
@@ -41,7 +49,7 @@ plot_difference_frequencies <- function(results,
   colnames(a1) <- c("time",  "location", "ancestor", "frequency_before")
   colnames(a2) <- c("time",  "location", "ancestor", "frequency_after")
 
-  ax <- dplyr::full_join(a1,a2, by = c("location", "ancestor"))
+  ax <- dplyr::full_join(a1, a2, by = c("location", "ancestor"))
 
   ax_m <- dplyr::mutate(ax,
                         "diff_frequency" =

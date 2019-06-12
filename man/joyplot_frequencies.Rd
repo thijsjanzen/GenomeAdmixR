@@ -8,19 +8,28 @@ joyplot_frequencies(frequencies, time_points, picked_ancestor = "ALL",
   picked_population = 1)
 }
 \arguments{
-\item{frequencies}{A tibble containing four columns: \code{time}, \code{location}, \code{ancestor}, \code{frequency}. Typically one of the items returned by \code{create_population_selection} or \code{select_population} when the user specifies \code{track_frequency}.}
+\item{frequencies}{A tibble containing four columns: \code{time},
+\code{location}, \code{ancestor}, \code{frequency}. Typically one of the
+items returned by \code{create_population_selection} or
+\code{select_population} when the user specifies \code{track_frequency}.}
 
-\item{time_points}{A sequence of time points for which the user wants to create the joyplot}
+\item{time_points}{A sequence of time points for which the user wants to
+create the joyplot}
 
-\item{picked_ancestor}{Default is "ALL", where different colors indicate different ancestors. Alternatively, for clarity, the user can specify a specific ancestral allele, and only that allele is plotted}
+\item{picked_ancestor}{Default is "ALL", where different colors indicate
+different ancestors. Alternatively, for clarity, the user can specify a
+specific ancestral allele, and only that allele is plotted}
 
-\item{picked_population}{If multiple populations were simulated (in the case of \code{simulate_admixture_migration}), which population should be plotted? Default is population_1.}
+\item{picked_population}{If multiple populations were simulated (in the case
+of \code{simulate_admixture_migration}), which population should be plotted?
+Default is population_1.}
 }
 \value{
 a ggplot object
 }
 \description{
-This function plots the distribution of allele frequencies within a region over time, making use of a 'joyplot'
+This function plots the distribution of allele frequencies
+within a region over time, making use of a 'joyplot'
 }
 \examples{
 \dontrun{
