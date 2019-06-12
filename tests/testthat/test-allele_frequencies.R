@@ -5,10 +5,11 @@ test_that("calculate_allele_frequencies", {
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 5
+
   morgan <- 1
 
   found <- c()
-  for (r in 1:100) {
+  for (r in 1:30) {
     vx <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = number_of_founders,
                              total_runtime = run_time,
@@ -33,7 +34,7 @@ test_that("calculate_allele_frequencies", {
   testthat::expect_equal(v[[2]], 0.5, tolerance = 0.05)
 
   found <- c()
-  for (r in 1:100) {
+  for (r in 1:30) {
     vx <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = 4,
                              total_runtime = run_time,

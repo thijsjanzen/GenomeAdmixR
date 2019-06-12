@@ -87,20 +87,18 @@ plot_chromosome(isofemale[[1]]$chromosome1, xmin = 0.0, xmax = 0.5)
 It gets more interesting if we create two populations, and draw iso-females from them, and cross these.
 First, we have to create two populations. 
 ```{r create two populations}
+both_populations <- simulate_admixture_migration(pop_size = c(100, 100),
+                                                 initial_frequencies =
+                                                   list( c(rep(1,20),rep(0,20)),
+                                                         c(rep(0,20),rep(1,20))),
+                                                 morgan = 1,
+                                                 total_runtime = 1000,
+                                                 seed = 42)
 
-population_1 <- simulate_admixture(pop_size = 100, 
-                                          number_of_founders = 20,
-                                          total_runtime = 1000, 
-                                          morgan = 1, 
-                                          seed = 42)
 
-population_2 <- simulate_admixture(pop_size = 100, 
-                                          number_of_founders = 20,
-                                          total_runtime = 1000, 
-                                          morgan = 1, 
-                                          seed = 24)
+population_1 <- both_populations$population_1
 
-population_2 <- increase_ancestor(population_2, increment = 20)
+population_2 <- both_populations$population_2
 ```
 To make sure that the two populations dont share ancestor indices, we use the function 'increase_ancestor'. 
 
@@ -149,46 +147,49 @@ Although this seems to be quite right, I have no right intuition how the FST sho
 We can also calculate LD statistics. LD is only defined for markers, so again we have to simulate artificial markers along the chromosome. 
 
 ```{r}
-  LD_results <- calculate_LD(wildpop, number_of_markers = 10, random_markers = TRUE)
+  ld_results <- calculate_ld(wildpop, number_of_markers = 10, random_markers = TRUE)
 
   par(mfrow=c(1,3))
-  plot(LD_results$LD_matrix~LD_results$dist_matrix, xlab = "Genetic Distance (Morgan)", ylab = "LD", pch = 16)
-  plot(LD_results$rsq_matrix~LD_results$dist_matrix, xlab = "Genetic Distance (Morgan)", ylab = "r_sq", pch = 16)
-  plot(LD_results$LD_matrix~LD_results$rsq_matrix, xlab = "r_sq", ylab = "LD", pch = 16)
+  plot(ld_results$ld_matrix~ld_results$dist_matrix, xlab = "Genetic Distance (Morgan)", 
+       ylab = "LD", pch = 16)
+  plot(ld_results$rsq_matrix~ld_results$dist_matrix, xlab = "Genetic Distance (Morgan)", 
+       ylab = "r_sq", pch = 16)
+  plot(ld_results$ld_matrix~ld_results$rsq_matrix, xlab = "r_sq", ylab = "LD", pch = 16)
 ```
 
 To analyze LD patterns better, it makes more sense to create a population from scratch. We expect for a strongly inbred population, that there is no LD:
 
 ```{r no LD}
-no_LD_pop <- simulate_admixture(pop_size = 100, 
+no_ld_pop <- simulate_admixture(pop_size = 100, 
                              number_of_founders = 4,
                              total_runtime = 1000, 
                              morgan = 1, 
                              seed = 42)
 
-LD_results <- calculate_LD(no_LD_pop, sampled_individuals = 10,
+ld_results <- calculate_ld(no_ld_pop, sampled_individuals = 10,
                                   number_of_markers = 10, random_markers = TRUE)
 
 par(mfrow=c(1,1))
 par(mar=c(4,4,2,2))
-plot(LD_results$LD_matrix~LD_results$dist_matrix, pch = 16, xlab = "Distance", ylab = "LD",xlim = c(0, 1), ylim = c(0, 1))
+plot(ld_results$ld_matrix~ld_results$dist_matrix, pch = 16, 
+     xlab = "Distance", ylab = "LD",xlim = c(0, 1), ylim = c(0, 1))
 ```
 
 Alternatively, for a barely inbred population, we expect a negative relationship between LD and distance:
 
 ```{r strong LD}
-strong_LD_pop <- simulate_admixture(pop_size = 1000, 
+strong_ld_pop <- simulate_admixture(pop_size = 1000, 
                              number_of_founders = 4,
                              total_runtime = 10, 
                              morgan = 1, 
                              seed = 42)
 
-LD_results <- calculate_LD(strong_LD_pop, sampled_individuals = 10,
+ld_results <- calculate_ld(strong_ld_pop, sampled_individuals = 10,
                             number_of_markers = 10, random_markers = TRUE)
 
 par(mfrow=c(1,1))
 par(mar=c(4,4,2,2))
-plot(LD_results$LD_matrix~LD_results$dist_matrix, pch = 16, xlab = "Distance", ylab = "LD",xlim = c(0, 1), ylim = c(0, 1))
+plot(ld_results$ld_matrix~ld_results$dist_matrix, pch = 16, xlab = "Distance", ylab = "LD",xlim = c(0, 1), ylim = c(0, 1))
 ```
 
 # Selection

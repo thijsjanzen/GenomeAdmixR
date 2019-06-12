@@ -31,17 +31,17 @@ test_that("expected_number_junctions", {
     cat(pop_size, run_time, morgan, mean(found), expected,"\n")
   }
 
-  test_expected_junction_number(pop_size = 100, run_time = 100,
-                                morgan = 1, replicates = 100)
+  test_expected_junction_number(pop_size = 100, run_time = 20,
+                                morgan = 1, replicates = 20)
 
   test_expected_junction_number(pop_size = 100, run_time = 100,
-                                morgan = 0.5, replicates = 100)
+                                morgan = 0.5, replicates = 30)
 
   test_expected_junction_number(pop_size = 100, run_time = 100,
-                                morgan = 3, replicates = 100)
+                                morgan = 3, replicates = 30)
 
   test_expected_junction_number(pop_size = 1000, run_time = 20,
-                                morgan = 1, replicates = 100)
+                                morgan = 1, replicates = 30)
 
   vx <- simulate_admixture(pop_size = 1000, number_of_founders = 2,
                           total_runtime = 5, morgan = 1, seed = 666)

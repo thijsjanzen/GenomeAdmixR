@@ -2,13 +2,13 @@ Package: GenomeAdmixR
 Type: Package
 Title: Simulate Admixture of Genomes
 Version: 0.61
-Date: 2019-23-04
+Date: 2019-11-06
 Authors@R: c(person("Thijs","Janzen", email = "thijsjanzen@gmail.com", role=c("aut","cre")),
-             person("Fernando","Diaz G.",email="ferdiazfer@gmail.com", role=c("ctb")),
+             person("Fernando","Diaz G.", email="ferdiazfer@gmail.com", role=c("ctb")),
              person("Richèl J.C.", "Bilderbeek", role = c("ctb")))
 Description: Simulation of source populations, and simulation of the creation of isofemale lines from these populations.
 License: GPL (>= 2)
-Imports: Rcpp (>= 0.12.12), 
+Imports: Rcpp,
          hierfstat, 
          tibble, 
          methods, 
@@ -27,4 +27,6 @@ Suggests: testit,
 LinkingTo: Rcpp, 
            RcppArmadillo
 SystemRequirements: C++11
+Encoding: UTF-8
 VignetteBuilder: knitr
+RoxygenNote: 6.1.1

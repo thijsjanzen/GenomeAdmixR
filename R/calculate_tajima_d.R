@@ -1,3 +1,21 @@
+#' Calculate Tajima's d
+#' @description Tajima's d is calculated, given a number of markers.
+#' @param pop Population object
+#' @param markers Vector from 0 to 1 (excluding 0 and 1) indicating the locations of the markers used for the analysis
+#' @param number_of_sampled_individuals Number of individuals to base Tajima's d upon. Individuals are randomly drawn from the population.
+#' @return A list with the following entries: \code{D} Tajima's D, \code{pi} pi, the average pairwise differences across the number of selected markers. \code{S} the number of segregating sites and \code{theta_hat}, the expected value of pi, calculated from S, such that theta = S/a1.
+#' @examples \dontrun{
+#' pop <- simulate_admixture(pop_size = 100,
+#'                           number_of_founders = 2,
+#'                           total_runtime = 100,
+#'                           seed = 42)$population
+#'
+#' calculate_tajima_d(pop,
+#'                    markers = seq(1e-6,1-1e-6,100),
+#'                    number_of_sampled_individuals = 10)
+#'
+#' }
+#' @export
 calculate_tajima_d <- function(pop,
                                markers = seq(1e-6, 1-1e-6, length.out = 100),
                                number_of_sampled_individuals = 10) {
@@ -76,7 +94,7 @@ calculate_tajima_d <- function(pop,
   tmp2 <- dmax - dmin
   a <- -tmp1 * dmax / tmp2
   b <- tmp1 * dmin / tmp2
-  p <- pbeta((d - dmin) / tmp2, b, a)
+  p <- stats::pbeta((d - dmin) / tmp2, b, a)
   if (!is.nan(p)) {
     p <- if (p < 0.5) {
             2 * p
