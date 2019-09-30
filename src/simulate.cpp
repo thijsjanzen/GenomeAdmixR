@@ -108,7 +108,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             }
         }
 
-        std::vector<Fish> newGeneration;
+        std::vector<Fish> newGeneration(pop_size);
         std::vector<double> newFitness;
         double newMaxFitness = -1.0;
         //Rcout << "updating fish\n";
@@ -125,12 +125,10 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                 while(index2 == index1) index2 = random_number( (int)Pop.size() );
             }
 
-            Fish kid = mate(Pop[index1], Pop[index2], morgan);
-
-            newGeneration.push_back(kid);
+            newGeneration[i] = mate(Pop[index1], Pop[index2], morgan);
 
             double fit = -2.0;
-            if(use_selection) fit = calculate_fitness(kid, select, multiplicative_selection);
+            if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
             if(fit > newMaxFitness) newMaxFitness = fit;
 
             if(fit > expected_max_fitness) {
@@ -153,9 +151,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
         Rcpp::checkUserInterrupt();
 
-        Pop = newGeneration;
-        newGeneration.clear();
-        fitness = newFitness;
+        Pop.swap(newGeneration);
+        fitness.swap(newFitness);
         maxFitness = newMaxFitness;
    //     Rcout << "done updating, again!\n";
     }

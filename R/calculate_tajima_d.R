@@ -92,12 +92,12 @@ calculate_tajima_d <- function(pop,
   d <- (pi - s / a1) / sqrt(e1 * s + e2 * s * (s - 1))
 
   dmin <- (2 / n - 1 / a1) / sqrt(e2)
-  dmax <- ((n + 1) / (2 * n) - 1 / a1) / sqrt(e2)
+  dmax <- ( (n + 1) / (2 * n) - 1 / a1) / sqrt(e2)
   tmp1 <- 1 + dmin * dmax
   tmp2 <- dmax - dmin
   a <- -tmp1 * dmax / tmp2
   b <- tmp1 * dmin / tmp2
-  p <- stats::pbeta((d - dmin) / tmp2, b, a)
+  p <- stats::pbeta( (d - dmin) / tmp2, b, a)
   if (!is.nan(p)) {
     p <- if (p < 0.5) {
             2 * p
