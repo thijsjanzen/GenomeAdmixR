@@ -31,9 +31,9 @@ test_that("simulate_migration", {
   s <- 0.1
   select_matrix[1, ] <- c(0.5, 0.5, 0.5 + 0.5 * s, 0.5 + s, 0)
 
-  markers <- seq(from = 0.0, to = 0.51, by = 0.001)
+  markers <- seq(from = 0.0, to = 0.51, by = 0.01)
 
-  vy <- simulate_admixture_migration(seed = 42,
+  vy <- simulate_admixture_migration(seed = 666,
                                      migration_rate = 0.01,
                                      initial_frequencies = list(c(1, 0),
                                                                 c(0, 1)),
