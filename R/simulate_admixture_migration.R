@@ -183,7 +183,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     }
   }
 
-  if(is.null(seed)) {
+  if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))
   }
 

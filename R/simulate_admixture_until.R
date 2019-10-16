@@ -93,7 +93,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      number_of_markers = 100,
                                      random_markers = TRUE) {
 
-  if(is.null(seed)) {
+  if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))
   }
 

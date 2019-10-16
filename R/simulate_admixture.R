@@ -124,7 +124,7 @@ simulate_admixture <- function(input_population = NA,
     track_frequency <- TRUE
   }
 
-  if(is.null(seed)) {
+  if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))
   }
 
