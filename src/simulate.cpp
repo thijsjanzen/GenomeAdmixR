@@ -172,9 +172,13 @@ List simulate_cpp(Rcpp::NumericVector input_population,
               bool track_frequency,
               NumericVector track_markers,
               bool track_junctions,
-              bool multiplicative_selection)
+              bool multiplicative_selection,
+              int seed)
 {
     //Rcout << "simulate_cpp: " << multiplicative_selection << "\n";
+
+    set_seed(seed);
+    set_poisson(morgan);
 
     std::vector< Fish > Pop;
     int number_of_alleles = number_of_founders;

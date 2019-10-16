@@ -18,7 +18,7 @@ using namespace Rcpp;
 bool do_recombination(std::vector<junction>& offspring,
                      const std::vector<junction>& chromosome1,
                      const std::vector<junction>& chromosome2,
-                     const std::vector<long double> recomPos) {
+                     const std::vector<double> recomPos) {
 
     std::vector< junction > toAdd; //first create junctions on exactly the recombination positions
     for(int i = 0; i < recomPos.size(); ++i) {
@@ -160,17 +160,17 @@ bool do_recombination(std::vector<junction>& offspring,
     return true;
 }
 
-std::vector<long double> generate_recomPos(int number_of_recombinations) {
+std::vector<double> generate_recomPos(int number_of_recombinations) {
 
-    std::vector<long double> recomPos(number_of_recombinations, 0);
+    std::vector<double> recomPos(number_of_recombinations, 0);
     for(int i = 0; i < number_of_recombinations; ++i) {
-        recomPos[i] = long_uniform();
+        recomPos[i] = uniform();
     }
     std::sort(recomPos.begin(), recomPos.end() );
     recomPos.erase(std::unique(recomPos.begin(), recomPos.end()), recomPos.end());
 
     while (recomPos.size() < number_of_recombinations) {
-        long double pos = long_uniform();
+        double pos = uniform();
         recomPos.push_back(pos);
         // sort them, in case they are not sorted yet
         // we need this to remove duplicates, and later
@@ -182,13 +182,12 @@ std::vector<long double> generate_recomPos(int number_of_recombinations) {
     return recomPos;
 }
 
-
 void Recombine(      std::vector<junction>& offspring,
                const std::vector<junction>& chromosome1,
                const std::vector<junction>& chromosome2,
                double MORGAN)  {
 
-    int numRecombinations = poisson(MORGAN);
+    int numRecombinations = poisson_preset();
 
     if (numRecombinations == 0) {
         offspring.insert(offspring.end(),
@@ -198,7 +197,7 @@ void Recombine(      std::vector<junction>& offspring,
         return;
     }
 
-    std::vector<long double> recomPos = generate_recomPos(numRecombinations);
+    std::vector<double> recomPos = generate_recomPos(numRecombinations);
 
     bool recomPos_is_unique = do_recombination(offspring,
                                                chromosome1,
@@ -298,7 +297,7 @@ Fish::Fish(int initLoc)    {
 }
 
 Fish::Fish(const std::vector<junction>& A,
-     const std::vector<junction>& B)    {
+    const std::vector<junction>& B)    {
     chromosome1 = A;
     chromosome2 = B;
 }

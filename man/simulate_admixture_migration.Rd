@@ -8,7 +8,7 @@ two populations linked by migration}
 simulate_admixture_migration(input_population_1 = NA,
   input_population_2 = NA, pop_size = c(100, 100),
   initial_frequencies = list(c(1, 0), c(0, 1)), total_runtime = 100,
-  morgan = 1, seed, select_matrix = NA, markers = NA,
+  morgan = 1, seed = NULL, select_matrix = NA, markers = NA,
   progress_bar = TRUE, track_junctions = FALSE,
   multiplicative_selection = TRUE, migration_rate = 0)
 }

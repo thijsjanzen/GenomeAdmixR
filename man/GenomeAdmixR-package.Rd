@@ -6,6 +6,7 @@
  This package simulates admixture of ancestry
 }
 \description{
+   Version 0.63 - updated ranodm number generation \cr
    Version 0.62 - Updated to Roxygen \cr
    Version 0.61 - Added plot_over_time \cr
    Version 0.60 - Added admixture with migration \cr

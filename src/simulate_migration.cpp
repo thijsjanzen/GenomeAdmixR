@@ -79,6 +79,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
 
   std::vector<Fish> new_generation(pop_size);
   new_fitness.clear();
+  new_fitness.resize(pop_size);
   new_max_fitness = -1.0;
   for(int i = 0; i < pop_size; ++i)  {
     int index1, index2;
@@ -99,13 +100,14 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                             max_fitness_source, max_fitness_migr,
                             index2);
     }
+
     new_generation[i] = mate(parent1, parent2, size_in_morgan);
 
     double fit = -2.0;
     if(use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
     if(fit > new_max_fitness) new_max_fitness = fit;
 
-    new_fitness.push_back(fit);
+    new_fitness[i] = fit;
   }
   return new_generation;
 }
@@ -263,8 +265,12 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             NumericVector track_markers,
                             bool track_junctions,
                             bool multiplicative_selection,
-                            double migration_rate)
+                            double migration_rate,
+                            int seed)
 {
+  set_seed(seed);
+  set_poisson(morgan);
+
   std::vector< Fish > Pop_1;
   std::vector< Fish > Pop_2;
   int number_of_alleles = -1;

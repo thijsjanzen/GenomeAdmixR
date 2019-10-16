@@ -5,15 +5,15 @@ calculate_allele_spectrum_cpp <- function(input_population, markers, progress_ba
     .Call('_GenomeAdmixR_calculate_allele_spectrum_cpp', PACKAGE = 'GenomeAdmixR', input_population, markers, progress_bar)
 }
 
-simulate_cpp <- function(input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection) {
-    .Call('_GenomeAdmixR_simulate_cpp', PACKAGE = 'GenomeAdmixR', input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection)
+simulate_cpp <- function(input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed) {
+    .Call('_GenomeAdmixR_simulate_cpp', PACKAGE = 'GenomeAdmixR', input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed)
 }
 
 test_fish_functions <- function() {
     invisible(.Call('_GenomeAdmixR_test_fish_functions', PACKAGE = 'GenomeAdmixR'))
 }
 
-simulate_migration_cpp <- function(input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate) {
-    .Call('_GenomeAdmixR_simulate_migration_cpp', PACKAGE = 'GenomeAdmixR', input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate)
+simulate_migration_cpp <- function(input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed) {
+    .Call('_GenomeAdmixR_simulate_migration_cpp', PACKAGE = 'GenomeAdmixR', input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed)
 }
 

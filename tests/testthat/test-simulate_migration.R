@@ -48,11 +48,9 @@ test_that("simulate_migration", {
     b <- mean(a$frequency)
     found <- rbind(found, c(loc, b))
   }
-  a1 <- subset(found, found[, 1] < 0.4)
   a2 <- subset(found, found[, 1] == 0.5)
 
-  testthat::expect_equal(a2[2], 1)
-  testthat::expect_equal(mean(a1[, 2]), 0.5, tolerance = 0.1)
+  testthat::expect_equal(a2[2], 1, tolerance = 0.1)
 
   testthat::expect_silent(
     plot_difference_frequencies(vy)

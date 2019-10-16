@@ -54,7 +54,7 @@ simulate_admixture <- function(input_population = NA,
                                initial_frequencies = NA,
                                total_runtime = 100,
                                morgan = 1,
-                               seed,
+                               seed = NULL,
                                select_matrix = NA,
                                markers = NA,
                                progress_bar = TRUE,
@@ -124,7 +124,9 @@ simulate_admixture <- function(input_population = NA,
     track_frequency <- TRUE
   }
 
-  set.seed(seed)
+  if(is.null(seed)) {
+    seed <- round(as.numeric(Sys.time()))
+  }
 
   selected_pop <- simulate_cpp(input_population,
                                select_matrix,
@@ -137,7 +139,8 @@ simulate_admixture <- function(input_population = NA,
                                track_frequency,
                                markers,
                                track_junctions,
-                               multiplicative_selection)
+                               multiplicative_selection,
+                               seed)
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 

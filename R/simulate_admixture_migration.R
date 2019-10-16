@@ -76,7 +76,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                                                     c(0, 1.0)),
                                          total_runtime = 100,
                                          morgan = 1,
-                                         seed,
+                                         seed = NULL,
                                          select_matrix = NA,
                                          markers = NA,
                                          progress_bar = TRUE,
@@ -174,8 +174,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     track_frequency <- TRUE
   }
 
-  set.seed(seed)
-
   init_freq_matrix <- matrix(nrow = length(initial_frequencies),
                       ncol = length(initial_frequencies[[1]]))
 
@@ -183,6 +181,10 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     for (j in seq_along(initial_frequencies[[i]])) {
       init_freq_matrix[i, j] <- initial_frequencies[[i]][j]
     }
+  }
+
+  if(is.null(seed)) {
+    seed <- round(as.numeric(Sys.time()))
   }
 
   selected_pop <- simulate_migration_cpp(input_population_1,
@@ -197,7 +199,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                 markers,
                                 track_junctions,
                                 multiplicative_selection,
-                                migration_rate)
+                                migration_rate,
+                                seed)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)

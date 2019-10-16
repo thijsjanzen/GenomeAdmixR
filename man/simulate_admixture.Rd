@@ -6,7 +6,7 @@
 \usage{
 simulate_admixture(input_population = NA, pop_size = 100,
   number_of_founders = 2, initial_frequencies = NA,
-  total_runtime = 100, morgan = 1, seed, select_matrix = NA,
+  total_runtime = 100, morgan = 1, seed = NULL, select_matrix = NA,
   markers = NA, progress_bar = TRUE, track_junctions = FALSE,
   multiplicative_selection = TRUE)
 }
