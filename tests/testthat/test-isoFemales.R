@@ -54,8 +54,6 @@ test_that("create_population_from_isofemales", {
   female_2 <- create_iso_female(pop2, n = 1,
                                 run_time = 2000, seed = 2)
 
-
-
   testthat::expect_true(verify_individual(female_1[[1]]))
   testthat::expect_true(verify_individual(female_2[[1]]))
 
@@ -83,7 +81,6 @@ test_that("create_population_from_isofemales", {
 })
 
 test_that("cpp classes", {
-  test_fish_functions()
 
   a <- matrix(c(0.1, 1, 2, 2), nrow = 2)
   b <- matrix(c(0, 1, 1, -1), nrow = 2)
