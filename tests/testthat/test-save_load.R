@@ -1,6 +1,5 @@
 context("create_populations")
 
-
 test_that("save_population", {
   pop_size <- 100
   number_of_founders <- 10

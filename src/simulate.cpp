@@ -260,6 +260,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                          Named("junctions") = junctions);
 }
 
+/*
 // [[Rcpp::export]]
 void test_fish_functions() {
     Fish test_fish;
@@ -306,4 +307,4 @@ void test_fish_functions() {
 
 
     return;
-}
+}*/

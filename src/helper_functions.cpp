@@ -8,35 +8,6 @@
 #include "helper_functions.h"
 #include <vector>
 
-bool verify_individual_cpp(const Fish& Nemo) {
-    for(int i = 0; i < Nemo.chromosome1.size(); ++i) {
-        if(Nemo.chromosome1[i].right >  1000 |
-           Nemo.chromosome1[i].right < -1000) {
-            return false;
-        }
-    }
-
-    for(int i = 0; i < Nemo.chromosome2.size(); ++i) {
-        if(Nemo.chromosome2[i].right >  1000 |
-           Nemo.chromosome2[i].right < -1000) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-
-bool verify_pop_cpp(const std::vector< Fish >& pop) {
-    for(auto it = pop.begin(); it != pop.end(); ++it) {
-        if(!verify_individual_cpp((*it))) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 bool matching_chromosomes(const std::vector< junction >& v1,
                           const std::vector< junction >& v2)
 {
@@ -198,22 +169,6 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
      }
     // Rcout << "end record_frequencies_pop\n"; R_FlushConsole();
      return(output);
-}
-
-arma::mat update_frequency_tibble_dual_pop(const std::vector< Fish >& pop_1,
-                                                 const std::vector< Fish >& pop_2,
-                                                 double marker,
-                                                 const std::vector<int>& founder_labels,
-                                                 int t) {
-    //Rcout << "start update_frequency_tibble_dual_pop\n"; R_FlushConsole();
-    NumericVector markers; markers.push_back(marker);
-
-    arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1);
-    arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2);
-
-    arma::mat output = arma::join_cols(output_1, output_2);
-    //Rcout << "end update_frequency_tibble_dual_pop\n";
-    return(output);
 }
 
 arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_1,
@@ -407,7 +362,7 @@ int draw_random_founder(const NumericVector& v) {
             return(i);
         }
     }
-    return(v[v.size() - 1]);
+    return(v.size() - 1);
 }
 
 // [[Rcpp::export]]
@@ -429,64 +384,3 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
 
     return frequencies;
 }
-
-/* Old code
-
-NumericVector update_frequency(const std::vector< Fish >& v,
-                               double m,
-                               int num_alleles) {
-
-    NumericVector freq(num_alleles, 0.0);
-
-    for(auto it = v.begin(); it != v.end(); ++it) {
-        for(auto i = ((*it).chromosome1.begin()+1); i != (*it).chromosome1.end(); ++i) {
-            if((*i).pos > m) {
-                int index = (*(i-1)).right;
-                if(index >= num_alleles || index < 0) {
-                    Rcout << "ERROR!!\n";
-                    Rcout << "trying to access NumericVector freq outside bounds\n";
-                }
-                freq(index)++;
-                break;
-            }
-        }
-
-        for(auto i = ((*it).chromosome2.begin()+1); i != (*it).chromosome2.end(); ++i) {
-            if((*i).pos > m) {
-                int index = (*(i-1)).right;
-                if(index >= num_alleles || index < 0) {
-                    Rcout << "ERROR!!\n";
-                    Rcout << "trying to access NumericVector freq outside bounds\n";
-                }
-                freq(index)++;
-                break;
-            }
-        }
-    }
-
-    for(int i = 0; i < freq.size(); ++i) {
-        freq(i) = freq(i) * 1.0 / (2*v.size());
-    }
-
-    return(freq);
-}
-
- arma::mat update_all_frequencies(const std::vector< Fish >& pop,
- const NumericVector& markers,
- int number_of_alleles) {
-
- arma::mat output(markers.size(), number_of_alleles);
-
- for(int i = 0; i < markers.size(); ++i) {
- NumericVector v = update_frequency(pop,
- markers[i],
- number_of_alleles);
- for(int j = 0; j < v.size(); ++j) {
- output(i, j) = v(j);
- }
- }
- return(output);
- }
-
-
-*/

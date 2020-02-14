@@ -42,15 +42,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// test_fish_functions
-void test_fish_functions();
-RcppExport SEXP _GenomeAdmixR_test_fish_functions() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    test_fish_functions();
-    return R_NilValue;
-END_RCPP
-}
 // simulate_migration_cpp
 List simulate_migration_cpp(NumericVector input_population_1, NumericVector input_population_2, NumericMatrix select, NumericVector pop_size, NumericMatrix starting_frequencies, int total_runtime, double morgan, bool progress_bar, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, double migration_rate, int seed);
 RcppExport SEXP _GenomeAdmixR_simulate_migration_cpp(SEXP input_population_1SEXP, SEXP input_population_2SEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP starting_frequenciesSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP progress_barSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP, SEXP migration_rateSEXP, SEXP seedSEXP) {
@@ -79,7 +70,6 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_GenomeAdmixR_calculate_allele_spectrum_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_allele_spectrum_cpp, 3},
     {"_GenomeAdmixR_simulate_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_cpp, 13},
-    {"_GenomeAdmixR_test_fish_functions", (DL_FUNC) &_GenomeAdmixR_test_fish_functions, 0},
     {"_GenomeAdmixR_simulate_migration_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_migration_cpp, 14},
     {NULL, NULL, 0}
 };

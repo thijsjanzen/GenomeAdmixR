@@ -16,8 +16,8 @@
 using namespace Rcpp;
 
 
-bool verify_individual_cpp(const Fish& Nemo);
-bool verify_pop_cpp(const std::vector< Fish >& pop);
+// bool verify_individual_cpp(const Fish& Nemo);
+// bool verify_pop_cpp(const std::vector< Fish >& pop);
 bool matching_chromosomes(const std::vector< junction >& v1,
                           const std::vector< junction >& v2);
 
