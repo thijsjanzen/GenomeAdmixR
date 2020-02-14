@@ -4,8 +4,11 @@
 \alias{plot_frequencies}
 \title{Plot the frequencies of all ancestors along the genome.}
 \usage{
-plot_frequencies(result, locations = seq(0, 1, length.out = 100),
-  progress_bar = FALSE)
+plot_frequencies(
+  result,
+  locations = seq(0, 1, length.out = 100),
+  progress_bar = FALSE
+)
 }
 \arguments{
 \item{result}{An object which is the result of \code{select_population} or

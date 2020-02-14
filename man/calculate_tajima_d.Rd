@@ -4,8 +4,11 @@
 \alias{calculate_tajima_d}
 \title{Calculate Tajima's d}
 \usage{
-calculate_tajima_d(pop, markers = seq(1e-06, 1 - 1e-06, length.out =
-  100), number_of_sampled_individuals = 10)
+calculate_tajima_d(
+  pop,
+  markers = seq(1e-06, 1 - 1e-06, length.out = 100),
+  number_of_sampled_individuals = 10
+)
 }
 \arguments{
 \item{pop}{Population object}

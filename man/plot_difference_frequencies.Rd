@@ -4,8 +4,11 @@
 \alias{plot_difference_frequencies}
 \title{Plot the change in frequency between the start and end of a simulation}
 \usage{
-plot_difference_frequencies(results, picked_ancestor = "ALL",
-  picked_population = 1)
+plot_difference_frequencies(
+  results,
+  picked_ancestor = "ALL",
+  picked_population = 1
+)
 }
 \arguments{
 \item{results}{An object which is the result of \code{select_population} or

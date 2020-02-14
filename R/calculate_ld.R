@@ -65,8 +65,8 @@ calculate_ld <- function(pop,
   for (x in seq_along(markers)) {
     for (y in seq_len(x)) {
       if (x != y) {
-        index1 <- c( (x - 1) * 2 + 1, (x - 1) * 2 + 2)
-        index2 <- c( (y - 1) * 2 + 1, (y - 1) * 2 + 2)
+        index1 <- c((x - 1) * 2 + 1, (x - 1) * 2 + 2)
+        index2 <- c((y - 1) * 2 + 1, (y - 1) * 2 + 2)
         g1 <- all_loci[, index1]
         g2 <- all_loci[, index2]
 
@@ -103,11 +103,11 @@ calculate_average_ld <- function(alleles_pos_1, alleles_pos_2) {
 
       countab <- 0
       for (a in seq_along(alleles_pos_1[, 1])) {
-        if ( (alleles_pos_1[a, 1]) == i && (alleles_pos_2[a, 1] == j)) {
+        if ((alleles_pos_1[a, 1]) == i && (alleles_pos_2[a, 1] == j)) {
           countab <- countab + 1
         }
 
-        if ( (alleles_pos_1[a, 2]) == i && (alleles_pos_2[a, 2] == j)) {
+        if ((alleles_pos_1[a, 2]) == i && (alleles_pos_2[a, 2] == j)) {
           countab <- countab + 1
         }
       }

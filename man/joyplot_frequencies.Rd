@@ -4,8 +4,12 @@
 \alias{joyplot_frequencies}
 \title{make a joy plot of the distribution of allele frequencies within a region}
 \usage{
-joyplot_frequencies(frequencies, time_points, picked_ancestor = "ALL",
-  picked_population = 1)
+joyplot_frequencies(
+  frequencies,
+  time_points,
+  picked_ancestor = "ALL",
+  picked_population = 1
+)
 }
 \arguments{
 \item{frequencies}{A tibble containing four columns: \code{time},

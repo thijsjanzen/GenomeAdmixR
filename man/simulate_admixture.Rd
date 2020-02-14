@@ -4,11 +4,20 @@
 \alias{simulate_admixture}
 \title{Individual based simulation of the breakdown of contiguous ancestry blocks.}
 \usage{
-simulate_admixture(input_population = NA, pop_size = 100,
-  number_of_founders = 2, initial_frequencies = NA,
-  total_runtime = 100, morgan = 1, seed = NULL, select_matrix = NA,
-  markers = NA, progress_bar = TRUE, track_junctions = FALSE,
-  multiplicative_selection = TRUE)
+simulate_admixture(
+  input_population = NA,
+  pop_size = 100,
+  number_of_founders = 2,
+  initial_frequencies = NA,
+  total_runtime = 100,
+  morgan = 1,
+  seed = NULL,
+  select_matrix = NA,
+  markers = NA,
+  progress_bar = TRUE,
+  track_junctions = FALSE,
+  multiplicative_selection = TRUE
+)
 }
 \arguments{
 \item{input_population}{Potential earlier simulated population used as

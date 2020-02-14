@@ -4,15 +4,26 @@
 \alias{simulate_admixture_until}
 \title{Simulate admixture until}
 \usage{
-simulate_admixture_until(input_population_1 = NA,
-  input_population_2 = NA, pop_size = c(100, 100),
-  initial_frequencies = list(c(1, 0), c(0, 1)), total_runtime = 100,
-  morgan = 1, seed = NULL, select_matrix = NA, markers = NA,
-  progress_bar = TRUE, track_junctions = FALSE,
-  multiplicative_selection = TRUE, migration_rate = 0,
-  generations_between_update = 100, critical_fst = 0.1,
-  sampled_individuals = 10, number_of_markers = 100,
-  random_markers = TRUE)
+simulate_admixture_until(
+  input_population_1 = NA,
+  input_population_2 = NA,
+  pop_size = c(100, 100),
+  initial_frequencies = list(c(1, 0), c(0, 1)),
+  total_runtime = 100,
+  morgan = 1,
+  seed = NULL,
+  select_matrix = NA,
+  markers = NA,
+  progress_bar = TRUE,
+  track_junctions = FALSE,
+  multiplicative_selection = TRUE,
+  migration_rate = 0,
+  generations_between_update = 100,
+  critical_fst = 0.1,
+  sampled_individuals = 10,
+  number_of_markers = 100,
+  random_markers = TRUE
+)
 }
 \arguments{
 \item{input_population_1}{Potential earlier simulated population used as

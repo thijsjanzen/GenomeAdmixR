@@ -16,9 +16,9 @@
 using namespace Rcpp;
 
 bool do_recombination(std::vector<junction>& offspring,
-                     const std::vector<junction>& chromosome1,
-                     const std::vector<junction>& chromosome2,
-                     const std::vector<double> recomPos) {
+                      const std::vector<junction>& chromosome1,
+                      const std::vector<junction>& chromosome2,
+                      const std::vector<double>& recomPos) {
 
     std::vector< junction > toAdd; //first create junctions on exactly the recombination positions
     for(int i = 0; i < recomPos.size(); ++i) {

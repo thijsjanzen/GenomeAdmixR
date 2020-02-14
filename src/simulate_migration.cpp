@@ -234,7 +234,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     }
 
     // Rcout << "checking for fixation\n";
-    if (t > 0 && is_fixed(pop_1) && is_fixed(pop_2)) {
+    if (t > 1 && is_fixed(pop_1) && is_fixed(pop_2)) {
       Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
       R_FlushConsole();
       std::vector< std::vector < Fish > > output;

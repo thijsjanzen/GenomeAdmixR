@@ -244,7 +244,7 @@ double calc_mean_junctions(const std::vector< Fish> & pop) {
     return(mean_junctions);
 }
 
-int draw_prop_fitness(const std::vector<double> fitness,
+int draw_prop_fitness(const std::vector<double>& fitness,
                       double maxFitness) {
 
     if(maxFitness <= 0.0) {

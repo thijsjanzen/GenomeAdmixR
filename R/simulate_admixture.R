@@ -61,30 +61,7 @@ simulate_admixture <- function(input_population = NA,
                                track_junctions = FALSE,
                                multiplicative_selection = TRUE) {
 
-  if (is.list(input_population)) {
-    # if a list of individuals is given, the class is often wrong
-    # let's check if that is the case
-    if (!methods::is(input_population, "population")) {
-      all_are_individuals <- vapply(input_population, class,
-                                    FUN.VALUE = "character")
-      if (sum(all_are_individuals == "individual") ==
-            length(all_are_individuals)) {
-        class(input_population) <- "population"
-      }
-    }
-
-    if (methods::is(input_population$population, "population")) {
-      input_population <- input_population$population
-    }
-
-    if (methods::is(input_population, "population")) {
-      input_population <- population_to_vector(input_population)
-    } else {
-      input_population <- c(-1e6, -1e6)
-    }
-  } else {
-    input_population <- c(-1e6, -1e6)
-  }
+  input_population <- check_input_pop(input_population)
 
   if (sum(is.na(initial_frequencies))) {
     initial_frequencies <- rep(1.0 / number_of_founders,
@@ -96,22 +73,7 @@ simulate_admixture <- function(input_population = NA,
     cat("starting frequencies were normalized to 1\n")
   }
 
-  if (is.matrix(select_matrix)) {
-    cat("Found a selection matrix, performing simulation\n")
-    cat("including selection\n")
-    if (sum(is.na(select_matrix))) {
-      stop("Can't start, there are NA values in the selection matrix!\n")
-    }
-
-    if (dim(select_matrix)[[2]] != 5) {
-      stop("Incorrect dimensions of select_matrix,
-           are you sure you provided all fitnesses?\n")
-    }
-  } else {
-    if (is.na(select_matrix)) {
-      select_matrix <- matrix(-1, nrow = 2, ncol = 2)
-    }
-  }
+  select_matrix <- check_select_matrix(select_matrix)
 
   if (length(markers) == 1) {
     if (is.na(markers))  {
@@ -126,6 +88,10 @@ simulate_admixture <- function(input_population = NA,
 
   if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))
+  }
+
+  if (methods::is(input_population, "population")) {
+    input_population <- population_to_vector(input_population)
   }
 
   selected_pop <- simulate_cpp(input_population,
@@ -144,14 +110,6 @@ simulate_admixture <- function(input_population = NA,
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 
-  #initial_freq_tibble <- create_tibble_from_freq_mat(
-  #                            selected_pop$initial_frequencies,
-  #                            markers)
-
-  #final_freq_tibble   <- create_tibble_from_freq_mat(
-  #                            selected_pop$final_frequencies,
-  #                            markers)
-
   initial_freq_tibble <- tibble::as.tibble(selected_pop$initial_frequencies)
   colnames(initial_freq_tibble) <- c("time",
                                      "location",
@@ -163,38 +121,12 @@ simulate_admixture <- function(input_population = NA,
                                    "ancestor", "frequency")
 
 
-  output <- list()
-  if (track_frequency == FALSE && track_junctions == FALSE) {
-    output <- list("population" = selected_popstruct)
-  }
-
-  if (track_frequency == FALSE && track_junctions == TRUE) {
-    output <- list("population" = selected_popstruct,
-                   "junctions" = selected_pop$junctions)
-  }
-
-  if (track_frequency == TRUE && track_junctions == FALSE) {
-    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time", "location",
-                                      "ancestor", "frequency")
-
-    output <- list("population" = selected_popstruct,
-                   "frequencies" = frequencies_tibble,
-                   "initial_frequency" = initial_freq_tibble,
-                   "final_frequency" = final_freq_tibble)
-  }
-
-  if (track_frequency == TRUE && track_junctions == TRUE) {
-    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time", "location",
-                                      "ancestor", "frequency")
-
-    output <- list("population" = selected_popstruct,
-                   "frequencies" = frequencies_tibble,
-                   "initial_frequency" = initial_freq_tibble,
-                   "final_frequency" = final_freq_tibble,
-                   "junctions" = selected_pop$junctions)
-  }
+  output <- generate_output_list_one_pop(selected_popstruct,
+                                         selected_pop,
+                                         initial_freq_tibble,
+                                         final_freq_tibble,
+                                         track_frequency,
+                                         track_junctions)
 
   return(output)
 }

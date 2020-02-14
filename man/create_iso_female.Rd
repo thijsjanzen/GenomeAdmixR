@@ -4,8 +4,15 @@
 \alias{create_iso_female}
 \title{Create isofemale}
 \usage{
-create_iso_female(source_pop, n = 1, inbreeding_pop_size = 100,
-  run_time = 2000, morgan = 1, seed = 42, progress_bar = TRUE)
+create_iso_female(
+  source_pop,
+  n = 1,
+  inbreeding_pop_size = 100,
+  run_time = 2000,
+  morgan = 1,
+  seed = 42,
+  progress_bar = TRUE
+)
 }
 \arguments{
 \item{source_pop}{Source population from which isofemales are generated}

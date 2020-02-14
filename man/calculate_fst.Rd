@@ -4,8 +4,13 @@
 \alias{calculate_fst}
 \title{Calculate FST}
 \usage{
-calculate_fst(pop1, pop2, sampled_individuals, number_of_markers = 100,
-  random_markers = FALSE)
+calculate_fst(
+  pop1,
+  pop2,
+  sampled_individuals,
+  number_of_markers = 100,
+  random_markers = FALSE
+)
 }
 \arguments{
 \item{pop1}{Population object}

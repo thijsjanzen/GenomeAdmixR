@@ -10,18 +10,164 @@ check_input_pop <- function(pop) {
               explicitly pass a population to remedy this\n")
           pop <- pop$population_1
         } else {
-          stop("Input object is not of class 'population'")
+          types <- c()
+          for(i in seq_along(pop)) {
+            types[i] <- class(pop[[i]])
+          }
+          if(sum(types == "individual") == length(types)) {
+            class(pop) = "population"
+          } else {
+            stop("Input object is not of class 'population'")
+          }
         }
       }
     } else {
-      stop("Input object is not of class 'population'")
+      pop <- c(-1e6, -1e6)
     }
   }
+
   return(pop)
 }
 
 #' @keywords internal
+check_initial_frequencies <- function(initial_frequencies) {
+  if (sum(initial_frequencies[[1]]) != 1) {
+    initial_frequencies[[1]] <-
+      initial_frequencies[[1]] / sum(initial_frequencies[[1]])
+    cat("starting frequencies were normalized to 1\n")
+  }
+  if (sum(initial_frequencies[[2]]) != 1) {
+    initial_frequencies[[2]] <-
+      initial_frequencies[[2]] / sum(initial_frequencies[[2]])
+    cat("starting frequencies were normalized to 1\n")
+  }
+  return(initial_frequencies)
+}
+
+#' @keywords internal
+check_select_matrix <- function(select_matrix) {
+  if (is.matrix(select_matrix)) {
+    cat("Found a selection matrix, performing simulation\n")
+    cat("including selection\n")
+    if (sum(is.na(select_matrix))) {
+      stop("Can't start, there are NA values in the selection matrix!\n")
+    }
+
+    if (dim(select_matrix)[[2]] != 5) {
+      stop("Incorrect dimensions of select_matrix,
+           are you sure you provided all fitnesses?\n")
+    }
+  } else {
+    if (is.na(select_matrix)) {
+      select_matrix <- matrix(-1, nrow = 2, ncol = 2)
+    }
+  }
+  return(select_matrix)
+}
+
+#' @keywords internal
+generate_output_list_two_pop <- function(selected_pop,
+                                         selected_popstruct_1,
+                                         selected_popstruct_2,
+                                         initial_freq_tibble,
+                                         final_freq_tibble,
+                                         track_frequency = FALSE,
+                                         track_junctions = FALSE
+) {
+  output <- list()
+  if (track_frequency == FALSE && track_junctions == FALSE) {
+    output <- list("population_1" = selected_popstruct_1,
+                   "population_2" = selected_popstruct_2)
+  }
+
+  if (track_frequency == FALSE && track_junctions == TRUE) {
+    output <- list("population_1" = selected_popstruct_1,
+                   "population_2" = selected_popstruct_2,
+                   "junctions" = selected_pop$junctions)
+  }
+
+  if (track_frequency == TRUE && track_junctions == FALSE) {
+    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
+    colnames(frequencies_tibble) <- c("time",
+                                      "location",
+                                      "ancestor",
+                                      "frequency",
+                                      "population")
+
+    output <- list("population_1" = selected_popstruct_1,
+                   "population_2" = selected_popstruct_2,
+                   "frequencies" = frequencies_tibble,
+                   "initial_frequency" = initial_freq_tibble,
+                   "final_frequency" = final_freq_tibble)
+  }
+
+  if (track_frequency == TRUE && track_junctions == TRUE) {
+    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
+    colnames(frequencies_tibble) <- c("time",
+                                      "location",
+                                      "ancestor",
+                                      "frequency",
+                                      "population")
+
+    output <- list("population_1" = selected_popstruct_1,
+                   "population_2" = selected_popstruct_2,
+                   "frequencies" = frequencies_tibble,
+                   "initial_frequency" = initial_freq_tibble,
+                   "final_frequency" = final_freq_tibble,
+                   "junctions" = selected_pop$junctions)
+  }
+
+  return(output)
+}
+
+
+#' @keywords internal
+generate_output_list_one_pop <- function(selected_popstruct,
+                                         selected_pop,
+                                         initial_freq_tibble,
+                                         final_freq_tibble,
+                                         track_frequency = FALSE,
+                                         track_junctions = FALSE) {
+  output <- list()
+  if (track_frequency == FALSE && track_junctions == FALSE) {
+    output <- list("population" = selected_popstruct)
+  }
+
+  if (track_frequency == FALSE && track_junctions == TRUE) {
+    output <- list("population" = selected_popstruct,
+                   "junctions" = selected_pop$junctions)
+  }
+
+  if (track_frequency == TRUE && track_junctions == FALSE) {
+    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
+    colnames(frequencies_tibble) <- c("time", "location",
+                                      "ancestor", "frequency")
+
+    output <- list("population" = selected_popstruct,
+                   "frequencies" = frequencies_tibble,
+                   "initial_frequency" = initial_freq_tibble,
+                   "final_frequency" = final_freq_tibble)
+  }
+
+  if (track_frequency == TRUE && track_junctions == TRUE) {
+    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
+    colnames(frequencies_tibble) <- c("time", "location",
+                                      "ancestor", "frequency")
+
+    output <- list("population" = selected_popstruct,
+                   "frequencies" = frequencies_tibble,
+                   "initial_frequency" = initial_freq_tibble,
+                   "final_frequency" = final_freq_tibble,
+                   "junctions" = selected_pop$junctions)
+  }
+  return(output)
+}
+
+
+
+#' @keywords internal
 population_to_vector <- function(source_pop) {
+  if(is.vector(source_pop)) return(source_pop)
   pop_for_cpp <- c()
   for (i in seq_along(source_pop)) {
     x <- source_pop[[i]]$chromosome1
@@ -149,13 +295,13 @@ plot.individual <- function(x, ...) {
   graphics::par(mfrow = c(2, 1))
   graphics::par(mar = c(2, 2, 2, 2))
   graphics::plot(NA,
-       xlim = c(0, 1),
-       ylim = c(0, 1),
-       xlab = "",
-       ylab = "",
-       xaxt = "n",
-       yaxt = "n",
-       bty  = "n")
+                 xlim = c(0, 1),
+                 ylim = c(0, 1),
+                 xlab = "",
+                 ylab = "",
+                 xaxt = "n",
+                 yaxt = "n",
+                 bty  = "n")
 
   for (i in seq_along(x$chromosome1[, 1])) {
     xleft <- x$chromosome1[i, 1]
@@ -167,21 +313,21 @@ plot.individual <- function(x, ...) {
     colour_to_plot <- color_palette[colour_index]
 
     graphics::rect(xleft = xleft,
-         xright = xrght,
-         ybottom = 0,
-         ytop = 1,
-         col = colour_to_plot,
-         border = NA)
+                   xright = xrght,
+                   ybottom = 0,
+                   ytop = 1,
+                   col = colour_to_plot,
+                   border = NA)
   }
 
   graphics::plot(NA,
-       xlim = c(0, 1),
-       ylim = c(0, 1),
-       xlab = "",
-       ylab = "",
-       xaxt = "n",
-       yaxt = "n",
-       bty  = "n")
+                 xlim = c(0, 1),
+                 ylim = c(0, 1),
+                 xlab = "",
+                 ylab = "",
+                 xaxt = "n",
+                 yaxt = "n",
+                 bty  = "n")
 
   for (i in seq_along(x$chromosome2[, 1])) {
     xleft <- x$chromosome2[i, 1]
@@ -193,11 +339,11 @@ plot.individual <- function(x, ...) {
     colour_to_plot <- color_palette[colour_index]
 
     graphics::rect(xleft = xleft,
-         xright = xrght,
-         ybottom = 0,
-         ytop = 1,
-         col = colour_to_plot,
-         border = NA)
+                   xright = xrght,
+                   ybottom = 0,
+                   ytop = 1,
+                   col = colour_to_plot,
+                   border = NA)
   }
 
   graphics::par(opar)

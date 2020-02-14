@@ -7,8 +7,12 @@ This function calculates two matrices, once containing all pairwise
 linkage disequilibrium (ld) values, and one matrix containing all pairwise r
 statistics}
 \usage{
-calculate_ld(pop, sampled_individuals = 10, number_of_markers = 100,
-  random_markers = TRUE)
+calculate_ld(
+  pop,
+  sampled_individuals = 10,
+  number_of_markers = 100,
+  random_markers = TRUE
+)
 }
 \arguments{
 \item{pop}{focal population}

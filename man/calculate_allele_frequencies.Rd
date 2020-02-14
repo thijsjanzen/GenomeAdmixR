@@ -4,8 +4,11 @@
 \alias{calculate_allele_frequencies}
 \title{Calculate allele frequencies}
 \usage{
-calculate_allele_frequencies(source_pop, locations = seq(0, 1, length.out
-  = 100), progress_bar = TRUE)
+calculate_allele_frequencies(
+  source_pop,
+  locations = seq(0, 1, length.out = 100),
+  progress_bar = TRUE
+)
 }
 \arguments{
 \item{source_pop}{Population for which to estimate allele frequencies}

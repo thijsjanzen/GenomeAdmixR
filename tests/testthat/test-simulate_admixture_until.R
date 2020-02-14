@@ -4,6 +4,8 @@ test_that("simulate_admixture_until", {
 
   vx <- simulate_admixture_until(total_runtime = 1000,
                                  pop_size = c(1000, 1000),
+                                 initial_frequencies =
+                                                list(c(0.5, 0.5), c(0.5, 0.5)),
                                  morgan = 1,
                                  seed = 42,
                                  generations_between_update = 100,
@@ -38,14 +40,12 @@ test_that("simulate_admixture_until", {
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,
-                         sampled_individuals = 100,
+                         sampled_individuals = 25,
                          number_of_markers = 100,
                          random_markers = TRUE)
 
   testthat::expect_true(vx$FST >= 0.1)
-
-  # this one seems to fail on Travis? why?
-  # testthat::expect_true(fst_2 >= 0.1)
+  testthat::expect_true(fst_2 >= 0.1)
 
 
   testthat::expect_equal(length(vx$Population_1), 100)

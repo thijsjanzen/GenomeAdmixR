@@ -6,23 +6,24 @@
  This package simulates admixture of ancestry
 }
 \description{
-   Version 0.63 - updated ranodm number generation \cr
+   Verison 0.64 - Reduced cyclomatic complexity \cr
+   Version 0.63 - Updated random number generation \cr
    Version 0.62 - Updated to Roxygen \cr
    Version 0.61 - Added plot_over_time \cr
    Version 0.60 - Added admixture with migration \cr
    Version 0.59 - Updated frequency code under the hood \cr
-   Version 0.58 - renamed to GenomeAdmixR \cr
-   Version 0.58 - collapsed and improved many functions \cr
+   Version 0.58 - Renamed to GenomeAdmixR \cr
+   Version 0.58 - Collapsed and improved many functions \cr
    Version 0.57 - Added function to generate admixed individuals \cr
    Version 0.56 - Added starting frequencies to 'simulate_admixture' \cr
-   Version 0.55 - extended 'calculate_marker_frequency' to handle a vector of locations \cr
-   Version 0.55 - increased accuracy of choosing a random position for recombination, this should prevent the rare bug fixed in version 0.54 \cr
+   Version 0.55 - Extended 'calculate_marker_frequency' to handle a vector of locations \cr
+   Version 0.55 - Increased accuracy of choosing a random position for recombination, this should prevent the rare bug fixed in version 0.54 \cr
    Version 0.54 - Fixed a MAJOR bug regarding recombination: in rare cases, a crossover position could be picked on an existing junction, due to the limited number of digits in uniform() \cr
    Version 0.54 - Improved plot_difference_frequencies to handle modified input \cr
    Version 0.53 - Added multiplicative_selection \cr
    Version 0.52 - Added plot_difference_frequencies \cr
    Version 0.51 - Added tajima's d calculation \cr
-   Version 0.50 - added simulated_admixture until \cr
+   Version 0.50 - Added simulated_admixture until \cr
    Version 0.49 - Added 'simulate' to cpp \cr
    Version 0.48 - Added a general 'simulate' function \cr
    Version 0.47 - Changed the effect of migration \cr
