@@ -2,13 +2,15 @@ context("simulate_migration")
 
 test_that("simulate_migration", {
   vx <- simulate_admixture_migration(seed = 42,
-                                     migration_rate = 0.1)
+                                     migration_rate = 0.1,
+                                     total_runtime = 10)
 
   testthat::expect_true(verify_population(vx$population_1))
   testthat::expect_true(verify_population(vx$population_2))
 
   vz <- simulate_admixture_migration(input_population_1 = vx$population_1[[1]],
                                      input_population_2 = vx$population_2[[2]],
+                                     total_runtime = 10,
                                      seed = 5)
 
   markers <- seq(from = 0.4, to = 0.6, length.out = 100)

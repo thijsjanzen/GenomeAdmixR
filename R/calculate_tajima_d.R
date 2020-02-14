@@ -27,27 +27,9 @@ calculate_tajima_d <- function(pop,
 
   pop <- check_input_pop(pop)
 
-  pop_size <- length(pop)
-  indices_sampled_individuals <- sample(1:pop_size,
-                                        number_of_sampled_individuals,
-                                        replace = FALSE)
-
-  loci_matrix <- matrix(ncol = length(markers),
-                        nrow = 2 * number_of_sampled_individuals)
-
-  for (m in seq_along(markers)) {
-    for (indiv in seq_along(indices_sampled_individuals)) {
-
-      indiv_start <- (indiv * 2) - 1
-
-      loci_matrix[indiv_start, m] <- findtype(
-                pop[[indices_sampled_individuals[indiv]]]$chromosome1,
-                  markers[m])
-      loci_matrix[indiv_start + 1, m] <- findtype(
-        pop[[indices_sampled_individuals[indiv]]]$chromosome2,
-        markers[m])
-    }
-  }
+  loci_matrix <- create_loci_matrix_tajima_d(pop,
+                                             markers,
+                                             number_of_sampled_individuals)
 
   n <- 2 * number_of_sampled_individuals
   tmp <- 1:(n - 1)
@@ -60,26 +42,8 @@ calculate_tajima_d <- function(pop,
   e1 <- c1 / a1
   e2 <- c2 / (a1 ^ 2 + a2)
 
-  pi <- 0 #average number of pairwise differences
-  cnt <- 0
-  for (i in seq_along(loci_matrix[, 1])) {
-    for (j in 1:i) {
-      if (i != j) {
-        loci_1 <- loci_matrix[i, ]
-        loci_2 <- loci_matrix[j, ]
-        difference <- loci_1 - loci_2
-        num_diff <- length(difference) - length(which(difference == 0))
-        pi <- pi + num_diff
-        cnt <- cnt + 1
-      }
-    }
-  }
 
-  if (choose(2 * number_of_sampled_individuals, 2) != cnt) {
-    stop("Too many pairwise comparisons!\n")
-  }
-
-  pi <- pi * 1.0 / (choose(2 * number_of_sampled_individuals, 2))
+  pi <- count_pi(loci_matrix, number_of_sampled_individuals)
 
   s <- 0 # number of segregating sites
   for (i in seq_along(loci_matrix[1, ])) {
@@ -113,4 +77,52 @@ calculate_tajima_d <- function(pop,
               "S" = s,
               "theta_hat[Estimated_from_S]" = theta_hat,
               "p value" = p))
+}
+
+
+#' @keywords internal
+create_loci_matrix_tajima_d <- function(pop,
+                                        markers,
+                                        number_of_sampled_individuals) {
+
+  pop_size <- length(pop)
+  indices_sampled_individuals <- sample(1:pop_size,
+                                        number_of_sampled_individuals,
+                                        replace = FALSE)
+
+  loci_matrix <- matrix(ncol = length(markers),
+                        nrow = 2 * number_of_sampled_individuals)
+
+  for (m in seq_along(markers)) {
+    for (indiv in seq_along(indices_sampled_individuals)) {
+
+      indiv_start <- (indiv * 2) - 1
+
+      loci_matrix[indiv_start, m] <- findtype(
+        pop[[indices_sampled_individuals[indiv]]]$chromosome1,
+        markers[m])
+      loci_matrix[indiv_start + 1, m] <- findtype(
+        pop[[indices_sampled_individuals[indiv]]]$chromosome2,
+        markers[m])
+    }
+  }
+  return(loci_matrix)
+}
+
+#' @keywords internal
+count_pi <- function(loci_matrix, number_of_sampled_individuals) {
+  pi <- 0 #average number of pairwise differences
+  for (i in seq_along(loci_matrix[, 1])) {
+    for (j in 1:i) {
+      if (i != j) {
+        loci_1 <- loci_matrix[i, ]
+        loci_2 <- loci_matrix[j, ]
+        difference <- loci_1 - loci_2
+        num_diff <- length(difference) - length(which(difference == 0))
+        pi <- pi + num_diff
+      }
+    }
+  }
+  pi <- pi * 1.0 / (choose(2 * number_of_sampled_individuals, 2))
+  return(pi)
 }

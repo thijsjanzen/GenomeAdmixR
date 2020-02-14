@@ -84,6 +84,18 @@ calculate_ld <- function(pop,
               "dist_matrix" = dist_matrix))
 }
 
+count_ab <- function(alleles_pos_1, alleles_pos_2, a, b) {
+  total_count <- 0
+  for (i in 1:2) {
+    v1 <- alleles_pos_1[, i] == a
+    v2 <- alleles_pos_2[, i] == b
+    total_count <- total_count + sum((v1 == v2) & v1 == TRUE)
+  }
+
+  return(total_count)
+}
+
+
 #' Calculates the  ld between two alleles
 #' @description calculate the average ld between two loci
 #' @param alleles_pos_1 alleles at locus 1
@@ -101,19 +113,10 @@ calculate_average_ld <- function(alleles_pos_1, alleles_pos_2) {
       p_a_i <- length(which(alleles_pos_1 == i)) / length(alleles_pos_1)
       p_b_j <- length(which(alleles_pos_2 == j)) / length(alleles_pos_2)
 
-      countab <- 0
-      for (a in seq_along(alleles_pos_1[, 1])) {
-        if ((alleles_pos_1[a, 1]) == i && (alleles_pos_2[a, 1] == j)) {
-          countab <- countab + 1
-        }
-
-        if ((alleles_pos_1[a, 2]) == i && (alleles_pos_2[a, 2] == j)) {
-          countab <- countab + 1
-        }
-      }
+      countab <- count_ab(alleles_pos_1, alleles_pos_2, i, j)
 
       p_a_i_b_j <- countab / (length(alleles_pos_1[, 1]) +
-                                length(alleles_pos_1[, 2]))
+                              length(alleles_pos_1[, 2]))
 
       if (is.nan(p_a_i_b_j)) p_a_i_b_j <- 0
 

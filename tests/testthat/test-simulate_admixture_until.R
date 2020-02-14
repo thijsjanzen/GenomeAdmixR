@@ -40,8 +40,8 @@ test_that("simulate_admixture_until", {
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,
-                         sampled_individuals = 25,
-                         number_of_markers = 100,
+                         sampled_individuals = 10,
+                         number_of_markers = 10,
                          random_markers = TRUE)
 
   testthat::expect_true(vx$FST >= 0.1)

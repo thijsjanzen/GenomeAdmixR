@@ -278,6 +278,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
 
   if (input_population_1[0] > -1e4) {
     Rcout << "Found input populations! converting!\n";  R_FlushConsole();
+
     Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
     Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
 
@@ -292,6 +293,25 @@ List simulate_migration_cpp(NumericVector input_population_1,
     }
 
     number_of_alleles = founder_labels.size();
+
+    if(Pop_1.size() != pop_size[0]) {
+      // the populations have to be populated from the parents!
+      std::vector< Fish > Pop_1_new;
+      for(int j = 0; j < pop_size[0]; ++j) {
+        int index = random_number(Pop_1.size());
+        Pop_1_new.push_back(Pop_1[index]);
+      }
+      std::swap(Pop_1, Pop_1_new);
+    }
+
+    if(Pop_2.size() != pop_size[1]) {
+      std::vector< Fish > Pop_2_new;
+      for(int j = 0; j < pop_size[1]; ++j) {
+        int index = random_number(Pop_2.size());
+        Pop_2_new.push_back(Pop_2[index]);
+      }
+      std::swap(Pop_2, Pop_2_new);
+    }
   } else {
 
     for (int j = 0; j < 2; ++j) {

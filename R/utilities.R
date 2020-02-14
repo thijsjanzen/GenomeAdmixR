@@ -1,5 +1,11 @@
 #' @keywords internal
 check_input_pop <- function(pop) {
+
+  if (class(pop) == "individual") {
+    pop <- list(pop)
+    class(pop) <- "population"
+  }
+
   if (!methods::is(pop, "population")) {
     if (is.list(pop)) {
       if (methods::is(pop$population, "population")) {
@@ -11,11 +17,11 @@ check_input_pop <- function(pop) {
           pop <- pop$population_1
         } else {
           types <- c()
-          for(i in seq_along(pop)) {
+          for (i in seq_along(pop)) {
             types[i] <- class(pop[[i]])
           }
-          if(sum(types == "individual") == length(types)) {
-            class(pop) = "population"
+          if (sum(types == "individual") == length(types)) {
+            class(pop) <- "population"
           } else {
             stop("Input object is not of class 'population'")
           }
@@ -25,6 +31,8 @@ check_input_pop <- function(pop) {
       pop <- c(-1e6, -1e6)
     }
   }
+
+
 
   return(pop)
 }
@@ -167,7 +175,7 @@ generate_output_list_one_pop <- function(selected_popstruct,
 
 #' @keywords internal
 population_to_vector <- function(source_pop) {
-  if(is.vector(source_pop)) return(source_pop)
+  if (is.vector(source_pop)) return(source_pop)
   pop_for_cpp <- c()
   for (i in seq_along(source_pop)) {
     x <- source_pop[[i]]$chromosome1
@@ -218,6 +226,7 @@ create_random_markers <- function(number_of_markers) {
   markers <- sort(markers)
   return(markers)
 }
+
 
 #' @rawNamespace useDynLib(GenomeAdmixR)
 #' @rawNamespace import(Rcpp)
@@ -351,7 +360,6 @@ plot.individual <- function(x, ...) {
 
 #' @keywords internal
 create_pop_class <- function(pop) {
-
   set_indiv_class <- function(indiv) {
     class(indiv) <- "individual"
     indiv

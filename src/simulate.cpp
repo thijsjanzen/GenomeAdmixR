@@ -195,6 +195,16 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         }
         number_of_alleles = founder_labels.size();
        // Rcout << "Number of alleles is " << number_of_alleles << "\n";
+
+       if(Pop.size() != pop_size) {
+         // the new population has to be seeded from the input!
+         std::vector< Fish > Pop_new;
+         for(int j = 0; j < pop_size; ++j) {
+            int index = random_number(Pop.size());
+           Pop_new.push_back(Pop[index]);
+         }
+         std::swap(Pop, Pop_new);
+       }
     } else {
         for(int i = 0; i < pop_size; ++i) {
             int founder_1 = draw_random_founder(starting_proportions);
