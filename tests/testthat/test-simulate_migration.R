@@ -30,11 +30,12 @@ test_that("simulate_migration", {
 
   select_matrix <- matrix(NA, nrow = 1, ncol = 5)
 
-  s <- 0.1
+  s <- 0.5
   select_matrix[1, ] <- c(0.5, 0.5, 0.5 + 0.5 * s, 0.5 + s, 0)
 
-  markers <- seq(from = 0.0, to = 0.51, by = 0.01)
+  markers <- seq(from = 0.4, to = 0.60, by = 0.01)
 
+  cat("starting with simulation of migration of 0.01\n")
   vy <- simulate_admixture_migration(seed = 666,
                                      migration_rate = 0.01,
                                      initial_frequencies = list(c(1, 0),
@@ -42,6 +43,8 @@ test_that("simulate_migration", {
                                      select_matrix = select_matrix,
                                      total_runtime = 100,
                                      markers = markers)
+
+  cat("verify results\n")
 
   found <- c()
   for (loc in unique(vy$final_frequency$location)) {
@@ -52,7 +55,7 @@ test_that("simulate_migration", {
   }
   a2 <- subset(found, found[, 1] == 0.5)
 
-  testthat::expect_equal(a2[2], 1, tolerance = 0.1)
+  testthat::expect_equal(a2[2], 1)
 
   testthat::expect_silent(
     plot_difference_frequencies(vy)
