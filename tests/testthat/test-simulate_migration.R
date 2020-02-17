@@ -28,7 +28,7 @@ test_that("simulate_migration", {
                         length(unique(vy$frequencies$location)))
 
 
-  if(.Platform$OS.type == "unix") {
+
       # this seems to not work on windows, I don't know why!
 
       select_matrix <- matrix(NA, nrow = 1, ncol = 5)
@@ -48,7 +48,7 @@ test_that("simulate_migration", {
                                          markers = markers)
 
     cat("verify results\n")
-
+    if(.Platform$OS.type == "unix") {
     found <- c()
     for (loc in unique(vy$final_frequency$location)) {
       a <- subset(vy$final_frequency, vy$final_frequency$location == loc &
