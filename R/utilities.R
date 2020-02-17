@@ -95,6 +95,7 @@ generate_output_list_two_pop <- function(selected_pop,
   }
 
   if (track_frequency == TRUE && track_junctions == FALSE) {
+    cat("hello!\n")
     frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
     colnames(frequencies_tibble) <- c("time",
                                       "location",
@@ -107,6 +108,7 @@ generate_output_list_two_pop <- function(selected_pop,
                    "frequencies" = frequencies_tibble,
                    "initial_frequency" = initial_freq_tibble,
                    "final_frequency" = final_freq_tibble)
+    cat("output created\n")
   }
 
   if (track_frequency == TRUE && track_junctions == TRUE) {

@@ -163,5 +163,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          final_freq_tibble,
                                          track_frequency,
                                          track_junctions)
+  cat("output list created\n")
   return(output)
 }
