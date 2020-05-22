@@ -98,13 +98,14 @@ generate_output_list_two_pop <- function(selected_pop,
   }
 
   if (track_frequency == TRUE && track_junctions == FALSE) {
-    cat("hello!\n")
-    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time",
+  #   cat("hello!\n")
+    colnames(selected_pop$frequencies) <- c("time",
                                       "location",
                                       "ancestor",
                                       "frequency",
                                       "population")
+    frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies)
+
 
     output <- list("population_1" = selected_popstruct_1,
                    "population_2" = selected_popstruct_2,
@@ -152,9 +153,10 @@ generate_output_list_one_pop <- function(selected_popstruct,
   }
 
   if (track_frequency == TRUE && track_junctions == FALSE) {
-    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time", "location",
+    colnames(selected_pop$frequencies) <- c("time", "location",
                                       "ancestor", "frequency")
+    frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies)
+
 
     output <- list("population" = selected_popstruct,
                    "frequencies" = frequencies_tibble,
@@ -163,9 +165,10 @@ generate_output_list_one_pop <- function(selected_popstruct,
   }
 
   if (track_frequency == TRUE && track_junctions == TRUE) {
-    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time", "location",
+    colnames(selected_pop$frequencies) <- c("time", "location",
                                       "ancestor", "frequency")
+
+    frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies)
 
     output <- list("population" = selected_popstruct,
                    "frequencies" = frequencies_tibble,

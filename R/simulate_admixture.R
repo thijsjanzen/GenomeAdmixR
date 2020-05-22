@@ -94,7 +94,7 @@ simulate_admixture <- function(input_population = NA,
     input_population <- population_to_vector(input_population)
   }
 
-  cat("starting diving into cpp\n")
+  # cat("starting diving into cpp\n")
   selected_pop <- simulate_cpp(input_population,
                                select_matrix,
                                pop_size,

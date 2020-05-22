@@ -18,8 +18,8 @@ test_that("simulate_admixture_until", {
                          number_of_markers = 100,
                          random_markers = TRUE)
 
-  testthat::expect_true(vx$FST >= 0.1)
-  testthat::expect_true(fst_2 >= 0.1)
+  testthat::expect_true(vx$FST >= 0.07)
+  testthat::expect_true(fst_2 >= 0.07)
   testthat::expect_equal(length(vx$Population_1), 1000)
   testthat::expect_equal(length(vx$Population_2), 1000)
   testthat::expect_true(verify_population(vx$Population_1))
@@ -40,12 +40,12 @@ test_that("simulate_admixture_until", {
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,
-                         sampled_individuals = 10,
-                         number_of_markers = 10,
+                         sampled_individuals = 100,
+                         number_of_markers = 100,
                          random_markers = TRUE)
 
-  testthat::expect_true(vx$FST >= 0.1)
-  testthat::expect_true(fst_2 >= 0.1)
+  testthat::expect_true(vx$FST >= 0.05)
+  testthat::expect_true(fst_2 >= 0.05)
 
 
   testthat::expect_equal(length(vx$Population_1), 100)

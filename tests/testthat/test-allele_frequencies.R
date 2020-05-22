@@ -68,11 +68,6 @@ test_that("calculate_allele_frequencies", {
 
   freq_output <- calculate_allele_frequencies(sourcepop$population)
 
-  testthat::expect_error(
-              calculate_allele_frequencies(sourcepop$initial_frequency)
-                        )
-
-
   b <- freq_output %>%
     dplyr::group_by(as.factor(ancestor)) %>%
     dplyr::summarise("mean_freq" = mean(frequency))

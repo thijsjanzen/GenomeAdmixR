@@ -36,9 +36,10 @@ calculate_marker_frequency <- function(pop, location) {
                findtype(indiv$chromosome2, loc)))
     }
     types <- unlist(lapply(pop, fun_chrom))
-    vv <- tibble::as.tibble(table(types))
 
+    vv <- tibble::as_tibble(table(types))
     colnames(vv) <- c("ancestor", "frequency")
+
     vv$frequency <- vv$frequency / sum(vv$frequency)
     vv$location <- loc
     return(vv)
