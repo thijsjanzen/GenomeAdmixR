@@ -1,7 +1,7 @@
 library("covr")
 
 
-#setwd("/Users/janzen/MEGasync/GitHub/GenomeAdmixR/")
+setwd("/Users/janzen/MEGasync/GitHub/GenomeAdmixR/")
 library(lintr)
 lintr::lint_package()
 

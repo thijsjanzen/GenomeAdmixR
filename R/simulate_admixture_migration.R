@@ -141,19 +141,17 @@ simulate_admixture_migration <- function(input_population_1 = NA,
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)
 
-  initial_freq_tibble <- tibble::as.tibble(selected_pop$initial_frequencies)
-  colnames(initial_freq_tibble) <- c("time",
+  colnames(selected_pop$initial_frequencies) <- c("time",
                                      "location",
                                      "ancestor",
                                      "frequency",
                                      "population")
 
-  final_freq_tibble <- tibble::as.tibble(selected_pop$final_frequencies)
-  colnames(final_freq_tibble) <- c("time",
-                                   "location",
-                                   "ancestor",
-                                   "frequency",
-                                   "population")
+  colnames(selected_pop$final_frequencies) <- colnames(selected_pop$initial_frequencies)
+
+  initial_freq_tibble <- tibble::as_tibble(selected_pop$initial_frequencies)
+  final_freq_tibble   <- tibble::as_tibble(selected_pop$final_frequencies)
+
 
   cat("create output list\n")
   output <- generate_output_list_two_pop(selected_pop,

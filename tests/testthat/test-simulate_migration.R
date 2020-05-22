@@ -60,22 +60,12 @@ test_that("simulate_migration", {
 
     testthat::expect_equal(a2[2], 1)
 
-    testthat::expect_silent(
-      plot_difference_frequencies(vy)
-    )
-    testthat::expect_silent(
-      plot_start_end(vy)
-    )
+    plot_difference_frequencies(vy)
+    plot_start_end(vy)
 
-    testthat::expect_silent(
-      plot_frequencies(vy$population_1, locations = c(0.3, 0.5, 0.8))
-    )
-    testthat::expect_silent(
-      plot_frequencies(vy$population_2, locations = c(0.3, 0.5, 0.8))
-    )
-    testthat::expect_silent(
-      vv <- joyplot_frequencies(vy$frequencies, time_points = c(0, 10, 50))
-    )
+    plot_frequencies(vy$population_1, locations = c(0.3, 0.5, 0.8))
+    plot_frequencies(vy$population_2, locations = c(0.3, 0.5, 0.8))
+    vv <- joyplot_frequencies(vy$frequencies, time_points = c(0, 10, 50))
   }
 
 

@@ -1,4 +1,7 @@
-#' @keywords internal
+#' check input population
+#' @param input population, object to be checked
+#' @return corrected input population, or error if not supplied
+#' @export
 check_input_pop <- function(pop) {
 
   if (class(pop) == "individual") {
