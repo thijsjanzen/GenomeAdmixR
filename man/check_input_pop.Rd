@@ -7,7 +7,7 @@
 check_input_pop(pop)
 }
 \arguments{
-\item{input}{population, object to be checked}
+\item{pop}{population, object to be checked}
 }
 \value{
 corrected input population, or error if not supplied

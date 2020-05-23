@@ -1,5 +1,5 @@
 #' check input population
-#' @param input population, object to be checked
+#' @param pop population, object to be checked
 #' @return corrected input population, or error if not supplied
 #' @export
 check_input_pop <- function(pop) {
@@ -34,8 +34,6 @@ check_input_pop <- function(pop) {
       pop <- c(-1e6, -1e6)
     }
   }
-
-
 
   return(pop)
 }
