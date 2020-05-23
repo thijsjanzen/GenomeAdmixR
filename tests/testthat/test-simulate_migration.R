@@ -68,7 +68,6 @@ test_that("simulate_migration", {
     vv <- joyplot_frequencies(vy$frequencies, time_points = c(0, 10, 50))
   }
 
-
   markers <- seq(from = 0.0, to = 1, by = 0.1)
 
   vy <- simulate_admixture_migration(seed = 42,
