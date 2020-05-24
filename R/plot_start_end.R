@@ -13,21 +13,18 @@
 #' Default is population_1.
 #' @return a ggplot object
 #' @examples
-#' s <- 0.01
-#' select_matrix <- matrix(nrow = 1, ncol = 5)
-#' select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
-#'
 #' markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 #'
-#' selected_pop <- simulate_admixture(pop_size = 1000,
-#'                                    number_of_founders = 10,
+#' pop <- simulate_admixture(pop_size = 1000,
+#'                                    number_of_founders = 3,
 #'                                    total_runtime = 11,
 #'                                    morgan = 1,
-#'                                    select_matrix,
 #'                                    seed = 1234,
 #'                                    markers = markers)
-#' plot_start_end(selected_pop,
+#' plot_start_end(pop,
 #'                picked_ancestor = "ALL")
+#' plot_start_end(pop,
+#'                picked_ancestor = 1)
 #' @export
 plot_start_end <- function(results,
                            picked_ancestor = "ALL",
@@ -60,7 +57,6 @@ plot_start_end <- function(results,
                                                          to_plot$timepoint))) +
       ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
   } else {
-
     to_plot <- dplyr::filter(to_plot_m,
                              to_plot_m$ancestor %in% picked_ancestor)
 
