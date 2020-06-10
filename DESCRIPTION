@@ -10,8 +10,7 @@ License: GPL (>= 2)
 Imports: Rcpp,
          hierfstat, 
          tibble, 
-         methods, 
-         tidyr
+         methods
 Suggests: testit, 
           testthat, 
           knitr, 
@@ -28,5 +27,5 @@ LinkingTo: Rcpp,
 SystemRequirements: C++11
 Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2.9000
+RoxygenNote: 7.1.0
 URL: https://github.com/thijsjanzen/GenomeAdmixR
