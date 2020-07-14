@@ -28,10 +28,10 @@ test_that("utilities", {
 
 test_that("initial_frequencies", {
   vx <- simulate_admixture_migration(total_runtime = 5, seed = 1,
-                           initial_frequencies = c(1, 1, 0, 0, 0, 0, 1, 1))
+                                     initial_frequencies = c(1, 1))
 
   vx <- simulate_admixture_migration(total_runtime = 5, seed = 1,
-                                     initial_frequencies = c(1, 1))
+                           initial_frequencies = c(1, 1, 0, 0, 0, 0, 1, 1))
 
 
   vy <- simulate_admixture_migration(total_runtime = 5, seed = 1,
