@@ -122,3 +122,15 @@ test_that("simulate admixture use", {
   print(vx$population)
   print(vx$population[[1]])
 })
+
+
+test_that("simulate admixture use, junctions", {
+  markers <- 0.5
+  vx <- simulate_admixture(pop_size = 100,
+                           number_of_founders = 2,
+                           total_runtime = 100,
+                           seed = 42,
+                           markers = markers,
+                           track_junctions = TRUE)
+})
+
