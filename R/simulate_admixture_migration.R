@@ -137,7 +137,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                 migration_rate,
                                 seed)
 
-  cat("create popstruct\n")
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)
 
@@ -154,7 +153,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
   final_freq_tibble   <- tibble::as_tibble(selected_pop$final_frequencies)
 
 
-  cat("create output list\n")
   output <- generate_output_list_two_pop(selected_pop,
                                          selected_popstruct_1,
                                          selected_popstruct_2,
@@ -162,6 +160,5 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          final_freq_tibble,
                                          track_frequency,
                                          track_junctions)
-  cat("output list created\n")
   return(output)
 }

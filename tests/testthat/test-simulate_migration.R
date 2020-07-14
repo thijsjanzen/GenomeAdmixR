@@ -101,4 +101,12 @@ test_that("simulate_migration", {
   }
   testthat::expect_equal(bv[1], 0)
   testthat::expect_equal(bv[2], 0)
+
+  vy <- simulate_admixture_migration(seed = 42,
+                                     migration_rate = 0.0,
+                                     initial_frequencies = list(c(1, 1, 0, 0),
+                                                                c(0, 0, 1, 1)),
+                                     total_runtime = 100,
+                                     markers = 0.5,
+                                     track_junctions = TRUE)
 })
