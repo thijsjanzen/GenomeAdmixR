@@ -1,4 +1,8 @@
 # GenomeAdmixR
+<img src="https://github.com/thijsjanzen/GenomeAdmixR/blob/master/pics/GenomeAdmixR.png" width="256">
+
+
+
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
