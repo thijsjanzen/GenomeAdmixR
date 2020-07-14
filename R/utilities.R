@@ -1,7 +1,7 @@
-#' check input population
-#' @param pop population, object to be checked
-#' @return corrected input population, or error if not supplied
-#' @export
+# #' check input population
+# #' @param pop population, object to be checked
+# #' @return corrected input population, or error if not supplied
+#' @keywords internal
 check_input_pop <- function(pop) {
 
   if (class(pop) == "individual") {
@@ -40,6 +40,32 @@ check_input_pop <- function(pop) {
 
 #' @keywords internal
 check_initial_frequencies <- function(initial_frequencies) {
+  if (!is.list(initial_frequencies)) {
+    if (length(initial_frequencies) %% 2 == 1) {
+      cat("wrong length of initial frequencies vector\n")
+      stop()
+    }
+
+    if (length(initial_frequencies) == 2) {
+      cat("Assuming a single population with two ancestors\n")
+      if (sum(initial_frequencies) != 1) {
+        initial_frequencies <- initial_frequencies / sum(initial_frequencies)
+        cat("initial frequencies were normalized to 1")
+      }
+    }
+
+    cat("found a vector instead of a list, converting by assuming\n")
+    cat("the second half is the second population\n")
+    num_founders <- length(initial_frequencies) / 2
+    output_freq <- list()
+    a <- initial_frequencies[1:num_founders]
+    output_freq[[1]] <- a
+    b <- initial_frequencies[(num_founders + 1):length(initial_frequencies)]
+    output_freq[[2]] <- b
+
+    initial_frequencies <- output_freq
+  }
+
   if (sum(initial_frequencies[[1]]) != 1) {
     initial_frequencies[[1]] <-
       initial_frequencies[[1]] / sum(initial_frequencies[[1]])
@@ -50,6 +76,11 @@ check_initial_frequencies <- function(initial_frequencies) {
       initial_frequencies[[2]] / sum(initial_frequencies[[2]])
     cat("starting frequencies were normalized to 1\n")
   }
+
+  for (i in seq_along(initial_frequencies)) {
+    cat("initial frequencies pop", i, ":", initial_frequencies[[i]], "\n")
+  }
+
   return(initial_frequencies)
 }
 
@@ -96,7 +127,6 @@ generate_output_list_two_pop <- function(selected_pop,
   }
 
   if (track_frequency == TRUE && track_junctions == FALSE) {
-  #   cat("hello!\n")
     colnames(selected_pop$frequencies) <- c("time",
                                       "location",
                                       "ancestor",
@@ -297,15 +327,22 @@ print.population <- function(x, ...) {
 #' plot the genome of an individual
 #' @description visualise ancestry blocks on both chromosomes
 #' @param x object of type individual
+#' @param cols colors for the different ancestors
 #' @param ... other arguments
 #' @export
-plot.individual <- function(x, ...) {
+plot.individual <- function(x, cols = NA,  ...) {
   alleles_chrom1 <- unique(x$chromosome1[, 2])
   alleles_chrom2 <- unique(x$chromosome2[, 2])
   num_colors <- 1 + max(alleles_chrom1, alleles_chrom2)
   if (num_colors > 20) num_colors <- 20
-  color_palette <- grDevices::rainbow(num_colors)
-  opar <- graphics::par("mar", "mfrow")
+  color_palette <- grDevices::rainbow(num_colors, alpha = 1)
+
+  if (!is.na(cols[[1]])) {
+    color_palette <- cols
+  }
+
+
+   opar <- graphics::par("mar", "mfrow")
 
   graphics::par(mfrow = c(2, 1))
   graphics::par(mar = c(2, 2, 2, 2))
@@ -376,11 +413,11 @@ create_pop_class <- function(pop) {
 }
 
 
-#' verify that an individual is correct
-#' @description function to verify correctness of an object of class
-#' 'individual'
-#' @param indiv object of class 'individual'
-#' @export
+# #' verify that an individual is correct
+# #' @description function to verify correctness of an object of class
+# #' 'individual'
+# #' @param indiv object of class 'individual'
+#' @keywords internal
 verify_individual <- function(indiv) {
 
   if (!methods::is(indiv, "individual")) return(FALSE)
@@ -418,11 +455,11 @@ verify_individual <- function(indiv) {
 }
 
 
-#' verify that a population is correct
-#' @description function to verify correctness of an object of class
-#' 'population'
-#' @param pop object of class 'population'
-#' @export
+# #' verify that a population is correct
+# #' @description function to verify correctness of an object of class
+# #' 'population'
+# #' @param pop object of class 'population'
+#' @keywords internal
 verify_population <- function(pop) {
 
   if (!methods::is(pop, "population"))  {
@@ -438,12 +475,12 @@ verify_population <- function(pop) {
   return(TRUE)
 }
 
-#' find local ancestry
-#' @description returns local ancestry at a site
-#' @param chrom chromosome
-#' @param pos position where to check for local ancestry
-#' @return local ancestry
-#' @export
+# find local ancestry
+# #' @description returns local ancestry at a site
+# #' @param chrom chromosome
+# #' @param pos position where to check for local ancestry
+# #' @return local ancestry
+#' @keywords internal
 findtype <- function(chrom, pos) {
 
   b <- which(chrom[, 1] > pos)

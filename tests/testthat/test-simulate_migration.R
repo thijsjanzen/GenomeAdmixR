@@ -28,7 +28,7 @@ test_that("simulate_migration", {
                         length(unique(vy$frequencies$location)))
 
 
-  if(.Platform$OS.type == "unix") {
+  if (.Platform$OS.type == "unix") {
       # this seems to not work on windows, I don't know why!
 
       select_matrix <- matrix(NA, nrow = 1, ncol = 5)

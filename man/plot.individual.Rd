@@ -4,10 +4,12 @@
 \alias{plot.individual}
 \title{plot the genome of an individual}
 \usage{
-\method{plot}{individual}(x, ...)
+\method{plot}{individual}(x, cols = NA, ...)
 }
 \arguments{
 \item{x}{object of type individual}
+
+\item{cols}{colors for the different ancestors}
 
 \item{...}{other arguments}
 }

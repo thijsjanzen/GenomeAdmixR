@@ -147,7 +147,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                      "frequency",
                                      "population")
 
-  colnames(selected_pop$final_frequencies) <- colnames(selected_pop$initial_frequencies)
+  colnames(selected_pop$final_frequencies) <-
+           colnames(selected_pop$initial_frequencies)
 
   initial_freq_tibble <- tibble::as_tibble(selected_pop$initial_frequencies)
   final_freq_tibble   <- tibble::as_tibble(selected_pop$final_frequencies)

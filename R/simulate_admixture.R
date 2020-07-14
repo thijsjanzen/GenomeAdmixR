@@ -94,7 +94,6 @@ simulate_admixture <- function(input_population = NA,
     input_population <- population_to_vector(input_population)
   }
 
-  # cat("starting diving into cpp\n")
   selected_pop <- simulate_cpp(input_population,
                                select_matrix,
                                pop_size,
@@ -115,7 +114,8 @@ simulate_admixture <- function(input_population = NA,
                                                   "location",
                                                   "ancestor",
                                                   "frequency")
-  colnames(selected_pop$final_frequencies) <- colnames(selected_pop$initial_frequencies)
+  colnames(selected_pop$final_frequencies) <-
+     colnames(selected_pop$initial_frequencies)
 
 
   initial_freq_tibble <- tibble::as_tibble(selected_pop$initial_frequencies)

@@ -13,3 +13,4 @@ tests/testthat/Rplots.pdf
 codecov.R
 codecov.R
 codecov.R
+*.pdf
