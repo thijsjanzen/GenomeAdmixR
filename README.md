@@ -1,5 +1,5 @@
 # GenomeAdmixR
-<img src="https://github.com/thijsjanzen/GenomeAdmixR/blob/master/pics/GenomeAdmixR.png" width="256">
+<img src="https://github.com/thijsjanzen/GenomeAdmixR/blob/master/pics/GenomeAdmixR_2.png" width="256">
 
 
 
