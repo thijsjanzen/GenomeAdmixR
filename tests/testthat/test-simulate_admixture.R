@@ -133,4 +133,3 @@ test_that("simulate admixture use, junctions", {
                            markers = markers,
                            track_junctions = TRUE)
 })
-

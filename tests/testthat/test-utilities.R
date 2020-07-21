@@ -42,7 +42,8 @@ test_that("initial_frequencies", {
 
   testthat::expect_error(
     simulate_admixture_migration(total_runtime = 5, seed = 1,
-                                 initial_frequencies = c(1, 1, 0, 0, 0, 0, 1, 1, 1))
+                                 initial_frequencies = c(1, 1, 0, 0,
+                                                         0, 0, 1, 1, 1))
   )
 
 

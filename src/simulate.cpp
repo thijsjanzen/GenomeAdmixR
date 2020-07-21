@@ -40,8 +40,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
     //Rcout << "simulate_population: " << multiplicative_selection << "\n";
 
-    bool use_selection = FALSE;
-    if(select(1, 1) >= 0) use_selection = TRUE;
+    bool use_selection = false;
+    if(select(1, 1) >= 0) use_selection = true;
 
     double expected_max_fitness = 1e-6;
     std::vector<Fish> Pop = sourcePop;
@@ -49,7 +49,9 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     double maxFitness = -1;
 
     if(use_selection) {
-        for(int j = 0; j < select.nrow(); ++j) {
+        /*
+
+         for(int j = 0; j < select.nrow(); ++j) {
             if(select(j, 4) < 0) break; // these entries are only for tracking, not for selection calculations
             double local_max_fitness = 0.0;
             for(int i = 1; i < 4; ++i) {
@@ -59,15 +61,16 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             }
             expected_max_fitness += local_max_fitness;
         }
+      */
 
         for(auto it = Pop.begin(); it != Pop.end(); ++it){
             double fit = calculate_fitness((*it), select, multiplicative_selection);
             if(fit > maxFitness) maxFitness = fit;
 
-            if(fit > (expected_max_fitness)) { // little fix to avoid numerical problems
-                Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
-                Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
-            }
+        //    if(fit > (expected_max_fitness)) { // little fix to avoid numerical problems
+          //      Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
+          //      Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
+          //  }
 
             fitness.push_back(fit);
         }
@@ -131,10 +134,10 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
             if(fit > newMaxFitness) newMaxFitness = fit;
 
-            if(fit > expected_max_fitness) {
-                Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
-                Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
-            }
+           // if(fit > expected_max_fitness) {
+           //      Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
+          //      Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
+          //  }
 
             newFitness.push_back(fit);
         }
@@ -224,7 +227,6 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
     if(track_frequency) {
         //Rcout << "Preparing frequencies_table\n";
-       // int number_entries = track_markers.size();
         int number_of_markers = track_markers.size();
         //arma::cube x(total_runtime, number_of_alleles, number_entries); // n_row, n_col, n_slices, type
         arma::mat x(number_of_markers * number_of_alleles * total_runtime, 4); // 4 columns: time, loc, anc, type
@@ -251,7 +253,10 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                       number_of_alleles,
                                                       founder_labels);
     //Rcout << "finished simulation\n";
-    arma::mat final_frequencies = update_all_frequencies_tibble(outputPop, track_markers, founder_labels, total_runtime);
+    arma::mat final_frequencies = update_all_frequencies_tibble(outputPop,
+                                                                track_markers,
+                                                                founder_labels,
+                                                                total_runtime);
 
     return List::create( Named("population") = convert_to_list(outputPop),
                          Named("frequencies") = frequencies_table,
@@ -259,52 +264,3 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                          Named("final_frequencies") = final_frequencies,
                          Named("junctions") = junctions);
 }
-
-/*
-// [[Rcpp::export]]
-void test_fish_functions() {
-    Fish test_fish;
-
-    junction temp;
-    junction temp2(0.5, 0);
-    junction temp3(0.5, 0);
-    if(temp2 == temp3) {
-        temp = temp2;
-    }
-
-    bool temp400 = (temp2 != temp3);
-    Rcout << temp400 << "\t" << "this is only for testing\n";
-
-    junction temp4(temp);
-
-    test_fish.chromosome1.push_back(temp);
-    test_fish.chromosome1.push_back(temp2);
-    test_fish.chromosome1.push_back(temp3);
-    test_fish.chromosome1.push_back(temp4);
-
-    Fish test_fish2 = test_fish;
-
-    if(test_fish == test_fish2) {
-        Rcout << "fishes are equal!\n";
-    }
-
-    Fish test_fish3(5);
-    bool b = (test_fish == test_fish3);
-    Rcout << b << "\t" << "this is only for testing\n";
-
-    std::vector< junction > chrom;
-    chrom.push_back(temp);
-
-    Fish test_fish4(chrom, chrom);
-
-    std::vector< Fish > pop;
-    pop.push_back(test_fish);
-    pop.push_back(test_fish2);
-    pop.push_back(test_fish3);
-    pop.push_back(test_fish4);
-
-    verify_pop_cpp(pop);
-
-
-    return;
-}*/
