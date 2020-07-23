@@ -15,7 +15,7 @@ check_input_pop <- function(pop) {
         pop <- pop$population
       } else{
         if (methods::is(pop$population_1, "population")) {
-          cat("Warning, only population 1 is processed\n
+          warning("Warning, only population 1 is processed\n
               explicitly pass a population to remedy this\n")
           pop <- pop$population_1
         } else {
@@ -42,20 +42,19 @@ check_input_pop <- function(pop) {
 check_initial_frequencies <- function(initial_frequencies) {
   if (!is.list(initial_frequencies)) {
     if (length(initial_frequencies) %% 2 == 1) {
-      cat("wrong length of initial frequencies vector\n")
-      stop()
+      stop("wrong length of initial frequencies vector\n")
     }
 
     if (length(initial_frequencies) == 2) {
       cat("Assuming a single population with two ancestors\n")
       if (sum(initial_frequencies) != 1) {
         initial_frequencies <- initial_frequencies / sum(initial_frequencies)
-        cat("initial frequencies were normalized to 1")
+        warning("initial frequencies were normalized to 1")
       }
     }
 
-    cat("found a vector instead of a list, converting by assuming\n")
-    cat("the second half is the second population\n")
+    message("found a vector instead of a list, converting by assuming\n")
+    message("the second half is the second population\n")
     num_founders <- length(initial_frequencies) / 2
     output_freq <- list()
     a <- initial_frequencies[1:num_founders]
@@ -69,26 +68,21 @@ check_initial_frequencies <- function(initial_frequencies) {
   if (sum(initial_frequencies[[1]]) != 1) {
     initial_frequencies[[1]] <-
       initial_frequencies[[1]] / sum(initial_frequencies[[1]])
-    cat("starting frequencies were normalized to 1\n")
+    warning("starting frequencies were normalized to 1\n")
   }
   if (sum(initial_frequencies[[2]]) != 1) {
     initial_frequencies[[2]] <-
       initial_frequencies[[2]] / sum(initial_frequencies[[2]])
-    cat("starting frequencies were normalized to 1\n")
+    warning("starting frequencies were normalized to 1\n")
   }
-
-  for (i in seq_along(initial_frequencies)) {
-    cat("initial frequencies pop", i, ":", initial_frequencies[[i]], "\n")
-  }
-
   return(initial_frequencies)
 }
 
 #' @keywords internal
 check_select_matrix <- function(select_matrix) {
   if (is.matrix(select_matrix)) {
-    cat("Found a selection matrix, performing simulation\n")
-    cat("including selection\n")
+    message("Found a selection matrix, performing simulation\n")
+    message("including selection\n")
     if (sum(is.na(select_matrix))) {
       stop("Can't start, there are NA values in the selection matrix!\n")
     }
@@ -140,7 +134,7 @@ generate_output_list_two_pop <- function(selected_pop,
                    "frequencies" = frequencies_tibble,
                    "initial_frequency" = initial_freq_tibble,
                    "final_frequency" = final_freq_tibble)
-    cat("output created\n")
+    message("output created\n")
   }
 
   if (track_frequency == TRUE && track_junctions == TRUE) {

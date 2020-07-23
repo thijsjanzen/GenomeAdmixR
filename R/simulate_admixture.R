@@ -70,7 +70,7 @@ simulate_admixture <- function(input_population = NA,
 
   if (sum(initial_frequencies) != 1) {
     initial_frequencies <- initial_frequencies / sum(initial_frequencies)
-    cat("starting frequencies were normalized to 1\n")
+    message("starting frequencies were normalized to 1\n")
   }
 
   select_matrix <- check_select_matrix(select_matrix)

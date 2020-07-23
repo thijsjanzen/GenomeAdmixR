@@ -84,7 +84,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          multiplicative_selection = TRUE,
                                          migration_rate = 0.0) {
 
-  cat("starting simulation incl migration\n")
+  message("starting simulation incl migration\n")
 
   input_population_1 <- check_input_pop(input_population_1)
   input_population_2 <- check_input_pop(input_population_2)
