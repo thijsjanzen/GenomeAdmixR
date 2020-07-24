@@ -45,6 +45,4 @@ test_that("initial_frequencies", {
                                  initial_frequencies = c(1, 1, 0, 0,
                                                          0, 0, 1, 1, 1))
   )
-
-
 })
