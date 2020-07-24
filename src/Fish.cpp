@@ -144,15 +144,6 @@ bool do_recombination(std::vector<junction>& offspring,
         // if a bad memory access call happens, we get weird numbers in .right:
         if(abs(temp_offspring[i].right) > 1000) add = false;
 
-
-        // verify correctness even further
-        if(temp_offspring[i].right == -1) {
-            if(temp_offspring[i].pos < 1.0) {
-                Rcout << "Error introduced in recombine\n";
-                stop("Error in total chromosome");
-            }
-        }
-
         if(add == true) {
             offspring.push_back(temp_offspring[i]);
         }
@@ -294,32 +285,4 @@ Fish::Fish(int initLoc)    {
     chromosome1.push_back( right );
     chromosome2.push_back( left  );
     chromosome2.push_back( right );
-}
-
-Fish::Fish(const std::vector<junction>& A,
-    const std::vector<junction>& B)    {
-    chromosome1 = A;
-    chromosome2 = B;
-}
-
-bool chromosomes_are_same(const std::vector< junction >& c1,
-                          const std::vector< junction >& c2) {
-
-    if(c1.size() != c2.size()) return false;
-
-    static double eps = 1e-4;
-    for(int i = 0; i < (int)c1.size(); ++i) {
-        double diffPos = c1[i].pos - c2[i].pos;
-        if(diffPos < -eps || diffPos > eps) return false;
-        if(c1[i].right != c2[i].right) return false;
-    }
-    return true;
-
-}
-
-bool Fish::operator ==(const Fish& other) const {
-    if(!chromosomes_are_same(chromosome1, other.chromosome1)) return false;
-    if(!chromosomes_are_same(chromosome2, other.chromosome2)) return false;
-
-    return true;
 }

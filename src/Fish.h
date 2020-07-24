@@ -1,6 +1,6 @@
 //
 //  Fish.hpp
-//  
+//
 //
 //  Created by Thijs Janzen on 02/11/2017.
 //
@@ -32,10 +32,6 @@ struct Fish {
     Fish();
 
     Fish(int initLoc);
-    Fish(const std::vector<junction>& A,
-         const std::vector<junction>& B);
-
-    bool operator ==(const Fish& other) const;
 };
 
 

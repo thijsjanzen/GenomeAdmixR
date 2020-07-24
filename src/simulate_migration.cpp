@@ -37,7 +37,7 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
   Fish parent;
   index = -1;
 
-  if(uniform() < migration_rate) {
+  if (uniform() < migration_rate) {
     // migration
     if(use_selection) {
       index = draw_prop_fitness(fitness_migr, max_fitness_migr);
@@ -81,7 +81,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
   new_fitness.clear();
   new_fitness.resize(pop_size);
   new_max_fitness = -1.0;
-  for(int i = 0; i < pop_size; ++i)  {
+  for (int i = 0; i < pop_size; ++i)  {
     int index1, index2;
     Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
                                use_selection,
@@ -93,7 +93,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                fitness_source, fitness_migr,
                                max_fitness_source, max_fitness_migr,
                                index2);
-    while(index1 == index2) {
+    while (index1 == index2) {
       parent2 = draw_parent(pop_1, pop_2, migration_rate,
                             use_selection,
                             fitness_source, fitness_migr,
@@ -104,8 +104,8 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
     new_generation[i] = mate(parent1, parent2, size_in_morgan);
 
     double fit = -2.0;
-    if(use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
-    if(fit > new_max_fitness) new_max_fitness = fit;
+    if (use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
+    if (fit > new_max_fitness) new_max_fitness = fit;
 
     new_fitness[i] = fit;
   }
@@ -130,7 +130,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     const std::vector<int>& founder_labels,
     double migration_rate) {
   bool use_selection = FALSE;
-  if(select(1, 1) >= 0) use_selection = TRUE;
+  if (select(1, 1) >= 0) use_selection = TRUE;
 
   double expected_max_fitness = 1e-6;
   std::vector<Fish> pop_1 = source_pop_1;
@@ -139,23 +139,23 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   double max_fitness_pop_1, max_fitness_pop_2;
   std::vector<double> fitness_pop_1, fitness_pop_2;
 
-  if(use_selection) {
-    for(int j = 0; j < select.nrow(); ++j) {
-      if(select(j, 4) < 0) break; // these entries are only for tracking, not for selection calculations
+  if (use_selection) {
+    for (int j = 0; j < select.nrow(); ++j) {
+      if (select(j, 4) < 0) break; // these entries are only for tracking, not for selection calculations
       double local_max_fitness = 0.0;
-      for(int i = 1; i < 4; ++i) {
-        if(select(j, i) > local_max_fitness) {
+      for (int i = 1; i < 4; ++i) {
+        if (select(j, i) > local_max_fitness) {
           local_max_fitness = select(j, i);
         }
       }
       expected_max_fitness += local_max_fitness;
     }
 
-    for(auto it = pop_1.begin(); it != pop_1.end(); ++it){
+    for (auto it = pop_1.begin(); it != pop_1.end(); ++it){
       double fit = calculate_fitness((*it), select, multiplicative_selection);
-      if(fit > max_fitness_pop_1) max_fitness_pop_1 = fit;
+      if (fit > max_fitness_pop_1) max_fitness_pop_1 = fit;
 
-      if(fit > (expected_max_fitness)) { // little fix to avoid numerical problems
+      if (fit > (expected_max_fitness)) { // little fix to avoid numerical problems
         Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
           Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
       }
@@ -163,11 +163,11 @@ std::vector< std::vector< Fish > > simulate_two_populations(
       fitness_pop_1.push_back(fit);
     }
 
-    for(auto it = pop_2.begin(); it != pop_2.end(); ++it){
+    for (auto it = pop_2.begin(); it != pop_2.end(); ++it){
       double fit = calculate_fitness((*it), select, multiplicative_selection);
-      if(fit > max_fitness_pop_2) max_fitness_pop_2 = fit;
+      if (fit > max_fitness_pop_2) max_fitness_pop_2 = fit;
 
-      if(fit > (expected_max_fitness)) { // little fix to avoid numerical problems
+      if (fit > (expected_max_fitness)) { // little fix to avoid numerical problems
         Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
           Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
       }
@@ -185,9 +185,10 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   }
   R_FlushConsole();
 
-  for(int t = 0; t < total_runtime; ++t) {
+  for (int t = 0; t < total_runtime; ++t) {
     if(track_frequency) {
-      arma::mat local_mat = update_all_frequencies_tibble_dual_pop (pop_1, pop_2,
+      arma::mat local_mat = update_all_frequencies_tibble_dual_pop (pop_1,
+                                                                    pop_2,
                                                                     track_markers,
                                                                     founder_labels,
                                                                     t);
@@ -197,8 +198,8 @@ std::vector< std::vector< Fish > > simulate_two_populations(
 
       int start_add_marker = local_mat_size * t;
 
-      for(int j = 0; j < local_mat_size; ++j) {
-        for(int k = 0; k < 5; ++k) {
+      for (int j = 0; j < local_mat_size; ++j) {
+        for (int k = 0; k < 5; ++k) {
           frequencies(start_add_marker + j, k)  = local_mat(j, k);
         }
       }
@@ -208,18 +209,33 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     std::vector<double> new_fitness_pop_1, new_fitness_pop_2;
     assert(pop_size.size() == 2);
 
-    std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1, pop_2, pop_size[0],
-                                                           fitness_pop_1, fitness_pop_2,
-                                                           max_fitness_pop_1, max_fitness_pop_2,
-                                                           select, use_selection, multiplicative_selection,
-                                                           migration_rate, new_fitness_pop_1, new_max_fitness_pop_1,
+    std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1, // resident
+                                                           pop_2, // migrants
+                                                           pop_size[0],
+                                                           fitness_pop_1,
+                                                           fitness_pop_2,
+                                                           max_fitness_pop_1,
+                                                           max_fitness_pop_2,
+                                                           select,
+                                                           use_selection,
+                                                           multiplicative_selection,
+                                                           migration_rate,
+                                                           new_fitness_pop_1,
+                                                           new_max_fitness_pop_1,
                                                            morgan);
-    // Rcout << "starting nex_pop_migr pop 2\n";
-    std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2, pop_1, pop_size[1],
-                                                           fitness_pop_2, fitness_pop_1,
-                                                           max_fitness_pop_2, max_fitness_pop_1,
-                                                           select, use_selection, multiplicative_selection,
-                                                           migration_rate, new_fitness_pop_2, new_max_fitness_pop_2,
+    std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
+                                                           pop_1,  // migrants
+                                                           pop_size[1],
+                                                           fitness_pop_2,
+                                                           fitness_pop_1,
+                                                           max_fitness_pop_2,
+                                                           max_fitness_pop_1,
+                                                           select,
+                                                           use_selection,
+                                                           multiplicative_selection,
+                                                           migration_rate,
+                                                           new_fitness_pop_2,
+                                                           new_max_fitness_pop_2,
                                                            morgan);
     // Rcout << "updating vectors\n";
     pop_1 = new_generation_pop_1;
@@ -245,7 +261,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
 
     Rcpp::checkUserInterrupt();
   }
-  if(progress_bar) Rcout << "\n";
+  if (progress_bar) Rcout << "\n";
   std::vector< std::vector< Fish > > output;
   output.push_back(pop_1);
   output.push_back(pop_2);
@@ -266,8 +282,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             bool track_junctions,
                             bool multiplicative_selection,
                             double migration_rate,
-                            int seed)
-{
+                            int seed) {
   set_seed(seed);
   set_poisson(morgan);
 
@@ -294,7 +309,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
 
     number_of_alleles = founder_labels.size();
 
-    if(Pop_1.size() != pop_size[0]) {
+    if (Pop_1.size() != pop_size[0]) {
       // the populations have to be populated from the parents!
       std::vector< Fish > Pop_1_new;
       for(int j = 0; j < pop_size[0]; ++j) {
@@ -304,9 +319,9 @@ List simulate_migration_cpp(NumericVector input_population_1,
       std::swap(Pop_1, Pop_1_new);
     }
 
-    if(Pop_2.size() != pop_size[1]) {
+    if (Pop_2.size() != pop_size[1]) {
       std::vector< Fish > Pop_2_new;
-      for(int j = 0; j < pop_size[1]; ++j) {
+      for (int j = 0; j < pop_size[1]; ++j) {
         int index = random_number(Pop_2.size());
         Pop_2_new.push_back(Pop_2[index]);
       }
