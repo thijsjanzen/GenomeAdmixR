@@ -40,7 +40,7 @@
 #'   ggplot2::ylab("Generations")
 #' }
 #' @export
-joyplot_frequencies <- function(frequencies,
+plot_joyplot_frequencies <- function(frequencies,
                                 time_points,
                                 picked_ancestor = "ALL",
                                 picked_population = 1
