@@ -44,16 +44,16 @@ We can now plot all the ancestors over time, we choose here to plot them only fo
 
 ```{r joyplot all}
 time_points <- seq(from = 0, to = 1000, by = 100)
-joyplot_frequencies(selected_pop$frequencies, time_points, picked_ancestor = "ALL")
+plot_joyplot_frequencies(selected_pop$frequencies, time_points, picked_ancestor = "ALL")
 ```
 
 Alternatively, we can plot them separately.
 ```{r joyplot separate 0}
-p1 <- joyplot_frequencies(selected_pop$frequencies, time_points, picked_ancestor = 0)
+p1 <- plot_joyplot_frequencies(selected_pop$frequencies, time_points, picked_ancestor = 0)
 p1 + ggplot2::geom_vline(xintercept = 0.23, lty = 2)
 ```
 And for the other ancestor:
 ```{r joyplot separate 1}
-p2 <- joyplot_frequencies(selected_pop$frequencies, time_points, picked_ancestor = 1)
+p2 <- plot_joyplot_frequencies(selected_pop$frequencies, time_points, picked_ancestor = 1)
 p2 + ggplot2::geom_vline(xintercept = 0.27, lty = 2)
 ```
