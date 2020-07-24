@@ -132,4 +132,11 @@ test_that("simulate admixture use, junctions", {
                            seed = 42,
                            markers = markers,
                            track_junctions = TRUE)
+
+  # no seed
+  vx <- simulate_admixture(pop_size = 100,
+                           number_of_founders = 2,
+                           total_runtime = 100,
+                           markers = markers,
+                           track_junctions = TRUE)
 })
