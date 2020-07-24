@@ -132,7 +132,6 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   bool use_selection = FALSE;
   if (select(1, 1) >= 0) use_selection = TRUE;
 
-  double expected_max_fitness = 1e-6;
   std::vector<Fish> pop_1 = source_pop_1;
   std::vector<Fish> pop_2 = source_pop_2;
 
@@ -148,17 +147,11 @@ std::vector< std::vector< Fish > > simulate_two_populations(
           local_max_fitness = select(j, i);
         }
       }
-      expected_max_fitness += local_max_fitness;
     }
 
     for (auto it = pop_1.begin(); it != pop_1.end(); ++it){
       double fit = calculate_fitness((*it), select, multiplicative_selection);
       if (fit > max_fitness_pop_1) max_fitness_pop_1 = fit;
-
-      if (fit > (expected_max_fitness)) { // little fix to avoid numerical problems
-        Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
-          Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
-      }
 
       fitness_pop_1.push_back(fit);
     }
@@ -166,11 +159,6 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     for (auto it = pop_2.begin(); it != pop_2.end(); ++it){
       double fit = calculate_fitness((*it), select, multiplicative_selection);
       if (fit > max_fitness_pop_2) max_fitness_pop_2 = fit;
-
-      if (fit > (expected_max_fitness)) { // little fix to avoid numerical problems
-        Rcout << "Expected maximum " << expected_max_fitness << " found " << fit << "\n";
-          Rcpp::stop("ERROR in calculating fitness, fitness too large\n");
-      }
 
       fitness_pop_2.push_back(fit);
     }
@@ -223,6 +211,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
                                                            new_fitness_pop_1,
                                                            new_max_fitness_pop_1,
                                                            morgan);
+
     std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                            pop_1,  // migrants
                                                            pop_size[1],
