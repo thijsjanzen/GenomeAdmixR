@@ -65,7 +65,7 @@ test_that("simulate_migration", {
 
     plot_frequencies(vy$population_1, locations = c(0.3, 0.5, 0.8))
     plot_frequencies(vy$population_2, locations = c(0.3, 0.5, 0.8))
-    vv <- joyplot_frequencies(vy$frequencies, time_points = c(0, 10, 50))
+    vv <- plot_joyplot_frequencies(vy$frequencies, time_points = c(0, 10, 50))
   }
 
   markers <- seq(from = 0.0, to = 1, by = 0.1)
