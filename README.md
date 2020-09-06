@@ -1,4 +1,5 @@
-# GenomeAdmixR
+# GenomeAdmixR  <img src="pics/GenomeAdmixR_2.png" align="right" width="120" />
+
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 [![](http://cranlogs.r-pkg.org/badges/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
@@ -9,7 +10,6 @@ master|[![Build Status](https://travis-ci.org/thijsjanzen/GenomeAdmixR.svg?branc
 
 # What is GenomeAdmixR?
 A package under construction to simulate genetic admixture in relation to isofemale lines
-<img src="pics/GenomeAdmixR_2.png" align="right" width="120" />
 
 # Demonstration GenomeAdmixR
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
