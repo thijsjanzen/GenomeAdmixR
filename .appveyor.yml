@@ -15,11 +15,12 @@ cache:
 # Adapt as necessary starting from here
 
 build_script:
-  - travis-tool.sh install_deps
   - travis-tool.sh install_github jimhester/covr
   - travis-tool.sh install_github jimhester/lintr
   - travis-tool.sh install_github MangoTheCat/goodpractice
   - travis-tool.sh install_github EricArcher/strataG
+  - travis-tool.sh install_deps
+ 
   
 
 test_script:
