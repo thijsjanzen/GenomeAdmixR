@@ -42,6 +42,17 @@
 #' Migration is implemented such that with probability m (migration rate) one
 #' of the two parents of a new offspring is from the other population, with
 #' probability 1-m both parents are of the focal population.
+#' @param stop_simulation_at_critical_fst option to stop at a critical FST value
+#' , default is FALSE
+#' @param critical_fst the critical fst value to stop, if
+#' \code{stop_simulation_at_critical_fst} is TRUE
+#' @param generations_between_update The number of generations after which the
+#' simulation has to check again whether the critical Fst value is exceeded
+#' @param sampled_individuals Number of individuals to be sampled at random from
+#' the population to estimate Fst
+#' @param number_of_markers Number of markers to be used to estimate Fst
+#' @param random_markers Are the markers to estimate Fst randomly distributed,
+#' or regularly distributed? Default is TRUE.
 #' @return A list with: \code{population_1}, \code{population_2} two population
 #' objects, and three tibbles with allele frequencies (only contain values of a
 #' vector was provided to the argument \code{markers}: \code{frequencies},
@@ -50,7 +61,9 @@
 #' and \code{population}, which indicates the number of generations, the
 #' location along the chromosome of the marker, the ancestral allele at that
 #' location in that generation, the frequency of that allele and the population
-#' in which it was recorded (1 or 2).
+#' in which it was recorded (1 or 2). If a critical fst value was used to
+#' terminate the simulation, and object \code{FST} with the final FST estimate
+#' is returned as well.
 #' @examples
 #'  \dontrun{
 #' select_matrix <- matrix(NA, nrow=1, ncol=5)
@@ -82,9 +95,37 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          progress_bar = TRUE,
                                          track_junctions = FALSE,
                                          multiplicative_selection = TRUE,
-                                         migration_rate = 0.0) {
+                                         migration_rate = 0.0,
+                                         stop_simulation_at_critical_fst = FALSE,
+                                         critical_fst = 0.1,
+                                         generations_between_update = 100,
+                                         sampled_individuals = 10,
+                                         number_of_markers = 100,
+                                         random_markers = TRUE) {
 
   message("starting simulation incl migration\n")
+
+  if (stop_simulation_at_critical_fst) {
+    return(simulate_admixture_until(input_population_1 = input_population_1,
+                                    input_population_2 = input_population_2,
+                                    pop_size = pop_size,
+                                    initial_frequencies = initial_frequencies,
+                                    total_runtime = total_runtime,
+                                    morgan = morgan,
+                                    seed = seed,
+                                    select_matrix = select_matrix,
+                                    markers = markers,
+                                    progress_bar = progress_bar,
+                                    track_junctions = track_junctions,
+                                    multiplicative_selection = multiplicative_selection,
+                                    migration_rate = migration_rate,
+                                    critical_fst = critical_fst,
+                                    generations_between_update = generations_between_update,
+                                    sampled_individuals = sampled_individuals,
+                                    number_of_markers = number_of_markers,
+                                    random_markers = random_markers))
+  }
+
 
   input_population_1 <- check_input_pop(input_population_1)
   input_population_2 <- check_input_pop(input_population_2)

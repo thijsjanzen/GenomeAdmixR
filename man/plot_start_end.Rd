@@ -7,8 +7,8 @@
 plot_start_end(results, picked_ancestor = "ALL", picked_population = 1)
 }
 \arguments{
-\item{results}{An object which is the result of \code{select_population} or
-\code{create_population_selection}, being a list with four properties:
+\item{results}{An object which is the result of \code{simulate_admixture},
+being a list with four properties:
 \code{population}, \code{frequencies}, \code{initial_frequencies} and
 \code{final frequencies}}
 

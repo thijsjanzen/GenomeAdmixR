@@ -1,8 +1,8 @@
 #' Plot both the starting frequencies and the final frequencies in one plot
 #' @description This function plots the distribution of both the starting and
 #' the final frequencies in one plot
-#' @param results An object which is the result of \code{select_population} or
-#' \code{create_population_selection}, being a list with four properties:
+#' @param results An object which is the result of \code{simulate_admixture},
+#' being a list with four properties:
 #' \code{population}, \code{frequencies}, \code{initial_frequencies} and
 #' \code{final frequencies}
 #' @param picked_ancestor Default is "ALL", where different colors indicate

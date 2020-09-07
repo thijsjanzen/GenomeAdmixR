@@ -122,11 +122,12 @@ generate_output_list_two_pop <- function(selected_pop,
 
   if (track_frequency == TRUE && track_junctions == FALSE) {
     colnames(selected_pop$frequencies) <- c("time",
-                                      "location",
-                                      "ancestor",
-                                      "frequency",
-                                      "population")
-    frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies)
+                                            "location",
+                                            "ancestor",
+                                            "frequency",
+                                            "population")
+    frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies,
+                                            .name_repair = "unique")
 
 
     output <- list("population_1" = selected_popstruct_1,
@@ -176,7 +177,7 @@ generate_output_list_one_pop <- function(selected_popstruct,
 
   if (track_frequency == TRUE && track_junctions == FALSE) {
     colnames(selected_pop$frequencies) <- c("time", "location",
-                                      "ancestor", "frequency")
+                                            "ancestor", "frequency")
     frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies)
 
 
@@ -188,7 +189,7 @@ generate_output_list_one_pop <- function(selected_popstruct,
 
   if (track_frequency == TRUE && track_junctions == TRUE) {
     colnames(selected_pop$frequencies) <- c("time", "location",
-                                      "ancestor", "frequency")
+                                            "ancestor", "frequency")
 
     frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies)
 
@@ -336,7 +337,7 @@ plot.individual <- function(x, cols = NA,  ...) {
   }
 
 
-   opar <- graphics::par("mar", "mfrow")
+  opar <- graphics::par("mar", "mfrow")
 
   graphics::par(mfrow = c(2, 1))
   graphics::par(mar = c(2, 2, 2, 2))

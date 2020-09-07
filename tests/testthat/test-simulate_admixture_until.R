@@ -2,15 +2,16 @@ context("simulate_admixture_until")
 
 test_that("simulate_admixture_until", {
 
-  vx <- simulate_admixture_until(total_runtime = 1000,
-                                 pop_size = c(1000, 1000),
-                                 initial_frequencies =
-                                                list(c(0.5, 0.5), c(0.5, 0.5)),
-                                 morgan = 1,
-                                 seed = 42,
-                                 generations_between_update = 100,
-                                 critical_fst = 0.1,
-                                 migration_rate = 0.0)
+  vx <- simulate_admixture_migration(total_runtime = 1000,
+                                     pop_size = c(1000, 1000),
+                                     initial_frequencies =
+                                       list(c(0.5, 0.5), c(0.5, 0.5)),
+                                     morgan = 1,
+                                     seed = 42,
+                                     stop_simulation_at_critical_fst = TRUE,
+                                     generations_between_update = 100,
+                                     critical_fst = 0.1,
+                                     migration_rate = 0.0)
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,
@@ -25,17 +26,18 @@ test_that("simulate_admixture_until", {
   testthat::expect_true(verify_population(vx$Population_1))
   testthat::expect_true(verify_population(vx$Population_1))
   testthat::expect_true(length(all.equal(vx$Population_1,
-                                   vx$Population_2)) > 10)
+                                         vx$Population_2)) > 10)
 
 
-  vx <- simulate_admixture_until(total_runtime = 1000,
-                                 pop_size = c(100, 100),
-                                 initial_frequencies = list(c(1, 1),
-                                                            c(1, 1)),
-                                 morgan = 1,
-                                 generations_between_update = 10,
-                                 critical_fst = 0.1,
-                                 migration_rate = 0.001)
+  vx <- simulate_admixture_migration(total_runtime = 1000,
+                                     pop_size = c(100, 100),
+                                     initial_frequencies = list(c(1, 1),
+                                                                c(1, 1)),
+                                     morgan = 1,
+                                     stop_simulation_at_critical_fst = TRUE,
+                                     generations_between_update = 10,
+                                     critical_fst = 0.1,
+                                     migration_rate = 0.001)
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,

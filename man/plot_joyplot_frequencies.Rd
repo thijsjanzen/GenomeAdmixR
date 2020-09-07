@@ -50,12 +50,12 @@ selected_pop <- simulate_admixture(pop_size = 1000,
                                    select_matrix,
                                    seed = 1234,
                                    markers = markers)
-joyplot_frequencies(selected_pop$frequencies,
+plot_joyplot_frequencies(selected_pop$frequencies,
                     0:11, picked_ancestor = "ALL")
 
 # joyplot frequencies returns a ggplot object, so we can
 # add extra elements:
-joyplot_frequencies(selected_pop$frequencies,
+plot_joyplot_frequencies(selected_pop$frequencies,
                     0:11, picked_ancestor = "ALL") +
   ggplot2::xlab("Location") +
   ggplot2::ylab("Generations")

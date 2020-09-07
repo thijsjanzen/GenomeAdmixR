@@ -66,6 +66,7 @@ testthat::test_that("fst", {
 
 testthat::test_that("random markers", {
   set.seed(42)
-  create_random_markers(1e3)
-  create_random_markers(1e6)
+  vx <- create_random_markers(1e3)
+  vy <- create_random_markers(1e6)
+  testthat::expect_true(length(vy) > length(vx))
 })

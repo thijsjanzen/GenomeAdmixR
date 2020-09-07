@@ -18,7 +18,13 @@ simulate_admixture_migration(
   progress_bar = TRUE,
   track_junctions = FALSE,
   multiplicative_selection = TRUE,
-  migration_rate = 0
+  migration_rate = 0,
+  stop_simulation_at_critical_fst = FALSE,
+  critical_fst = 0.1,
+  generations_between_update = 100,
+  sampled_individuals = 10,
+  number_of_markers = 100,
+  random_markers = TRUE
 )
 }
 \arguments{
@@ -72,6 +78,23 @@ marker.}
 Migration is implemented such that with probability m (migration rate) one
 of the two parents of a new offspring is from the other population, with
 probability 1-m both parents are of the focal population.}
+
+\item{stop_simulation_at_critical_fst}{option to stop at a critical FST value
+, default is FALSE}
+
+\item{critical_fst}{the critical fst value to stop, if
+\code{stop_simulation_at_critical_fst} is TRUE}
+
+\item{generations_between_update}{The number of generations after which the
+simulation has to check again whether the critical Fst value is exceeded}
+
+\item{sampled_individuals}{Number of individuals to be sampled at random from
+the population to estimate Fst}
+
+\item{number_of_markers}{Number of markers to be used to estimate Fst}
+
+\item{random_markers}{Are the markers to estimate Fst randomly distributed,
+or regularly distributed? Default is TRUE.}
 }
 \value{
 A list with: \code{population_1}, \code{population_2} two population
@@ -82,7 +105,9 @@ five columns, \code{time}, \code{location}, \code{ancestor}, \code{frequency}
 and \code{population}, which indicates the number of generations, the
 location along the chromosome of the marker, the ancestral allele at that
 location in that generation, the frequency of that allele and the population
-in which it was recorded (1 or 2).
+in which it was recorded (1 or 2). If a critical fst value was used to
+terminate the simulation, and object \code{FST} with the final FST estimate
+is returned as well.
 }
 \description{
 Individual based simulation of the breakdown of contiguous
