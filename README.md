@@ -1,4 +1,4 @@
-# GenomeAdmixR  <img src="pics/GenomeAdmixR_2.png" align="right" width="120" />
+# GenomeAdmixR  <img src="pics/GenomeAdmixR_2.png" align="right" width="180" />
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
