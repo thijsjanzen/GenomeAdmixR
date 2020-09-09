@@ -5,6 +5,10 @@ calculate_allele_spectrum_cpp <- function(input_population, markers, progress_ba
     .Call('_GenomeAdmixR_calculate_allele_spectrum_cpp', PACKAGE = 'GenomeAdmixR', input_population, markers, progress_bar)
 }
 
+calculate_heterozygosity_cpp <- function(input_population, markers, progress_bar) {
+    .Call('_GenomeAdmixR_calculate_heterozygosity_cpp', PACKAGE = 'GenomeAdmixR', input_population, markers, progress_bar)
+}
+
 simulate_cpp <- function(input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed) {
     .Call('_GenomeAdmixR_simulate_cpp', PACKAGE = 'GenomeAdmixR', input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed)
 }

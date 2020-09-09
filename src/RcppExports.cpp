@@ -19,6 +19,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// calculate_heterozygosity_cpp
+arma::mat calculate_heterozygosity_cpp(Rcpp::NumericVector input_population, Rcpp::NumericVector markers, bool progress_bar);
+RcppExport SEXP _GenomeAdmixR_calculate_heterozygosity_cpp(SEXP input_populationSEXP, SEXP markersSEXP, SEXP progress_barSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type input_population(input_populationSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type markers(markersSEXP);
+    Rcpp::traits::input_parameter< bool >::type progress_bar(progress_barSEXP);
+    rcpp_result_gen = Rcpp::wrap(calculate_heterozygosity_cpp(input_population, markers, progress_bar));
+    return rcpp_result_gen;
+END_RCPP
+}
 // simulate_cpp
 List simulate_cpp(Rcpp::NumericVector input_population, NumericMatrix select, int pop_size, int number_of_founders, Rcpp::NumericVector starting_proportions, int total_runtime, double morgan, bool progress_bar, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, int seed);
 RcppExport SEXP _GenomeAdmixR_simulate_cpp(SEXP input_populationSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP number_of_foundersSEXP, SEXP starting_proportionsSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP progress_barSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP, SEXP seedSEXP) {
@@ -69,6 +82,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_GenomeAdmixR_calculate_allele_spectrum_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_allele_spectrum_cpp, 3},
+    {"_GenomeAdmixR_calculate_heterozygosity_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_heterozygosity_cpp, 3},
     {"_GenomeAdmixR_simulate_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_cpp, 13},
     {"_GenomeAdmixR_simulate_migration_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_migration_cpp, 14},
     {NULL, NULL, 0}
