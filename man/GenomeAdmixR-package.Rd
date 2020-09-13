@@ -6,6 +6,7 @@
  This package simulates admixture of ancestry
 }
 \description{
+   Version 0.66 - Improved recombination code, about twice as fast \cr
    Version 0.65 - Added testing and added logo \cr
    Version 0.64 - Reduced cyclomatic complexity \cr
    Version 0.63 - Updated random number generation \cr

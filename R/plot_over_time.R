@@ -44,7 +44,7 @@ plot_over_time <- function(frequencies,
   }
 
   p1 <- p1 +
-    ggplot2::xlab("Time (Generations") +
+    ggplot2::xlab("Time (Generations)") +
     ggplot2::ylab("Frequency") +
     ggplot2::labs(col = "Ancestor")
 

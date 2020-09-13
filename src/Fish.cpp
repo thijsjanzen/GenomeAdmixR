@@ -15,139 +15,62 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+void add(std::vector< junction>& offspring,
+         const junction& new_junction) {
+
+    if (offspring.empty()) {
+        offspring.push_back(new_junction);
+        return;
+    }
+
+    if (new_junction.pos > offspring.back().pos &&
+        new_junction.right != offspring.back().right) {
+        offspring.push_back(new_junction);
+    }
+    return;
+}
+
 bool do_recombination(std::vector<junction>& offspring,
                       const std::vector<junction>& chromosome1,
                       const std::vector<junction>& chromosome2,
-                      const std::vector<double>& recomPos) {
+                      std::vector<double>& recomPos) {
 
-    std::vector< junction > toAdd; //first create junctions on exactly the recombination positions
-    for(int i = 0; i < recomPos.size(); ++i) {
-        junction temp;
-        temp.right = -1.0;
-        temp.pos = recomPos[i];
-        toAdd.push_back(temp);
-    }
+    std::vector < std::vector<junction>::const_iterator > iters =
+        { chromosome1.begin(), chromosome2.begin() };
 
-    for(auto i = (chromosome1.begin()+1); i != chromosome1.end(); ++i) {
-        long double leftpos = (*(i-1)).pos;
-        long double rightpos = (*i).pos;
+    recomPos.push_back(1.0); // for completeness
 
-        for(int j = 0; j < recomPos.size(); ++j) {
-            if(recomPos[j] == leftpos) {
-                return false;
-            }
-            if(recomPos[j] == rightpos) {
-                return false;
+    int index = 0;
+    int recompos_cnt = 0;
+
+    while(1 == 1) {
+
+        if ( iters[index]->pos > recomPos[recompos_cnt]  ) {
+            // encountered junction point
+            // create junction
+            index = 1 - index;
+            while( iters[index]->pos < recomPos[recompos_cnt]) {
+                iters[index]++;
             }
 
-            if(recomPos[j] > leftpos) {
-                if(recomPos[j] < rightpos) {
-                    if(j % 2 == 0) { // even, so chrom1 = L, chrom2 = R
-                        if(j < toAdd.size()) {
-                            //       toAdd[j].left = (*i).left;
-                        }
-                    } else { // uneven so chrom1 = R, chrom2 = L
-                        if(j < toAdd.size()) {
-                            toAdd[j].right = (*(i-1)).right;
-                        }
-                    }
-                }
-            }
+            auto prev_iter = iters[index];
+            prev_iter--;
+            assert(prev_iter->pos < recomPos[recompos_cnt]);
+            junction new_junction(recomPos[recompos_cnt], prev_iter->right);
+            // offspring.push_back(new_junction);
+            add(offspring, new_junction);
+
+            recompos_cnt++;
+        } else {
+            add(offspring, (*iters[index]));
+            iters[index]++;
+        }
+
+        if (offspring.back().right == -1) {
+            break;
         }
     }
 
-    for(auto i = (chromosome2.begin()+1); i != chromosome2.end(); ++i) {
-        long double leftpos = (*(i-1)).pos;
-        long double rightpos = (*i).pos;
-
-        for(int j = 0; j < recomPos.size(); ++j) {
-            if(recomPos[j] == leftpos) {
-                return false;
-            }
-            if(recomPos[j] == rightpos) {
-                return false;
-            }
-
-            if(recomPos[j] > leftpos) {
-                if(recomPos[j] < rightpos) {
-                    if(j % 2 == 0) { //even, so chrom1 = L, chrom2 = R
-                        if(j < toAdd.size()) {
-                            toAdd[j].right = (*(i-1)).right;
-                        }
-                    } else { //uneven so chrom1 = R, chrom2 = L
-                        if(j < toAdd.size()) {
-                            //    toAdd[j].left = (*i).left;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    for(int i = 0; i < toAdd.size(); ++i) {
-        if(toAdd[i].right == -1 && toAdd[i].pos < 1) {
-            Rcout << "This break point was not addressed!\n";
-            stop("Error in toAdd");
-        }
-        offspring.push_back(toAdd[i]);
-    }
-
-    //now we have to add the other junctions from chrom1 and chrom2.
-    long double leftpos = 0;
-    long double rightpos = 0;
-
-
-    for(int i = 0; i < (recomPos.size() + 1); ++i) {
-        rightpos = 1.0;
-        if(i < recomPos.size()) rightpos = recomPos[i];
-
-        if(i % 2 == 0) { //even, so take from chromosome 1
-            for(auto it = chromosome1.begin(); it != chromosome1.end(); ++it) {
-                if((*it).pos >= leftpos && (*it).pos <= rightpos) {
-                    offspring.push_back((*it));
-                }
-                if((*it).pos > rightpos) { //we are past the recombination section
-                    break;
-                }
-            }
-        }
-
-        if(i % 2 == 1) { //odd, so take from chromosome 2
-            for(auto it = chromosome2.begin(); it != chromosome2.end(); ++it) {
-                if((*it).pos >= leftpos && (*it).pos <= rightpos) {
-                    offspring.push_back((*it));
-                }
-                if((*it).pos > rightpos) { //we are past the recombination section
-                    break;
-                }
-            }
-        }
-
-        //move forward
-        leftpos = rightpos;
-    }
-
-    std::sort(offspring.begin(), offspring.end());
-    // gatekeeper code to not allow false junctions to be introduced
-
-    std::vector<junction> temp_offspring = offspring;
-    offspring.clear();
-    for(int i = 0; i < temp_offspring.size(); ++i) {  // extra checks to make sure no memory access errors
-        bool add = true;
-
-        if(i > 0) {
-            if(temp_offspring[i].right == temp_offspring[i-1].right) add = false;
-
-            if(temp_offspring[i].pos == temp_offspring[i-1].pos) add = false;
-        }
-
-        // if a bad memory access call happens, we get weird numbers in .right:
-        if(abs(temp_offspring[i].right) > 1000) add = false;
-
-        if(add == true) {
-            offspring.push_back(temp_offspring[i]);
-        }
-    }
     return true;
 }
 
