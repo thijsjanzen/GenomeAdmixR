@@ -208,7 +208,7 @@ int draw_prop_fitness(const std::vector<double>& fitness,
     return(-1);
   }
 
-  if(maxFitness > 10000.0) {
+  if(maxFitness > 1e20) {
     Rcout << "maxFitness = " << maxFitness << "\n";
     Rcpp::stop("It appears maxfitness has encountered a memory access violation\n");
     return(-1);
