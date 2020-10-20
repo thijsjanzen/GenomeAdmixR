@@ -14,7 +14,11 @@ A package under construction to simulate genetic admixture in relation to isofem
 # Demonstration GenomeAdmixR
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
 
+# More information
+More information can be found in the accompanying paper, currently available as pre-print here : https://doi.org/10.1101/2020.10.19.343491
+
 # Version history
+Version 1.00 - Release associated with bioRxiv submission, to be found here: https://doi.org/10.1101/2020.10.19.343491
 Version 0.66 - Improved recombination code, about twice as fast
 Version 0.65 - Added testing and added logo <br />
 Version 0.64 - Reduced cyclomatic complexity <br />
