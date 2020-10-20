@@ -9,7 +9,7 @@ Branch|[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)|[![AppVeyor
 master|[![Build Status](https://travis-ci.org/thijsjanzen/GenomeAdmixR.svg?branch=master)](https://travis-ci.org/thijsjanzen/GenomeAdmixR)|[![Build status](https://ci.appveyor.com/api/projects/status/vrfuo3dednjl52tr?svg=true)](https://ci.appveyor.com/project/thijsjanzen/genomeadmixr)|[![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
 
 # What is GenomeAdmixR?
-A package under construction to simulate genetic admixture in relation to isofemale lines
+A package to perfrom individual-based simulations of genome evolution with ancestry.
 
 # Demonstration GenomeAdmixR
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
