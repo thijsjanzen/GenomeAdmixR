@@ -18,8 +18,8 @@ Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) 
 More information can be found in the accompanying paper, currently available as pre-print here : https://doi.org/10.1101/2020.10.19.343491
 
 # Version history
-Version 1.00 - Release associated with bioRxiv submission, to be found here: https://doi.org/10.1101/2020.10.19.343491
-Version 0.66 - Improved recombination code, about twice as fast
+Version 1.00 - Release associated with bioRxiv submission, to be found here: https://doi.org/10.1101/2020.10.19.343491 <br />
+Version 0.66 - Improved recombination code, about twice as fast <br />
 Version 0.65 - Added testing and added logo <br />
 Version 0.64 - Reduced cyclomatic complexity <br />
 Version 0.63 - Updated random number generation <br />
