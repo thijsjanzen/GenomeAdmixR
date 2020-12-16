@@ -9,13 +9,17 @@ Branch|[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)|[![AppVeyor
 master|[![Build Status](https://travis-ci.org/thijsjanzen/GenomeAdmixR.svg?branch=master)](https://travis-ci.org/thijsjanzen/GenomeAdmixR)|[![Build status](https://ci.appveyor.com/api/projects/status/vrfuo3dednjl52tr?svg=true)](https://ci.appveyor.com/project/thijsjanzen/genomeadmixr)|[![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
 
 # What is GenomeAdmixR?
-A package under construction to simulate genetic admixture in relation to isofemale lines
+A package to perfrom individual-based simulations of genome evolution with ancestry.
 
 # Demonstration GenomeAdmixR
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://streaming3.service.rug.nl/p2gplayer/Player.aspx?id=cxbKvM)  (audio starts after 1 min)
 
+# More information
+More information can be found in the accompanying paper, currently available as pre-print here : https://doi.org/10.1101/2020.10.19.343491
+
 # Version history
-Version 0.66 - Improved recombination code, about twice as fast
+Version 1.00 - Release associated with bioRxiv submission, to be found here: https://doi.org/10.1101/2020.10.19.343491 <br />
+Version 0.66 - Improved recombination code, about twice as fast <br />
 Version 0.65 - Added testing and added logo <br />
 Version 0.64 - Reduced cyclomatic complexity <br />
 Version 0.63 - Updated random number generation <br />
