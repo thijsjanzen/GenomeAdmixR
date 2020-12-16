@@ -3,6 +3,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 [![](http://cranlogs.r-pkg.org/badges/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
+[![R-CMD-check](https://github.com/thijsjanzen/GenomeAdmixR/workflows/R-CMD-check/badge.svg)](https://github.com/thijsjanzen/GenomeAdmixR/actions)
 
 Branch|[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)|[![AppVeyor logo](pics/AppVeyor.png)](https://www.appveyor.com)|[![Codecov logo](pics/Codecov.png)](https://www.codecov.io)
 ---|---|---|---
