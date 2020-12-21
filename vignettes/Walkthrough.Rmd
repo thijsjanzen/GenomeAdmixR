@@ -9,7 +9,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(fig.width=6) 
+knitr::opts_chunk$set(fig.width = 6) 
 ```
 
 # GenomeAdmixR
@@ -89,8 +89,8 @@ First, we have to create two populations.
 ```{r create two populations}
 both_populations <- simulate_admixture_migration(pop_size = c(100, 100),
                                                  initial_frequencies =
-                                                   list( c(rep(1,20),rep(0,20)),
-                                                         c(rep(0,20),rep(1,20))),
+                                                   list( c(rep(1, 20),rep(0, 20)),
+                                                         c(rep(0, 20),rep(1, 20))),
                                                  morgan = 1,
                                                  total_runtime = 1000,
                                                  seed = 42)
@@ -149,7 +149,7 @@ We can also calculate LD statistics. LD is only defined for markers, so again we
 ```{r}
   ld_results <- calculate_ld(wildpop, number_of_markers = 10, random_markers = TRUE)
 
-  par(mfrow=c(1,3))
+  par(mfrow=c(1, 3))
   plot(ld_results$ld_matrix~ld_results$dist_matrix, xlab = "Genetic Distance (Morgan)", 
        ylab = "LD", pch = 16)
   plot(ld_results$rsq_matrix~ld_results$dist_matrix, xlab = "Genetic Distance (Morgan)", 
@@ -169,8 +169,8 @@ no_ld_pop <- simulate_admixture(pop_size = 100,
 ld_results <- calculate_ld(no_ld_pop, sampled_individuals = 10,
                                   number_of_markers = 10, random_markers = TRUE)
 
-par(mfrow=c(1,1))
-par(mar=c(4,4,2,2))
+par(mfrow=c(1, 1))
+par(mar=c(4, 4, 2, 2))
 plot(ld_results$ld_matrix~ld_results$dist_matrix, pch = 16, 
      xlab = "Distance", ylab = "LD",xlim = c(0, 1), ylim = c(0, 1))
 ```
@@ -187,8 +187,8 @@ strong_ld_pop <- simulate_admixture(pop_size = 1000,
 ld_results <- calculate_ld(strong_ld_pop, sampled_individuals = 10,
                             number_of_markers = 10, random_markers = TRUE)
 
-par(mfrow=c(1,1))
-par(mar=c(4,4,2,2))
+par(mfrow=c(1, 1))
+par(mar=c(4, 4, 2, 2))
 plot(ld_results$ld_matrix~ld_results$dist_matrix, pch = 16, xlab = "Distance", ylab = "LD",xlim = c(0, 1), ylim = c(0, 1))
 ```
 
@@ -236,5 +236,5 @@ selected_pop <- simulate_admixture(pop_size = 1000,
                                    markers = markers,
                                    seed = 12345)
 
-ggplot(selected_pop$frequencies, aes(y = frequency, x = time, col = as.factor(ancestor))) + geom_line() + ylim(0,1)
+ggplot(selected_pop$frequencies, aes(y = frequency, x = time, col = as.factor(ancestor))) + geom_line() + ylim(0, 1)
 ```

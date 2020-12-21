@@ -9,7 +9,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(fig.width=6) 
+knitr::opts_chunk$set(fig.width = 6) 
 ```
 
 ```{r}
@@ -24,8 +24,8 @@ To demonstrate the applicability and versatility of joyplots, we create a popula
 ```{r setup select_matrix}
 select_matrix <- matrix(ncol = 5, nrow = 2)
 s <- 0.1
-select_matrix[1, ] <- c(0.23, 1.0, 1+0.5*s, 1+s, 0)
-select_matrix[2, ] <- c(0.27, 1.0, 1+0.5*s, 1+s, 1)
+select_matrix[1, ] <- c(0.23, 1.0, 1 + 0.5 * s, 1 + s, 0)
+select_matrix[2, ] <- c(0.27, 1.0, 1 + 0.5 * s, 1 + s, 1)
 
 markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 ```
