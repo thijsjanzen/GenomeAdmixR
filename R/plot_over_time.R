@@ -28,7 +28,7 @@ plot_over_time <- function(frequencies,
         vector of molecular markers?\n")
   }
 
-  if ("population" %in% colnames(to_plot$frequencies)) {
+  if ("population" %in% colnames(to_plot$frequency)) {
     p1 <- ggplot2::ggplot(to_plot,
                           ggplot2::aes(x = time,
                                        y = frequency,
