@@ -118,8 +118,9 @@ test_that("simulate_migration no seed", {
 
   testthat::expect_warning(
     vy <- simulate_admixture_migration(migration_rate = 0.0,
-                                       initial_frequencies = list(c(1, 1, 0, 0),
-                                                                  c(0, 0, 1, 1)),
+                                       initial_frequencies =
+                                         list(c(1, 1, 0, 0),
+                                              c(0, 0, 1, 1)),
                                        total_runtime = 100,
                                        markers = 0.5,
                                        track_junctions = TRUE)
@@ -128,8 +129,9 @@ test_that("simulate_migration no seed", {
   # no markers:
   testthat::expect_warning(
     vy <- simulate_admixture_migration(migration_rate = 0.0,
-                                       initial_frequencies = list(c(1, 1, 0, 0),
-                                                                  c(0, 0, 1, 1)),
+                                       initial_frequencies =
+                                         list(c(1, 1, 0, 0),
+                                              c(0, 0, 1, 1)),
                                        total_runtime = 100,
                                        track_junctions = TRUE)
   )

@@ -14,3 +14,4 @@ codecov.R
 codecov.R
 codecov.R
 *.pdf
+*.tmp
