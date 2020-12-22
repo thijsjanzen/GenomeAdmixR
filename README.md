@@ -5,9 +5,9 @@
 [![](http://cranlogs.r-pkg.org/badges/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 [![R-CMD-check](https://github.com/thijsjanzen/GenomeAdmixR/workflows/R-CMD-check/badge.svg)](https://github.com/thijsjanzen/GenomeAdmixR/actions)
 
-Branch|[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)|[![AppVeyor logo](pics/AppVeyor.png)](https://www.appveyor.com)|[![Codecov logo](pics/Codecov.png)](https://www.codecov.io)
----|---|---|---
-master|[![Build Status](https://travis-ci.org/thijsjanzen/GenomeAdmixR.svg?branch=master)](https://travis-ci.org/thijsjanzen/GenomeAdmixR)|[![Build status](https://ci.appveyor.com/api/projects/status/vrfuo3dednjl52tr?svg=true)](https://ci.appveyor.com/project/thijsjanzen/genomeadmixr)|[![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
+Branch|[![AppVeyor logo](pics/AppVeyor.png)](https://www.appveyor.com)|[![Codecov logo](pics/Codecov.png)](https://www.codecov.io)
+---|---|---
+master|[![Build status](https://ci.appveyor.com/api/projects/status/vrfuo3dednjl52tr?svg=true)](https://ci.appveyor.com/project/thijsjanzen/genomeadmixr)|[![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/gh/thijsjanzen/GenomeAdmixR)
 
 # What is GenomeAdmixR?
 A package to perfrom individual-based simulations of genome evolution with ancestry.
