@@ -179,7 +179,8 @@ std::vector< std::vector< Fish > > simulate_two_populations(
                                                                     pop_2,
                                                                     track_markers,
                                                                     founder_labels,
-                                                                    t);
+                                                                    t,
+                                                                    morgan);
       int num_founder_labels = founder_labels.size();
       int num_markers = track_markers.size();
       int local_mat_size = num_founder_labels * num_markers * 2;
@@ -345,7 +346,8 @@ List simulate_migration_cpp(NumericVector input_population_1,
                                                                          Pop_2,
                                                                          track_markers,
                                                                          founder_labels,
-                                                                         0);
+                                                                         0,
+                                                                         morgan);
 
   std::vector<double> junctions;
   Rcout << "starting simulation\n"; R_FlushConsole();
@@ -370,9 +372,10 @@ List simulate_migration_cpp(NumericVector input_population_1,
   Rcout << "finished simulation\n";
   arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
                                                                        output_populations[1],
-                                                                                         track_markers,
-                                                                                         founder_labels,
-                                                                                         total_runtime);
+                                                                       track_markers,
+                                                                       founder_labels,
+                                                                       total_runtime,
+                                                                       morgan);
 
   return List::create( Named("population_1") = convert_to_list(output_populations[0]),
                        Named("population_2") = convert_to_list(output_populations[1]),

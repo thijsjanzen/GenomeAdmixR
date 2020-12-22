@@ -65,13 +65,15 @@ void update_founder_labels(const std::vector<junction> chrom,
 arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   double m,
                                   const std::vector<int>& founder_labels,
-                                  int t) {
+                                  int t,
+                                  double morgan) {
 
   int num_alleles = founder_labels.size();
   arma::mat allele_matrix(num_alleles, 4);
+  // initialize results
   for(int i = 0; i < num_alleles; ++i) {
     allele_matrix(i, 0) = t;
-    allele_matrix(i, 1) = m;
+    allele_matrix(i, 1) = m * morgan;
     allele_matrix(i, 2) = founder_labels[i];
     allele_matrix(i, 3) = 0;
   }
@@ -103,11 +105,11 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
   return(allele_matrix);
 }
 
-
 arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
                                         const NumericVector& markers,
                                         const std::vector<int>& founder_labels,
-                                        int t) {
+                                        int t,
+                                        double morgan) {
 
   // Rcout << "this is update_all_frequencies_tibble\n"; R_FlushConsole();
   int number_of_alleles = founder_labels.size();
@@ -118,8 +120,9 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
     //Rcout << "collect local_mat\n";
     arma::mat local_mat = update_frequency_tibble(pop,
                                                   markers[i],
-                                                         founder_labels,
-                                                         t);
+                                                  founder_labels,
+                                                  t,
+                                                  morgan);
     // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
     // and we have to put that in the right place in the output matrix
     //Rcout << "now we feed local mat to output:\n";
@@ -141,7 +144,8 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
                                  const NumericVector& markers,
                                  const std::vector<int>& founder_labels,
                                  int t,
-                                 int pop_indicator) {
+                                 int pop_indicator,
+                                 double morgan) {
   // Rcout << "start record_frequencies_pop\n"; R_FlushConsole();
   int number_of_alleles = founder_labels.size();
   arma::mat output(markers.size() * number_of_alleles, 5);
@@ -151,7 +155,8 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
     arma::mat local_mat = update_frequency_tibble(pop,
                                                   markers[i],
                                                          founder_labels,
-                                                         t);
+                                                         t,
+                                                         morgan);
     // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
     // and we have to put that in the right place in the output matrix
     // Rcout << "now we feed local mat to output:\n";
@@ -175,11 +180,12 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_
                                                  const std::vector< Fish >& pop_2,
                                                  const NumericVector& markers,
                                                  const std::vector<int>& founder_labels,
-                                                 int t) {
+                                                 int t,
+                                                 double morgan) {
   //Rcout << "start update_all_frequencies_tibble_dual_pop\n"; R_FlushConsole();
-  arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1);
+  arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1, morgan);
   //Rcout << "starting on output_2\n";
-  arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2);
+  arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2, morgan);
 
   //Rcout << "joining by column\n";
   arma::mat output = arma::join_cols(output_1, output_2);
@@ -380,7 +386,14 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
   }
   //Rcout << "number of alleles: " << founder_labels.size() << "\n";
 
-  arma::mat frequencies = update_all_frequencies_tibble(Pop, markers, founder_labels, 0);
+  double morgan = markers[markers.size() - 1];
+  markers = scale_markers(markers); // make sure they are in [0, 1];
+
+  arma::mat frequencies = update_all_frequencies_tibble(Pop,
+                                                        markers,
+                                                        founder_labels,
+                                                        0,
+                                                        morgan);
 
   return frequencies;
 }
@@ -457,6 +470,15 @@ arma::mat calculate_heterozygosity_cpp(Rcpp::NumericVector input_population,
                                                               markers,
                                                               progress_bar);
   return heterozygosities;
+}
+
+NumericVector scale_markers(const Rcpp::NumericVector& markers) {
+  double max = markers[markers.size() - 1];
+  Rcpp::NumericVector outputmarkers(markers.size());
+  for(int i = 0; i < markers.size(); ++i) {
+    outputmarkers[i] = markers[i] * 1.0 / max;
+  }
+  return outputmarkers;
 }
 
 

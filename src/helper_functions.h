@@ -51,23 +51,29 @@ void update_founder_labels(const std::vector<junction> chrom,
 arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   double m,
                                   const std::vector<int>& founder_labels,
-                                  int t);
+                                  int t,
+                                  double morgan);
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
                                         const NumericVector& markers,
                                         const std::vector<int>& founder_labels,
-                                        int t);
+                                        int t,
+                                        double morgan);
 
 arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_1,
                                                  const std::vector< Fish >& pop_2,
                                                  const NumericVector& markers,
                                                  const std::vector<int>& founder_labels,
-                                                 int t);
+                                                 int t,
+                                                 double morgan);
 
 arma::mat update_frequency_tibble_dual_pop(const std::vector< Fish >& pop_1,
                                            const std::vector< Fish >& pop_2,
                                            double marker,
                                            const std::vector<int>& founder_labels,
-                                           int t);
+                                           int t,
+                                           double morgan);
+
+NumericVector scale_markers(const Rcpp::NumericVector& markers);
 
 #endif /* helper_functions_hpp */
