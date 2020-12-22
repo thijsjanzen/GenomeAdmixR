@@ -133,10 +133,22 @@ test_that("simulate admixture use, junctions", {
                            markers = markers,
                            track_junctions = TRUE)
 
+  num_j <- length(vx$junctions)
+  testthat::expect_gt(num_j, 0)
+  testthat::expect_equal(num_j, 100)
+  expected_j <- junctions::number_of_junctions(N = 100, t = 100)
+  testthat::expect_equal(max(vx$junctions), expected_j, tolerance = 0.1)
+
+
   # no seed
   vx <- simulate_admixture(pop_size = 100,
                            number_of_founders = 2,
                            total_runtime = 100,
                            markers = markers,
                            track_junctions = TRUE)
+  num_j <- length(vx$junctions)
+  testthat::expect_gt(num_j, 0)
+  testthat::expect_equal(num_j, 100)
+  expected_j <- junctions::number_of_junctions(N = 100, t = 100)
+  testthat::expect_equal(max(vx$junctions), expected_j, tolerance = 0.1)
 })

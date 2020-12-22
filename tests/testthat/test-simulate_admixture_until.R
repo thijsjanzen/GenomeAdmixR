@@ -8,7 +8,7 @@ test_that("simulate_admixture_until", {
                                        list(c(0.5, 0.5), c(0.5, 0.5)),
                                      morgan = 1,
                                      seed = 42,
-                                     stop_simulation_at_critical_fst = TRUE,
+                                     stop_at_critical_fst = TRUE,
                                      generations_between_update = 100,
                                      critical_fst = 0.1,
                                      migration_rate = 0.0)
@@ -31,10 +31,10 @@ test_that("simulate_admixture_until", {
 
   vx <- simulate_admixture_migration(total_runtime = 1000,
                                      pop_size = c(100, 100),
-                                     initial_frequencies = list(c(1, 1),
-                                                                c(1, 1)),
+                                     initial_frequencies = list(c(0.5, 0.5),
+                                                                c(0.5, 0.5)),
                                      morgan = 1,
-                                     stop_simulation_at_critical_fst = TRUE,
+                                     stop_at_critical_fst = TRUE,
                                      generations_between_update = 10,
                                      critical_fst = 0.2,
                                      migration_rate = 0.001)

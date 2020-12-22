@@ -42,7 +42,7 @@
 #' Migration is implemented such that with probability m (migration rate) one
 #' of the two parents of a new offspring is from the other population, with
 #' probability 1-m both parents are of the focal population.
-#' @param stop_simulation_at_critical_fst option to stop at a critical FST value
+#' @param stop_at_critical_fst option to stop at a critical FST value
 #' , default is FALSE
 #' @param critical_fst the critical fst value to stop, if
 #' \code{stop_simulation_at_critical_fst} is TRUE
@@ -96,7 +96,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          track_junctions = FALSE,
                                          multiplicative_selection = TRUE,
                                          migration_rate = 0.0,
-                                         stop_simulation_at_critical_fst = FALSE,
+                                         stop_at_critical_fst = FALSE,
                                          critical_fst = 0.1,
                                          generations_between_update = 100,
                                          sampled_individuals = 10,
@@ -105,7 +105,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
   message("starting simulation incl migration\n")
 
-  if (stop_simulation_at_critical_fst) {
+  if (stop_at_critical_fst) {
     return(simulate_admixture_until(input_population_1 = input_population_1,
                                     input_population_2 = input_population_2,
                                     pop_size = pop_size,
@@ -117,10 +117,12 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                     markers = markers,
                                     progress_bar = progress_bar,
                                     track_junctions = track_junctions,
-                                    multiplicative_selection = multiplicative_selection,
+                                    multiplicative_selection =
+                                      multiplicative_selection,
                                     migration_rate = migration_rate,
                                     critical_fst = critical_fst,
-                                    generations_between_update = generations_between_update,
+                                    generations_between_update =
+                                      generations_between_update,
                                     sampled_individuals = sampled_individuals,
                                     number_of_markers = number_of_markers,
                                     random_markers = random_markers))
@@ -164,35 +166,37 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
 
   selected_pop <- simulate_migration_cpp(input_population_1,
-                                input_population_2,
-                                select_matrix,
-                                pop_size,
-                                init_freq_matrix,
-                                total_runtime,
-                                morgan,
-                                progress_bar,
-                                track_frequency,
-                                markers,
-                                track_junctions,
-                                multiplicative_selection,
-                                migration_rate,
-                                seed)
+                                         input_population_2,
+                                         select_matrix,
+                                         pop_size,
+                                         init_freq_matrix,
+                                         total_runtime,
+                                         morgan,
+                                         progress_bar,
+                                         track_frequency,
+                                         markers,
+                                         track_junctions,
+                                         multiplicative_selection,
+                                         migration_rate,
+                                         seed)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)
 
   colnames(selected_pop$initial_frequencies) <- c("time",
-                                     "location",
-                                     "ancestor",
-                                     "frequency",
-                                     "population")
+                                                  "location",
+                                                  "ancestor",
+                                                  "frequency",
+                                                  "population")
 
-  colnames(selected_pop$final_frequencies) <-
-           colnames(selected_pop$initial_frequencies)
+  colnames(selected_pop$final_frequencies) <- c("time",
+                                                "location",
+                                                "ancestor",
+                                                "frequency",
+                                                "population")
 
   initial_freq_tibble <- tibble::as_tibble(selected_pop$initial_frequencies)
   final_freq_tibble   <- tibble::as_tibble(selected_pop$final_frequencies)
-
 
   output <- generate_output_list_two_pop(selected_pop,
                                          selected_popstruct_1,

@@ -16,8 +16,9 @@ test_that("simulate_migration", {
   markers <- seq(from = 0.4, to = 0.6, length.out = 100)
   vy <- simulate_admixture_migration(seed = 42,
                                      migration_rate = 0.01,
-                                     initial_frequencies = list(c(1, 1, 0, 0),
-                                                                c(0, 0, 1, 1)),
+                                     initial_frequencies =
+                                       list(c(0.5, 0.5, 0, 0),
+                                            c(0, 0, 0.5, 0.5)),
                                      total_runtime = 100,
                                      markers = markers)
 
@@ -72,8 +73,9 @@ test_that("simulate_migration", {
 
   vy <- simulate_admixture_migration(seed = 42,
                                      migration_rate = 0.0,
-                                     initial_frequencies = list(c(1, 1, 0, 0),
-                                                                c(0, 0, 1, 1)),
+                                     initial_frequencies =
+                                       list(c(0.5, 0.5, 0, 0),
+                                            c(0, 0, 0.5, 0.5)),
                                      total_runtime = 100,
                                      markers = markers)
 
@@ -104,26 +106,31 @@ test_that("simulate_migration", {
 
   vy <- simulate_admixture_migration(seed = 42,
                                      migration_rate = 0.0,
-                                     initial_frequencies = list(c(1, 1, 0, 0),
-                                                                c(0, 0, 1, 1)),
+                                     initial_frequencies =
+                                       list(c(0.5, 0.5, 0, 0),
+                                            c(0, 0, 0.5, 0.5)),
                                      total_runtime = 100,
                                      markers = 0.5,
                                      track_junctions = TRUE)
 })
 
 test_that("simulate_migration no seed", {
-  vy <- simulate_admixture_migration(migration_rate = 0.0,
-                                     initial_frequencies = list(c(1, 1, 0, 0),
-                                                                c(0, 0, 1, 1)),
-                                     total_runtime = 100,
-                                     markers = 0.5,
-                                     track_junctions = TRUE)
+
+  testthat::expect_warning(
+    vy <- simulate_admixture_migration(migration_rate = 0.0,
+                                       initial_frequencies = list(c(1, 1, 0, 0),
+                                                                  c(0, 0, 1, 1)),
+                                       total_runtime = 100,
+                                       markers = 0.5,
+                                       track_junctions = TRUE)
+  )
 
   # no markers:
-  vy <- simulate_admixture_migration(seed = 42,
-                                     migration_rate = 0.0,
-                                     initial_frequencies = list(c(1, 1, 0, 0),
-                                                                c(0, 0, 1, 1)),
-                                     total_runtime = 100,
-                                     track_junctions = TRUE)
+  testthat::expect_warning(
+    vy <- simulate_admixture_migration(migration_rate = 0.0,
+                                       initial_frequencies = list(c(1, 1, 0, 0),
+                                                                  c(0, 0, 1, 1)),
+                                       total_runtime = 100,
+                                       track_junctions = TRUE)
+  )
 })

@@ -19,7 +19,7 @@ simulate_admixture_migration(
   track_junctions = FALSE,
   multiplicative_selection = TRUE,
   migration_rate = 0,
-  stop_simulation_at_critical_fst = FALSE,
+  stop_at_critical_fst = FALSE,
   critical_fst = 0.1,
   generations_between_update = 100,
   sampled_individuals = 10,
@@ -79,7 +79,7 @@ Migration is implemented such that with probability m (migration rate) one
 of the two parents of a new offspring is from the other population, with
 probability 1-m both parents are of the focal population.}
 
-\item{stop_simulation_at_critical_fst}{option to stop at a critical FST value
+\item{stop_at_critical_fst}{option to stop at a critical FST value
 , default is FALSE}
 
 \item{critical_fst}{the critical fst value to stop, if

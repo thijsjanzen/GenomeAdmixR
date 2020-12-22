@@ -139,12 +139,13 @@ generate_output_list_two_pop <- function(selected_pop,
   }
 
   if (track_frequency == TRUE && track_junctions == TRUE) {
-    frequencies_tibble <- tibble::as.tibble(selected_pop$frequencies)
-    colnames(frequencies_tibble) <- c("time",
-                                      "location",
-                                      "ancestor",
-                                      "frequency",
-                                      "population")
+
+    colnames(selected_pop$frequencies) <- c("time",
+                                            "location",
+                                            "ancestor",
+                                            "frequency",
+                                            "population")
+    frequencies_tibble <- tibble::as_tibble(selected_pop$frequencies)
 
     output <- list("population_1" = selected_popstruct_1,
                    "population_2" = selected_popstruct_2,
