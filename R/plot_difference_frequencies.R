@@ -53,25 +53,25 @@ plot_difference_frequencies <- function(results,
 
   ax_m <- dplyr::mutate(ax,
                         "diff_frequency" =
-                          ax$frequency_after - ax$frequency_before)
+                          frequency_after - frequency_before)
 
   if (picked_ancestor[[1]] == "ALL") {
     to_plot <- ax_m
 
     p1 <- ggplot2::ggplot(to_plot,
-                          ggplot2::aes(x = to_plot$location,
-                                       y = to_plot$diff_frequency,
-                                       colour = as.factor(to_plot$ancestor))) +
+                          ggplot2::aes(x = location,
+                                       y = diff_frequency,
+                                       colour = as.factor(ancestor))) +
       ggplot2::geom_step()
   } else {
 
     to_plot <- dplyr::filter(ax_m,
-                             ax_m$ancestor %in% picked_ancestor)
+                             ancestor %in% picked_ancestor)
 
     p1 <- ggplot2::ggplot(to_plot,
-                          ggplot2::aes(x = to_plot$location,
-                                       y = to_plot$diff_frequency,
-                                       colour = as.factor(to_plot$ancestor))) +
+                          ggplot2::aes(x = location,
+                                       y = diff_frequency,
+                                       colour = as.factor(ancestor))) +
       ggplot2::geom_step()
   }
 
