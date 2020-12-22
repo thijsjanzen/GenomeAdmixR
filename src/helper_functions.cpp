@@ -473,8 +473,13 @@ arma::mat calculate_heterozygosity_cpp(Rcpp::NumericVector input_population,
 }
 
 NumericVector scale_markers(const Rcpp::NumericVector& markers) {
+  if (markers.size() == 1) {
+    return markers;
+  }
+
   double max = markers[markers.size() - 1];
   Rcpp::NumericVector outputmarkers(markers.size());
+
   for(int i = 0; i < markers.size(); ++i) {
     outputmarkers[i] = markers[i] * 1.0 / max;
   }
