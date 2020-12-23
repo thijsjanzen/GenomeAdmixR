@@ -43,7 +43,7 @@ bool do_recombination(std::vector<junction>& offspring,
     int index = 0;
     int recompos_cnt = 0;
 
-    while(1 == 1) {
+    while(true) {
 
         if ( iters[index]->pos > recomPos[recompos_cnt]  ) {
             // encountered junction point

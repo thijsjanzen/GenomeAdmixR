@@ -39,7 +39,8 @@ test_that("initial_frequencies", {
                            initial_frequencies = c(1, 1, 0, 0, 0, 0, 1, 1))
   )
 
-testthat::expect_warning( # warning that frequencies don't add up to 1.
+  # warning that frequencies don't add up to 1.
+testthat::expect_warning(
     vy <- simulate_admixture_migration(total_runtime = 5, seed = 1,
                                      initial_frequencies = list(c(1, 1, 0, 0),
                                                                 c(0, 0, 1, 1)))
