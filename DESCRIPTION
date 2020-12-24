@@ -1,30 +1,44 @@
-Package: GenomeAdmixR
 Type: Package
+Package: GenomeAdmixR
 Title: Simulate Admixture of Genomes
 Version: 1.0.1
-Authors@R: c(person("Thijs","Janzen", email = "thijsjanzen@gmail.com", role=c("aut","cre")),
-             person("Fernando","Diaz G.", email="ferdiazfer@gmail.com", role=c("ctb")),
-             person("Richèl J.C.", "Bilderbeek", role = c("ctb")))
-Description: Simulation of source populations, and simulation of the creation of isofemale lines from these populations.
+Authors@R: 
+    c(person(given = "Thijs",
+             family = "Janzen",
+             role = c("aut", "cre"),
+             email = "thijsjanzen@gmail.com"),
+      person(given = "Fernando",
+             family = "Diaz G.",
+             role = "ctb",
+             email = "ferdiazfer@gmail.com"),
+      person(given = "Richèl J.C.",
+             family = "Bilderbeek",
+             role = "ctb"))
+Description: Simulation of source populations, and simulation of
+    the creation of isofemale lines from these populations.
 License: GPL (>= 2)
-Imports: Rcpp,
-         hierfstat, 
-         tibble, 
-         methods
-Suggests: testit, 
-          testthat, 
-          knitr, 
-          rmarkdown, 
-          ggplot2, 
-          magrittr, 
-          dplyr, 
-          junctions, 
-          covr, 
-          ggridges
-LinkingTo: Rcpp, 
-           RcppArmadillo
-SystemRequirements: C++11
-Encoding: UTF-8
-VignetteBuilder: knitr
-RoxygenNote: 7.1.1
 URL: https://github.com/thijsjanzen/GenomeAdmixR
+Imports: 
+    hierfstat,
+    methods,
+    Rcpp,
+    tibble
+Suggests: 
+    covr,
+    dplyr,
+    ggplot2,
+    ggridges,
+    junctions,
+    knitr,
+    magrittr,
+    rmarkdown,
+    testit,
+    testthat
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+RoxygenNote: 7.1.1
+SystemRequirements: C++11
