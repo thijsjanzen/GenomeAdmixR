@@ -193,11 +193,11 @@ bool Fish::operator ==(const Fish& other) const {
     if (chromosome2.size() != other.chromosome2.size())
         return false;
 
-    for (int i = 0; i < chromosome1.size(); ++i) {
+    for (size_t i = 0; i < chromosome1.size(); ++i) {
         if (chromosome1[i] != other.chromosome1[i])
             return false;
     }
-    for (int i = 0; i < chromosome2.size(); ++i) {
+    for (size_t i = 0; i < chromosome2.size(); ++i) {
         if (chromosome2[i] != other.chromosome2[i])
             return false;
     }

@@ -11,6 +11,7 @@
 
 #include <random>
 #include <vector>
+#include <algorithm>
 
 struct rnd_t {
   std::mt19937 rndgen_;
