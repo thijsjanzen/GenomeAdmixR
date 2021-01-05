@@ -37,7 +37,7 @@ test_that("calculate_average_LD", {
   g2 <- all_loci[, 3:4]
 
   vv <- calculate_average_ld(g1, g2)
-  testthat::expect_equal(vv$LD, 1)
+  testthat::expect_equal(vv$LD, 1, tolerance = 0.05)
 })
 
 test_that("calculate_LD_matrix", {
