@@ -6,6 +6,8 @@
  This package simulates admixture of ancestry
 }
 \description{
+   Version 1.1  - Added multi threading \cr
+   Version 1.0  - Release associated with bioRxiv submission, to be found here: https://doi.org/10.1101/2020.10.19.343491 \cr
    Version 0.66 - Improved recombination code, about twice as fast \cr
    Version 0.65 - Added testing and added logo \cr
    Version 0.64 - Reduced cyclomatic complexity \cr
