@@ -18,6 +18,7 @@ Description: Simulation of source populations, and simulation of
     the creation of isofemale lines from these populations.
 License: GPL (>= 2)
 URL: https://github.com/thijsjanzen/GenomeAdmixR
+Depends: RcppParallel
 Imports: 
     hierfstat,
     methods,
