@@ -261,6 +261,7 @@ create_random_markers <- function(number_of_markers) {
 
 
 #' @rawNamespace useDynLib(GenomeAdmixR)
+#' @rawNamespace importFrom(RcppParallel, RcppParallelLibs)
 #' @rawNamespace import(Rcpp)
 #' @keywords internal
 calc_allele_frequencies <- function(indiv, alleles) {

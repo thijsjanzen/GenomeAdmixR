@@ -23,6 +23,7 @@
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' represents the mutant allele A}
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
+#' @param num_threads number of threads, default is -1 which selects all available threads
 #' @param markers A vector of locations of markers (relative locations in
 #' [0, 1]). If a vector is provided, ancestry at these marker positions is
 #' tracked for every generation.
@@ -58,6 +59,7 @@ simulate_admixture <- function(input_population = NA,
                                select_matrix = NA,
                                markers = NA,
                                progress_bar = TRUE,
+                               num_threads = -1,
                                track_junctions = FALSE,
                                multiplicative_selection = TRUE) {
 
@@ -106,7 +108,8 @@ simulate_admixture <- function(input_population = NA,
                                markers,
                                track_junctions,
                                multiplicative_selection,
-                               seed)
+                               seed,
+                               num_threads)
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 

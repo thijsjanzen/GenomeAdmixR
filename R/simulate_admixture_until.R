@@ -10,6 +10,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      select_matrix = NA,
                                      markers = NA,
                                      progress_bar = TRUE,
+                                     num_threads = -1,
                                      track_junctions = FALSE,
                                      multiplicative_selection = TRUE,
                                      migration_rate = 0.0,
@@ -36,7 +37,8 @@ simulate_admixture_until <- function(input_population_1 = NA,
     progress_bar = progress_bar,
     track_junctions = track_junctions,
     multiplicative_selection = multiplicative_selection,
-    migration_rate = migration_rate)
+    migration_rate = migration_rate,
+    num_threads = num_threads)
 
   fst <- calculate_fst(pops$population_1, pops$population_2,
                        sampled_individuals = sampled_individuals,
@@ -63,7 +65,8 @@ simulate_admixture_until <- function(input_population_1 = NA,
       progress_bar = progress_bar,
       track_junctions = track_junctions,
       multiplicative_selection = multiplicative_selection,
-      migration_rate = migration_rate)
+      migration_rate = migration_rate,
+      num_threads = num_threads)
 
     cnt <- cnt + 2
     fst <- calculate_fst(pops$population_1, pops$population_2,

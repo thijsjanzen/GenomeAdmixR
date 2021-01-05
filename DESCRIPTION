@@ -36,7 +36,8 @@ Suggests:
     testthat
 LinkingTo: 
     Rcpp,
-    RcppArmadillo
+    RcppArmadillo,
+    RcppParallel
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

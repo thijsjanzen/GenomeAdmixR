@@ -29,6 +29,7 @@
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' representes the mutant allele A}
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
+#' @param num_threads number of threads, default is -1 which uses all available threads
 #' @param markers A vector of locations of markers (relative locations in
 #' [0, 1]). If a vector is provided, ancestry at these marker positions is
 #' tracked for every generation.
@@ -93,6 +94,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          select_matrix = NA,
                                          markers = NA,
                                          progress_bar = TRUE,
+                                         num_threads = -1,
                                          track_junctions = FALSE,
                                          multiplicative_selection = TRUE,
                                          migration_rate = 0.0,
@@ -104,6 +106,11 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          random_markers = TRUE) {
 
   message("starting simulation incl migration\n")
+
+  if (length(pop_size) == 1) {
+    pop_size <- c(pop_size, pop_size)
+  }
+
 
   if (stop_at_critical_fst) {
     return(simulate_admixture_until(input_population_1 = input_population_1,
@@ -125,7 +132,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                       generations_between_update,
                                     sampled_individuals = sampled_individuals,
                                     number_of_markers = number_of_markers,
-                                    random_markers = random_markers))
+                                    random_markers = random_markers,
+                                    num_threads = num_threads))
   }
 
 
@@ -178,7 +186,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          track_junctions,
                                          multiplicative_selection,
                                          migration_rate,
-                                         seed)
+                                         seed,
+                                         num_threads)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)

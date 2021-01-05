@@ -136,3 +136,27 @@ test_that("simulate_migration no seed", {
                                        track_junctions = TRUE)
   )
 })
+
+test_that("simulate_migration threads", {
+  skip_on_cran()
+  population_size <- 1000
+  runtime <- 300
+  m <- 0.01
+
+  t1 <- Sys.time()
+  vx <- simulate_admixture_migration(pop_size = population_size,
+                                     total_runtime = runtime,
+                                     migration_rate = m,
+                                     num_threads = 1)
+
+  t2 <- Sys.time()
+  vy <- simulate_admixture_migration(pop_size = population_size,
+                                     total_runtime = runtime,
+                                     migration_rate = m,
+                                     num_threads = -1)
+  t3 <- Sys.time()
+
+  time_one_thread = difftime(t2, t1, units = "secs")[[1]]
+  time_all_threads = difftime(t3, t2, units = "secs")[[1]]
+  testthat::expect_lt(time_all_threads, time_one_thread)
+})

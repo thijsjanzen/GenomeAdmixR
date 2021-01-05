@@ -16,6 +16,7 @@ simulate_admixture_migration(
   select_matrix = NA,
   markers = NA,
   progress_bar = TRUE,
+  num_threads = -1,
   track_junctions = FALSE,
   multiplicative_selection = TRUE,
   migration_rate = 0,
@@ -65,6 +66,8 @@ representes the mutant allele A}}
 tracked for every generation.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
+
+\item{num_threads}{number of threads, default is -1 which uses all available threads}
 
 \item{track_junctions}{Track the average number of junctions over time if
 TRUE}
