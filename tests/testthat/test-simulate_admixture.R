@@ -156,6 +156,7 @@ test_that("simulate admixture use, markers", {
 
 test_that("simulate admixture use, threads", {
   skip_on_cran()
+  skip_on_ci()
   population_size <- 1000
 
   t1 <- Sys.time()
