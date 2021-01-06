@@ -33,8 +33,7 @@ make use of the function 'create_population':
 wildpop <-  simulate_admixture(pop_size = 100,
                                number_of_founders = 4,
                                total_runtime = 1000,
-                               morgan = 1,
-                               seed = 42)
+                               morgan = 1)
 
 ```
 This creates a population of 100 diploid individuals (e.g. 2N = 200), based upon 
@@ -84,8 +83,7 @@ let's try a toy example:
 wildpop <-  simulate_admixture(pop_size = 100,
                                number_of_founders = 4,
                                total_runtime = 100,
-                               morgan = 1,
-                               seed = 666)
+                               morgan = 1)
 
 isofemale <- create_iso_female(source_pop = wildpop,
                                n = 1,
@@ -113,8 +111,7 @@ both_populations <-
                                  list(c(rep(1, 20), rep(0, 20)),
                                       c(rep(0, 20), rep(1, 20))),
                                morgan = 1,
-                               total_runtime = 1000,
-                               seed = 42)
+                               total_runtime = 1000)
 
 population_1 <- both_populations$population_1
 
@@ -143,7 +140,7 @@ mixed_population <-
   simulate_admixture(list(isofemales[[1]],
                           isofemales[[2]]),
                      pop_size = 100, total_runtime = 100,
-                     morgan = 1, seed = 42)
+                     morgan = 1)
 ```
 And plot some individuals from our new population:
 ```{r plot mixed_population}
@@ -200,8 +197,7 @@ scratch. We expect for a strongly inbred population, that there is no LD:
 no_ld_pop <- simulate_admixture(pop_size = 100,
                              number_of_founders = 4,
                              total_runtime = 1000,
-                             morgan = 1,
-                             seed = 42)
+                             morgan = 1)
 
 ld_results <- calculate_ld(no_ld_pop,
                            sampled_individuals = 10,
@@ -225,8 +221,7 @@ between LD and distance:
 strong_ld_pop <- simulate_admixture(pop_size = 1000,
                                     number_of_founders = 4,
                                     total_runtime = 10,
-                                    morgan = 1,
-                                    seed = 42)
+                                    morgan = 1)
 
 ld_results <- calculate_ld(strong_ld_pop,
                            sampled_individuals = 10,
@@ -270,8 +265,7 @@ selected_pop <- simulate_admixture(pop_size = 1000,
                                    total_runtime = 100,
                                    morgan = 1,
                                    select_matrix = selection_matrix,
-                                   markers = markers,
-                                   seed = 12345)
+                                   markers = markers)
 
 plot_over_time(selected_pop$frequencies, markers)
 ```
@@ -291,8 +285,7 @@ selected_pop <- simulate_admixture(pop_size = 1000,
                                    total_runtime = 300,
                                    morgan = 1,
                                    select_matrix = selection_matrix,
-                                   markers = markers,
-                                   seed = 12345)
+                                   markers = markers)
 
 plot_over_time(selected_pop$frequencies, markers)
 ```

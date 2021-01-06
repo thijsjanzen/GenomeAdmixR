@@ -39,8 +39,7 @@ pops <-
                                  list(c(1, 1, 1, 1, 0, 0, 0, 0),
                                       c(0, 0, 0, 0, 1, 1, 1, 1)),
                                total_runtime = 1000,
-                               migration_rate = 0,
-                               seed = 42)
+                               migration_rate = 0)
 
 pop_1 <- pops$population_1
 pop_2 <- pops$population_2
@@ -67,12 +66,10 @@ Now we can start to generate isofemale lines from both populations, using \code{
 ```{r create isofemale lines}
 iso_females_pop_1 <- create_iso_female(pop_1,
                                        n = 2,
-                                       inbreeding_pop_size = 100,
-                                       seed = 44)
+                                       inbreeding_pop_size = 100)
 iso_females_pop_2 <- create_iso_female(pop_2,
                                        n = 2,
-                                       inbreeding_pop_size = 100,
-                                       seed = 45)
+                                       inbreeding_pop_size = 100)
 ```
 Using the function \code{create_population_from_individuals} we then create
 three populations, two where the isofemales are drawn from the same source 
@@ -83,21 +80,18 @@ respectively.
 pop_1_1 <- simulate_admixture(iso_females_pop_1,
                               pop_size = 1000,
                               total_runtime = 1000,
-                              morgan = 1,
-                              seed = 5)
+                              morgan = 1)
 
 pop_1_2 <- simulate_admixture(list(iso_females_pop_1[[1]],
                                    iso_females_pop_2[[1]]),
                                pop_size = 1000,
                                total_runtime = 1000,
-                               morgan = 1,
-                               seed = 6)
+                               morgan = 1)
 
 pop_2_2 <- simulate_admixture(iso_females_pop_2,
                               pop_size = 1000,
                               total_runtime = 1000,
-                              morgan = 1,
-                              seed = 7)
+                              morgan = 1)
 ```
 Then, using the function \code{calculate_fst} we calculate all pairwise FST 
 values. Here, we expect to find the highest FST for the 1x2 comparison. 

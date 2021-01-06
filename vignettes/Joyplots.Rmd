@@ -40,8 +40,7 @@ selected_pop <- simulate_admixture(pop_size = 1000,
                                    total_runtime = 1001,
                                    morgan = 1,
                                    select_matrix = select_matrix,
-                                   markers = markers,
-                                   seed = 1234)
+                                   markers = markers)
 ```
 We can now plot all the ancestors over time, we choose here to plot them only 
 for a select subset of times.
