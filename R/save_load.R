@@ -25,8 +25,7 @@ save_population <- function(population, file_name, compression = TRUE) {
 #' @examples wildpop <- simulate_admixture(pop_size = 10,
 #' number_of_founders = 2,
 #' total_runtime = 3,
-#' morgan = 1,
-#' seed = 123)
+#' morgan = 1)
 
 #' save_population(wildpop, file_name = "wildpop.pop")
 #' wildpop2 <- load_population(file_name = "wildpop.pop")
