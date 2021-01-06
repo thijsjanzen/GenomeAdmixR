@@ -16,11 +16,10 @@
 #'   Pairwise rsq statistics for all markers
 #' }
 #'@examples
-#'wildpop =  simulate_admixture(pop_size = 100,
-#' number_of_founders = 10,
-#' total_runtime = 100,
-#' morgan = 1,
-#' seed = 42)
+#'wildpop <- simulate_admixture(pop_size = 100,
+#'                              number_of_founders = 10,
+#'                              total_runtime = 100,
+#'                              morgan = 1)
 #'
 #' ld_results <- calculate_ld(wildpop,
 #'                            number_of_markers = 10,
