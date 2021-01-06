@@ -47,7 +47,6 @@ two_populations <- simulate_admixture_until(pop_size = 100,
                                             number_of_founders = 20,
                                             total_runtime = 10,
                                             morgan = 1,
-                                            seed = 42,
                                             overlap = 0.25)
 
 FST <- calculate_fst(two_populations$Population_1,

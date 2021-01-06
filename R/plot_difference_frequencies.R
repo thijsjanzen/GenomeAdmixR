@@ -23,7 +23,6 @@
 #'                                    total_runtime = 11,
 #'                                    morgan = 1,
 #'                                    select_matrix,
-#'                                    seed = 1234,
 #'                                    markers = markers)
 #' require(ggplot2)
 #' plot_difference_frequencies(selected_pop,

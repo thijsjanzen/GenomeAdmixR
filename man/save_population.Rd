@@ -23,9 +23,8 @@ This function functions as a wrapper for the base function
 }
 \examples{
 wildpop <- simulate_admixture(pop_size = 10,
-number_of_founders = 2,
-total_runtime = 3,
-morgan = 1,
-seed = 123)
+                                        number_of_founders = 2,
+                                        total_runtime = 3,
+                                        morgan = 1)
 save_population(wildpop, file_name = "wildpop.pop")
 }

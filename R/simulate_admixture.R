@@ -40,12 +40,10 @@
 #' ancestral allele at that location in that generation, and finally, the
 #' frequency of that allele.
 #' @examples
-#' \dontrun{
 #' wildpop <- simulate_admixture(pop_size = 10,
-#'                              number_of_founders = 2,
-#'                              total_runtime = 3,
-#'                              morgan = 1)
-#'}
+#'                               number_of_founders = 2,
+#'                               total_runtime = 3,
+#'                               morgan = 1)
 #' @export
 simulate_admixture <- function(input_population = NA,
                                pop_size = 100,

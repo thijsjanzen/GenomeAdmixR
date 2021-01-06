@@ -32,7 +32,6 @@ performing a simulation.
 pop <- simulate_admixture(pop_size = 1000,
                                    number_of_founders = 4,
                                    total_runtime = 11,
-                                   morgan = 1,
-                                   seed = 42)
+                                   morgan = 1)
 plot_frequencies(pop)
 }

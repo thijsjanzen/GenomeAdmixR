@@ -77,10 +77,8 @@ ancestry blocks, with or without selection. Simulations can be started from
 scratch, or from a predefined input population.
 }
 \examples{
-\dontrun{
 wildpop <- simulate_admixture(pop_size = 10,
-                             number_of_founders = 2,
-                             total_runtime = 3,
-                             morgan = 1)
-}
+                              number_of_founders = 2,
+                              total_runtime = 3,
+                              morgan = 1)
 }

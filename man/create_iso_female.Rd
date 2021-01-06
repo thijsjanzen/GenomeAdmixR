@@ -51,7 +51,6 @@ wildpop =  simulate_admixture(pop_size = 100,
                               number_of_founders = 10,
                               total_runtime = 5,
                               morgan = 1,
-                              seed = 42,
                               progress_bar = TRUE)
 
 isofemale <- create_iso_female(source_pop = wildpop,
@@ -59,7 +58,6 @@ isofemale <- create_iso_female(source_pop = wildpop,
                                inbreeding_pop_size = 100,
                                run_time = 100,
                                morgan = 1,
-                               seed = 42,
                                progress_bar = TRUE)
 }
 }

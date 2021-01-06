@@ -27,7 +27,6 @@
 #'                                    total_runtime = 11,
 #'                                    morgan = 1,
 #'                                    select_matrix,
-#'                                    seed = 1234,
 #'                                    markers = markers)
 #' plot_joyplot_frequencies(selected_pop$frequencies,
 #'                     0:11, picked_ancestor = "ALL")

@@ -19,7 +19,6 @@
 #'                                    number_of_founders = 3,
 #'                                    total_runtime = 11,
 #'                                    morgan = 1,
-#'                                    seed = 1234,
 #'                                    markers = markers)
 #' plot_start_end(pop,
 #'                picked_ancestor = "ALL")

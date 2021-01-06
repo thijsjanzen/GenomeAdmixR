@@ -27,8 +27,7 @@ pop <- simulate_admixture(pop_size = 1000,
                           number_of_founders = 10,
                           total_runtime = 11,
                           morgan = 1,
-                          markers = 0.5,
-                          seed = 42)
+                          markers = 0.5)
 plot_over_time(pop$frequencies,
                focal_location = 0.5)
 }

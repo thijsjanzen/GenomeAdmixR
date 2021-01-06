@@ -14,8 +14,7 @@
 #' wildpop =  simulate_admixture(pop_size = 1000,
 #'                               number_of_founders = number_founders,
 #'                               total_runtime = 10,
-#'                               morgan = 1,
-#'                               seed = 666)
+#'                               morgan = 1)
 #'
 #' calculate_marker_frequency(wildpop, 0.5)
 #'
