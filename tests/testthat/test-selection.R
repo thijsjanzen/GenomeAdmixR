@@ -9,8 +9,7 @@ test_that("select population two_alleles", {
                                      number_of_founders = 10,
                                      total_runtime = 100,
                                      morgan = 1,
-                                     select_matrix = select_matrix,
-                                     seed = 1234)
+                                     select_matrix = select_matrix)
 
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
@@ -25,8 +24,7 @@ test_that("select population two_alleles", {
                                      number_of_founders = number_of_founders,
                                      total_runtime = run_time,
                                      morgan = 1,
-                                     select_matrix = select_matrix,
-                                     seed = 1234)
+                                     select_matrix = select_matrix)
 
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
@@ -37,8 +35,7 @@ test_that("select on population", {
   sourcepop <- simulate_admixture(pop_size = 100,
                                  number_of_founders = 10,
                                  total_runtime = 1000,
-                                 morgan = 1,
-                                 seed = 123)
+                                 morgan = 1)
 
   testthat::expect_true(verify_population(sourcepop))
 
@@ -50,8 +47,7 @@ test_that("select on population", {
                                      select_matrix = select_matrix,
                                     pop_size = 100,
                                     total_runtime = 100,
-                                    morgan = 1,
-                                    seed = 1233)
+                                    morgan = 1)
 
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
@@ -60,8 +56,7 @@ test_that("select on population", {
                                      select_matrix = select_matrix,
                                                pop_size = 100,
                                                total_runtime = 100,
-                                               morgan = 1,
-                                               seed = 1233)
+                                               morgan = 1)
 
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
@@ -78,8 +73,7 @@ test_that("select population two_alleles multiple markers", {
                                      number_of_founders = 10,
                                      total_runtime = 100,
                                      morgan = 1,
-                                     select_matrix = select_matrix,
-                                     seed = 1234)
+                                     select_matrix = select_matrix)
 
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
@@ -87,8 +81,7 @@ test_that("select population two_alleles multiple markers", {
   sourcepop <- simulate_admixture(pop_size = 100,
                                   number_of_founders = 10,
                                   total_runtime = 1000,
-                                  morgan = 1,
-                                  seed = 123)
+                                  morgan = 1)
 
   testthat::expect_true(verify_population(sourcepop))
 
@@ -96,8 +89,7 @@ test_that("select population two_alleles multiple markers", {
                                      select_matrix = select_matrix,
                                      pop_size = 100,
                                      total_runtime = 100,
-                                     morgan = 1,
-                                     seed = 1233)
+                                     morgan = 1)
 
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
@@ -106,8 +98,7 @@ test_that("select population two_alleles multiple markers", {
                                      select_matrix = select_matrix,
                                      pop_size = 100,
                                      total_runtime = 100,
-                                     morgan = 1,
-                                     seed = 1233)
+                                     morgan = 1)
 
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
@@ -126,7 +117,6 @@ test_that("select population two_alleles regions", {
                                      total_runtime = 100,
                                      morgan = 1,
                                      select_matrix = select_matrix,
-                                     seed = 1234,
                                      markers = markers)
 
   testthat::expect_equal(length(selected_pop$population), 100)
@@ -135,8 +125,7 @@ test_that("select population two_alleles regions", {
   sourcepop <- simulate_admixture(pop_size = 100,
                                  number_of_founders = 10,
                                  total_runtime = 1000,
-                                 morgan = 1,
-                                 seed = 123)
+                                 morgan = 1)
 
   testthat::expect_true(verify_population(sourcepop))
 
@@ -145,7 +134,6 @@ test_that("select population two_alleles regions", {
                                      pop_size = 100,
                                      total_runtime = 100,
                                      morgan = 1,
-                                     seed = 1233,
                                      markers = markers)
 
   testthat::expect_equal(length(selected_pop$population), 100)
@@ -179,8 +167,7 @@ test_that("selection abuse", {
   sourcepop <- simulate_admixture(pop_size = 100,
                                   number_of_founders = 2,
                                   total_runtime = 100,
-                                  morgan = 1,
-                                  seed = 123)
+                                  morgan = 1)
 
   testthat::expect_true(verify_population(sourcepop))
 
@@ -194,8 +181,7 @@ test_that("selection abuse", {
                          select_matrix = select_matrix,
                         pop_size = 1000,
                         total_runtime = 1000,
-                        morgan = 1,
-                        seed = 1234),
+                        morgan = 1),
     "Can't start, there are NA values in the selection matrix!"
   )
 
@@ -203,8 +189,7 @@ test_that("selection abuse", {
     simulate_admixture(select_matrix = select_matrix,
                        pop_size = 1000,
                        total_runtime = 1000,
-                       morgan = 1,
-                       seed = 1234),
+                       morgan = 1),
     "Can't start, there are NA values in the selection matrix!"
   )
 
@@ -218,8 +203,7 @@ test_that("selection abuse", {
                        select_matrix = select_matrix,
                        pop_size = 1000,
                        total_runtime = 1000,
-                       morgan = 1,
-                       seed = 1234),
+                       morgan = 1),
     "Can't start, there are NA values in the selection matrix!"
   )
 
@@ -227,8 +211,7 @@ test_that("selection abuse", {
     simulate_admixture(select_matrix = select_matrix,
                        pop_size = 100,
                        total_runtime = 10,
-                       morgan = 1,
-                       seed = 1234),
+                       morgan = 1),
     "Can't start, there are NA values in the selection matrix!"
   )
 
@@ -247,8 +230,7 @@ test_that("selection abuse", {
                        select_matrix = select_matrix,
                        pop_size = 1000,
                        total_runtime = 1000,
-                       morgan = 1,
-                       seed = 1234)
+                       morgan = 1)
   )
 
   testthat::expect_error(
@@ -257,7 +239,6 @@ test_that("selection abuse", {
                        pop_size = 100,
                        number_of_founders = 10,
                        total_runtime = 10,
-                       morgan = 1,
-                       seed = 1234)
+                       morgan = 1)
   )
 })

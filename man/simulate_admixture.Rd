@@ -11,7 +11,6 @@ simulate_admixture(
   initial_frequencies = NA,
   total_runtime = 100,
   morgan = 1,
-  seed = NULL,
   select_matrix = NA,
   markers = NA,
   progress_bar = TRUE,
@@ -38,8 +37,6 @@ to 1 is provided, the vector is normalized.}
 
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
-
-\item{seed}{Seed of the pseudo-random number generator}
 
 \item{select_matrix}{Selection matrix indicating the markers which are under
 selection. If not provided by the user, the simulation proceeds neutrally. If
@@ -84,7 +81,6 @@ scratch, or from a predefined input population.
 wildpop <- simulate_admixture(pop_size = 10,
                              number_of_founders = 2,
                              total_runtime = 3,
-                             morgan = 1,
-                             seed = 123)
+                             morgan = 1)
 }
 }

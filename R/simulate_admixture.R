@@ -14,7 +14,6 @@
 #' @param total_runtime  Number of generations
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
-#' @param seed Seed of the pseudo-random number generator
 #' @param select_matrix Selection matrix indicating the markers which are under
 #' selection. If not provided by the user, the simulation proceeds neutrally. If
 #' provided, each row in the matrix should contain five entries:
@@ -45,8 +44,7 @@
 #' wildpop <- simulate_admixture(pop_size = 10,
 #'                              number_of_founders = 2,
 #'                              total_runtime = 3,
-#'                              morgan = 1,
-#'                              seed = 123)
+#'                              morgan = 1)
 #'}
 #' @export
 simulate_admixture <- function(input_population = NA,
@@ -55,7 +53,6 @@ simulate_admixture <- function(input_population = NA,
                                initial_frequencies = NA,
                                total_runtime = 100,
                                morgan = 1,
-                               seed = NULL,
                                select_matrix = NA,
                                markers = NA,
                                progress_bar = TRUE,
@@ -88,10 +85,6 @@ simulate_admixture <- function(input_population = NA,
     track_frequency <- TRUE
   }
 
-  if (is.null(seed)) {
-    seed <- round(as.numeric(Sys.time()))
-  }
-
   if (methods::is(input_population, "population")) {
     input_population <- population_to_vector(input_population)
   }
@@ -108,7 +101,6 @@ simulate_admixture <- function(input_population = NA,
                                markers,
                                track_junctions,
                                multiplicative_selection,
-                               seed,
                                num_threads)
 
   selected_popstruct <- create_pop_class(selected_pop$population)

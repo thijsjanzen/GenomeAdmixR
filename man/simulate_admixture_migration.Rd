@@ -12,7 +12,6 @@ simulate_admixture_migration(
   initial_frequencies = list(c(1, 0), c(0, 1)),
   total_runtime = 100,
   morgan = 1,
-  seed = NULL,
   select_matrix = NA,
   markers = NA,
   progress_bar = TRUE,
@@ -50,8 +49,6 @@ vector is normalized.}
 
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
-
-\item{seed}{Seed of the pseudo-random number generator}
 
 \item{select_matrix}{Selection matrix indicating the markers which are under
 selection. If not provided by the user, the simulation proceeds neutrally.

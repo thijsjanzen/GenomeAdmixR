@@ -1,8 +1,7 @@
 context("simulate_migration")
 
 test_that("simulate_migration", {
-  vx <- simulate_admixture_migration(seed = 42,
-                                     migration_rate = 0.1,
+  vx <- simulate_admixture_migration(migration_rate = 0.1,
                                      total_runtime = 10)
 
   testthat::expect_true(verify_population(vx$population_1))
@@ -10,12 +9,10 @@ test_that("simulate_migration", {
 
   vz <- simulate_admixture_migration(input_population_1 = vx$population_1[[1]],
                                      input_population_2 = vx$population_2[[2]],
-                                     total_runtime = 10,
-                                     seed = 5)
+                                     total_runtime = 10)
 
   markers <- seq(from = 0.4, to = 0.6, length.out = 100)
-  vy <- simulate_admixture_migration(seed = 42,
-                                     migration_rate = 0.01,
+  vy <- simulate_admixture_migration(migration_rate = 0.01,
                                      initial_frequencies =
                                        list(c(0.5, 0.5, 0, 0),
                                             c(0, 0, 0.5, 0.5)),
@@ -40,8 +37,7 @@ test_that("simulate_migration", {
       markers <- seq(from = 0.4, to = 0.60, by = 0.01)
 
       cat("starting with simulation of migration of 0.01\n")
-      vy <- simulate_admixture_migration(seed = 666,
-                                         migration_rate = 0.01,
+      vy <- simulate_admixture_migration(migration_rate = 0.01,
                                          initial_frequencies = list(c(1, 0),
                                                                     c(0, 1)),
                                          select_matrix = select_matrix,
@@ -71,8 +67,7 @@ test_that("simulate_migration", {
 
   markers <- seq(from = 0.0, to = 1, by = 0.1)
 
-  vy <- simulate_admixture_migration(seed = 42,
-                                     migration_rate = 0.0,
+  vy <- simulate_admixture_migration(migration_rate = 0.0,
                                      initial_frequencies =
                                        list(c(0.5, 0.5, 0, 0),
                                             c(0, 0, 0.5, 0.5)),
@@ -104,8 +99,7 @@ test_that("simulate_migration", {
   testthat::expect_equal(bv[1], 0)
   testthat::expect_equal(bv[2], 0)
 
-  vy <- simulate_admixture_migration(seed = 42,
-                                     migration_rate = 0.0,
+  vy <- simulate_admixture_migration(migration_rate = 0.0,
                                      initial_frequencies =
                                        list(c(0.5, 0.5, 0, 0),
                                             c(0, 0, 0.5, 0.5)),
@@ -116,17 +110,7 @@ test_that("simulate_migration", {
 
 test_that("simulate_migration no seed", {
 
-  testthat::expect_warning(
-    vy <- simulate_admixture_migration(migration_rate = 0.0,
-                                       initial_frequencies =
-                                         list(c(1, 1, 0, 0),
-                                              c(0, 0, 1, 1)),
-                                       total_runtime = 100,
-                                       markers = 0.5,
-                                       track_junctions = TRUE)
-  )
-
-  # no markers:
+   # no markers:
   testthat::expect_warning(
     vy <- simulate_admixture_migration(migration_rate = 0.0,
                                        initial_frequencies =

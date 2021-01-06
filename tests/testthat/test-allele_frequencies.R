@@ -13,8 +13,7 @@ test_that("calculate_allele_frequencies", {
     vx <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = number_of_founders,
                              total_runtime = run_time,
-                             morgan = morgan,
-                             seed = r)
+                             morgan = morgan)
 
     testthat::expect_true(verify_population(vx))
 
@@ -38,8 +37,7 @@ test_that("calculate_allele_frequencies", {
     vx <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = 4,
                              total_runtime = run_time,
-                             morgan = morgan,
-                             seed = r)
+                             morgan = morgan)
 
     testthat::expect_true(verify_population(vx))
 
@@ -61,8 +59,7 @@ test_that("calculate_allele_frequencies", {
   sourcepop <- simulate_admixture(pop_size = 10000,
                                   number_of_founders = number_of_founders,
                                   total_runtime = 1,
-                                  morgan = morgan,
-                                  seed = 123)
+                                  morgan = morgan)
 
   testthat::expect_true(verify_population(sourcepop))
 
@@ -82,8 +79,7 @@ test_that("calculate_allele_frequencies", {
   sourcepop <- simulate_admixture(pop_size = 1000,
                                   number_of_founders = number_of_founders,
                                   total_runtime = 100,
-                                  morgan = 1,
-                                  seed = 123)
+                                  morgan = 1)
 
   testthat::expect_true(verify_population(sourcepop))
 
@@ -106,8 +102,7 @@ test_that("calculate_allele_frequencies", {
   sourcepop <- simulate_admixture(pop_size = 1000,
                                   number_of_founders = number_of_founders,
                                   total_runtime = 1,
-                                  morgan = 1,
-                                  seed = 123)
+                                  morgan = 1)
 
 
 

@@ -6,7 +6,6 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                                                 c(0, 1.0)),
                                      total_runtime = 100,
                                      morgan = 1,
-                                     seed = NULL,
                                      select_matrix = NA,
                                      markers = NA,
                                      progress_bar = TRUE,
@@ -20,9 +19,6 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      number_of_markers = 100,
                                      random_markers = TRUE) {
 
-  if (is.null(seed)) {
-    seed <- round(as.numeric(Sys.time()))
-  }
 
   pops <- simulate_admixture_migration(
     input_population_1 = input_population_1,
@@ -30,7 +26,6 @@ simulate_admixture_until <- function(input_population_1 = NA,
     pop_size = pop_size,
     initial_frequencies = initial_frequencies,
     total_runtime = generations_between_update,
-    seed = seed,
     morgan = morgan,
     select_matrix = select_matrix,
     markers = markers,
@@ -59,7 +54,6 @@ simulate_admixture_until <- function(input_population_1 = NA,
       initial_frequencies = initial_frequencies,
       total_runtime = generations_between_update,
       morgan = morgan,
-      seed = seed + cnt,
       select_matrix = select_matrix,
       markers = markers,
       progress_bar = progress_bar,

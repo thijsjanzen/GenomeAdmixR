@@ -11,8 +11,7 @@ test_that("expected_number_junctions", {
       vx <- simulate_admixture(pop_size = pop_size,
                                number_of_founders = 2,
                                total_runtime = run_time,
-                               morgan = morgan,
-                               seed = r)
+                               morgan = morgan)
 
       testthat::expect_true(verify_population(vx))
 
@@ -43,7 +42,7 @@ test_that("expected_number_junctions", {
                                 morgan = 1, replicates = 30)
 
   vx <- simulate_admixture(pop_size = 1000, number_of_founders = 2,
-                          total_runtime = 5, morgan = 1, seed = 666)
+                          total_runtime = 5, morgan = 1)
 
   plot_dist_junctions(vx$population)
 })

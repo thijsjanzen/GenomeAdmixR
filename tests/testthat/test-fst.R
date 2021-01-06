@@ -9,14 +9,12 @@ testthat::test_that("fst", {
   pop1 <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = number_of_founders,
                              total_runtime = run_time,
-                             morgan = morgan,
-                             seed = 42)
+                             morgan = morgan)
 
   pop2 <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = number_of_founders,
                              total_runtime = run_time,
-                             morgan = morgan,
-                             seed = 24)
+                             morgan = morgan)
 
   pop2 <- increase_ancestor(pop2, number_of_founders)
 
@@ -44,14 +42,12 @@ testthat::test_that("fst", {
   pop1 <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = number_of_founders,
                              total_runtime = run_time,
-                             morgan = morgan,
-                             seed = 42)
+                             morgan = morgan,)
 
   pop2 <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = number_of_founders,
                              total_runtime = run_time,
-                             morgan = morgan,
-                             seed = 24)
+                             morgan = morgan)
   pop2 <- increase_ancestor(pop2, number_of_founders)
 
   testthat::expect_true(verify_population(pop1))

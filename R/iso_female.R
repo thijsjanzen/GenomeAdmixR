@@ -59,8 +59,7 @@ create_iso_female <- function(source_pop,
     inbred_population <- simulate_admixture(input_population = parents,
                                             pop_size = inbreeding_pop_size,
                                             total_runtime = run_time,
-                                            morgan = morgan,
-                                            seed = seed + i)
+                                            morgan = morgan)
     output_females[[i]] <-
           inbred_population$population[[
               sample(seq_along(inbred_population$population), 1)

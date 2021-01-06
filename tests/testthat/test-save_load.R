@@ -9,8 +9,7 @@ test_that("save_population", {
   vx <- simulate_admixture(pop_size = pop_size,
                              number_of_founders = number_of_founders,
                              total_runtime = run_time,
-                             morgan = morgan,
-                             seed = 42)
+                             morgan = morgan)
 
   testthat::expect_true(verify_population(vx))
 

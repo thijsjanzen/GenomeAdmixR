@@ -7,7 +7,6 @@ test_that("simulate_admixture_until", {
                                      initial_frequencies =
                                        list(c(0.5, 0.5), c(0.5, 0.5)),
                                      morgan = 1,
-                                     seed = 42,
                                      stop_at_critical_fst = TRUE,
                                      generations_between_update = 100,
                                      critical_fst = 0.1,
