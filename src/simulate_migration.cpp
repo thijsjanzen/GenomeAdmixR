@@ -24,7 +24,9 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-#include <tbb/tbb.h>
+#ifdef __unix__
+  #include <tbb/tbb.h>
+#endif
 
 Fish draw_parent(const std::vector< Fish>& pop_1,
                  const std::vector< Fish>& pop_2,
@@ -84,6 +86,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
   std::vector<Fish> new_generation(pop_size);
   new_fitness = std::vector<double>(pop_size);
 
+#ifdef __unix__
   tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
 
   tbb::parallel_for(
@@ -91,8 +94,11 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
     [&](const tbb::blocked_range<unsigned>& r) {
       rnd_t rndgen;
       for (unsigned i = r.begin(); i < r.end(); ++i) {
+#else
+      rnd_t rndgen;
+      for (unsigned i = 0; i < pop_size; ++i) {
+#endif
         int index1, index2;
- // for (int i = 0; i < pop_size; ++i) {
         Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
                                    use_selection,
                                    fitness_source, fitness_migr,
@@ -115,15 +121,17 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                 index2, rndgen);
         }
 
-        new_generation[i] = mate(parent1, parent2, size_in_morgan, rndgen);
+        new_generation[i] = std::move(mate(parent1, parent2, size_in_morgan, rndgen));
 
         double fit = -2.0;
         if (use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
 
         new_fitness[i] = fit;
       }
-    }
+#ifdef __unix__
+      }
   );
+#endif
 
   new_max_fitness = *std::max_element(new_fitness.begin(), new_fitness.end());
 
@@ -294,9 +302,8 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             bool track_junctions,
                             bool multiplicative_selection,
                             double migration_rate,
-                            int seed,
                             int num_threads) {
-  rnd_t rndgen(seed);
+  rnd_t rndgen;
 
   std::vector< Fish > Pop_1;
   std::vector< Fish > Pop_2;
@@ -351,8 +358,8 @@ List simulate_migration_cpp(NumericVector input_population_1,
         Fish p1 = Fish( founder_1 );
         Fish p2 = Fish( founder_2 );
 
-        if(j == 0) Pop_1.push_back(mate(p1,p2, morgan, rndgen));
-        if(j == 1) Pop_2.push_back(mate(p1,p2, morgan, rndgen));
+        if(j == 0) Pop_1.emplace_back(mate(p1,p2, morgan, rndgen));
+        if(j == 1) Pop_2.emplace_back(mate(p1,p2, morgan, rndgen));
       }
     }
     for (int i = 0; i < starting_frequencies.ncol(); ++i) {

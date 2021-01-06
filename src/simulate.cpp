@@ -23,7 +23,9 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-#include <tbb/tbb.h>
+#ifdef __unix__
+  #include <tbb/tbb.h>
+#endif
 
 std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         const NumericMatrix& select,
@@ -47,8 +49,9 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
   bool use_selection = false;
   if(select(1, 1) >= 0) use_selection = true;
 
+#ifdef __unix__
   tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
-
+#endif
 
   std::vector<Fish> Pop = sourcePop;
   std::vector<double> fitness;
@@ -101,11 +104,16 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     std::vector<Fish> newGeneration(pop_size);
     std::vector<double> newFitness(pop_size);
 
+#ifdef __unix__
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
         rnd_t rndgen2;
         for (unsigned i = r.begin(); i < r.end(); ++i) {
+#else
+        rnd_t rndgen2;
+        for (unsigned i = 0; i < pop_size; ++i) {
+#endif
           int index1 = 0;
           int index2 = 0;
           if (use_selection) {
@@ -118,15 +126,17 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             while(index2 == index1) index2 = rndgen2.random_number( (int)Pop.size() );
           }
 
-          newGeneration[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
+          newGeneration[i] = std::move(mate(Pop[index1], Pop[index2], morgan, rndgen2));
 
           double fit = -2.0;
           if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
 
           newFitness[i] = fit;
         }
+#ifdef __unix__
       }
     );
+#endif
 
     if (t % updateFreq == 0 && progress_bar) {
       Rcout << "**";
@@ -161,10 +171,9 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericVector track_markers,
                   bool track_junctions,
                   bool multiplicative_selection,
-                  int seed,
                   int num_threads) {
 
-  rnd_t rndgen(seed);
+  rnd_t rndgen;
 
   std::vector< Fish > Pop;
   int number_of_alleles = number_of_founders;
@@ -199,7 +208,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
       Fish p1 = Fish( founder_1 );
       Fish p2 = Fish( founder_2 );
 
-      Pop.push_back(mate(p1,p2, morgan, rndgen));
+      Pop.emplace_back(mate(p1,p2, morgan, rndgen));
     }
     for (int i = 0; i < number_of_alleles; ++i) {
       founder_labels.push_back(i);
