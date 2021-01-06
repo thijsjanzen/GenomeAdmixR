@@ -35,6 +35,11 @@ struct Fish {
     Fish(int initLoc);
     bool operator ==(const Fish& other) const;
     bool operator !=(const Fish& other) const;
+
+    Fish(const Fish& other);
+    Fish(Fish&& other);
+    Fish& operator=(Fish&& other);
+    Fish& operator=(const Fish& other);
 };
 
 

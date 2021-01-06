@@ -208,3 +208,30 @@ bool Fish::operator ==(const Fish& other) const {
 bool Fish::operator !=(const Fish& other) const {
     return ! ((*this) == other);
 }
+
+
+Fish::Fish(Fish&& other) {
+    chromosome1 = other.chromosome1;
+    chromosome2 = other.chromosome2;
+}
+
+Fish& Fish::operator=(Fish&& other) {
+    if (this != &other) {
+        chromosome1 = other.chromosome1;
+        chromosome2 = other.chromosome2;
+    }
+    return *this;
+}
+
+Fish::Fish(const Fish& other) {
+    chromosome1 = other.chromosome1;
+    chromosome2 = other.chromosome2;
+}
+
+Fish& Fish::operator=(const Fish& other) {
+    if (this != &other) {
+        chromosome1 = other.chromosome1;
+        chromosome2 = other.chromosome2;
+    }
+    return *this;
+}
