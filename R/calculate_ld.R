@@ -16,7 +16,7 @@
 #'   Pairwise rsq statistics for all markers
 #' }
 #'@examples
-#'wildpop <- simulate_admixture(pop_size = 100,
+#' wildpop <- simulate_admixture(pop_size = 100,
 #'                              number_of_founders = 10,
 #'                              total_runtime = 100,
 #'                              morgan = 1)
