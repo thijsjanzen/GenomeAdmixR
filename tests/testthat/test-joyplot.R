@@ -19,5 +19,4 @@ test_that("joyplot", {
   testthat::expect_identical(px$labels$y, "Time")
   testthat::expect_identical(px$labels$fill, "Ancestor")
   testthat::expect_identical(px$labels$height, "frequency")
-  plot_difference_frequencies(selected_pop)
-}
+})
