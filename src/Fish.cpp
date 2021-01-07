@@ -60,6 +60,63 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
     return go;
 }
 
+void add(std::vector< junction>& offspring,
+         const junction& new_junction) {
+
+    if (offspring.empty()) {
+        offspring.push_back(new_junction);
+        return;
+    }
+
+
+    if (new_junction.pos > offspring.back().pos &&
+        new_junction.right != offspring.back().right) {
+        offspring.push_back(new_junction);
+    }
+    return;
+}
+
+void recombine_old(std::vector<junction>& offspring,
+                   const std::vector<junction>& chromosome1,
+                   const std::vector<junction>& chromosome2,
+                   const std::vector<double>& recomPos) {
+
+
+    std::vector < std::vector<junction>::const_iterator > iters =
+        { chromosome1.begin(), chromosome2.begin() };
+
+    int index = 0;
+    int recompos_cnt = 0;
+
+    while(true) {
+
+        if ( iters[index]->pos > recomPos[recompos_cnt]  ) {
+            // encountered junction point
+            // create junction
+            index = 1 - index;
+            while( iters[index]->pos < recomPos[recompos_cnt]) {
+                iters[index]++;
+            }
+
+            auto prev_iter = iters[index];
+            prev_iter--;
+            junction new_junction(recomPos[recompos_cnt], prev_iter->right);
+            add(offspring, new_junction);
+
+            recompos_cnt++;
+        } else {
+            add(offspring, (*iters[index]));
+            iters[index]++;
+        }
+
+        if (offspring.back().right == -1) {
+            break;
+        }
+    }
+
+    return;
+}
+
 std::vector<double> generate_recomPos(int number_of_recombinations,
                                       rnd_t& rndgen) {
 
@@ -68,27 +125,18 @@ std::vector<double> generate_recomPos(int number_of_recombinations,
         recomPos[i] = rndgen.uniform();
     }
     std::sort(recomPos.begin(), recomPos.end() );
-    recomPos.erase(std::unique(recomPos.begin(), recomPos.end()), recomPos.end());
 
-    while (recomPos.size() < number_of_recombinations) {
-        double pos = rndgen.uniform();
-        recomPos.push_back(pos);
-        // sort them, in case they are not sorted yet
-        // we need this to remove duplicates, and later
-        // to apply crossover
-        std::sort(recomPos.begin(), recomPos.end() );
-        // remove duplicate recombination sites
-        recomPos.erase(std::unique(recomPos.begin(), recomPos.end()), recomPos.end());
-    }
-    recomPos.push_back(1.0);
+    if(recomPos.back() < 1.0)
+        recomPos.push_back(1.0);
+
     return recomPos;
 }
 
 void Recombine(      std::vector<junction>& offspring,
-               const std::vector<junction>& chromosome1,
-               const std::vector<junction>& chromosome2,
-               double MORGAN,
-               rnd_t& rndgen)  {
+                     const std::vector<junction>& chromosome1,
+                     const std::vector<junction>& chromosome2,
+                     double MORGAN,
+                     rnd_t& rndgen)  {
 
     int numRecombinations = rndgen.poisson(MORGAN);
 
@@ -103,7 +151,14 @@ void Recombine(      std::vector<junction>& offspring,
     std::vector<double> recomPos = generate_recomPos(numRecombinations,
                                                      rndgen);
 
+#ifdef __unix__
     offspring = recombine_new(chromosome1, chromosome2, recomPos);
+#else
+    recombine_old(offspring,
+                  chromosome1,
+                  chromosome2,
+                  recomPos);
+#endif
 
     return;
 }
@@ -118,28 +173,28 @@ Fish mate(const Fish& A, const Fish& B, double numRecombinations,
     //first the father chromosome
     int event = rndgen.random_number(2);
     switch(event) {
-        case 0:  {
-            Recombine(offspring.chromosome1, A.chromosome1, A.chromosome2, numRecombinations, rndgen);
-            break;
-        }
-        case 1: {
-            Recombine(offspring.chromosome1, A.chromosome2, A.chromosome1, numRecombinations, rndgen);
-            break;
-        }
+    case 0:  {
+        Recombine(offspring.chromosome1, A.chromosome1, A.chromosome2, numRecombinations, rndgen);
+        break;
+    }
+    case 1: {
+        Recombine(offspring.chromosome1, A.chromosome2, A.chromosome1, numRecombinations, rndgen);
+        break;
+    }
     }
 
 
     //then the mother chromosome
     event = rndgen.random_number(2);
     switch(event) {
-        case 0:  {
-            Recombine(offspring.chromosome2, B.chromosome1, B.chromosome2, numRecombinations, rndgen);
-            break;
-        }
-        case 1: {
-            Recombine(offspring.chromosome2, B.chromosome2, B.chromosome1, numRecombinations, rndgen);
-            break;
-        }
+    case 0:  {
+        Recombine(offspring.chromosome2, B.chromosome1, B.chromosome2, numRecombinations, rndgen);
+        break;
+    }
+    case 1: {
+        Recombine(offspring.chromosome2, B.chromosome2, B.chromosome1, numRecombinations, rndgen);
+        break;
+    }
     }
 
     return offspring;
