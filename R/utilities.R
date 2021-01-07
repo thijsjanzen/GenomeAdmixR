@@ -4,12 +4,6 @@
 #' @keywords internal
 check_input_pop <- function(pop) {
 
-  if (is.na(pop[1])) {
-    message("check in check_input_pop")
-    return(c(-1e6, -1e6))
-  }
-
-
   if (class(pop[1]) == "individual") {
     message("check in check_input_pop")
     pop <- list(pop)
