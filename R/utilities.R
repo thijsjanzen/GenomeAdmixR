@@ -4,7 +4,14 @@
 #' @keywords internal
 check_input_pop <- function(pop) {
 
-  if (class(pop) == "individual") {
+  if (is.na(pop[1])) {
+    message("check in check_input_pop")
+    return(c(-1e6, -1e6))
+  }
+
+
+  if (class(pop[1]) == "individual") {
+    message("check in check_input_pop")
     pop <- list(pop)
     class(pop) <- "population"
   }
@@ -81,8 +88,8 @@ check_initial_frequencies <- function(initial_frequencies) {
 #' @keywords internal
 check_select_matrix <- function(select_matrix) {
   if (is.matrix(select_matrix)) {
-    message("Found a selection matrix, performing simulation\n")
-    message("including selection\n")
+    message("Found a selection matrix, performing simulation")
+    message("including selection")
     if (sum(is.na(select_matrix))) {
       stop("Can't start, there are NA values in the selection matrix!\n")
     }
