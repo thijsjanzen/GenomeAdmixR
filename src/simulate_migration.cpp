@@ -121,7 +121,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                 index2, rndgen);
         }
 
-        new_generation[i] = std::move(mate(parent1, parent2, size_in_morgan, rndgen));
+        new_generation[i] = mate(parent1, parent2, size_in_morgan, rndgen);
 
         double fit = -2.0;
         if (use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
