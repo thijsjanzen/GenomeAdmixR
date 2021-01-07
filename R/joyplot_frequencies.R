@@ -72,4 +72,5 @@ plot_joyplot_frequencies <- function(frequencies,
     ggplot2::labs(fill = "Ancestor")  +
     ggplot2::ylab("Time") +
     ggplot2::xlab("Location (Morgan)")
+  return(p1)
 }
