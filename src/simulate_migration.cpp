@@ -382,6 +382,8 @@ List simulate_migration_cpp(NumericVector input_population_1,
   Rcout << "starting simulation\n"; R_FlushConsole();
   std::vector< std::vector< Fish> > output_populations;
 
+  track_markers = scale_markers(track_markers, morgan);
+
   output_populations = simulate_two_populations(Pop_1,
                                                 Pop_2,
                                                 select,

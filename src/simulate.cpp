@@ -179,7 +179,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
   int number_of_alleles = number_of_founders;
   std::vector<int> founder_labels;
 
-  track_markers = scale_markers(track_markers);
+  track_markers = scale_markers(track_markers, morgan);
 
   if (input_population[0] > -1e4) {
     Pop = convert_NumericVector_to_fishVector(input_population);

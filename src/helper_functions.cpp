@@ -390,7 +390,7 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
   //Rcout << "number of alleles: " << founder_labels.size() << "\n";
 
   double morgan = markers[markers.size() - 1];
-  markers = scale_markers(markers); // make sure they are in [0, 1];
+  markers = scale_markers(markers, morgan); // make sure they are in [0, 1];
 
   arma::mat frequencies = update_all_frequencies_tibble(Pop,
                                                         markers,
@@ -475,16 +475,16 @@ arma::mat calculate_heterozygosity_cpp(Rcpp::NumericVector input_population,
   return heterozygosities;
 }
 
-NumericVector scale_markers(const Rcpp::NumericVector& markers) {
+NumericVector scale_markers(const Rcpp::NumericVector& markers,
+                            double morgan) {
   if (markers.size() == 1) {
     return markers;
   }
 
-  double max = markers[markers.size() - 1];
   Rcpp::NumericVector outputmarkers(markers.size());
 
   for(int i = 0; i < markers.size(); ++i) {
-    outputmarkers[i] = markers[i] * 1.0 / max;
+    outputmarkers[i] = markers[i] * 1.0 / morgan;
   }
   return outputmarkers;
 }

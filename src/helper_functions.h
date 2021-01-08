@@ -77,6 +77,7 @@ arma::mat update_frequency_tibble_dual_pop(const std::vector< Fish >& pop_1,
                                            int t,
                                            double morgan);
 
-NumericVector scale_markers(const Rcpp::NumericVector& markers);
+NumericVector scale_markers(const Rcpp::NumericVector& markers,
+                            double morgan);
 
 #endif /* helper_functions_hpp */
