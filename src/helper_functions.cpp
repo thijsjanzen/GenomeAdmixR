@@ -14,7 +14,7 @@ bool matching_chromosomes(const std::vector< junction >& v1,
   if(v1.size() != v2.size()) {
     return false;
   }
-  for(int i = 0; i < v1.size(); ++i) {
+  for(size_t i = 0; i < v1.size(); ++i) {
     if(v1[i] != v2[i]) {
       return false;
     }
@@ -40,7 +40,7 @@ bool is_fixed(const std::vector< Fish >& v) {
 }
 
 int find_index(const std::vector<int>& v, int value) {
-  for(int i = 0; i < v.size(); ++i) {
+  for(size_t i = 0; i < v.size(); ++i) {
     if(v[i] == value) return i;
   }
   //Rcout << "ERROR! Could not find ancestry label, returning -1, expect out of range error soon\n";
@@ -306,18 +306,18 @@ List convert_to_list(const std::vector<Fish>& v) {
   int list_size = (int)v.size();
   List output(list_size);
 
-  for(int i = 0; i < v.size(); ++i) {
+  for (size_t i = 0; i < v.size(); ++i) {
 
     Fish focal = v[i];
 
     NumericMatrix chrom1(focal.chromosome1.size(), 2); // nrow = number of junctions, ncol = 2
-    for(int j = 0; j < focal.chromosome1.size(); ++j) {
+    for (size_t j = 0; j < focal.chromosome1.size(); ++j) {
       chrom1(j, 0) = focal.chromosome1[j].pos;
       chrom1(j, 1) = focal.chromosome1[j].right;
     }
 
     NumericMatrix chrom2(focal.chromosome2.size(), 2); // nrow = number of junctions, ncol = 2
-    for(int j = 0; j < focal.chromosome2.size(); ++j) {
+    for (size_t j = 0; j < focal.chromosome2.size(); ++j) {
       chrom2(j, 0) = focal.chromosome2[j].pos;
       chrom2(j, 1) = focal.chromosome2[j].right;
     }
@@ -377,7 +377,7 @@ double calculate_fitness(const Fish& focal,
 
   double fitness = 0.0;
   if (multiplicative_selection) fitness = 1.0;
-  for(int i = 0; i < num_alleles.size(); ++i) {
+  for (size_t i = 0; i < num_alleles.size(); ++i) {
     if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
 
     int fitness_index = 1 + num_alleles[i];
