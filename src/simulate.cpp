@@ -23,6 +23,85 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
+#include <tbb/tbb.h>
+
+void     update_pop(const std::vector<Fish>& Pop,
+                    const std::vector<double> fitness,
+                    std::vector<Fish>& newGeneration,
+                    std::vector<double>& newFitness,
+                    const NumericMatrix& select,
+                    double maxFitness,
+                    double morgan,
+                    bool multiplicative_selection,
+                    bool use_selection,
+                    int num_threads) {
+
+
+  if (num_threads == 1) {
+    for (int i = 0; i < Pop.size(); ++i)  {
+      int index1 = 0;
+      int index2 = 0;
+      if (use_selection) {
+        index1 = draw_prop_fitness(fitness, maxFitness);
+        index2 = draw_prop_fitness(fitness, maxFitness);
+        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness);
+      } else {
+        index1 = random_number( (int)Pop.size() );
+        index2 = random_number( (int)Pop.size() );
+        while(index2 == index1) index2 = random_number( (int)Pop.size() );
+      }
+
+      newGeneration[i] = mate(Pop[index1], Pop[index2], morgan);
+
+      double fit = -2.0;
+      if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
+
+      newFitness[i] = fit;
+    }
+  }
+
+  if (num_threads > 1) {
+
+    int pop_size = Pop.size();
+
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+       [&](const tbb::blocked_range<unsigned>& r) {
+
+         std::random_device rd;
+         std::mt19937 local_rndgen_(rd());
+
+         // initialize randomizers.
+         std::uniform_int_distribution<> pop_draw = std::uniform_int_distribution<> (0, Pop.size() - 1);
+
+         for (unsigned i = r.begin(); i < r.end(); ++i) {
+           int index1 = 0;
+           int index2 = 0;
+           if (use_selection) {
+             index1 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
+             index2 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
+             while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
+           } else {
+             index1 = pop_draw(local_rndgen_);
+             index2 = pop_draw(local_rndgen_);
+             while(index2 == index1) index2 = pop_draw(local_rndgen_);
+           }
+
+           newGeneration[i] = mate_threaded(Pop[index1], Pop[index2], morgan,
+                                            local_rndgen_);
+
+           double fit = -2.0;
+           if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
+
+           newFitness[i] = fit;
+         }
+       }
+      );
+  }
+  return;
+}
+
+
 std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         const NumericMatrix& select,
                                         int pop_size,
@@ -36,7 +115,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         std::vector<double>& junctions,
                                         bool multiplicative_selection,
                                         int num_alleles,
-                                        const std::vector<int>& founder_labels) {
+                                        const std::vector<int>& founder_labels,
+                                        int num_threads) {
 
   //Rcout << "simulate_population: " << multiplicative_selection << "\n";
 
@@ -64,6 +144,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     Rcout << "*";
   }
 
+  tbb::task_scheduler_init _tbb((num_threads > 1) ? num_threads : tbb::task_scheduler_init::automatic);
+
   for(int t = 0; t < total_runtime; ++t) {
 
     if(track_junctions) junctions.push_back(calc_mean_junctions(Pop));
@@ -73,9 +155,9 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
         if(track_markers[i] < 0) break;
         arma::mat local_mat = update_frequency_tibble(Pop,
                                                       track_markers[i],
-                                                      founder_labels,
-                                                      t,
-                                                      morgan);
+                                                                   founder_labels,
+                                                                   t,
+                                                                   morgan);
 
         // now we have to find where to copy local_mat into frequencies
         int time_block = track_markers.size() * founder_labels.size(); // number of markers times number of alleles
@@ -92,29 +174,19 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     }
 
     std::vector<Fish> newGeneration(pop_size);
-    std::vector<double> newFitness;
+    std::vector<double> newFitness(pop_size);
     double newMaxFitness = -1.0;
-    for (int i = 0; i < pop_size; ++i)  {
-      int index1 = 0;
-      int index2 = 0;
-      if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness);
-        index2 = draw_prop_fitness(fitness, maxFitness);
-        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness);
-      } else {
-        index1 = random_number( (int)Pop.size() );
-        index2 = random_number( (int)Pop.size() );
-        while(index2 == index1) index2 = random_number( (int)Pop.size() );
-      }
 
-      newGeneration[i] = std::move(mate(Pop[index1], Pop[index2], morgan));
-
-      double fit = -2.0;
-      if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
-      if(fit > newMaxFitness) newMaxFitness = fit;
-
-      newFitness.push_back(fit);
-    }
+    update_pop(Pop,
+               fitness,
+               newGeneration,
+               newFitness,
+               select,
+               maxFitness,
+               morgan,
+               multiplicative_selection,
+               use_selection,
+               num_threads);
 
     if (t % updateFreq == 0 && progress_bar) {
       Rcout << "**";
@@ -130,7 +202,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
     Pop.swap(newGeneration);
     fitness.swap(newFitness);
-    maxFitness = newMaxFitness;
+    maxFitness = *std::max_element(fitness.begin(), fitness.end());
   }
   if(progress_bar) Rcout << "\n";
   return(Pop);
@@ -149,7 +221,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericVector track_markers,
                   bool track_junctions,
                   bool multiplicative_selection,
-                  int seed) {
+                  int seed,
+                  int num_threads) {
 
   set_seed(seed);
   set_poisson(morgan);
@@ -224,7 +297,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                     junctions,
                                                     multiplicative_selection,
                                                     number_of_alleles,
-                                                    founder_labels);
+                                                    founder_labels,
+                                                    num_threads);
 
   arma::mat final_frequencies = update_all_frequencies_tibble(outputPop,
                                                               track_markers,

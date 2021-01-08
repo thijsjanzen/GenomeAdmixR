@@ -31,6 +31,7 @@
 #' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated
 #' for multiple markers by multiplying fitness values for each marker. If FALSE,
 #' fitness is calculated by adding fitness values for each marker.
+#' @param num_threads number of threads, default is 1.
 #' @return A list with: \code{population} a population object, and three tibbles
 #' with allele frequencies (only contain values of a vector was provided to the
 #' argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and
@@ -51,7 +52,8 @@ simulate_admixture <- function(input_population = NA,
                                markers = NA,
                                progress_bar = TRUE,
                                track_junctions = FALSE,
-                               multiplicative_selection = TRUE) {
+                               multiplicative_selection = TRUE,
+                               num_threads = 1) {
 
   input_population <- check_input_pop(input_population)
 
@@ -98,7 +100,8 @@ simulate_admixture <- function(input_population = NA,
                                markers,
                                track_junctions,
                                multiplicative_selection,
-                               seed)
+                               seed,
+                               num_threads)
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 

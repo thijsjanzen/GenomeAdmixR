@@ -232,6 +232,37 @@ int draw_prop_fitness(const std::vector<double>& fitness,
   return -1;
 }
 
+int draw_prop_fitness(const std::vector<double>& fitness,
+                      double maxFitness,
+                      std::mt19937& local_rndgen_) {
+
+  std::uniform_int_distribution<> pop_draw = std::uniform_int_distribution<>(0, fitness.size() - 1);
+  //std::uniform_real_distribution<double> unif_draw = std::uniform_real_distribution(0, 1.0);
+  std::uniform_real_distribution<> unif_draw = std::uniform_real_distribution<>(0, 1.0);
+  if(maxFitness <= 0.0) {
+    Rcout << "maxFitness = " << maxFitness << "\n";
+    Rcpp::stop("Cannot draw fitness if maxFitness <= 0");
+    return(-1);
+  }
+
+  if(maxFitness > 1e20) {
+    Rcout << "maxFitness = " << maxFitness << "\n";
+    Rcpp::stop("It appears maxfitness has encountered a memory access violation\n");
+    return(-1);
+  }
+
+  for(int i = 0; i < 1e6; ++i) {
+    int index = pop_draw(local_rndgen_);
+    double prob = 1.0 * fitness[index] / maxFitness;
+    if(unif_draw(local_rndgen_) < prob) {
+      return index;
+    }
+  }
+  Rcout << maxFitness << "\n";
+  Rcpp::stop("ERROR!Couldn't pick proportional to fitness");
+  return -1;
+}
+
 
 std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector v) {
   std::vector< Fish > output;

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <vector>
+#include <random>
 
 struct junction {
     long double pos;
@@ -41,5 +42,9 @@ struct Fish {
 
 
 Fish mate(const Fish& A, const Fish& B, double numRecombinations);
+Fish mate_threaded(const Fish& A,
+                   const Fish& B,
+                   double numRecombinations,
+                   std::mt19937& local_rndgen_);
 
 #endif /* Fish_hpp */

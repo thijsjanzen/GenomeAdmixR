@@ -16,7 +16,8 @@ simulate_admixture(
   markers = NA,
   progress_bar = TRUE,
   track_junctions = FALSE,
-  multiplicative_selection = TRUE
+  multiplicative_selection = TRUE,
+  num_threads = 1
 )
 }
 \arguments{
@@ -60,6 +61,8 @@ TRUE}
 \item{multiplicative_selection}{Default: TRUE. If TRUE, fitness is calculated
 for multiple markers by multiplying fitness values for each marker. If FALSE,
 fitness is calculated by adding fitness values for each marker.}
+
+\item{num_threads}{number of threads, default is 1.}
 }
 \value{
 A list with: \code{population} a population object, and three tibbles
