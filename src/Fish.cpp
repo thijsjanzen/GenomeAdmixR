@@ -64,7 +64,7 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
 std::vector<double> generate_recomPos(size_t number_of_recombinations) {
 
     std::vector<double> recomPos(number_of_recombinations, 0);
-    for(int i = 0; i < number_of_recombinations; ++i) {
+    for (size_t i = 0; i < number_of_recombinations; ++i) {
         recomPos[i] = uniform();
     }
     std::sort(recomPos.begin(), recomPos.end() );

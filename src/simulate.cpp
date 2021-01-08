@@ -23,7 +23,12 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-#include <tbb/tbb.h>
+bool TBB_ABLE = false;
+
+#ifdef __unix__
+ #include <tbb/tbb.h>
+ TBB_ABLE = true;
+#endif
 
 void     update_pop(const std::vector<Fish>& Pop,
                     const std::vector<double> fitness,
@@ -37,8 +42,47 @@ void     update_pop(const std::vector<Fish>& Pop,
                     int num_threads) {
 
 
-  if (num_threads == 1) {
-    for (int i = 0; i < Pop.size(); ++i)  {
+
+  if (num_threads > 1 && TBB_ABLE) {
+
+ #ifdef __unix__
+    int pop_size = Pop.size();
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+      [&](const tbb::blocked_range<unsigned>& r) {
+
+        std::random_device rd;
+        std::mt19937 local_rndgen_(rd());
+
+        // initialize randomizers.
+        std::uniform_int_distribution<> pop_draw = std::uniform_int_distribution<> (0, Pop.size() - 1);
+
+        for (unsigned i = r.begin(); i < r.end(); ++i) {
+          int index1 = 0;
+          int index2 = 0;
+          if (use_selection) {
+            index1 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
+            index2 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
+            while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
+          } else {
+            index1 = pop_draw(local_rndgen_);
+            index2 = pop_draw(local_rndgen_);
+            while(index2 == index1) index2 = pop_draw(local_rndgen_);
+          }
+
+          newGeneration[i] = mate_threaded(Pop[index1], Pop[index2], morgan,
+                                           local_rndgen_);
+
+          double fit = -2.0;
+          if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
+
+          newFitness[i] = fit;
+        }
+      }
+    );
+ #endif
+  } else {
+    for (size_t i = 0; i < Pop.size(); ++i)  {
       int index1 = 0;
       int index2 = 0;
       if (use_selection) {
@@ -60,44 +104,7 @@ void     update_pop(const std::vector<Fish>& Pop,
     }
   }
 
-  if (num_threads > 1) {
 
-    int pop_size = Pop.size();
-
-    tbb::parallel_for(
-      tbb::blocked_range<unsigned>(0, pop_size),
-       [&](const tbb::blocked_range<unsigned>& r) {
-
-         std::random_device rd;
-         std::mt19937 local_rndgen_(rd());
-
-         // initialize randomizers.
-         std::uniform_int_distribution<> pop_draw = std::uniform_int_distribution<> (0, Pop.size() - 1);
-
-         for (unsigned i = r.begin(); i < r.end(); ++i) {
-           int index1 = 0;
-           int index2 = 0;
-           if (use_selection) {
-             index1 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
-             index2 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
-             while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, local_rndgen_);
-           } else {
-             index1 = pop_draw(local_rndgen_);
-             index2 = pop_draw(local_rndgen_);
-             while(index2 == index1) index2 = pop_draw(local_rndgen_);
-           }
-
-           newGeneration[i] = mate_threaded(Pop[index1], Pop[index2], morgan,
-                                            local_rndgen_);
-
-           double fit = -2.0;
-           if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
-
-           newFitness[i] = fit;
-         }
-       }
-      );
-  }
   return;
 }
 
@@ -144,7 +151,9 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     Rcout << "*";
   }
 
+#ifdef __unix
   tbb::task_scheduler_init _tbb((num_threads > 1) ? num_threads : tbb::task_scheduler_init::automatic);
+#endif
 
   for(int t = 0; t < total_runtime; ++t) {
 
@@ -175,7 +184,6 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
     std::vector<Fish> newGeneration(pop_size);
     std::vector<double> newFitness(pop_size);
-    double newMaxFitness = -1.0;
 
     update_pop(Pop,
                fitness,
