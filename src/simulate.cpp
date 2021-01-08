@@ -103,7 +103,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
     std::vector<Fish> newGeneration(pop_size);
     std::vector<double> newFitness(pop_size);
-/*
+
 #ifdef __unix__
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
@@ -137,8 +137,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
       }
     );
 #endif
-*/
 
+/*
       rnd_t rndgen2;
       for (unsigned i = 0; i < pop_size; ++i) {
         int index1 = 0;
@@ -161,7 +161,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
         newFitness[i] = fit;
       }
 
-
+*/
 
     if (t % updateFreq == 0 && progress_bar) {
       Rcout << "**";

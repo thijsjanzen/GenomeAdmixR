@@ -151,14 +151,14 @@ void Recombine(      std::vector<junction>& offspring,
     std::vector<double> recomPos = generate_recomPos(numRecombinations,
                                                      rndgen);
 
-// #ifdef __unix__
-//    offspring = recombine_new(chromosome1, chromosome2, recomPos);
-// #else
+ #ifdef __unix__
+    offspring = recombine_new(chromosome1, chromosome2, recomPos);
+ #else
     recombine_old(offspring,
                   chromosome1,
                   chromosome2,
                   recomPos);
-// #endif
+ #endif
 
     return;
 }
