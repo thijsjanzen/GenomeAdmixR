@@ -126,7 +126,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
             while(index2 == index1) index2 = rndgen2.random_number( (int)Pop.size() );
           }
 
-          newGeneration[i] = std::move(mate(Pop[index1], Pop[index2], morgan, rndgen2));
+          newGeneration[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
 
           double fit = -2.0;
           if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
