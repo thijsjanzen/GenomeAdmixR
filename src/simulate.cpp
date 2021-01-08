@@ -103,7 +103,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
     std::vector<Fish> newGeneration(pop_size);
     std::vector<double> newFitness(pop_size);
-
+/*
 #ifdef __unix__
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
@@ -137,6 +137,31 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
       }
     );
 #endif
+*/
+
+      rnd_t rndgen2;
+      for (unsigned i = 0; i < pop_size; ++i) {
+        int index1 = 0;
+        int index2 = 0;
+        if (use_selection) {
+          index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+          index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+          while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+        } else {
+          index1 = rndgen2.random_number( (int)Pop.size() );
+          index2 = rndgen2.random_number( (int)Pop.size() );
+          while(index2 == index1) index2 = rndgen2.random_number( (int)Pop.size() );
+        }
+
+        newGeneration[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
+
+        double fit = -2.0;
+        if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
+
+        newFitness[i] = fit;
+      }
+
+
 
     if (t % updateFreq == 0 && progress_bar) {
       Rcout << "**";
