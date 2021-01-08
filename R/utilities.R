@@ -4,7 +4,7 @@
 #' @keywords internal
 check_input_pop <- function(pop) {
 
-  if (class(pop[1]) == "individual") {
+  if (class(pop) == "individual") {
     message("check in check_input_pop")
     pop <- list(pop)
     class(pop) <- "population"
