@@ -14,6 +14,7 @@
 #' @param total_runtime  Number of generations
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
+#' @param seed Seed of the pseudo-random number generator
 #' @param select_matrix Selection matrix indicating the markers which are under
 #' selection. If not provided by the user, the simulation proceeds neutrally. If
 #' provided, each row in the matrix should contain five entries:
@@ -22,7 +23,6 @@
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' represents the mutant allele A}
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
-#' @param num_threads number of threads, default is -1 which selects all available threads
 #' @param markers A vector of locations of markers (relative locations in
 #' [0, 1]). If a vector is provided, ancestry at these marker positions is
 #' tracked for every generation.
@@ -39,11 +39,6 @@
 #' number of generations, the location along the chromosome of the marker, the
 #' ancestral allele at that location in that generation, and finally, the
 #' frequency of that allele.
-#' @examples
-#' wildpop <- simulate_admixture(pop_size = 10,
-#'                               number_of_founders = 2,
-#'                               total_runtime = 3,
-#'                               morgan = 1)
 #' @export
 simulate_admixture <- function(input_population = NA,
                                pop_size = 100,
@@ -51,10 +46,10 @@ simulate_admixture <- function(input_population = NA,
                                initial_frequencies = NA,
                                total_runtime = 100,
                                morgan = 1,
+                               seed = NULL,
                                select_matrix = NA,
                                markers = NA,
                                progress_bar = TRUE,
-                               num_threads = -1,
                                track_junctions = FALSE,
                                multiplicative_selection = TRUE) {
 
@@ -83,6 +78,10 @@ simulate_admixture <- function(input_population = NA,
     track_frequency <- TRUE
   }
 
+  if (is.null(seed)) {
+    seed <- round(as.numeric(Sys.time()))
+  }
+
   if (methods::is(input_population, "population")) {
     input_population <- population_to_vector(input_population)
   }
@@ -99,7 +98,7 @@ simulate_admixture <- function(input_population = NA,
                                markers,
                                track_junctions,
                                multiplicative_selection,
-                               num_threads)
+                               seed)
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 

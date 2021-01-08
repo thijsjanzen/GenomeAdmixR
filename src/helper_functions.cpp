@@ -6,7 +6,6 @@
 //
 
 #include "helper_functions.h"
-#include "random_functions.h"
 #include <vector>
 
 bool matching_chromosomes(const std::vector< junction >& v1,
@@ -207,8 +206,7 @@ double calc_mean_junctions(const std::vector< Fish> & pop) {
 }
 
 int draw_prop_fitness(const std::vector<double>& fitness,
-                      double maxFitness,
-                      rnd_t& rndgen) {
+                      double maxFitness) {
 
   if(maxFitness <= 0.0) {
     Rcout << "maxFitness = " << maxFitness << "\n";
@@ -223,9 +221,9 @@ int draw_prop_fitness(const std::vector<double>& fitness,
   }
 
   for(int i = 0; i < 1e6; ++i) {
-    int index = rndgen.random_number(fitness.size());
+    int index = random_number(fitness.size());
     double prob = 1.0 * fitness[index] / maxFitness;
-    if(rndgen.uniform() < prob) {
+    if(uniform() < prob) {
       return index;
     }
   }
@@ -362,9 +360,8 @@ double calculate_fitness(const Fish& focal,
   return(fitness);
 }
 
-int draw_random_founder(const NumericVector& v,
-                        rnd_t& rndgen) {
-  double r = rndgen.uniform();
+int draw_random_founder(const NumericVector& v) {
+  double r = uniform();
   for(int i = 0; i < v.size(); ++i) {
     r -= v[i];
     if(r <= 0) {

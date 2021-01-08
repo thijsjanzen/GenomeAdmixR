@@ -20,6 +20,7 @@
 #' @param total_runtime  Number of generations
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
+#' @param seed Seed of the pseudo-random number generator
 #' @param select_matrix Selection matrix indicating the markers which are under
 #' selection. If not provided by the user, the simulation proceeds neutrally.
 #' If provided, each row in the matrix should contain five entries:
@@ -28,7 +29,6 @@
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' representes the mutant allele A}
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
-#' @param num_threads number of threads, default is -1 which uses all available threads
 #' @param markers A vector of locations of markers (relative locations in
 #' [0, 1]). If a vector is provided, ancestry at these marker positions is
 #' tracked for every generation.
@@ -64,23 +64,6 @@
 #' in which it was recorded (1 or 2). If a critical fst value was used to
 #' terminate the simulation, and object \code{FST} with the final FST estimate
 #' is returned as well.
-#' @examples
-#'  \dontrun{
-#' select_matrix <- matrix(NA, nrow=1, ncol=5)
-#'
-#' s <- 0.1
-#' select_matrix[1, ] <- c(0.5, 0.5, 0.5+0.5*s, 0.5+s, 0)
-#'
-#' markers <- seq(from = 0.2, to = 0.6, by = 0.001)
-#'
-#' vy <- simulate_admixture_migration(seed = 42,
-#'                                   migration_rate = 0.01,
-#'                                   initial_frequencies = list(c(1,0),
-#'                                                              c(0,1)),
-#'                                   select_matrix = select_matrix,
-#'                                   total_runtime = 100,
-#'                                   markers = markers)
-#'}
 #' @export
 simulate_admixture_migration <- function(input_population_1 = NA,
                                          input_population_2 = NA,
@@ -89,10 +72,10 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                                                     c(0, 1.0)),
                                          total_runtime = 100,
                                          morgan = 1,
+                                         seed = NULL,
                                          select_matrix = NA,
                                          markers = NA,
                                          progress_bar = TRUE,
-                                         num_threads = -1,
                                          track_junctions = FALSE,
                                          multiplicative_selection = TRUE,
                                          migration_rate = 0.0,
@@ -105,11 +88,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
   message("starting simulation incl migration\n")
 
-  if (length(pop_size) == 1) {
-    pop_size <- c(pop_size, pop_size)
-  }
-
-
   if (stop_at_critical_fst) {
     return(simulate_admixture_until(input_population_1 = input_population_1,
                                     input_population_2 = input_population_2,
@@ -117,6 +95,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                     initial_frequencies = initial_frequencies,
                                     total_runtime = total_runtime,
                                     morgan = morgan,
+                                    seed = seed,
                                     select_matrix = select_matrix,
                                     markers = markers,
                                     progress_bar = progress_bar,
@@ -129,8 +108,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                       generations_between_update,
                                     sampled_individuals = sampled_individuals,
                                     number_of_markers = number_of_markers,
-                                    random_markers = random_markers,
-                                    num_threads = num_threads))
+                                    random_markers = random_markers))
   }
 
 
@@ -162,6 +140,10 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     }
   }
 
+  if (is.null(seed)) {
+    seed <- round(as.numeric(Sys.time()))
+  }
+
   input_population_1 <- population_to_vector(input_population_1)
   input_population_2 <- population_to_vector(input_population_2)
 
@@ -179,7 +161,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          track_junctions,
                                          multiplicative_selection,
                                          migration_rate,
-                                         num_threads)
+                                         seed)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)

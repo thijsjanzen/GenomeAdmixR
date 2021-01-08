@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include <vector>
-#include "random_functions.h"
 
 struct junction {
     long double pos;
@@ -33,8 +32,6 @@ struct Fish {
     Fish();
 
     Fish(int initLoc);
-    bool operator ==(const Fish& other) const;
-    bool operator !=(const Fish& other) const;
 
     Fish(const Fish& other);
     Fish(Fish&& other);
@@ -43,7 +40,6 @@ struct Fish {
 };
 
 
-Fish mate(const Fish& A, const Fish& B, double numRecombinations,
-          rnd_t& rndgen);
+Fish mate(const Fish& A, const Fish& B, double numRecombinations);
 
 #endif /* Fish_hpp */

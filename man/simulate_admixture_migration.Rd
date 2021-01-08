@@ -12,10 +12,10 @@ simulate_admixture_migration(
   initial_frequencies = list(c(1, 0), c(0, 1)),
   total_runtime = 100,
   morgan = 1,
+  seed = NULL,
   select_matrix = NA,
   markers = NA,
   progress_bar = TRUE,
-  num_threads = -1,
   track_junctions = FALSE,
   multiplicative_selection = TRUE,
   migration_rate = 0,
@@ -50,6 +50,8 @@ vector is normalized.}
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
 
+\item{seed}{Seed of the pseudo-random number generator}
+
 \item{select_matrix}{Selection matrix indicating the markers which are under
 selection. If not provided by the user, the simulation proceeds neutrally.
 If provided, each row in the matrix should contain five entries:
@@ -63,8 +65,6 @@ representes the mutant allele A}}
 tracked for every generation.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
-
-\item{num_threads}{number of threads, default is -1 which uses all available threads}
 
 \item{track_junctions}{Track the average number of junctions over time if
 TRUE}
@@ -114,22 +114,4 @@ Individual based simulation of the breakdown of contiguous
 ancestry blocks, with or without selection. Simulations can be started from
 scratch, or from a predefined input population. Two populations are
 simulated, connected by migration
-}
-\examples{
- \dontrun{
-select_matrix <- matrix(NA, nrow=1, ncol=5)
-
-s <- 0.1
-select_matrix[1, ] <- c(0.5, 0.5, 0.5+0.5*s, 0.5+s, 0)
-
-markers <- seq(from = 0.2, to = 0.6, by = 0.001)
-
-vy <- simulate_admixture_migration(seed = 42,
-                                  migration_rate = 0.01,
-                                  initial_frequencies = list(c(1,0),
-                                                             c(0,1)),
-                                  select_matrix = select_matrix,
-                                  total_runtime = 100,
-                                  markers = markers)
-}
 }

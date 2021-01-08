@@ -11,10 +11,10 @@ simulate_admixture(
   initial_frequencies = NA,
   total_runtime = 100,
   morgan = 1,
+  seed = NULL,
   select_matrix = NA,
   markers = NA,
   progress_bar = TRUE,
-  num_threads = -1,
   track_junctions = FALSE,
   multiplicative_selection = TRUE
 )
@@ -38,6 +38,8 @@ to 1 is provided, the vector is normalized.}
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
 
+\item{seed}{Seed of the pseudo-random number generator}
+
 \item{select_matrix}{Selection matrix indicating the markers which are under
 selection. If not provided by the user, the simulation proceeds neutrally. If
 provided, each row in the matrix should contain five entries:
@@ -51,8 +53,6 @@ represents the mutant allele A}}
 tracked for every generation.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
-
-\item{num_threads}{number of threads, default is -1 which selects all available threads}
 
 \item{track_junctions}{Track the average number of junctions over time if
 TRUE}
@@ -75,10 +75,4 @@ frequency of that allele.
 Individual based simulation of the breakdown of contiguous
 ancestry blocks, with or without selection. Simulations can be started from
 scratch, or from a predefined input population.
-}
-\examples{
-wildpop <- simulate_admixture(pop_size = 10,
-                              number_of_founders = 2,
-                              total_runtime = 3,
-                              morgan = 1)
 }

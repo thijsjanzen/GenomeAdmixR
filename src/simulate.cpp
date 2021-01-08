@@ -23,10 +23,6 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-#ifdef __unix__
-  #include <tbb/tbb.h>
-#endif
-
 std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         const NumericMatrix& select,
                                         int pop_size,
@@ -40,18 +36,12 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         std::vector<double>& junctions,
                                         bool multiplicative_selection,
                                         int num_alleles,
-                                        const std::vector<int>& founder_labels,
-                                        int num_threads,
-                                        rnd_t& rndgen) {
+                                        const std::vector<int>& founder_labels) {
 
   //Rcout << "simulate_population: " << multiplicative_selection << "\n";
 
   bool use_selection = false;
   if(select(1, 1) >= 0) use_selection = true;
-
-#ifdef __unix__
-  tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
-#endif
 
   std::vector<Fish> Pop = sourcePop;
   std::vector<double> fitness;
@@ -102,66 +92,29 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     }
 
     std::vector<Fish> newGeneration(pop_size);
-    std::vector<double> newFitness(pop_size);
-
-#ifdef __unix__
-    tbb::parallel_for(
-      tbb::blocked_range<unsigned>(0, pop_size),
-      [&](const tbb::blocked_range<unsigned>& r) {
-        rnd_t rndgen2;
-        for (unsigned i = r.begin(); i < r.end(); ++i) {
-#else
-        rnd_t rndgen2;
-        for (unsigned i = 0; i < pop_size; ++i) {
-#endif
-          int index1 = 0;
-          int index2 = 0;
-          if (use_selection) {
-            index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-            index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-            while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          } else {
-            index1 = rndgen2.random_number( (int)Pop.size() );
-            index2 = rndgen2.random_number( (int)Pop.size() );
-            while(index2 == index1) index2 = rndgen2.random_number( (int)Pop.size() );
-          }
-
-          newGeneration[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
-
-          double fit = -2.0;
-          if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
-
-          newFitness[i] = fit;
-        }
-#ifdef __unix__
-      }
-    );
-#endif
-
-/*
-      rnd_t rndgen2;
-      for (unsigned i = 0; i < pop_size; ++i) {
-        int index1 = 0;
-        int index2 = 0;
-        if (use_selection) {
-          index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-        } else {
-          index1 = rndgen2.random_number( (int)Pop.size() );
-          index2 = rndgen2.random_number( (int)Pop.size() );
-          while(index2 == index1) index2 = rndgen2.random_number( (int)Pop.size() );
-        }
-
-        newGeneration[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
-
-        double fit = -2.0;
-        if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
-
-        newFitness[i] = fit;
+    std::vector<double> newFitness;
+    double newMaxFitness = -1.0;
+    for (int i = 0; i < pop_size; ++i)  {
+      int index1 = 0;
+      int index2 = 0;
+      if (use_selection) {
+        index1 = draw_prop_fitness(fitness, maxFitness);
+        index2 = draw_prop_fitness(fitness, maxFitness);
+        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness);
+      } else {
+        index1 = random_number( (int)Pop.size() );
+        index2 = random_number( (int)Pop.size() );
+        while(index2 == index1) index2 = random_number( (int)Pop.size() );
       }
 
-*/
+      newGeneration[i] = std::move(mate(Pop[index1], Pop[index2], morgan));
+
+      double fit = -2.0;
+      if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
+      if(fit > newMaxFitness) newMaxFitness = fit;
+
+      newFitness.push_back(fit);
+    }
 
     if (t % updateFreq == 0 && progress_bar) {
       Rcout << "**";
@@ -177,7 +130,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
     Pop.swap(newGeneration);
     fitness.swap(newFitness);
-    maxFitness = *std::max_element(fitness.begin(), fitness.end());
+    maxFitness = newMaxFitness;
   }
   if(progress_bar) Rcout << "\n";
   return(Pop);
@@ -196,9 +149,10 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericVector track_markers,
                   bool track_junctions,
                   bool multiplicative_selection,
-                  int num_threads) {
+                  int seed) {
 
-  rnd_t rndgen;
+  set_seed(seed);
+  set_poisson(morgan);
 
   std::vector< Fish > Pop;
   int number_of_alleles = number_of_founders;
@@ -220,20 +174,20 @@ List simulate_cpp(Rcpp::NumericVector input_population,
       // the new population has to be seeded from the input!
       std::vector< Fish > Pop_new;
       for (int j = 0; j < pop_size; ++j) {
-        int index = rndgen.random_number(Pop.size());
+        int index = random_number(Pop.size());
         Pop_new.push_back(Pop[index]);
       }
       std::swap(Pop, Pop_new);
     }
   } else {
     for (int i = 0; i < pop_size; ++i) {
-      int founder_1 = draw_random_founder(starting_proportions, rndgen);
-      int founder_2 = draw_random_founder(starting_proportions, rndgen);
+      int founder_1 = draw_random_founder(starting_proportions);
+      int founder_2 = draw_random_founder(starting_proportions);
 
       Fish p1 = Fish( founder_1 );
       Fish p2 = Fish( founder_2 );
 
-      Pop.emplace_back(mate(p1,p2, morgan, rndgen));
+      Pop.push_back(mate(p1,p2, morgan));
     }
     for (int i = 0; i < number_of_alleles; ++i) {
       founder_labels.push_back(i);
@@ -270,9 +224,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                     junctions,
                                                     multiplicative_selection,
                                                     number_of_alleles,
-                                                    founder_labels,
-                                                    num_threads,
-                                                    rndgen);
+                                                    founder_labels);
 
   arma::mat final_frequencies = update_all_frequencies_tibble(outputPop,
                                                               track_markers,
