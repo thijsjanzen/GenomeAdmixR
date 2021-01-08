@@ -1,10 +1,4 @@
-//
-//  selection.cpp
-//
-//
-//  Created by Thijs Janzen on 28/02/2018.
-//
-//
+
 #include <iostream>
 #include <vector>
 #include <fstream>

@@ -13,7 +13,7 @@ simulate_cpp <- function(input_population, select, pop_size, number_of_founders,
     .Call('_GenomeAdmixR_simulate_cpp', PACKAGE = 'GenomeAdmixR', input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed, num_threads)
 }
 
-simulate_migration_cpp <- function(input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed) {
-    .Call('_GenomeAdmixR_simulate_migration_cpp', PACKAGE = 'GenomeAdmixR', input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed)
+simulate_migration_cpp <- function(input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed, num_threads) {
+    .Call('_GenomeAdmixR_simulate_migration_cpp', PACKAGE = 'GenomeAdmixR', input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed, num_threads)
 }
 
