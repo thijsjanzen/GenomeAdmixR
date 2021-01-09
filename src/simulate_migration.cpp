@@ -25,8 +25,11 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
+bool TBB_ABLE_MIGR = true;
+
 #ifdef __unix__
-  #include <tbb/tbb.h>
+#include <tbb/tbb.h>
+TBB_ABLE_MIGR = true;
 #endif
 
 
@@ -125,9 +128,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
   new_fitness.clear();
   new_fitness.resize(pop_size);
 
-  bool done_multithreaded_code = false;
-
-  if (num_threads > 1) {
+  if (num_threads > 1 && TBB_ABLE_MIGR == true) {
 #ifdef __unix__
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
@@ -167,10 +168,8 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
         }
       }
     );
-    done_multithreaded_code = true;
 #endif
-  }
-  if (done_multithreaded_code == false) {
+  } else {
     for (int i = 0; i < pop_size; ++i)  {
       int index1, index2;
       Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,

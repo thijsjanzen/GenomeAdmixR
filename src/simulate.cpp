@@ -17,8 +17,11 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
+bool TBB_ABLE = false;
+
 #ifdef __unix__
  #include <tbb/tbb.h>
+auto TBB_ABLE = true;
 #endif
 
 void     update_pop(const std::vector<Fish>& Pop,
@@ -33,8 +36,8 @@ void     update_pop(const std::vector<Fish>& Pop,
                     int num_threads) {
 
 
-  bool done_multithreaded_code = false;
-  if (num_threads > 1) {
+
+  if (num_threads > 1 && TBB_ABLE) {
 
  #ifdef __unix__
     int pop_size = Pop.size();
@@ -71,11 +74,8 @@ void     update_pop(const std::vector<Fish>& Pop,
         }
       }
     );
-    done_multithreaded_code = true;
  #endif
-  }
-
-  if (done_multithreaded_code == false) {
+  } else {
     for (size_t i = 0; i < Pop.size(); ++i)  {
       int index1 = 0;
       int index2 = 0;
