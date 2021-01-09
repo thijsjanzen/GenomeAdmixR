@@ -21,7 +21,7 @@ bool TBB_ABLE = false;
 
 #ifdef __unix__
  #include <tbb/tbb.h>
- TBB_ABLE = true;
+auto TBB_ABLE = true;
 #endif
 
 void     update_pop(const std::vector<Fish>& Pop,
