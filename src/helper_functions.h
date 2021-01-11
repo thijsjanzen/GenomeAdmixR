@@ -36,6 +36,10 @@ double calc_mean_junctions(const std::vector< Fish> & pop);
 int draw_prop_fitness(const std::vector<double>& fitness,
                       double maxFitness);
 
+int draw_prop_fitness(const std::vector<double>& fitness,
+                      double maxFitness,
+                      std::mt19937& local_rndgen_);
+
 std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector v);
 
 List convert_to_list(const std::vector<Fish>& v);

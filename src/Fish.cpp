@@ -61,10 +61,10 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
     return go;
 }
 
-std::vector<double> generate_recomPos(int number_of_recombinations) {
+std::vector<double> generate_recomPos(size_t number_of_recombinations) {
 
     std::vector<double> recomPos(number_of_recombinations, 0);
-    for(int i = 0; i < number_of_recombinations; ++i) {
+    for (size_t i = 0; i < number_of_recombinations; ++i) {
         recomPos[i] = uniform();
     }
     std::sort(recomPos.begin(), recomPos.end() );
@@ -107,6 +107,39 @@ void Recombine(      std::vector<junction>& offspring,
     return;
 }
 
+void Recombine_threaded(      std::vector<junction>& offspring,
+                     const std::vector<junction>& chromosome1,
+                     const std::vector<junction>& chromosome2,
+                     double MORGAN,
+                     std::mt19937& local_rndgen_)  {
+
+    std::poisson_distribution<int> Poisson(MORGAN);
+    std::uniform_real_distribution<> unif_draw = std::uniform_real_distribution<>(0, 1.0);
+
+    int number_of_recombinations = Poisson(local_rndgen_);
+
+    if (number_of_recombinations == 0) {
+        offspring.insert(offspring.end(),
+                         chromosome1.begin(),
+                         chromosome1.end());
+
+        return;
+    }
+
+    std::vector<double> recomPos(number_of_recombinations, 0);
+    for(int i = 0; i < number_of_recombinations; ++i) {
+        recomPos[i] = unif_draw(local_rndgen_);
+    }
+    std::sort(recomPos.begin(), recomPos.end() );
+    recomPos.erase(std::unique(recomPos.begin(), recomPos.end()), recomPos.end());
+
+    recomPos.push_back(1.0);
+
+    offspring = recombine_new(chromosome1, chromosome2, recomPos);
+
+    return;
+}
+
 Fish mate(const Fish& A, const Fish& B, double numRecombinations)
 {
     Fish offspring;
@@ -142,6 +175,48 @@ Fish mate(const Fish& A, const Fish& B, double numRecombinations)
 
     return offspring;
 }
+
+Fish mate_threaded(const Fish& A,
+                   const Fish& B,
+                   double numRecombinations,
+                   std::mt19937& local_rndgen_) {
+    Fish offspring;
+    offspring.chromosome1.clear();
+    offspring.chromosome2.clear(); //just to be sure.
+
+    std::uniform_int_distribution<> event_draw = std::uniform_int_distribution<> (0, 1);
+
+
+    //first the father chromosome
+    int event = event_draw(local_rndgen_);
+    switch(event) {
+    case 0:  {
+        Recombine_threaded(offspring.chromosome1, A.chromosome1, A.chromosome2, numRecombinations, local_rndgen_);
+        break;
+    }
+    case 1: {
+        Recombine_threaded(offspring.chromosome1, A.chromosome2, A.chromosome1, numRecombinations, local_rndgen_);
+        break;
+    }
+    }
+
+
+    //then the mother chromosome
+    event = event_draw(local_rndgen_);
+    switch(event) {
+    case 0:  {
+        Recombine_threaded(offspring.chromosome2, B.chromosome1, B.chromosome2, numRecombinations, local_rndgen_);
+        break;
+    }
+    case 1: {
+        Recombine_threaded(offspring.chromosome2, B.chromosome2, B.chromosome1, numRecombinations, local_rndgen_);
+        break;
+    }
+    }
+
+    return offspring;
+}
+
 
 Fish::Fish(){
 

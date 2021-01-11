@@ -53,6 +53,7 @@
 #' @param number_of_markers Number of markers to be used to estimate Fst
 #' @param random_markers Are the markers to estimate Fst randomly distributed,
 #' or regularly distributed? Default is TRUE.
+#' @param num_threads number of threads, default is 1. Setting the number of threads to -1 will use all available threads. Multi-threading is currently not supported on windows.
 #' @return A list with: \code{population_1}, \code{population_2} two population
 #' objects, and three tibbles with allele frequencies (only contain values of a
 #' vector was provided to the argument \code{markers}: \code{frequencies},
@@ -84,7 +85,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          generations_between_update = 100,
                                          sampled_individuals = 10,
                                          number_of_markers = 100,
-                                         random_markers = TRUE) {
+                                         random_markers = TRUE,
+                                         num_threads = 1) {
 
   message("starting simulation incl migration\n")
 
@@ -108,7 +110,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                       generations_between_update,
                                     sampled_individuals = sampled_individuals,
                                     number_of_markers = number_of_markers,
-                                    random_markers = random_markers))
+                                    random_markers = random_markers,
+                                    num_threads))
   }
 
 
@@ -161,7 +164,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          track_junctions,
                                          multiplicative_selection,
                                          migration_rate,
-                                         seed)
+                                         seed,
+                                         num_threads)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)

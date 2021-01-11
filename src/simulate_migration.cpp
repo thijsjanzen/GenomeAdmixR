@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <numeric>
 #include <cmath>
+#include <random>
 #include <assert.h>
 
 #include <vector>
@@ -23,6 +24,15 @@
 #include <RcppArmadillo.h>
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
+
+
+
+#if !defined(_WIN32) && !defined(_WIN64)
+  #include <tbb/tbb.h>
+  bool TBB_ABLE_MIGR = true;
+#else
+  bool TBB_ABLE_MIGR = false;
+#endif
 
 Fish draw_parent(const std::vector< Fish>& pop_1,
                  const std::vector< Fish>& pop_2,
@@ -60,6 +70,42 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
   return(parent);
 }
 
+Fish draw_parent(const std::vector< Fish>& pop_1,
+                          const std::vector< Fish>& pop_2,
+                          double migration_rate,
+                          bool use_selection,
+                          std::vector< double > fitness_source,
+                          std::vector< double > fitness_migr,
+                          double max_fitness_source,
+                          double max_fitness_migr,
+                          int &index,
+                          std::mt19937& local_rndgen_) {
+
+  Fish parent;
+  index = -1;
+
+  if (std::uniform_real_distribution<>(0, 1.0)(local_rndgen_) < migration_rate) {
+    // migration
+    if(use_selection) {
+      index = draw_prop_fitness(fitness_migr, max_fitness_migr, local_rndgen_);
+    } else {
+      index = std::uniform_int_distribution<> (0, (int)pop_2.size() - 1)(local_rndgen_);
+    }
+    assert(index < pop_2.size());
+    parent = pop_2[index];
+    index = index + pop_1.size();
+    // to ensure different indices for pop_1 and pop_2
+  } else {
+    if(use_selection)  {
+      index = draw_prop_fitness(fitness_source, max_fitness_source, local_rndgen_);
+    } else {
+      index = std::uniform_int_distribution<> (0, (int)pop_1.size() - 1)(local_rndgen_);
+    }
+    assert(index < pop_1.size());
+    parent = pop_1[index];
+  }
+  return(parent);
+}
 
 
 std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
@@ -75,40 +121,87 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                   double migration_rate,
                                   std::vector< double >& new_fitness,
                                   double& new_max_fitness,
-                                  double size_in_morgan) {
+                                  double size_in_morgan,
+                                  int num_threads) {
 
   std::vector<Fish> new_generation(pop_size);
   new_fitness.clear();
   new_fitness.resize(pop_size);
-  new_max_fitness = -1.0;
-  for (int i = 0; i < pop_size; ++i)  {
-    int index1, index2;
-    Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
-                               use_selection,
-                               fitness_source, fitness_migr,
-                               max_fitness_source, max_fitness_migr,
-                               index1);
-    Fish parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                               use_selection,
-                               fitness_source, fitness_migr,
-                               max_fitness_source, max_fitness_migr,
-                               index2);
-    while (index1 == index2) {
-      parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                            use_selection,
-                            fitness_source, fitness_migr,
-                            max_fitness_source, max_fitness_migr,
-                            index2);
+
+  if (num_threads > 1 && TBB_ABLE_MIGR == true) {
+
+    #if !defined(_WIN32) && !defined(_WIN64)
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+      [&](const tbb::blocked_range<unsigned>& r) {
+
+        std::random_device rd;
+        std::mt19937 local_rndgen_(rd());
+
+        for (unsigned i = r.begin(); i < r.end(); ++i) {
+          int index1, index2;
+          Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
+                                     use_selection,
+                                     fitness_source, fitness_migr,
+                                     max_fitness_source, max_fitness_migr,
+                                     index1, local_rndgen_);
+          Fish parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                     use_selection,
+                                     fitness_source, fitness_migr,
+                                     max_fitness_source, max_fitness_migr,
+                                     index2, local_rndgen_);
+          while (index1 == index2) {
+            parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                  use_selection,
+                                  fitness_source, fitness_migr,
+                                  max_fitness_source, max_fitness_migr,
+                                  index2, local_rndgen_);
+          }
+
+          new_generation[i] = mate_threaded(parent1, parent2, size_in_morgan, local_rndgen_);
+
+          double fit = -2.0;
+          if (use_selection) fit = calculate_fitness(new_generation[i],
+                                                     select,
+                                                     multiplicative_selection);
+
+          new_fitness[i] = fit;
+        }
+      }
+    );
+#endif
+
+  } else {
+    for (int i = 0; i < pop_size; ++i)  {
+      int index1, index2;
+      Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
+                                 use_selection,
+                                 fitness_source, fitness_migr,
+                                 max_fitness_source, max_fitness_migr,
+                                 index1);
+      Fish parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                 use_selection,
+                                 fitness_source, fitness_migr,
+                                 max_fitness_source, max_fitness_migr,
+                                 index2);
+      while (index1 == index2) {
+        parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                              use_selection,
+                              fitness_source, fitness_migr,
+                              max_fitness_source, max_fitness_migr,
+                              index2);
+      }
+
+      new_generation[i] = mate(parent1, parent2, size_in_morgan);
+
+      double fit = -2.0;
+      if (use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
+
+      new_fitness[i] = fit;
     }
-
-    new_generation[i] = mate(parent1, parent2, size_in_morgan);
-
-    double fit = -2.0;
-    if (use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
-    if (fit > new_max_fitness) new_max_fitness = fit;
-
-    new_fitness[i] = fit;
   }
+
+  new_max_fitness = *std::max_element(new_fitness.begin(), new_fitness.end());
   return new_generation;
 }
 
@@ -128,7 +221,8 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     bool multiplicative_selection,
     int num_alleles,
     const std::vector<int>& founder_labels,
-    double migration_rate) {
+    double migration_rate,
+    int num_threads) {
   bool use_selection = FALSE;
   if (select(1, 1) >= 0) use_selection = TRUE;
 
@@ -211,7 +305,8 @@ std::vector< std::vector< Fish > > simulate_two_populations(
                                                            migration_rate,
                                                            new_fitness_pop_1,
                                                            new_max_fitness_pop_1,
-                                                           morgan);
+                                                           morgan,
+                                                           num_threads);
 
     std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                            pop_1,  // migrants
@@ -226,7 +321,8 @@ std::vector< std::vector< Fish > > simulate_two_populations(
                                                            migration_rate,
                                                            new_fitness_pop_2,
                                                            new_max_fitness_pop_2,
-                                                           morgan);
+                                                           morgan,
+                                                           num_threads);
     // Rcout << "updating vectors\n";
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
@@ -272,9 +368,13 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             bool track_junctions,
                             bool multiplicative_selection,
                             double migration_rate,
-                            int seed) {
+                            int seed,
+                            int num_threads) {
   set_seed(seed);
   set_poisson(morgan);
+#if !defined(_WIN32) && !defined(_WIN64)
+  tbb::task_scheduler_init _tbb((num_threads > 1) ? num_threads : tbb::task_scheduler_init::automatic);
+#endif
 
   std::vector< Fish > Pop_1;
   std::vector< Fish > Pop_2;
@@ -368,7 +468,8 @@ List simulate_migration_cpp(NumericVector input_population_1,
                                                 multiplicative_selection,
                                                 number_of_alleles,
                                                 founder_labels,
-                                                migration_rate);
+                                                migration_rate,
+                                                num_threads);
   Rcout << "finished simulation\n";
   arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
                                                                        output_populations[1],

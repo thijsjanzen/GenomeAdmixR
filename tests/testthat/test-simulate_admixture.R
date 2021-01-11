@@ -153,3 +153,27 @@ test_that("simulate admixture use, markers", {
   testthat::expect_equal(dim(a), dim(b))
   GenomeAdmixR::plot_difference_frequencies(pop)
 })
+
+test_that("simulate admixture use, threads", {
+  skip_on_cran()
+  skip_on_ci() # multi threading is not supported with more than 2 threads
+               # on GitHub actions, and it is hard to find speedup of 2 threads
+  population_size <- 1000
+
+  t1 <- Sys.time()
+  vx <- simulate_admixture(pop_size = population_size,
+                           total_runtime = 1000,
+                           morgan = 1,
+                           num_threads = 1)
+
+  t2 <- Sys.time()
+  vy <- simulate_admixture(pop_size = population_size,
+                           total_runtime = 1000,
+                           morgan = 1,
+                           num_threads = 6)
+  t3 <- Sys.time()
+
+  time_one_thread = difftime(t2, t1, units = "secs")[[1]]
+  time_all_threads = difftime(t3, t2, units = "secs")[[1]]
+  testthat::expect_lt(time_all_threads, time_one_thread)
+})
