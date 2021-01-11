@@ -48,9 +48,8 @@ provided, each row in the matrix should contain five entries:
 \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 represents the mutant allele A}}
 
-\item{markers}{A vector of locations of markers (relative locations in
-[0, 1]). If a vector is provided, ancestry at these marker positions is
-tracked for every generation.}
+\item{markers}{A vector of locations of markers in Morgan. If a vector is
+provided, ancestry at these marker positions is tracked for every generation.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
 
