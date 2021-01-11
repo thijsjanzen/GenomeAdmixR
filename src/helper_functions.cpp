@@ -68,10 +68,10 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   int t,
                                   double morgan) {
 
-  int num_alleles = founder_labels.size();
+  size_t num_alleles = founder_labels.size();
   arma::mat allele_matrix(num_alleles, 4);
   // initialize results
-  for(int i = 0; i < num_alleles; ++i) {
+  for(size_t i = 0; i < num_alleles; ++i) {
     allele_matrix(i, 0) = t;
     allele_matrix(i, 1) = m * morgan;
     allele_matrix(i, 2) = founder_labels[i];
@@ -98,7 +98,7 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
     }
   }
 
-  for(int i = 0; i < num_alleles; ++i) {
+  for(size_t i = 0; i < num_alleles; ++i) {
     allele_matrix(i, 3) *= 1.0 / (2 * v.size());
   }
 
@@ -116,7 +116,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
   //  Rcout << number_of_alleles << "\n";
   arma::mat output(markers.size() * number_of_alleles, 4);
 
-  for(int i = 0; i < markers.size(); ++i) {
+  for(size_t i = 0; i < markers.size(); ++i) {
     //Rcout << "collect local_mat\n";
     arma::mat local_mat = update_frequency_tibble(pop,
                                                   markers[i],
@@ -147,10 +147,10 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
                                  int pop_indicator,
                                  double morgan) {
   // Rcout << "start record_frequencies_pop\n"; R_FlushConsole();
-  int number_of_alleles = founder_labels.size();
+  size_t number_of_alleles = founder_labels.size();
   arma::mat output(markers.size() * number_of_alleles, 5);
 
-  for(int i = 0; i < markers.size(); ++i) {
+  for(size_t i = 0; i < markers.size(); ++i) {
     // Rcout << "collect local_mat\n";
     arma::mat local_mat = update_frequency_tibble(pop,
                                                   markers[i],
@@ -271,7 +271,7 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector v) {
   int indic_chrom = 1;
   bool add_indiv = false;
 
-  for(int i = 0; i < v.size(); i += 2) {
+  for(size_t i = 0; i < v.size(); i += 2) {
     junction temp_j;
     temp_j.pos = v[i];
     temp_j.right = v[i+1];
