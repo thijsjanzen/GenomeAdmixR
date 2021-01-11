@@ -16,8 +16,7 @@ simulate_admixture(
   markers = NA,
   progress_bar = TRUE,
   track_junctions = FALSE,
-  multiplicative_selection = TRUE,
-  num_threads = 1
+  multiplicative_selection = TRUE
 )
 }
 \arguments{
@@ -49,8 +48,9 @@ provided, each row in the matrix should contain five entries:
 \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 represents the mutant allele A}}
 
-\item{markers}{A vector of locations of markers in Morgan. If a vector is
-provided, ancestry at these marker positions is tracked for every generation.}
+\item{markers}{A vector of locations of markers (relative locations in
+[0, 1]). If a vector is provided, ancestry at these marker positions is
+tracked for every generation.}
 
 \item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
 
@@ -60,8 +60,6 @@ TRUE}
 \item{multiplicative_selection}{Default: TRUE. If TRUE, fitness is calculated
 for multiple markers by multiplying fitness values for each marker. If FALSE,
 fitness is calculated by adding fitness values for each marker.}
-
-\item{num_threads}{number of threads, default is 1. Setting the number of threads to -1 will use all available threads. Multi-threading is currently not supported on windows.}
 }
 \value{
 A list with: \code{population} a population object, and three tibbles

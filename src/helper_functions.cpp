@@ -14,7 +14,7 @@ bool matching_chromosomes(const std::vector< junction >& v1,
   if(v1.size() != v2.size()) {
     return false;
   }
-  for(size_t i = 0; i < v1.size(); ++i) {
+  for(int i = 0; i < v1.size(); ++i) {
     if(v1[i] != v2[i]) {
       return false;
     }
@@ -40,7 +40,7 @@ bool is_fixed(const std::vector< Fish >& v) {
 }
 
 int find_index(const std::vector<int>& v, int value) {
-  for(size_t i = 0; i < v.size(); ++i) {
+  for(int i = 0; i < v.size(); ++i) {
     if(v[i] == value) return i;
   }
   //Rcout << "ERROR! Could not find ancestry label, returning -1, expect out of range error soon\n";
@@ -68,10 +68,10 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   int t,
                                   double morgan) {
 
-  size_t num_alleles = founder_labels.size();
+  int num_alleles = founder_labels.size();
   arma::mat allele_matrix(num_alleles, 4);
   // initialize results
-  for(size_t i = 0; i < num_alleles; ++i) {
+  for(int i = 0; i < num_alleles; ++i) {
     allele_matrix(i, 0) = t;
     allele_matrix(i, 1) = m * morgan;
     allele_matrix(i, 2) = founder_labels[i];
@@ -98,7 +98,7 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
     }
   }
 
-  for(size_t i = 0; i < num_alleles; ++i) {
+  for(int i = 0; i < num_alleles; ++i) {
     allele_matrix(i, 3) *= 1.0 / (2 * v.size());
   }
 
@@ -116,7 +116,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
   //  Rcout << number_of_alleles << "\n";
   arma::mat output(markers.size() * number_of_alleles, 4);
 
-  for(size_t i = 0; i < markers.size(); ++i) {
+  for(int i = 0; i < markers.size(); ++i) {
     //Rcout << "collect local_mat\n";
     arma::mat local_mat = update_frequency_tibble(pop,
                                                   markers[i],
@@ -147,10 +147,10 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
                                  int pop_indicator,
                                  double morgan) {
   // Rcout << "start record_frequencies_pop\n"; R_FlushConsole();
-  size_t number_of_alleles = founder_labels.size();
+  int number_of_alleles = founder_labels.size();
   arma::mat output(markers.size() * number_of_alleles, 5);
 
-  for(size_t i = 0; i < markers.size(); ++i) {
+  for(int i = 0; i < markers.size(); ++i) {
     // Rcout << "collect local_mat\n";
     arma::mat local_mat = update_frequency_tibble(pop,
                                                   markers[i],
@@ -232,37 +232,6 @@ int draw_prop_fitness(const std::vector<double>& fitness,
   return -1;
 }
 
-int draw_prop_fitness(const std::vector<double>& fitness,
-                      double maxFitness,
-                      std::mt19937& local_rndgen_) {
-
-  std::uniform_int_distribution<> pop_draw = std::uniform_int_distribution<>(0, fitness.size() - 1);
-  //std::uniform_real_distribution<double> unif_draw = std::uniform_real_distribution(0, 1.0);
-  std::uniform_real_distribution<> unif_draw = std::uniform_real_distribution<>(0, 1.0);
-  if(maxFitness <= 0.0) {
-    Rcout << "maxFitness = " << maxFitness << "\n";
-    Rcpp::stop("Cannot draw fitness if maxFitness <= 0");
-    return(-1);
-  }
-
-  if(maxFitness > 1e20) {
-    Rcout << "maxFitness = " << maxFitness << "\n";
-    Rcpp::stop("It appears maxfitness has encountered a memory access violation\n");
-    return(-1);
-  }
-
-  for(int i = 0; i < 1e6; ++i) {
-    int index = pop_draw(local_rndgen_);
-    double prob = 1.0 * fitness[index] / maxFitness;
-    if(unif_draw(local_rndgen_) < prob) {
-      return index;
-    }
-  }
-  Rcout << maxFitness << "\n";
-  Rcpp::stop("ERROR!Couldn't pick proportional to fitness");
-  return -1;
-}
-
 
 std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector v) {
   std::vector< Fish > output;
@@ -271,7 +240,7 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector v) {
   int indic_chrom = 1;
   bool add_indiv = false;
 
-  for(size_t i = 0; i < v.size(); i += 2) {
+  for(int i = 0; i < v.size(); i += 2) {
     junction temp_j;
     temp_j.pos = v[i];
     temp_j.right = v[i+1];
@@ -306,18 +275,18 @@ List convert_to_list(const std::vector<Fish>& v) {
   int list_size = (int)v.size();
   List output(list_size);
 
-  for (size_t i = 0; i < v.size(); ++i) {
+  for(int i = 0; i < v.size(); ++i) {
 
     Fish focal = v[i];
 
     NumericMatrix chrom1(focal.chromosome1.size(), 2); // nrow = number of junctions, ncol = 2
-    for (size_t j = 0; j < focal.chromosome1.size(); ++j) {
+    for(int j = 0; j < focal.chromosome1.size(); ++j) {
       chrom1(j, 0) = focal.chromosome1[j].pos;
       chrom1(j, 1) = focal.chromosome1[j].right;
     }
 
     NumericMatrix chrom2(focal.chromosome2.size(), 2); // nrow = number of junctions, ncol = 2
-    for (size_t j = 0; j < focal.chromosome2.size(); ++j) {
+    for(int j = 0; j < focal.chromosome2.size(); ++j) {
       chrom2(j, 0) = focal.chromosome2[j].pos;
       chrom2(j, 1) = focal.chromosome2[j].right;
     }
@@ -377,7 +346,7 @@ double calculate_fitness(const Fish& focal,
 
   double fitness = 0.0;
   if (multiplicative_selection) fitness = 1.0;
-  for (size_t i = 0; i < num_alleles.size(); ++i) {
+  for(int i = 0; i < num_alleles.size(); ++i) {
     if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
 
     int fitness_index = 1 + num_alleles[i];

@@ -23,14 +23,14 @@
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' represents the mutant allele A}
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
-#' @param markers A vector of locations of markers in Morgan. If a vector is
-#' provided, ancestry at these marker positions is tracked for every generation.
+#' @param markers A vector of locations of markers (relative locations in
+#' [0, 1]). If a vector is provided, ancestry at these marker positions is
+#' tracked for every generation.
 #' @param track_junctions Track the average number of junctions over time if
 #' TRUE
 #' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated
 #' for multiple markers by multiplying fitness values for each marker. If FALSE,
 #' fitness is calculated by adding fitness values for each marker.
-#' @param num_threads number of threads, default is 1. Setting the number of threads to -1 will use all available threads. Multi-threading is currently not supported on windows.
 #' @return A list with: \code{population} a population object, and three tibbles
 #' with allele frequencies (only contain values of a vector was provided to the
 #' argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and
@@ -51,8 +51,7 @@ simulate_admixture <- function(input_population = NA,
                                markers = NA,
                                progress_bar = TRUE,
                                track_junctions = FALSE,
-                               multiplicative_selection = TRUE,
-                               num_threads = 1) {
+                               multiplicative_selection = TRUE) {
 
   input_population <- check_input_pop(input_population)
 
@@ -99,8 +98,7 @@ simulate_admixture <- function(input_population = NA,
                                markers,
                                track_junctions,
                                multiplicative_selection,
-                               seed,
-                               num_threads)
+                               seed)
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 

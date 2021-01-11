@@ -17,8 +17,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      critical_fst = 0.1,
                                      sampled_individuals = 10,
                                      number_of_markers = 100,
-                                     random_markers = TRUE,
-                                     num_threads = 1) {
+                                     random_markers = TRUE) {
 
   if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))
@@ -37,8 +36,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
     progress_bar = progress_bar,
     track_junctions = track_junctions,
     multiplicative_selection = multiplicative_selection,
-    migration_rate = migration_rate,
-    num_threads = num_threads)
+    migration_rate = migration_rate)
 
   fst <- calculate_fst(pops$population_1, pops$population_2,
                        sampled_individuals = sampled_individuals,
@@ -65,8 +63,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
       progress_bar = progress_bar,
       track_junctions = track_junctions,
       multiplicative_selection = multiplicative_selection,
-      migration_rate = migration_rate,
-      num_threads = num_threads)
+      migration_rate = migration_rate)
 
     cnt <- cnt + 2
     fst <- calculate_fst(pops$population_1, pops$population_2,
