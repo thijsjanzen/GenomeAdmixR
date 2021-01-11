@@ -62,7 +62,7 @@ TRUE}
 for multiple markers by multiplying fitness values for each marker. If FALSE,
 fitness is calculated by adding fitness values for each marker.}
 
-\item{num_threads}{number of threads, default is 1.}
+\item{num_threads}{number of threads, default is 1. Setting the number of threads to -1 will use all available threads. Multi-threading is currently not supported on windows.}
 }
 \value{
 A list with: \code{population} a population object, and three tibbles

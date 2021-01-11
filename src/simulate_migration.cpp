@@ -25,14 +25,14 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-bool TBB_ABLE_MIGR = true;
 
-#ifdef __unix__
-#include <tbb/tbb.h>
-TBB_ABLE_MIGR = true;
+
+#if !defined(_WIN32) && !defined(_WIN64)
+  #include <tbb/tbb.h>
+  bool TBB_ABLE_MIGR = true;
+#else
+  bool TBB_ABLE_MIGR = false;
 #endif
-
-
 
 Fish draw_parent(const std::vector< Fish>& pop_1,
                  const std::vector< Fish>& pop_2,
@@ -130,7 +130,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
 
   if (num_threads > 1 && TBB_ABLE_MIGR == true) {
 
-    #ifdef __unix__
+    #if !defined(_WIN32) && !defined(_WIN64)
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
@@ -372,7 +372,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             int num_threads) {
   set_seed(seed);
   set_poisson(morgan);
-#ifdef __unix
+#if !defined(_WIN32) && !defined(_WIN64)
   tbb::task_scheduler_init _tbb((num_threads > 1) ? num_threads : tbb::task_scheduler_init::automatic);
 #endif
 

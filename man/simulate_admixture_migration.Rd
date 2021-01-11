@@ -97,8 +97,7 @@ the population to estimate Fst}
 \item{random_markers}{Are the markers to estimate Fst randomly distributed,
 or regularly distributed? Default is TRUE.}
 
-\item{num_threads}{number of threads, default is 1. More than one thread is
-only available on unix based systems.}
+\item{num_threads}{number of threads, default is 1. Setting the number of threads to -1 will use all available threads. Multi-threading is currently not supported on windows.}
 }
 \value{
 A list with: \code{population_1}, \code{population_2} two population

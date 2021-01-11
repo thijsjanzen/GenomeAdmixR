@@ -31,7 +31,7 @@
 #' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated
 #' for multiple markers by multiplying fitness values for each marker. If FALSE,
 #' fitness is calculated by adding fitness values for each marker.
-#' @param num_threads number of threads, default is 1.
+#' @param num_threads number of threads, default is 1. Setting the number of threads to -1 will use all available threads. Multi-threading is currently not supported on windows.
 #' @return A list with: \code{population} a population object, and three tibbles
 #' with allele frequencies (only contain values of a vector was provided to the
 #' argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and
