@@ -129,7 +129,8 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
   new_fitness.resize(pop_size);
 
   if (num_threads > 1 && TBB_ABLE_MIGR == true) {
-#ifdef __unix__
+
+    #ifdef __unix__
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
@@ -169,6 +170,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
       }
     );
 #endif
+
   } else {
     for (int i = 0; i < pop_size; ++i)  {
       int index1, index2;

@@ -17,12 +17,44 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-bool TBB_ABLE = false;
-
-#ifdef __unix__
- #include <tbb/tbb.h>
-auto TBB_ABLE = true;
+#if !defined(_WIN32) && !defined(_WIN64)
+#include <tbb/tbb.h>
 #endif
+
+void update_pop_no_multithread(const std::vector< Fish >& Pop,
+                               const std::vector< double >& fitness,
+                               double maxFitness,
+                               bool use_selection,
+                               std::vector<Fish>& newGeneration,
+                               std::vector<double>& newFitness,
+                               double morgan,
+                               bool multiplicative_selection,
+                               const NumericMatrix& select) {
+  for (size_t i = 0; i < Pop.size(); ++i)  {
+    int index1 = 0;
+    int index2 = 0;
+    if (use_selection) {
+      index1 = draw_prop_fitness(fitness, maxFitness);
+      index2 = draw_prop_fitness(fitness, maxFitness);
+      while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness);
+    } else {
+      index1 = random_number( (int)Pop.size() );
+      index2 = random_number( (int)Pop.size() );
+      while(index2 == index1) index2 = random_number( (int)Pop.size() );
+    }
+
+    newGeneration[i] = mate(Pop[index1], Pop[index2], morgan);
+
+    double fit = -2.0;
+    if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
+
+    newFitness[i] = fit;
+  }
+  return;
+}
+
+
+
 
 void     update_pop(const std::vector<Fish>& Pop,
                     const std::vector<double> fitness,
@@ -35,12 +67,14 @@ void     update_pop(const std::vector<Fish>& Pop,
                     bool use_selection,
                     int num_threads) {
 
+ // Rcout << num_threads << "\n";
 
+  int pop_size = Pop.size();
+#if !defined(_WIN32) && !defined(_WIN64)
+ // Rcout << "using unix code " << num_threads << "\n";
+      tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+   // tbb::task_scheduler_init _tbb(num_threads);
 
-  if (num_threads > 1 && TBB_ABLE) {
-
- #ifdef __unix__
-    int pop_size = Pop.size();
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
@@ -52,6 +86,17 @@ void     update_pop(const std::vector<Fish>& Pop,
         std::uniform_int_distribution<> pop_draw = std::uniform_int_distribution<> (0, Pop.size() - 1);
 
         for (unsigned i = r.begin(); i < r.end(); ++i) {
+#else
+     //     Rcout << "using windows code " << num_threads << "\n";
+          std::random_device rd;
+          std::mt19937 local_rndgen_(rd());
+
+          // initialize randomizers.
+          std::uniform_int_distribution<> pop_draw = std::uniform_int_distribution<> (0, Pop.size() - 1);
+
+        for (int i = 0; i < pop_size; ++i) {
+#endif
+
           int index1 = 0;
           int index2 = 0;
           if (use_selection) {
@@ -72,32 +117,10 @@ void     update_pop(const std::vector<Fish>& Pop,
 
           newFitness[i] = fit;
         }
+#if !defined(_WIN32) && !defined(_WIN64)
       }
     );
- #endif
-  } else {
-    for (size_t i = 0; i < Pop.size(); ++i)  {
-      int index1 = 0;
-      int index2 = 0;
-      if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness);
-        index2 = draw_prop_fitness(fitness, maxFitness);
-        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness);
-      } else {
-        index1 = random_number( (int)Pop.size() );
-        index2 = random_number( (int)Pop.size() );
-        while(index2 == index1) index2 = random_number( (int)Pop.size() );
-      }
-
-      newGeneration[i] = mate(Pop[index1], Pop[index2], morgan);
-
-      double fit = -2.0;
-      if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
-
-      newFitness[i] = fit;
-    }
-  }
-
+#endif
 
   return;
 }
@@ -144,10 +167,6 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     Rcout << "0--------25--------50--------75--------100\n";
     Rcout << "*";
   }
-
-#ifdef __unix
-  tbb::task_scheduler_init _tbb((num_threads > 1) ? num_threads : tbb::task_scheduler_init::automatic);
-#endif
 
   for(int t = 0; t < total_runtime; ++t) {
 
