@@ -20,8 +20,8 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<double>& recom_positions)
 {
     static thread_local auto tl_go = decltype(chromosome1){};
-    assert(!chromosome1.genome.empty());    // not strictly enforced by code
-    assert(!chromosome2.genome.empty());    // not strictly enforced bu code
+    assert(!chromosome1.empty());    // not strictly enforced by code
+    assert(!chromosome2.empty());    // not strictly enforced bu code
 
     // we need something that is cheaply swappable:
     auto* g1 = &chromosome1;
@@ -71,17 +71,6 @@ std::vector<double> generate_recomPos(size_t number_of_recombinations) {
     recomPos.erase(std::unique(recomPos.begin(), recomPos.end()), recomPos.end());
 
     recomPos.push_back(1.0);
-
-    while (recomPos.size() < number_of_recombinations) {
-        double pos = uniform();
-        recomPos.push_back(pos);
-        // sort them, in case they are not sorted yet
-        // we need this to remove duplicates, and later
-        // to apply crossover
-        std::sort(recomPos.begin(), recomPos.end() );
-        // remove duplicate recombination sites
-        recomPos.erase(std::unique(recomPos.begin(), recomPos.end()), recomPos.end());
-    }
     return recomPos;
 }
 

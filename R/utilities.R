@@ -1,6 +1,8 @@
 # #' check input population
 # #' @param pop population, object to be checked
 # #' @return corrected input population, or error if not supplied
+#' @rawNamespace useDynLib(GenomeAdmixR)
+#' @rawNamespace import(Rcpp)
 #' @keywords internal
 check_input_pop <- function(pop) {
 
@@ -260,9 +262,7 @@ create_random_markers <- function(number_of_markers) {
 }
 
 
-#' @rawNamespace useDynLib(GenomeAdmixR)
-#' @rawNamespace importFrom(RcppParallel, RcppParallelLibs)
-#' @rawNamespace import(Rcpp)
+
 #' @keywords internal
 calc_allele_frequencies <- function(indiv, alleles) {
 
