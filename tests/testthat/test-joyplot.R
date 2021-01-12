@@ -6,7 +6,8 @@ test_that("joyplot", {
                                      number_of_founders = 3,
                                      total_runtime = 101,
                                      morgan = 1,
-                                     markers = markers)
+                                     markers = markers,
+                                     progress_bar = FALSE)
 
   testthat::expect_lte(max(selected_pop$frequencies$location), max(markers))
   testthat::expect_gte(min(selected_pop$frequencies$location), min(markers))
@@ -17,5 +18,4 @@ test_that("joyplot", {
   testthat::expect_identical(px$labels$x, "Location (Morgan)")
   testthat::expect_identical(px$labels$y, "Time")
   testthat::expect_identical(px$labels$fill, "Ancestor")
-  testthat::expect_identical(px$labels$height, "frequency")
 })

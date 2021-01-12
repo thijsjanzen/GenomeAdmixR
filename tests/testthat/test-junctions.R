@@ -11,7 +11,8 @@ test_that("expected_number_junctions", {
       vx <- simulate_admixture(pop_size = pop_size,
                                number_of_founders = 2,
                                total_runtime = run_time,
-                               morgan = morgan)
+                               morgan = morgan,
+                               progress_bar = FALSE)
 
       testthat::expect_true(verify_population(vx))
 
