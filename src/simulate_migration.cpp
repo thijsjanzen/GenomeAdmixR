@@ -282,7 +282,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
   std::vector<int> founder_labels;
 
   if (input_population_1[0] > -1e4) {
-    Rcout << "Found input populations! converting!\n";  R_FlushConsole();
+    Rcout << "Found input populations\n";  R_FlushConsole();
 
     Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
     Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
@@ -350,7 +350,6 @@ List simulate_migration_cpp(NumericVector input_population_1,
                                                                          morgan);
 
   std::vector<double> junctions;
-  Rcout << "starting simulation\n"; R_FlushConsole();
   std::vector< std::vector< Fish> > output_populations;
 
   output_populations = simulate_two_populations(Pop_1,
@@ -369,7 +368,6 @@ List simulate_migration_cpp(NumericVector input_population_1,
                                                 number_of_alleles,
                                                 founder_labels,
                                                 migration_rate);
-  Rcout << "finished simulation\n";
   arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
                                                                        output_populations[1],
                                                                        track_markers,

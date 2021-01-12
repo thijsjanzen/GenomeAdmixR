@@ -28,7 +28,7 @@
 #' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' representes the mutant allele A}
-#' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
+#' @param progress_bar Displays a progress_bar if TRUE. Default value is FALSE
 #' @param markers A vector of locations of markers (relative locations in
 #' [0, 1]). If a vector is provided, ancestry at these marker positions is
 #' tracked for every generation.
@@ -75,7 +75,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          seed = NULL,
                                          select_matrix = NA,
                                          markers = NA,
-                                         progress_bar = TRUE,
+                                         progress_bar = FALSE,
                                          track_junctions = FALSE,
                                          multiplicative_selection = TRUE,
                                          migration_rate = 0.0,
@@ -85,8 +85,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          sampled_individuals = 10,
                                          number_of_markers = 100,
                                          random_markers = TRUE) {
-
-  message("starting simulation incl migration\n")
 
   if (stop_at_critical_fst) {
     return(simulate_admixture_until(input_population_1 = input_population_1,

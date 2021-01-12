@@ -15,7 +15,7 @@ simulate_admixture_migration(
   seed = NULL,
   select_matrix = NA,
   markers = NA,
-  progress_bar = TRUE,
+  progress_bar = FALSE,
   track_junctions = FALSE,
   multiplicative_selection = TRUE,
   migration_rate = 0,
@@ -64,7 +64,7 @@ representes the mutant allele A}}
 [0, 1]). If a vector is provided, ancestry at these marker positions is
 tracked for every generation.}
 
-\item{progress_bar}{Displays a progress_bar if TRUE. Default value is TRUE}
+\item{progress_bar}{Displays a progress_bar if TRUE. Default value is FALSE}
 
 \item{track_junctions}{Track the average number of junctions over time if
 TRUE}

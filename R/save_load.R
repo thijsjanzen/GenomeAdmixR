@@ -6,11 +6,6 @@
 #' size. See for more information \code{saveRDS}
 #' @details This function functions as a wrapper for the base function
 #' \code{saveRDS}.
-#' @examples \dontrun{wildpop <- simulate_admixture(pop_size = 10,
-#'                                         number_of_founders = 2,
-#'                                         total_runtime = 3,
-#'                                         morgan = 1)
-#' save_population(wildpop, file_name = "wildpop.pop")}
 #' @export
 save_population <- function(population, file_name, compression = TRUE) {
   saveRDS(population, file = file_name, compress = compression)
@@ -22,14 +17,6 @@ save_population <- function(population, file_name, compression = TRUE) {
 #' @return A population object
 #' @seealso \code{\link{save_population}}
 #' @details This function is a wrapper for \code{readRDS}.
-#' @examples \dontrun{wildpop <- simulate_admixture(pop_size = 10,
-#' number_of_founders = 2,
-#' total_runtime = 3,
-#' morgan = 1)
-
-#' save_population(wildpop, file_name = "wildpop.pop")
-#' wildpop2 <- load_population(file_name = "wildpop.pop")
-#' all.equal(wildpop, wildpop2)}
 #' @export
 load_population <- function(file_name) {
   readRDS(file_name)
