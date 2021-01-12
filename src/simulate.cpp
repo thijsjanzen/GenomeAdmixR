@@ -171,6 +171,9 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     number_of_alleles = founder_labels.size();
 
     if (Pop.size() != pop_size) {
+
+      if (Pop.size() != 0) pop_size = Pop.size();
+
       // the new population has to be seeded from the input!
       std::vector< Fish > Pop_new;
       for (int j = 0; j < pop_size; ++j) {
