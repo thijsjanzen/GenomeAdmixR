@@ -2,12 +2,14 @@ context("utilities")
 
 test_that("utilities", {
 
-  vx <- simulate_admixture(total_runtime = 5, number_of_founders = 50)
+  vx <- simulate_admixture(pop_size = 100,
+                           total_runtime = 5, number_of_founders = 50)
   testthat::expect_silent(
     plot_chromosome(vx$population[[1]]$chromosome1)
   )
 
   vx <- simulate_admixture(total_runtime = 100,
+                           pop_size = 100,
                            number_of_founders = 2,
                            markers = seq(0, 1, by = 0.01))
   testthat::expect_silent(

@@ -6,7 +6,7 @@
 \usage{
 simulate_admixture(
   input_population = NA,
-  pop_size = 100,
+  pop_size = NA,
   number_of_founders = 2,
   initial_frequencies = NA,
   total_runtime = 100,

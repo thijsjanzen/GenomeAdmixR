@@ -41,7 +41,7 @@
 #' frequency of that allele.
 #' @export
 simulate_admixture <- function(input_population = NA,
-                               pop_size = 100,
+                               pop_size = NA,
                                number_of_founders = 2,
                                initial_frequencies = NA,
                                total_runtime = 100,
@@ -58,6 +58,14 @@ simulate_admixture <- function(input_population = NA,
   if (sum(is.na(initial_frequencies))) {
     initial_frequencies <- rep(1.0 / number_of_founders,
                                times = number_of_founders)
+  }
+
+  if (is.na(pop_size)) {
+    if (input_population[1] != -1e6) {
+      pop_size = length(input_population)
+    } else {
+      stop("pop_size is undefined, need an input population")
+    }
   }
 
   if (sum(initial_frequencies) != 1) {

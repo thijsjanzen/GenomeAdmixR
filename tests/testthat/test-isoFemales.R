@@ -57,9 +57,11 @@ test_that("create_population_from_isofemales", {
 
   females <- create_iso_female(pop1, n = 2, run_time = 2000)
 
-  vy <- simulate_admixture(females,
-                           pop_size, 2000,
-                           morgan)
+  pop_size = 100
+  vy <- simulate_admixture(input_population = females,
+                           pop_size = pop_size,
+                           total_runtime = 2000,
+                           morgan = morgan)
 
   testthat::expect_equal(length(vy$population), pop_size)
   testthat::expect_true(verify_population(vy))
