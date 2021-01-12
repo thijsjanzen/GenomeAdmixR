@@ -28,9 +28,9 @@ test_that("calculate_allele_frequencies", {
   }
 
   v <- colMeans(found)
-  testthat::expect_equal(v[[1]], 0.5, tolerance = 0.1)
+  testthat::expect_equal(v[[1]], 0.5, tolerance = 0.2)
 
-  testthat::expect_equal(v[[2]], 0.5, tolerance = 0.1)
+  testthat::expect_equal(v[[2]], 0.5, tolerance = 0.2)
 
   found <- c()
   for (r in 1:30) {

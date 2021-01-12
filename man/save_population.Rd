@@ -22,9 +22,9 @@ This function functions as a wrapper for the base function
 \code{saveRDS}.
 }
 \examples{
-wildpop <- simulate_admixture(pop_size = 10,
+\dontrun{wildpop <- simulate_admixture(pop_size = 10,
                                         number_of_founders = 2,
                                         total_runtime = 3,
                                         morgan = 1)
-save_population(wildpop, file_name = "wildpop.pop")
+save_population(wildpop, file_name = "wildpop.pop")}
 }

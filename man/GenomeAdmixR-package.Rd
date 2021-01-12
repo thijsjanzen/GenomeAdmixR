@@ -3,10 +3,16 @@
 \alias{GenomeAdmixR}
 \docType{package}
 \title{
- This package simulates admixture of ancestry
+ Simulate Admixture of Genomes
 }
 \description{
-   Version 1.1  - Added multi threading \cr
+   Individual-based simulations forward in time, simulating how
+patterns in ancestry along the genome change after admixture. The simulation
+assumes Wright-Fisher dynamics, e.g. random mating and non-overlapping generations. In the simulation, instead of specific alleles, local ancestry is tracked, thus assuming that local molecular data can always be uniquely traced back to one of the founding individuals (populations). The package provides functionality to perform such simulations, but also to perform post-hoc statistical analyses and to visualize the obtained results.
+
+   Version 1.1  - Fixed a minor bug with plot_joyplot_frequencies \cr
+   Version 1.1  - Improved tests \cr
+   Version 1.1  - Improved recombination code (again) \cr
    Version 1.0  - Release associated with bioRxiv submission, to be found here: https://doi.org/10.1101/2020.10.19.343491 \cr
    Version 0.66 - Improved recombination code, about twice as fast \cr
    Version 0.65 - Added testing and added logo \cr
@@ -61,10 +67,10 @@
    Version 0.19 - Removed number_of_founders from Fst and LD code \cr
    Version 0.18 - Start of tracking changes \cr
 }
-\details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
-}
 \author{
-Thijs Janzen (thijsjanzen@gmail.com)
+Thijs Janzen
+Maintainer: (thijsjanzen@gmail.com)
+}
+\references{
+Janzen, T.,  Diaz, F. (2020) Individual-based simulations of genome evolution with ancestry: the GenomeAdmixR R package. bioRxiv 2020.10.19.343491; doi: https://doi.org/10.1101/2020.10.19.343491
 }

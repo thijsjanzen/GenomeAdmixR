@@ -14,10 +14,10 @@ Authors@R:
       person(given = "Richèl J.C.",
              family = "Bilderbeek",
              role = "ctb"))
-Description: Simulation of source populations, and simulation of
-    the creation of isofemale lines from these populations.
+Description: Individual-based simulations forward in time, simulating how patterns in ancestry along the genome change after admixture.
 License: GPL (>= 2)
 URL: https://github.com/thijsjanzen/GenomeAdmixR
+BugReports: https://github.com/thijsjanzen/GenomeAdmixR/issues
 Imports: 
     hierfstat,
     methods,

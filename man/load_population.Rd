@@ -19,13 +19,13 @@ Loads a population that has previously been written to file.
 This function is a wrapper for \code{readRDS}.
 }
 \examples{
-wildpop <- simulate_admixture(pop_size = 10,
+\dontrun{wildpop <- simulate_admixture(pop_size = 10,
 number_of_founders = 2,
 total_runtime = 3,
 morgan = 1)
 save_population(wildpop, file_name = "wildpop.pop")
 wildpop2 <- load_population(file_name = "wildpop.pop")
-all.equal(wildpop, wildpop2)
+all.equal(wildpop, wildpop2)}
 }
 \seealso{
 \code{\link{save_population}}
