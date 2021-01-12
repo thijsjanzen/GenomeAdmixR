@@ -40,9 +40,9 @@
 #' }
 #' @export
 plot_joyplot_frequencies <- function(frequencies,
-                                time_points,
-                                picked_ancestor = "ALL",
-                                picked_population = 1
+                                     time_points,
+                                     picked_ancestor = "ALL",
+                                     picked_population = 1
 ) {
   if ("population" %in% colnames(frequencies)) {
     frequencies <- subset(frequencies,
@@ -61,7 +61,7 @@ plot_joyplot_frequencies <- function(frequencies,
                                            fill = vz$ancestor)) +
       ggridges::geom_ridgeline(scale = 1.3)
   } else {
-    vy <- subset(vz, ancestor == picked_ancestor)
+    vy <- subset(vz, vz$ancestor == picked_ancestor)
     p1 <- ggplot2::ggplot(vy, ggplot2::aes(x = vy$location,
                                            y = as.factor(vy$time),
                                            height = vy$frequency)) +
