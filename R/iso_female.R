@@ -8,7 +8,7 @@
 #' @param morgan Size of the chromosome in Morgan (e.g. the number of crossovers
 #' during meiosis)
 #' @param seed Random number generator seed
-#' @param progress_bar Displays a progress_bar if TRUE. Default value is TRUE
+#' @param progress_bar Displays a progress_bar if TRUE. Default value is FALSE
 #' @details To create an isofemale, two individuals are randomly picked from
 #' the source population. Using these two individuals, a new population is
 #' seeded, of size \code{inbreeding_pop_size}. Then, this population is allowed
@@ -16,20 +16,6 @@
 #' are homozygous and genetically identical, whatever happens first.
 #' @return A list of length \code{n}, where each entry is a fully homozygous
 #' isofemale.
-#' @examples \dontrun{
-#' wildpop =  simulate_admixture(pop_size = 100,
-#'                               number_of_founders = 10,
-#'                               total_runtime = 5,
-#'                               morgan = 1,
-#'                               progress_bar = TRUE)
-#'
-#' isofemale <- create_iso_female(source_pop = wildpop,
-#'                                n = 1,
-#'                                inbreeding_pop_size = 100,
-#'                                run_time = 100,
-#'                                morgan = 1,
-#'                                progress_bar = TRUE)
-#' }
 #' @export
 create_iso_female <- function(source_pop,
                              n = 1,
@@ -37,7 +23,7 @@ create_iso_female <- function(source_pop,
                              run_time = 2000,
                              morgan = 1,
                              seed = 42,
-                             progress_bar = TRUE) {
+                             progress_bar = FALSE) {
 
   source_pop <- check_input_pop(source_pop)
 
