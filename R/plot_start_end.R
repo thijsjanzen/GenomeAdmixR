@@ -49,22 +49,22 @@ plot_start_end <- function(results,
     to_plot <- to_plot_m
 
     p1 <- ggplot2::ggplot(to_plot,
-                        ggplot2::aes(x = to_plot$location,
-                                     y = to_plot$frequency,
-                                     colour = as.factor(to_plot$ancestor),
-                                     group = interaction(to_plot$ancestor,
-                                                         to_plot$timepoint))) +
-      ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
+                        ggplot2::aes(x = location,
+                                     y = frequency,
+                                     colour = as.factor(ancestor),
+                                     group = interaction(ancestor,
+                                                         timepoint))) +
+      ggplot2::geom_step(ggplot2::aes(lty = timepoint))
   } else {
     to_plot <- dplyr::filter(to_plot_m,
-                             to_plot_m$ancestor %in% picked_ancestor)
+                             ancestor %in% picked_ancestor)
 
     p1 <- ggplot2::ggplot(to_plot,
-                          ggplot2::aes(x = to_plot$location,
+                          ggplot2::aes(x = location,
                                      y = to_plot$frequency,
-                                     colour = as.factor(to_plot$ancestor),
-                                     group = interaction(to_plot$ancestor,
-                                                         to_plot$timepoint))) +
+                                     colour = as.factor(ancestor),
+                                     group = interaction(ancestor,
+                                                         timepoint))) +
       ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
   }
 
