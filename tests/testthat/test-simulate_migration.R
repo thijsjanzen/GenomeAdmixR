@@ -1,7 +1,7 @@
 context("simulate_migration")
 
 test_that("simulate_migration", {
-  skip("aye")
+  skip("simulate_migration")
   vx <- simulate_admixture_migration(migration_rate = 0.1,
                                      total_runtime = 10)
 

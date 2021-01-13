@@ -1,7 +1,7 @@
 context("LD stats")
 
 test_that("calculate_average_LD", {
-  skip("LD")
+  skip("average LD")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 1000
@@ -80,6 +80,7 @@ test_that("calculate_average_LD", {
 })
 
 test_that("calculate_LD_matrix", {
+  skip("LD matrix")
   pop_size <- 100
   number_of_founders <- 2
   sampled_individuals <- pop_size

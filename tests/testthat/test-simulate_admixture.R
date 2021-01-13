@@ -1,7 +1,7 @@
 context("simulate_Admixture")
 
 test_that("simulate_admixture", {
-  skip("admix")
+  skip("test simulate admixture")
   select_matrix <- matrix(NA, nrow = 2, ncol = 5)
 
   s <- 0.1
@@ -20,7 +20,7 @@ test_that("simulate_admixture", {
 
 
 test_that("simulate admixture use", {
-  skip("admix2")
+  skip("test simulate admixture use")
   testthat::expect_output(
     vx <- simulate_admixture(pop_size = 100,
                              number_of_founders = 2,
@@ -107,7 +107,7 @@ test_that("simulate admixture use", {
 
 
 test_that("simulate admixture use, junctions", {
-  skip("junct")
+  skip("simulate admixture use, junctions")
   markers <- 0.5
   vx <- simulate_admixture(pop_size = 100,
                            number_of_founders = 2,
@@ -161,7 +161,7 @@ test_that("simulate admixture use, markers", {
 })
 
 test_that("simulate admixture use, pop size", {
-  skip("popsize")
+  skip("simulate admixture use, pop size")
   pop <- simulate_admixture(pop_size = 100,
                             total_runtime = 3)
 
