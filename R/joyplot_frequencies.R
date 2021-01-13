@@ -41,6 +41,7 @@
 #'   ggplot2::ylab("Generations")
 #' }
 #' @export
+#' @importFrom rlang .data
 plot_joyplot_frequencies <- function(frequencies,
                                      time_points,
                                      picked_ancestor = "ALL",
