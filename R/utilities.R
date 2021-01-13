@@ -55,8 +55,8 @@ check_initial_frequencies <- function(initial_frequencies) {
       }
     }
 
-    message("found a vector instead of a list, converting by assuming\n")
-    message("the second half is the second population\n")
+    cat("found a vector instead of a list, converting by assuming")
+    cat("the second half is the second population\n")
     num_founders <- length(initial_frequencies) / 2
     output_freq <- list()
     a <- initial_frequencies[1:num_founders]
@@ -137,7 +137,6 @@ generate_output_list_two_pop <- function(selected_pop,
                    "frequencies" = frequencies_tibble,
                    "initial_frequency" = initial_freq_tibble,
                    "final_frequency" = final_freq_tibble)
-    message("output created\n")
   }
 
   if (track_frequency == TRUE && track_junctions == TRUE) {
