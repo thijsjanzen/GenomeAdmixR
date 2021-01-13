@@ -35,7 +35,7 @@ testthat::test_that("fst", {
 
   pop_size <- 100
   number_of_founders <- 10
-  run_time <- 10000
+  run_time <- 1000
   morgan <- 1
   overlap <- 0.0
 

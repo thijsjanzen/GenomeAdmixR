@@ -5,7 +5,6 @@ test_that("expected_number_junctions", {
                                             run_time,
                                             morgan,
                                             replicates) {
-    cat(pop_size, run_time, morgan, "\n")
     found <- c()
     for (r in 1:replicates) {
       vx <- simulate_admixture(pop_size = pop_size,

@@ -16,10 +16,12 @@ test_that("create_isofemale", {
 
   testthat::expect_true(verify_population(pop))
 
+testthat::expect_output(
   females <- create_iso_female(pop, n = 5, run_time = 3000)
-
+)
+testthat::expect_output(
   females <- create_iso_female(pop, n = 1, run_time = 3000)
-
+)
 
   testthat::expect_equal(length(females), 1)
 })
@@ -46,21 +48,25 @@ test_that("create_population_from_isofemales", {
   testthat::expect_true(verify_population(pop1))
   testthat::expect_true(verify_population(pop2))
 
-  female_1 <- create_iso_female(pop1, n = 1,
-                                run_time = 2000)
-  female_2 <- create_iso_female(pop2, n = 1,
-                                run_time = 2000)
 
+  testthat::expect_output(
+      female_1 <- create_iso_female(pop1, n = 1,
+                                run_time = 20000)
+  )
+  testthat::expect_output(
+   female_2 <- create_iso_female(pop2, n = 1,
+                                run_time = 20000)
+)
   testthat::expect_true(verify_individual(female_1[[1]]))
   testthat::expect_true(verify_individual(female_2[[1]]))
 
-
+testthat::expect_output(
   females <- create_iso_female(pop1, n = 2, run_time = 2000)
-
+)
   pop_size = 100
   vy <- simulate_admixture(input_population = females,
                            pop_size = pop_size,
-                           total_runtime = 2000,
+                           total_runtime = 200,
                            morgan = morgan)
 
   testthat::expect_equal(length(vy$population), pop_size)
@@ -74,7 +80,9 @@ test_that("create_population_from_isofemales", {
   testthat::expect_equal(length(vy$population), pop_size)
   testthat::expect_true(verify_population(vy))
 
-  plot_chromosome(female_1[[1]]$chromosome1, 0, 1)
+  testthat::expect_silent(
+    plot_chromosome(female_1[[1]]$chromosome1, 0, 1)
+  )
 })
 
 test_that("cpp classes", {

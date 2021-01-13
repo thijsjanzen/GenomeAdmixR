@@ -1,7 +1,8 @@
 context("simulate_admixture_until")
 
 test_that("simulate_admixture_until", {
-  vx <- simulate_admixture_migration(total_runtime = 1000,
+  testthat::expect_output(
+    vx <- simulate_admixture_migration(total_runtime = 1000,
                                      pop_size = c(100, 100),
                                      initial_frequencies = list(c(0.5, 0.5),
                                                                 c(0.5, 0.5)),
@@ -10,6 +11,7 @@ test_that("simulate_admixture_until", {
                                      generations_between_update = 10,
                                      critical_fst = 0.2,
                                      migration_rate = 0.001)
+  )
 
   fst_2 <- calculate_fst(vx$Population_1,
                          vx$Population_2,
