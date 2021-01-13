@@ -57,7 +57,7 @@ testthat::test_that("fst", {
   v1 <- calculate_fst(pop1, pop2,
                       number_of_markers, random_markers = TRUE)
 
-  testthat::expect_equal(1.0, v1, tolerance = 0.01)
+  testthat::expect_equal(1.0, v1, tolerance = 0.1)
 })
 
 testthat::test_that("random markers", {
