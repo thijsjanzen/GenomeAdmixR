@@ -14,7 +14,7 @@
 #'                                    number_of_founders = 4,
 #'                                    total_runtime = 11,
 #'                                    morgan = 1)
-#' plot_frequencies(pop)
+#' plot1 <- plot_frequencies(pop)
 #' @export
 plot_frequencies <- function(result,
                              locations = seq(0, 1, length.out = 100),

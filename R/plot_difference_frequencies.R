@@ -25,8 +25,8 @@
 #'                                    select_matrix,
 #'                                    markers = markers)
 #' require(ggplot2)
-#' plot_difference_frequencies(selected_pop,
-#'                             picked_ancestor = "ALL")
+#' plot1 <- plot_difference_frequencies(selected_pop,
+#'                                       picked_ancestor = "ALL")
 #' @export
 plot_difference_frequencies <- function(results,
                                         picked_ancestor = "ALL",

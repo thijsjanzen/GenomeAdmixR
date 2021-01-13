@@ -39,8 +39,8 @@ selected_pop <- simulate_admixture(pop_size = 1000,
                                    select_matrix,
                                    markers = markers)
 require(ggplot2)
-plot_difference_frequencies(selected_pop,
-                            picked_ancestor = "ALL")
+plot1 <- plot_difference_frequencies(selected_pop,
+                                      picked_ancestor = "ALL")
 }
 \description{
 This function plots the change in frequency of one or

@@ -14,7 +14,7 @@
 #'                           total_runtime = 11,
 #'                           morgan = 1,
 #'                           markers = 0.5)
-#' plot_over_time(pop$frequencies,
+#' plot1 <- plot_over_time(pop$frequencies,
 #'                focal_location = 0.5)
 #' @export
 plot_over_time <- function(frequencies,
