@@ -22,11 +22,12 @@ Imports:
     hierfstat,
     methods,
     Rcpp,
-    tibble
+    tibble,
+    ggplot2,
+    rlang
 Suggests: 
     covr,
     dplyr,
-    ggplot2,
     ggridges,
     junctions,
     knitr,

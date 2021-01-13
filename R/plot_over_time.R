@@ -27,18 +27,20 @@ plot_over_time <- function(frequencies,
         vector of molecular markers?\n")
   }
 
-  if ("population" %in% colnames(frequency)) {
-    p1 <- ggplot2::ggplot(to_plot,
-                          ggplot2::aes(x = time,
-                                       y = frequency,
-                                       col = interaction(ancestor,
-                                                         population))) +
-      ggplot2::geom_step()
+  if ("population" %in% colnames(frequencies)) {
+    p1 <- ggplot2::ggplot(to_plot)  +
+      ggplot2::geom_step(ggplot2::aes(x = .data[["time"]],
+                                      y = .data[["frequency"]],
+                                      col = interaction(.data[["ancestor"]],
+                                                        .data[["population"]]
+                                                        )
+                                      )
+      )
   } else {
     p1 <- ggplot2::ggplot(to_plot,
-                          ggplot2::aes(x = time,
-                                       y = frequency,
-                                       col = as.factor(ancestor))) +
+                          ggplot2::aes(x = .data[["time"]],
+                                       y = .data[["frequency"]],
+                                       col = as.factor(.data[["ancestor"]]))) +
       ggplot2::geom_step()
   }
 

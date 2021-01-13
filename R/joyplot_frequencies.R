@@ -57,16 +57,17 @@ plot_joyplot_frequencies <- function(frequencies,
   vz$ancestor <- as.factor(vz$ancestor)
 
   if (picked_ancestor == "ALL") {
-    p1 <- ggplot2::ggplot(vz, ggplot2::aes(x = location,
-                                           y = as.factor(time),
-                                           height = frequency,
-                                           fill = ancestor)) +
+    p1 <- ggplot2::ggplot(vz, ggplot2::aes(x = .data[["location"]],
+                                           y = as.factor(.data[["time"]]),
+                                           height = .data[["frequency"]],
+                                           fill = .data[["ancestor"]])
+                          ) +
       ggridges::geom_ridgeline(scale = 1.3)
   } else {
     vy <- subset(vz, vz$ancestor == picked_ancestor)
-    p1 <- ggplot2::ggplot(vy, ggplot2::aes(x = location,
-                                           y = as.factor(time),
-                                           height = frequency)) +
+    p1 <- ggplot2::ggplot(vy, ggplot2::aes(x = .data[["location"]],
+                                           y = as.factor(.data[["time"]]),
+                                           height = .data[["frequency"]])) +
       ggridges::geom_ridgeline(scale = 1.3)
   }
   p1 <- p1 +

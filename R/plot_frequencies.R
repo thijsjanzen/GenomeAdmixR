@@ -25,9 +25,9 @@ plot_frequencies <- function(result,
                                           progress_bar)
 
   p1 <- ggplot2::ggplot(to_plot,
-                        ggplot2::aes(x = location,
-                                     y = frequency,
-                                     colour = as.factor(ancestor))) +
+                        ggplot2::aes(x = .data[["location"]],
+                                     y = .data[["frequency"]],
+                                     colour = as.factor(.data[["ancestor"]]))) +
     ggplot2::geom_step()
 
   p1 <- p1 +
