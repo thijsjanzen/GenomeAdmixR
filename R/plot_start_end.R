@@ -12,16 +12,6 @@
 #' of \code{simulate_admixture_migration}), which population should be plotted?
 #' Default is population_1.
 #' @return a ggplot object
-#' @examples
-#' markers <- seq(from = 0.2, to = 0.3, length.out = 100)
-#'
-#' pop <- simulate_admixture(pop_size = 1000,
-#'                           number_of_founders = 2,
-#'                           total_runtime = 11,
-#'                           morgan = 1,
-#'                           markers = markers)
-#' plot1 <- plot_start_end(pop, picked_ancestor = "ALL")
-#' plot2 <- plot_start_end(pop, picked_ancestor = 1)
 #' @export
 plot_start_end <- function(results,
                            picked_ancestor = "ALL",

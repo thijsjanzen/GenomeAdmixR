@@ -5,9 +5,7 @@
 //  Created by Thijs Janzen on 28/02/2018.
 //
 //
-#include <iostream>
 #include <vector>
-#include <fstream>
 #include <cstdlib>
 #include <numeric>
 #include <cmath>
@@ -83,8 +81,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
         int start_add_time = t * time_block;
         int start_add_marker = i * founder_labels.size() + start_add_time;
 
-        for(int j = 0; j < founder_labels.size(); ++j) {
-          for(int k = 0; k < 4; ++k) {
+        for(size_t j = 0; j < founder_labels.size(); ++j) {
+          for(size_t k = 0; k < 4; ++k) {
             frequencies(start_add_marker + j, k)  = local_mat(j, k);
           }
         }
@@ -139,10 +137,10 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 // [[Rcpp::export]]
 List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericMatrix select,
-                  int pop_size,
-                  int number_of_founders,
+                  size_t pop_size,
+                  size_t number_of_founders,
                   Rcpp::NumericVector starting_proportions,
-                  int total_runtime,
+                  size_t total_runtime,
                   double morgan,
                   bool progress_bar,
                   bool track_frequency,
@@ -171,17 +169,16 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     number_of_alleles = founder_labels.size();
 
     if (Pop.size() != pop_size) {
-
       // the new population has to be seeded from the input!
       std::vector< Fish > Pop_new;
-      for (int j = 0; j < pop_size; ++j) {
+      for (size_t j = 0; j < pop_size; ++j) {
         int index = random_number(Pop.size());
         Pop_new.push_back(Pop[index]);
       }
       std::swap(Pop, Pop_new);
     }
   } else {
-    for (int i = 0; i < pop_size; ++i) {
+    for (size_t i = 0; i < pop_size; ++i) {
       int founder_1 = draw_random_founder(starting_proportions);
       int founder_2 = draw_random_founder(starting_proportions);
 

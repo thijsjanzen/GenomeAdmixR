@@ -24,13 +24,12 @@ Imports:
     Rcpp,
     tibble,
     ggplot2,
-    rlang
+    rlang,
+    ggridges
 Suggests: 
     covr,
     dplyr,
-    ggridges,
     junctions,
-    knitr,
     magrittr,
     rmarkdown,
     testit,
@@ -39,7 +38,7 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 VignetteBuilder: 
-    knitr
+    rmarkdown
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 SystemRequirements: C++14, GNU make

@@ -33,17 +33,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // simulate_cpp
-List simulate_cpp(Rcpp::NumericVector input_population, NumericMatrix select, int pop_size, int number_of_founders, Rcpp::NumericVector starting_proportions, int total_runtime, double morgan, bool progress_bar, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, int seed);
+List simulate_cpp(Rcpp::NumericVector input_population, NumericMatrix select, size_t pop_size, size_t number_of_founders, Rcpp::NumericVector starting_proportions, size_t total_runtime, double morgan, bool progress_bar, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, int seed);
 RcppExport SEXP _GenomeAdmixR_simulate_cpp(SEXP input_populationSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP number_of_foundersSEXP, SEXP starting_proportionsSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP progress_barSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type input_population(input_populationSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type select(selectSEXP);
-    Rcpp::traits::input_parameter< int >::type pop_size(pop_sizeSEXP);
-    Rcpp::traits::input_parameter< int >::type number_of_founders(number_of_foundersSEXP);
+    Rcpp::traits::input_parameter< size_t >::type pop_size(pop_sizeSEXP);
+    Rcpp::traits::input_parameter< size_t >::type number_of_founders(number_of_foundersSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type starting_proportions(starting_proportionsSEXP);
-    Rcpp::traits::input_parameter< int >::type total_runtime(total_runtimeSEXP);
+    Rcpp::traits::input_parameter< size_t >::type total_runtime(total_runtimeSEXP);
     Rcpp::traits::input_parameter< double >::type morgan(morganSEXP);
     Rcpp::traits::input_parameter< bool >::type progress_bar(progress_barSEXP);
     Rcpp::traits::input_parameter< bool >::type track_frequency(track_frequencySEXP);

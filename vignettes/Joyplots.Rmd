@@ -2,8 +2,8 @@
 title: "Demonstrate joyplot"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{joyplot}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Demonstrate joyplot}
+  %\VignetteEngine{rmarkdown::render}
   \usepackage[utf8]{inputenc}
 ---
 

@@ -3,7 +3,7 @@ title: "Walkthrough"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Walkthrough}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{rmarkdown::render}
   \usepackage[utf8]{inputenc}
 ---
 

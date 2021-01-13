@@ -8,7 +8,6 @@
 
 #include "Fish.h"
 #include "random_functions.h"
-//#include "randomc.h"
 #include <algorithm>
 
 
@@ -20,8 +19,6 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<double>& recom_positions)
 {
     static thread_local auto tl_go = decltype(chromosome1){};
-    assert(!chromosome1.empty());    // not strictly enforced by code
-    assert(!chromosome2.empty());    // not strictly enforced bu code
 
     // we need something that is cheaply swappable:
     auto* g1 = &chromosome1;

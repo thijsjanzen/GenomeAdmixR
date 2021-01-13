@@ -14,8 +14,6 @@ test_that("expected_number_junctions", {
                                morgan = morgan,
                                progress_bar = FALSE)
 
-      testthat::expect_true(verify_population(vx))
-
       junct <- calculate_dist_junctions(vx$population)
       found <- c(found, mean(junct))
     }
@@ -29,19 +27,16 @@ test_that("expected_number_junctions", {
     testthat::expect_equal(mean(found), expected, tolerance = 1)
   }
 
-  test_expected_junction_number(pop_size = 100, run_time = 20,
+  test_expected_junction_number(pop_size = 1000, run_time = 20,
                                 morgan = 1, replicates = 20)
 
-  test_expected_junction_number(pop_size = 100, run_time = 100,
+  test_expected_junction_number(pop_size = 1000, run_time = 100,
                                 morgan = 0.5, replicates = 30)
 
-  test_expected_junction_number(pop_size = 100, run_time = 100,
+  test_expected_junction_number(pop_size = 1000, run_time = 100,
                                 morgan = 3, replicates = 30)
 
-  test_expected_junction_number(pop_size = 1000, run_time = 20,
-                                morgan = 1, replicates = 30)
-
-  vx <- simulate_admixture(pop_size = 1000, number_of_founders = 2,
+  vx <- simulate_admixture(pop_size = 100, number_of_founders = 2,
                           total_runtime = 5, morgan = 1)
 
   plot_dist_junctions(vx$population)

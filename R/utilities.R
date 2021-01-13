@@ -1,7 +1,7 @@
 # #' check input population
 # #' @param pop population, object to be checked
 # #' @return corrected input population, or error if not supplied
-#' @rawNamespace useDynLib(GenomeAdmixR)
+#' @rawNamespace useDynLib(GenomeAdmixR, .registration = TRUE)
 #' @rawNamespace import(Rcpp)
 #' @keywords internal
 check_input_pop <- function(pop) {

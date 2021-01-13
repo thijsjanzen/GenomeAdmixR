@@ -2,12 +2,12 @@
 title: "Demonstrate isofemales"
 output: rmarkdown::html_vignette
 vignette: >
-%\VignetteIndexEntry{Demonstrate isofemales}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Demonstrate isofemales}
+  %\VignetteEngine{rmarkdown::render}
   \usepackage[utf8]{inputenc}
-  ---
+---
   
-  ```{r setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.width = 6)
 ```

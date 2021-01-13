@@ -5,13 +5,10 @@
 //  Copyright Thijs Janzen 2018
 //
 //
-#include <iostream>
 #include <vector>
-#include <fstream>
 #include <cstdlib>
 #include <numeric>
 #include <cmath>
-#include <assert.h>
 
 #include <vector>
 #include <algorithm>
@@ -44,7 +41,6 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
     } else {
       index = random_number( (int)pop_2.size() );
     }
-    assert(index < pop_2.size());
     parent = pop_2[index];
     index = index + pop_1.size();
     // to ensure different indices for pop_1 and pop_2
@@ -54,7 +50,6 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
     } else {
       index = random_number( (int)pop_1.size() );
     }
-    assert(index < pop_1.size());
     parent = pop_1[index];
   }
   return(parent);
@@ -64,7 +59,7 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
 
 std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                   const std::vector< Fish>& pop_2,
-                                  int pop_size,
+                                  size_t pop_size,
                                   std::vector< double > fitness_source,
                                   std::vector< double > fitness_migr,
                                   double max_fitness_source,
@@ -81,7 +76,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
   new_fitness.clear();
   new_fitness.resize(pop_size);
   new_max_fitness = -1.0;
-  for (int i = 0; i < pop_size; ++i)  {
+  for (size_t i = 0; i < pop_size; ++i)  {
     int index1, index2;
     Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
                                use_selection,
@@ -194,9 +189,10 @@ std::vector< std::vector< Fish > > simulate_two_populations(
       }
     }
 
-    double new_max_fitness_pop_1, new_max_fitness_pop_2;
+    double new_max_fitness_pop_2 = 0.0;
+    double new_max_fitness_pop_1 = 0.0;
+
     std::vector<double> new_fitness_pop_1, new_fitness_pop_2;
-    assert(pop_size.size() == 2);
 
     std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1, // resident
                                                            pop_2, // migrants
