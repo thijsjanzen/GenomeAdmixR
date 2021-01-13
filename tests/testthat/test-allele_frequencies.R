@@ -2,7 +2,7 @@ context("allele_frequencies")
 
 
 test_that("calculate_allele_frequencies", {
-  skip()
+  skip("test this")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 5
