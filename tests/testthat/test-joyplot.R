@@ -1,5 +1,5 @@
 test_that("joyplot", {
-
+  skip("joyplot")
   markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 
   selected_pop <- simulate_admixture(pop_size = 1000,
