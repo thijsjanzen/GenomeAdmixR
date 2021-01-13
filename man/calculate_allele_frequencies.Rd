@@ -29,20 +29,3 @@ frequency of each ancestor in the population.
 Markers are equidistantly spaced, with a distance of
 \code{step_size} in between them.
 }
-\examples{
-\dontrun{
-number_founders = 20
-wildpop =  simulate_admixture(pop_size = 1000,
-                              number_of_founders = number_founders,
-                              total_runtime = 10,
-                              morgan = 1)
-
-freq_output <- calculate_allele_frequencies(wildpop,
-                                            progress_bar = TRUE)
-
-require(ggplot2)
-ggplot(freq_output, aes(x=location, y = frequency,
-                        col = as.factor(ancestor))) +
-  geom_line()
-}
-}

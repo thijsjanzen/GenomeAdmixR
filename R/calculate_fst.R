@@ -16,21 +16,6 @@
 #' calculate the FST. The function \code{wc} computes the Weir and Cockerham
 #' F statistic.
 #' @return FST value
-#' @examples
-#' \dontrun{
-#' two_populations <- simulate_admixture_until(pop_size = 100,
-#'                                             number_of_founders = 20,
-#'                                             total_runtime = 10,
-#'                                             morgan = 1,
-#'                                             overlap = 0.25)
-#'
-#' FST <- calculate_fst(two_populations$Population_1,
-#'                      two_populations$Population_2,
-#'                      sampled_individuals = 10,
-#'                      number_of_markers = 100,
-#'                      random_markers = TRUE)
-#' }
-#' @export
 calculate_fst <- function(pop1,
                           pop2,
                           sampled_individuals,

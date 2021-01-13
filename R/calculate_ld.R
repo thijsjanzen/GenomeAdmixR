@@ -15,20 +15,6 @@
 #' \item{rsq_matrix}{
 #'   Pairwise rsq statistics for all markers
 #' }
-#'@examples
-#' wildpop <- simulate_admixture(pop_size = 100,
-#'                              number_of_founders = 10,
-#'                              total_runtime = 100,
-#'                              morgan = 1)
-#'
-#' ld_results <- calculate_ld(wildpop,
-#'                            number_of_markers = 10,
-#'                            random_markers = TRUE)
-#'
-#' plot(ld_results$ld_matrix~ld_results$dist_matrix,
-#'      pch = 16,
-#'      xlab="Distance between markers",
-#'      ylab = "Linkage Disequilibrium")
 #' @export
 calculate_ld <- function(pop,
                          sampled_individuals = 10,

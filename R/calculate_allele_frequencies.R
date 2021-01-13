@@ -9,22 +9,6 @@
 #' \code{step_size} in between them.
 #' @return A tibble containing the allele frequencies
 #' @export
-#' @examples
-#' \dontrun{
-#' number_founders = 20
-#' wildpop =  simulate_admixture(pop_size = 1000,
-#'                               number_of_founders = number_founders,
-#'                               total_runtime = 10,
-#'                               morgan = 1)
-#'
-#' freq_output <- calculate_allele_frequencies(wildpop,
-#'                                             progress_bar = TRUE)
-#'
-#' require(ggplot2)
-#' ggplot(freq_output, aes(x=location, y = frequency,
-#'                         col = as.factor(ancestor))) +
-#'   geom_line()
-#' }
 calculate_allele_frequencies <- function(source_pop,
                                          locations = seq(0, 1,
                                                          length.out = 100),
