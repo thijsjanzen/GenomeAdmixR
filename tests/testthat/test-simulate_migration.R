@@ -1,6 +1,7 @@
 context("simulate_migration")
 
 test_that("simulate_migration", {
+  skip("aye")
   vx <- simulate_admixture_migration(migration_rate = 0.1,
                                      total_runtime = 10)
 
@@ -111,7 +112,7 @@ test_that("simulate_migration", {
 })
 
 test_that("simulate_migration no seed", {
-
+  skip("seedless")
    # no markers:
   testthat::expect_warning(
     vy <- simulate_admixture_migration(migration_rate = 0.0,
