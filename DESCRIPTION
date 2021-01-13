@@ -33,12 +33,12 @@ Suggests:
     magrittr,
     rmarkdown,
     testit,
-    testthat
+    testthat,
+    knitr
 LinkingTo: 
     Rcpp,
     RcppArmadillo
-VignetteBuilder: 
-    knitr
+VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 SystemRequirements: C++14, GNU make

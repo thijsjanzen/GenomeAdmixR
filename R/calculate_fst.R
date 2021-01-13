@@ -16,6 +16,7 @@
 #' calculate the FST. The function \code{wc} computes the Weir and Cockerham
 #' F statistic.
 #' @return FST value
+#' @export
 calculate_fst <- function(pop1,
                           pop2,
                           sampled_individuals,
