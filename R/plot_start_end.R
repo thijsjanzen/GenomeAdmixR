@@ -61,11 +61,11 @@ plot_start_end <- function(results,
 
     p1 <- ggplot2::ggplot(to_plot,
                           ggplot2::aes(x = location,
-                                     y = to_plot$frequency,
+                                     y =  frequency,
                                      colour = as.factor(ancestor),
                                      group = interaction(ancestor,
                                                          timepoint))) +
-      ggplot2::geom_step(ggplot2::aes(lty = to_plot$timepoint))
+      ggplot2::geom_step(ggplot2::aes(lty = timepoint))
   }
 
   p1 <- p1 +
