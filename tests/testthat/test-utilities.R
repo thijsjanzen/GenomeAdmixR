@@ -29,9 +29,11 @@ test_that("utilities", {
 
 test_that("initial_frequencies", {
 
-  testthat::expect_warning(
-    vx <- simulate_admixture_migration(total_runtime = 5,
-                                      initial_frequencies = c(1, 1))
+  testthat::expect_error(
+    simulate_admixture_migration(total_runtime = 100,
+                                 pop_size = c(1000, 1000),
+                                 initial_frequencies = c(0.5, 0.5),
+                                 migration_rate = 0.1)
   )
 
   testthat::expect_warning(

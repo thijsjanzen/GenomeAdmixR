@@ -33,7 +33,6 @@ test_that("simulate admixture use", {
                                             total_runtime = 100,
                                             morgan = 1,
                                             select_matrix = select_matrix,
-                                            progress_bar = TRUE,
                                             track_junctions = FALSE,
                                             multiplicative_selection = TRUE))
 
@@ -43,7 +42,6 @@ test_that("simulate admixture use", {
                                             total_runtime = 100,
                                             morgan = 1,
                                             select_matrix = select_matrix,
-                                            progress_bar = TRUE,
                                             track_junctions = FALSE,
                                             multiplicative_selection = TRUE))
 
@@ -53,7 +51,6 @@ test_that("simulate admixture use", {
                            total_runtime = 100,
                            morgan = 1,
                            select_matrix = NA,
-                           progress_bar = TRUE,
                            track_junctions = FALSE,
                            markers = markers,
                            multiplicative_selection = TRUE)
@@ -63,7 +60,6 @@ test_that("simulate admixture use", {
                            total_runtime = 100,
                            morgan = 1,
                            select_matrix = NA,
-                           progress_bar = TRUE,
                            track_junctions = TRUE,
                            multiplicative_selection = TRUE)
 
@@ -72,7 +68,6 @@ test_that("simulate admixture use", {
                            total_runtime = 100,
                            morgan = 1,
                            select_matrix = NA,
-                           progress_bar = TRUE,
                            track_junctions = TRUE,
                            markers = markers,
                            multiplicative_selection = TRUE)

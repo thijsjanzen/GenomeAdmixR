@@ -27,7 +27,6 @@ test_that("expected_number_junctions", {
                                                t = run_time)
 
     testthat::expect_equal(mean(found), expected, tolerance = 1)
-    cat(pop_size, run_time, morgan, mean(found), expected, "\n")
   }
 
   test_expected_junction_number(pop_size = 100, run_time = 20,
