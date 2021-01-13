@@ -1,7 +1,7 @@
 context("isoFemale creation")
 
 test_that("create_isofemale", {
- # skip()
+  skip("skip isofemales")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 100
@@ -27,7 +27,7 @@ testthat::expect_output(
 })
 
 test_that("create_population_from_isofemales", {
-  skip()
+  skip("skip pop")
   pop_size <- 100
   number_of_founders <- 10
   run_time <- 100
@@ -86,7 +86,7 @@ testthat::expect_output(
 })
 
 test_that("cpp classes", {
- # skip()
+  skip("cpp classes")
   a <- matrix(c(0.1, 1, 2, 2), nrow = 2)
   b <- matrix(c(0, 1, 1, -1), nrow = 2)
   indiv <- list(chromosome1 = a, chromosome2 = a)
