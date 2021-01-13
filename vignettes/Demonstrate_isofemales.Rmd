@@ -3,7 +3,7 @@ title: "Demonstrate isofemales"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Demonstrate isofemales}
-  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
   

@@ -38,7 +38,7 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 VignetteBuilder: 
-    rmarkdown
+    knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 SystemRequirements: C++14, GNU make

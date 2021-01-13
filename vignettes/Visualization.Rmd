@@ -3,7 +3,7 @@ title: "Visualization"
 author: "Thijs Janzen"
 vignette: >
   %\VignetteIndexEntry{Visualization}
-  %\VignetteEngine{rmarkdown::render}
+  %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
   
@@ -25,7 +25,7 @@ population <- simulate_admixture(pop_size = 1000,
                                  number_of_founders = 2,
                                  total_runtime = 200,
                                  select_matrix = select_matrix,
-                                 markers = seq(0, 1, length.out = 99))
+                                 markers = c(0.5, seq(0, 1, length.out = 100)))
 ```
 
 Now, we can first view whether selection on our marker has yielded an increase in frequency:
@@ -33,7 +33,7 @@ Now, we can first view whether selection on our marker has yielded an increase i
 ## Plot over time
 
 ```{r plot over time}
-plot_over_time(population$frequencies, focal_location = 0.5)
+plot_over_time(population$frequencies, focal_location = 0.500)
 ```
 
 Indeed, we observe that over time the frequency of the allele under selection (0) increases to fixation due to selection. 
