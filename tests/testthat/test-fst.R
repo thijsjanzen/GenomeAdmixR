@@ -1,7 +1,7 @@
 context("fst")
 
 testthat::test_that("fst", {
- # skip()
+  skip("test fst")
   pop_size <- 100
   number_of_founders <- 20
   run_time <- 1
@@ -62,7 +62,7 @@ testthat::test_that("fst", {
 })
 
 testthat::test_that("random markers", {
- # skip()
+  skip("test random markers")
   set.seed(42)
   vx <- create_random_markers(1e3)
   vy <- create_random_markers(1e6)
