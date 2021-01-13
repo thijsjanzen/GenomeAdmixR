@@ -14,32 +14,6 @@
 #' of \code{simulate_admixture_migration}), which population should be plotted?
 #' Default is population_1.
 #' @return a ggplot object
-#' @examples
-#' \dontrun{
-#' s <- 0.01
-#' select_matrix <- matrix(nrow = 1, ncol = 5)
-#' select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
-#'
-#' markers <- seq(from = 0.2, to = 0.3, length.out = 100)
-#'
-#' selected_pop <- simulate_admixture(pop_size = 1000,
-#'                                    number_of_founders = 10,
-#'                                    total_runtime = 11,
-#'                                    morgan = 1,
-#'                                    select_matrix,
-#'                                    markers = markers)
-#' plot1 <- plot_joyplot_frequencies(selected_pop$frequencies,
-#'                     0:11, picked_ancestor = "ALL")
-#'
-#' # joyplot frequencies returns a ggplot object, so we can
-#' # add extra elements:
-#' require(ggplot2)
-#' plot1 <- plot_joyplot_frequencies(selected_pop$frequencies,
-#'                                   time_points = 0:11,
-#'                                   picked_ancestor = "ALL") +
-#'   ggplot2::xlab("Location") +
-#'   ggplot2::ylab("Generations")
-#' }
 #' @export
 #' @importFrom rlang .data
 plot_joyplot_frequencies <- function(frequencies,
