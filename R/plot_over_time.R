@@ -8,14 +8,6 @@
 #' @param focal_location Location (in Morgan) where to plot the allele
 #' frequencies.
 #' @return a ggplot2 object
-#' @examples
-#' pop <- simulate_admixture(pop_size = 1000,
-#'                           number_of_founders = 10,
-#'                           total_runtime = 11,
-#'                           morgan = 1,
-#'                           markers = 0.5)
-#' plot1 <- plot_over_time(pop$frequencies,
-#'                focal_location = 0.5)
 #' @export
 plot_over_time <- function(frequencies,
                            focal_location) {

@@ -22,12 +22,3 @@ a ggplot2 object
 This function plots the frequency of all ancestors over time at
 a specific location on the chromosome, after performing a simulation.
 }
-\examples{
-pop <- simulate_admixture(pop_size = 1000,
-                          number_of_founders = 10,
-                          total_runtime = 11,
-                          morgan = 1,
-                          markers = 0.5)
-plot1 <- plot_over_time(pop$frequencies,
-               focal_location = 0.5)
-}

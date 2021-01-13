@@ -2,18 +2,18 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 calculate_allele_spectrum_cpp <- function(input_population, markers, progress_bar) {
-    .Call('_GenomeAdmixR_calculate_allele_spectrum_cpp', PACKAGE = 'GenomeAdmixR', input_population, markers, progress_bar)
+    .Call(`_GenomeAdmixR_calculate_allele_spectrum_cpp`, input_population, markers, progress_bar)
 }
 
 calculate_heterozygosity_cpp <- function(input_population, markers, progress_bar) {
-    .Call('_GenomeAdmixR_calculate_heterozygosity_cpp', PACKAGE = 'GenomeAdmixR', input_population, markers, progress_bar)
+    .Call(`_GenomeAdmixR_calculate_heterozygosity_cpp`, input_population, markers, progress_bar)
 }
 
 simulate_cpp <- function(input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed) {
-    .Call('_GenomeAdmixR_simulate_cpp', PACKAGE = 'GenomeAdmixR', input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed)
+    .Call(`_GenomeAdmixR_simulate_cpp`, input_population, select, pop_size, number_of_founders, starting_proportions, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, seed)
 }
 
 simulate_migration_cpp <- function(input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed) {
-    .Call('_GenomeAdmixR_simulate_migration_cpp', PACKAGE = 'GenomeAdmixR', input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed)
+    .Call(`_GenomeAdmixR_simulate_migration_cpp`, input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, progress_bar, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed)
 }
 
