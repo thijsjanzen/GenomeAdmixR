@@ -1,7 +1,7 @@
 context("utilities")
 
 test_that("utilities", {
-
+  skip("A")
   vx <- simulate_admixture(pop_size = 100,
                            total_runtime = 5, number_of_founders = 50)
   testthat::expect_silent(
@@ -28,7 +28,7 @@ test_that("utilities", {
 })
 
 test_that("initial_frequencies", {
-
+  skip("B")
   testthat::expect_error(
     simulate_admixture_migration(total_runtime = 100,
                                  pop_size = c(1000, 1000),
