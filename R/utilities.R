@@ -7,12 +7,16 @@
 check_input_pop <- function(pop) {
 
   if (length(pop) == 1) {
-    if(!is.na(pop)) {
-      if (class(pop) == "individual") {
-        pop <- list(pop)
-        class(pop) <- "population"
-      }
+    if(is.na(pop)) {
+      pop <- c(-1e6, -1e6)
+      return(pop)
     }
+  }
+
+
+  if (class(pop) == "individual") {
+    pop <- list(pop)
+    class(pop) <- "population"
   }
 
   if (!methods::is(pop, "population")) {
