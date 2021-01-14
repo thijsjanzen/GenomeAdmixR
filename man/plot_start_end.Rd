@@ -31,10 +31,10 @@ the final frequencies in one plot
 markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 
 pop <- simulate_admixture(pop_size = 1000,
-                                   number_of_founders = 3,
-                                   total_runtime = 11,
-                                   morgan = 1,
-                                   markers = markers)
+                          number_of_founders = 3,
+                          total_runtime = 11,
+                          morgan = 1,
+                          markers = markers)
 plot_start_end(pop,
                picked_ancestor = "ALL")
 plot_start_end(pop,

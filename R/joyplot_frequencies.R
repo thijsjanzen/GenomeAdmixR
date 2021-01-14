@@ -27,15 +27,17 @@
 #'                                    number_of_founders = 10,
 #'                                    total_runtime = 11,
 #'                                    morgan = 1,
-#'                                    select_matrix,
+#'                                    select_matrix = select_matrix,
 #'                                    markers = markers)
-#' plot_joyplot_frequencies(selected_pop$frequencies,
-#'                     0:11, picked_ancestor = "ALL")
+#' plot_joyplot_frequencies(frequencies = selected_pop$frequencies,
+#'                          time_points = 0:11,
+#'                          picked_ancestor = "ALL")
 #'
 #' # joyplot frequencies returns a ggplot object, so we can
 #' # add extra elements:
-#' plot_joyplot_frequencies(selected_pop$frequencies,
-#'                     0:11, picked_ancestor = "ALL") +
+#' plot_joyplot_frequencies(frequencies = selected_pop$frequencies,
+#'                          time_points = 0:11,
+#'                          picked_ancestor = "ALL") +
 #'   ggplot2::xlab("Location") +
 #'   ggplot2::ylab("Generations")
 #' }

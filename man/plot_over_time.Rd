@@ -28,6 +28,6 @@ pop <- simulate_admixture(pop_size = 1000,
                           total_runtime = 11,
                           morgan = 1,
                           markers = 0.5)
-plot_over_time(pop$frequencies,
+plot_over_time(frequencies = pop$frequencies,
                focal_location = 0.5)
 }

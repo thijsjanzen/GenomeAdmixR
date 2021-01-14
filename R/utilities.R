@@ -6,13 +6,13 @@
 #' @keywords internal
 check_input_pop <- function(pop) {
 
-  if (length(pop) == 1) {
-    if(is.na(pop)) {
-      pop <- c(-1e6, -1e6)
-      return(pop)
-    }
-  }
-
+ # if (length(pop) == 1) {
+#    if(is.na(pop)) {
+#      pop <- c(-1e6, -1e6)
+#      return(pop)
+#    }
+#  }
+  cat(pop[1], "\n")
 
   if (class(pop) == "individual") {
     pop <- list(pop)

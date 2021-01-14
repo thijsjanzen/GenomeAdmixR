@@ -42,11 +42,11 @@ statistics
 }
 \examples{
 wildpop <- simulate_admixture(pop_size = 100,
-                             number_of_founders = 10,
-                             total_runtime = 100,
-                             morgan = 1)
+                              number_of_founders = 10,
+                              total_runtime = 100,
+                              morgan = 1)
 
-ld_results <- calculate_ld(wildpop,
+ld_results <- calculate_ld(pop = wildpop,
                            number_of_markers = 10,
                            random_markers = TRUE)
 

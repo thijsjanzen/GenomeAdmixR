@@ -24,8 +24,8 @@
 #'                                             morgan = 1,
 #'                                             overlap = 0.25)
 #'
-#' FST <- calculate_fst(two_populations$Population_1,
-#'                      two_populations$Population_2,
+#' FST <- calculate_fst(pop1 = two_populations$Population_1,
+#'                      pop2 = two_populations$Population_2,
 #'                      sampled_individuals = 10,
 #'                      number_of_markers = 100,
 #'                      random_markers = TRUE)

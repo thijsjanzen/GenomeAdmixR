@@ -23,10 +23,10 @@
 #'                                    number_of_founders = 10,
 #'                                    total_runtime = 11,
 #'                                    morgan = 1,
-#'                                    select_matrix,
+#'                                    select_matrix = select_matrix,
 #'                                    markers = markers)
 #' require(ggplot2)
-#' plot_difference_frequencies(selected_pop,
+#' plot_difference_frequencies(results = relected_pop,
 #'                             picked_ancestor = "ALL")
 #' @export
 plot_difference_frequencies <- function(results,

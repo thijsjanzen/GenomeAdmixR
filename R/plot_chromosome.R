@@ -18,9 +18,11 @@
 #'                                run_time = 10,
 #'                                morgan = 1)
 #'
-#' plot_chromosome(isofemale[[1]]$chromosome1)
+#' plot_chromosome(chrom = isofemale[[1]]$chromosome1)
 #' # and a detail of the chromosome:
-#' plot_chromosome(isofemale[[1]]$chromosome1, xmin = 0.4, xmax = 0.6)
+#' plot_chromosome(chrom = isofemale[[1]]$chromosome1,
+#'                 xmin = 0.4,
+#'                 xmax = 0.6)
 #' @export
 plot_chromosome <- function(chrom, xmin = 0, xmax = 1) {
   alleles <- unique(chrom[, 2])

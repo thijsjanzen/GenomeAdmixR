@@ -30,8 +30,8 @@ performing a simulation.
 }
 \examples{
 pop <- simulate_admixture(pop_size = 1000,
-                                   number_of_founders = 4,
-                                   total_runtime = 11,
-                                   morgan = 1)
-plot_frequencies(pop)
+                          number_of_founders = 4,
+                          total_runtime = 11,
+                          morgan = 1)
+plot_frequencies(result = pop)
 }
