@@ -2,7 +2,6 @@ context("simulate_Admixture")
 
 
 test_that("simulate_admixture", {
-  skip("test simulate admixture")
   select_matrix <- matrix(NA, nrow = 2, ncol = 5)
 
   s <- 0.1
