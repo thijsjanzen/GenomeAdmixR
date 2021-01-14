@@ -1,0 +1,112 @@
+---
+title: "Demonstrate isofemales"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Demonstrate isofemales}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 6)
+```
+
+# Creation of isofemale lines
+The package GenomeAdmixR was designed to simulate the generation of iso-female 
+lines, and simulate genomic changes during, and after, formation of iso-female 
+lines. Furthermore, it allows for simulation of effects after crossing 
+individuals from iso-female lines.
+
+```{r load libraries}
+library(GenomeAdmixR)
+library(ggplot2)
+packageVersion("GenomeAdmixR")
+```
+We will analyze whether we can genetically tell apart two populations, where one 
+population was founded by crossing two isofemale lines that were created from 
+the same source population, and the other population was founded by crossing 
+two isofemale lines created from different source populations. 
+
+First, we generate two source populations using \code{simulate_admixture} and 
+then increase the founder labels in the second population to ensure that both 
+populations do not share founder labels.
+
+```{r create populations}
+pops <-
+  simulate_admixture_migration(pop_size = c(100, 100),
+                               initial_frequencies =
+                                 list(c(1, 1, 1, 1, 0, 0, 0, 0),
+                                      c(0, 0, 0, 0, 1, 1, 1, 1)),
+                               total_runtime = 1000,
+                               migration_rate = 0)
+
+pop_1 <- pops$population_1
+pop_2 <- pops$population_2
+```
+
+To ensure that our two wild populations are not inbred, we estimate the average 
+Linkage Disequilibrium (LD) for both populations using the function 
+calculate_LD. In the absence of inbreeding, we expect the average LD to be low 
+or zero.
+
+```{r calculate LD}
+mean(calculate_ld(pop = pop_1,
+                  sampled_individuals = 10,
+                  number_of_markers = 30,
+                  random_markers = TRUE)$ld_matrix,
+     na.rm = TRUE)
+mean(calculate_ld(pop = pop_2,
+                  sampled_individuals = 10,
+                  number_of_markers = 30,
+                  random_markers = TRUE)$ld_matrix,
+     na.rm = TRUE)
+```
+Now we can start to generate isofemale lines from both populations, using \code{create_iso_female}.
+```{r create isofemale lines}
+iso_females_pop_1 <- create_iso_female(pop_1,
+                                       n = 2,
+                                       inbreeding_pop_size = 100)
+iso_females_pop_2 <- create_iso_female(pop_2,
+                                       n = 2,
+                                       inbreeding_pop_size = 100)
+```
+Using the function \code{create_population_from_individuals} we then create
+three populations, two where the isofemales are drawn from the same source 
+population, and one where we mix the two, e.g. 1x1, 1x2 and 2x2, where 
+isofemales 1 and 2 indicate isofemales from source populations 1 and 2 
+respectively. 
+```{r create from individuals}
+pop_1_1 <- simulate_admixture(iso_females_pop_1,
+                              pop_size = 1000,
+                              total_runtime = 1000,
+                              morgan = 1)
+
+pop_1_2 <- simulate_admixture(list(iso_females_pop_1[[1]],
+                                   iso_females_pop_2[[1]]),
+                               pop_size = 1000,
+                               total_runtime = 1000,
+                               morgan = 1)
+
+pop_2_2 <- simulate_admixture(iso_females_pop_2,
+                              pop_size = 1000,
+                              total_runtime = 1000,
+                              morgan = 1)
+```
+Then, using the function \code{calculate_fst} we calculate all pairwise FST 
+values. Here, we expect to find the highest FST for the 1x2 comparison. 
+```{r FST calculation}
+f1 <- calculate_fst(pop_1_1, pop_1_2,
+                    sampled_individuals = 10, number_of_markers = 100)
+# this one should be highest
+f2 <- calculate_fst(pop_1_1, pop_2_2,
+                    sampled_individuals = 10, number_of_markers = 100)
+f3 <- calculate_fst(pop_1_2, pop_2_2,
+                    sampled_individuals = 10, number_of_markers = 100)
+f1
+f2
+f3
+```
+Which confirms our hypothesis and demonstrates how combining isofemale lines 
+from different source populations generates a population with maximal genetic 
+diversity. 

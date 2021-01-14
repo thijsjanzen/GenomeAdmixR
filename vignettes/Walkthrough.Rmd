@@ -1,0 +1,291 @@
+---
+title: "Walkthrough"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Walkthrough}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 6)
+```
+
+# GenomeAdmixR
+The package GenomeAdmixR was designed to simulate the generation of iso-female
+lines, and simulate genomic changes during, and after, formation of iso-female 
+lines. Furthermore, it allows for simulation of effects after crossing 
+individuals from iso-female lines.
+
+```{r}
+library(GenomeAdmixR)
+library(ggplot2)
+packageVersion("GenomeAdmixR")
+```
+
+
+## Simulating an iso-female line
+In order to create an iso-female line, we first have to create a 'wild' 
+population, from which we will draw individuals. To create such a population, we 
+make use of the function 'create_population':
+```{r create wildpop}
+wildpop <-  simulate_admixture(pop_size = 100,
+                               number_of_founders = 4,
+                               total_runtime = 1000,
+                               morgan = 1)
+
+```
+This creates a population of 100 diploid individuals (e.g. 2N = 200), based upon 
+10 founders (e.g. 10 individuals that can be genetically distinguished from each 
+other). Then, for 1000 generations, this population is inbred and genomes of the 
+20 founders are allowed to mix. All individuals have 2 chromosomes (for 
+simplicity and computational speed, we only model one chromosome pair), which 
+are 1 Morgan long. The result can be written to file (optional), which can be 
+usefull when generating for instance an extremely large wild population, which 
+can be used later (e.g. read from file).
+
+The result of the function is a structure containing 1000 individuals:
+```{r}
+wildpop
+```
+Each individual has two chromosomes, with a given number of junctions (e.g. 
+delineations between two contiguous genomic stretches from different ancestors):
+```{r}
+wildpop[[1]]
+```
+
+In order to create an iso-female line, two random individuals are drawn from the 
+wild population, and selected for inbreeding. We can simulate this process with:
+```{r create isofemale}
+isofemale <- create_iso_female(source_pop = wildpop,
+                               n = 1,
+                               inbreeding_pop_size = 1000,
+                               run_time = 200,
+                               morgan = 1)
+```
+
+Here, n indicates the number of isofemales to be created from the same source 
+population, the inbreeding population size is set to be small, in order to 
+speed up computation. Maximum run time is best set hight, to assure that all 
+individuals become genetically identical. 
+
+# Visualizing individuals
+Now, we can plot the isofemales, this plots the two chromosomes next to each 
+other, where colors indicate different ancestors:
+```{r}
+plot(isofemale[[1]])
+```
+
+Because we have chosen 4 ancestors, these plots are not terribly informative, 
+let's try a toy example:
+```{r toyexample}
+wildpop <-  simulate_admixture(pop_size = 100,
+                               number_of_founders = 4,
+                               total_runtime = 100,
+                               morgan = 1)
+
+isofemale <- create_iso_female(source_pop = wildpop,
+                               n = 1,
+                               inbreeding_pop_size = 100,
+                               run_time = 10000,
+                               morgan = 1)
+plot(wildpop$population[[1]])
+plot(isofemale[[1]])
+```
+
+We can also plot a (section of) a single chromosome:
+```{r plot selection of chromosome}
+plot_chromosome(isofemale[[1]]$chromosome1, xmin = 0.0, xmax = 0.5)
+```
+
+# Multiple source populations
+
+It gets more interesting if we create two populations, and draw iso-females from 
+them, and cross these.
+First, we have to create two populations. 
+```{r create two populations}
+both_populations <-
+  simulate_admixture_migration(pop_size = c(100, 100),
+                               initial_frequencies =
+                                 list(c(rep(1, 20), rep(0, 20)),
+                                      c(rep(0, 20), rep(1, 20))),
+                               morgan = 1,
+                               total_runtime = 1000)
+
+population_1 <- both_populations$population_1
+
+population_2 <- both_populations$population_2
+```
+To make sure that the two populations dont share ancestor indices, we use the 
+function 'increase_ancestor'. 
+
+Now that we have two populations, we can generate two different iso-females 
+from them:
+```{r draw two isofemales}
+isofemales <- create_iso_female(source_pop = population_1,
+                               n = 2,
+                               inbreeding_pop_size = 100,
+                               run_time = 10000,
+                               morgan = 1)
+
+par(mfrow = c(1, 2))
+plot_chromosome(isofemales[[1]]$chromosome1, 0, 1)
+plot_chromosome(isofemales[[2]]$chromosome1, 0, 1)
+```
+
+We can now use these two isofemales to seed a new inbreeding population:
+```{r seed mixed population}
+mixed_population <-
+  simulate_admixture(list(isofemales[[1]],
+                          isofemales[[2]]),
+                     pop_size = 100, total_runtime = 100,
+                     morgan = 1)
+```
+And plot some individuals from our new population:
+```{r plot mixed_population}
+plot(mixed_population$population[[1]])
+```
+
+# Statistics
+
+## FST
+We can show the effect of overlap by calculating the Fst value:
+```{r calc FST}
+fst <- calculate_fst(population_1,
+                 population_2,
+                 sampled_individuals = 10,
+                 number_of_markers = 100,
+                 random_markers = TRUE)
+fst
+```
+The FST calculation function uses the library hierfstat to calculate the FST. To 
+do so, it samples 10 random individuals (the parameter sampled individuals) from 
+the population, and then assesses the genetic content at 100 randomly placed 
+markers (number of markers, and random_markers = TRUE). To increase power, a 
+higher number of individuals can be sampled, although this does increase 
+computational load.
+
+## LD
+We can also calculate LD statistics. LD is only defined for markers, so again we 
+have to simulate artificial markers along the chromosome. 
+
+```{r}
+  ld_results <- calculate_ld(wildpop,
+                             number_of_markers = 10,
+                             random_markers = TRUE)
+
+  par(mfrow = c(1, 3))
+  plot(ld_results$ld_matrix~ld_results$dist_matrix,
+       xlab = "Genetic Distance (Morgan)",
+       ylab = "LD",
+       pch = 16)
+  plot(ld_results$rsq_matrix~ld_results$dist_matrix,
+       xlab = "Genetic Distance (Morgan)",
+       ylab = "r_sq",
+       pch = 16)
+  plot(ld_results$ld_matrix~ld_results$rsq_matrix,
+       xlab = "r_sq",
+       ylab = "LD",
+       pch = 16)
+```
+
+To analyze LD patterns better, it makes more sense to create a population from 
+scratch. We expect for a strongly inbred population, that there is no LD:
+
+```{r no LD}
+no_ld_pop <- simulate_admixture(pop_size = 100,
+                             number_of_founders = 4,
+                             total_runtime = 1000,
+                             morgan = 1)
+
+ld_results <- calculate_ld(no_ld_pop,
+                           sampled_individuals = 10,
+                           number_of_markers = 10,
+                           random_markers = TRUE)
+
+par(mfrow = c(1, 1))
+par(mar = c(4, 4, 2, 2))
+plot(ld_results$ld_matrix~ld_results$dist_matrix,
+     pch = 16,
+     xlab = "Distance",
+     ylab = "LD",
+     xlim = c(0, 1),
+     ylim = c(0, 1))
+```
+
+Alternatively, for a barely inbred population, we expect a negative relationship 
+between LD and distance:
+
+```{r strong LD}
+strong_ld_pop <- simulate_admixture(pop_size = 1000,
+                                    number_of_founders = 4,
+                                    total_runtime = 10,
+                                    morgan = 1)
+
+ld_results <- calculate_ld(strong_ld_pop,
+                           sampled_individuals = 10,
+                           number_of_markers = 10,
+                           random_markers = TRUE)
+
+par(mfrow = c(1, 1))
+par(mar = c(4, 4, 2, 2))
+plot(ld_results$ld_matrix~ld_results$dist_matrix,
+     pch = 16,
+     xlab = "Distance",
+     ylab = "LD",
+     xlim = c(0, 1),
+     ylim = c(0, 1))
+```
+
+# Selection
+Selection for specific markers (e.g. SNPs) can potentially cause local allelel 
+frequency biases, and influence genetic patterns within the population as a 
+whole.
+
+The user can provide a selection 'matrix' that specifies how selection acts upon 
+different genotypes. As genotypes we indicate here 'aa' (wildtype), 
+'aA' (heterozygote) and 'AA' (homozygote with allele under selection), where 
+wildtype is any allele not under selection. As alleles under selection we take 
+the general genomic content of ancestors, and hence alleles refer to anestors. 
+
+A perhaps interesting simulation would be one where the heterozygote has an 
+advantage over the other genotypes
+```{r heterozygote selection}
+s <- 0.1
+selection_matrix <- matrix(nrow = 1, ncol = 5)
+selection_matrix[1, ] <- c(0.5,
+                           1.0, 1.0 + s, 1.0,
+                           0)
+
+markers <- 0.5
+
+selected_pop <- simulate_admixture(pop_size = 1000,
+                                   number_of_founders = 2,
+                                   total_runtime = 100,
+                                   morgan = 1,
+                                   select_matrix = selection_matrix,
+                                   markers = markers)
+
+plot_over_time(selected_pop$frequencies, markers)
+```
+
+Indeed we observe that the frequencies of both ancestors are in equilibrium around 0.5, as expected.
+
+Another interesting simulation would be where we give only the homozygous mutant a selective benefit. Here we expect that it takes some time before the homozygote takes over.
+
+```{r homozygote selection}
+s <- 0.1
+selection_matrix[1, ] <- c(0.5,
+                           1.0, 1.0, 1.0 + s,
+                           0)
+
+selected_pop <- simulate_admixture(pop_size = 1000,
+                                   number_of_founders = 10,
+                                   total_runtime = 300,
+                                   morgan = 1,
+                                   select_matrix = selection_matrix,
+                                   markers = markers)
+
+plot_over_time(selected_pop$frequencies, markers)
+```

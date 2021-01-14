@@ -1,0 +1,75 @@
+---
+title: "Visualization"
+author: "Thijs Janzen"
+vignette: >
+  %\VignetteIndexEntry{Visualization}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+  
+```{r setup, include=FALSE}
+library(GenomeAdmixR)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 6)
+```
+
+# Visualization
+
+The GenomeAdmixR package provides many different visualization options, here we will explore a variety of them.
+First, we simulate a scenario with selection, to obtain somewhat meaningful results.
+
+```{r simulate}
+select_matrix <- matrix(nrow = 1, ncol = 5)
+select_matrix[1, ] <- c(0.5, 1, 1 + 0.05, 1 + 0.1, 0)
+population <- simulate_admixture(pop_size = 1000,
+                                 number_of_founders = 2,
+                                 total_runtime = 200,
+                                 select_matrix = select_matrix,
+                                 markers = c(0.5, seq(0, 1, length.out = 100)))
+```
+
+Now, we can first view whether selection on our marker has yielded an increase in frequency:
+
+## Plot over time
+
+```{r plot over time}
+plot_over_time(population$frequencies, focal_location = 0.500)
+```
+
+Indeed, we observe that over time the frequency of the allele under selection (0) increases to fixation due to selection. 
+
+## Plot Frequencies
+How are the alleles scattered across the genome? we can answer that with the function plot_frequencies:
+```{r plot frequencies}
+plot_frequencies(population, locations = seq(0, 1, length.out = 1000))
+```
+As expected, we observe a huge increase around the location of the marker under selection (at 0.5 Morgan).
+
+## plot difference frequencies
+If instead, we are interested in the change in frequency of a marker, we can do so using plot_difference_frequencies.
+
+```{r plot difference frequencies}
+plot_difference_frequencies(population)
+```
+
+## plot_start_end
+Visualized in another way, plot_start_end plots the frequency distributions at the start and at the end of the simulation:
+```{r plot start end}
+plot_start_end(population)
+```
+
+## joyplots
+If, indeed, we are more interested in the progression over time, we can also consult a so called 'joyplot', or 'ridgeplot':
+```{r joyplot}
+plot_joyplot_frequencies(population$frequencies,
+                         time_points = c(0, 10, 25, 50, 100, 199))
+```
+
+## Plotting individual chromosomes
+Lastly, individual chromosomes can be visualized using the standard plotting functions, where both the entire chromosome, and a fraction of the chromosome, can be visualized:
+
+```{r plot chromosome}
+plot(population$population[[1]])
+
+plot_chromosome(population$population[[1]]$chromosome1, xmin = 0.45, xmax = 0.55)
+```
