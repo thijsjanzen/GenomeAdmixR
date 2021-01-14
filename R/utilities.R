@@ -6,9 +6,13 @@
 #' @keywords internal
 check_input_pop <- function(pop) {
 
-  if (class(pop) == "individual") {
-    pop <- list(pop)
-    class(pop) <- "population"
+  if (length(pop) == 1) {
+    if(!is.na(pop)) {
+      if (class(pop) == "individual") {
+        pop <- list(pop)
+        class(pop) <- "population"
+      }
+    }
   }
 
   if (!methods::is(pop, "population")) {

@@ -12,7 +12,8 @@
 #' of \code{simulate_admixture_migration}), which population should be plotted?
 #' Default is population_1.
 #' @return a ggplot2 object
-#' @examples  s <- 0.1
+#' @examples
+#' s <- 0.1
 #' select_matrix <- matrix(nrow = 1, ncol = 5)
 #' select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
 #'
