@@ -21,10 +21,18 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<double>& recom_positions)
 {
 
-  // we need something that is cheaply swappable:
+ /* // we need something that is cheaply swappable:
   auto* g1 = &chromosome1;
   auto* g2 = &chromosome2;
   std::vector<junction> go;   // offspring genome: recycle what's already there...
+*/
+  static auto tl_go = decltype(chromosome1){};
+
+  // we need something that is cheaply swappable:
+  auto* g1 = &chromosome1;
+  auto* g2 = &chromosome2;
+  auto& go = tl_go;   // offspring genome: recycle what's already there...
+  go.clear();
 
   // predicate for lower_bound
   auto less = [](const auto& j, double p) { return j.pos < p; };
