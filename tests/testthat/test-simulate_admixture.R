@@ -1,23 +1,42 @@
 context("simulate_Admixture")
 
-test_that("simulate admixture use, pop size", {
-  pop <- simulate_admixture(pop_size = 100,
-                            total_runtime = 3)
 
-  testthat::expect_equal(length(pop$population), 100)
+test_that("simulate admixture use, markers", {
+  pop <- simulate_admixture(pop_size = 1000,
+                            number_of_founders = 2,
+                            total_runtime = 3,
+                            markers = seq(0, 1, length.out = 1000),
+                            morgan = 1)
 
-  in_pop <- list(pop$population[[1]],
-                 pop$population[[2]])
+  a <- subset(pop$final_frequency, pop$final_frequency$location < 0.5)
+  b <-  subset(pop$final_frequency, pop$final_frequency$location > 0.5)
+  testthat::expect_equal(dim(a), dim(b))
 
-  pop2 <- simulate_admixture(input_population = in_pop,
-                             total_runtime = 3)
+  testthat::expect_silent(
+    GenomeAdmixR::plot_difference_frequencies(pop)
+  )
 
-  testthat::expect_equal(length(pop2$population),
-                         length(in_pop))
 
-  pop3 <- simulate_admixture(input_population = in_pop,
-                             pop_size = 100,
-                             total_runtime = 3)
+  pop <- simulate_admixture(pop_size = 1000,
+                            number_of_founders = 2,
+                            total_runtime = 3,
+                            markers = seq(0, 3, length.out = 1000),
+                            morgan = 3)
 
-  testthat::expect_equal(length(pop3$population), 100)
+  a <- subset(pop$final_frequency, pop$final_frequency$location < 1.5)
+  b <-  subset(pop$final_frequency, pop$final_frequency$location > 1.5)
+  testthat::expect_equal(dim(a), dim(b))
+
+  GenomeAdmixR::plot_difference_frequencies(pop)
+
+  pop <- simulate_admixture(pop_size = 1000,
+                            number_of_founders = 2,
+                            total_runtime = 3,
+                            markers = seq(0, 5, length.out = 1000),
+                            morgan = 5)
+
+  a <- subset(pop$final_frequency, pop$final_frequency$location < 2.5)
+  b <-  subset(pop$final_frequency, pop$final_frequency$location > 2.5)
+  testthat::expect_equal(dim(a), dim(b))
+  GenomeAdmixR::plot_difference_frequencies(pop)
 })
