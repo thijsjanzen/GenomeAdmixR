@@ -8,6 +8,22 @@
 #' @return A tibble containing the frequency of each present ancestor at the
 #' provided location. Ancestors with frequency = 0 are dropped out of the table.
 #' The tibble contains three columns: location, ancestor and frequency.
+#' @examples
+#' \dontrun{
+#' number_founders = 20
+#' wildpop =  simulate_admixture(pop_size = 1000,
+#'                               number_of_founders = number_founders,
+#'                               total_runtime = 10,
+#'                               morgan = 1)
+#'
+#' calculate_marker_frequency(wildpop, 0.5)
+#'
+#' frequencies <- calculate_marker_frequency(wildpop, seq(0.4, 0.5, by = 0.001))
+#'
+#' ggplot(frequencies, aes(x = location, y = frequency, col = ancestor)) +
+#'   geom_step()
+#'
+#' }
 #' @export
 calculate_marker_frequency <- function(pop, location) {
 
