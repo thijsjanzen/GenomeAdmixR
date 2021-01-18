@@ -120,9 +120,11 @@ simulate_admixture_migration <- function(input_population_1 = NA,
 
   initial_frequencies <- check_initial_frequencies(initial_frequencies)
 
-
-
   select_matrix <-     check_select_matrix(select_matrix)
+
+  if (length(pop_size) == 1) {
+    pop_size <- c(pop_size, pop_size)
+  }
 
 
   if (length(markers) == 1) {

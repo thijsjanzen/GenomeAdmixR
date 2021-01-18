@@ -17,8 +17,7 @@
 #' F statistic.
 #' @return FST value
 #' @examples
-#' two_populations <- simulate_admixture_migration(pop_size = 100,
-#'                                                 number_of_founders = 20,
+#' two_populations <- simulate_admixture_migration(pop_size = c(100, 100),
 #'                                                 morgan = 1,
 #'                                                 migration_rate = 0.01)
 #'
