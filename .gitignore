@@ -16,3 +16,4 @@ codecov.R
 *.pdf
 *.tmp
 *.gz
+*.txt
