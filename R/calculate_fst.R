@@ -17,11 +17,10 @@
 #' F statistic.
 #' @return FST value
 #' @examples
-#' two_populations <- simulate_admixture_until(pop_size = 100,
-#'                                             number_of_founders = 20,
-#'                                             total_runtime = 10,
-#'                                             morgan = 1,
-#'                                             overlap = 0.25)
+#' two_populations <- simulate_admixture_migration(pop_size = 100,
+#'                                                 number_of_founders = 20,
+#'                                                 morgan = 1,
+#'                                                 migration_rate = 0.01)
 #'
 #' FST <- calculate_fst(pop1 = two_populations$Population_1,
 #'                      pop2 = two_populations$Population_2,
