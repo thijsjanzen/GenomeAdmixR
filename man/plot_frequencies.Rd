@@ -33,5 +33,6 @@ pop <- simulate_admixture(pop_size = 1000,
                           number_of_founders = 4,
                           total_runtime = 11,
                           morgan = 1)
+require(ggplot2)
 plot_frequencies(result = pop)
 }

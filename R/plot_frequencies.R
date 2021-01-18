@@ -14,6 +14,7 @@
 #'                           number_of_founders = 4,
 #'                           total_runtime = 11,
 #'                           morgan = 1)
+#' require(ggplot2)
 #' plot_frequencies(result = pop)
 #' @export
 plot_frequencies <- function(result,

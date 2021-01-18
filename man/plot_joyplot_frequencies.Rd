@@ -49,6 +49,7 @@ selected_pop <- simulate_admixture(pop_size = 1000,
                                    morgan = 1,
                                    select_matrix = select_matrix,
                                    markers = markers)
+require(ggplot2)
 plot_joyplot_frequencies(frequencies = selected_pop$frequencies,
                          time_points = 0:11,
                          picked_ancestor = "ALL")

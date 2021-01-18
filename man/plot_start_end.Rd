@@ -35,6 +35,7 @@ pop <- simulate_admixture(pop_size = 1000,
                           total_runtime = 11,
                           morgan = 1,
                           markers = markers)
+require(ggplot2)
 plot_start_end(pop,
                picked_ancestor = "ALL")
 plot_start_end(pop,
