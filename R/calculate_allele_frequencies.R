@@ -8,7 +8,6 @@
 #' @details Markers are equidistantly spaced, with a distance of
 #' \code{step_size} in between them.
 #' @return A tibble containing the allele frequencies
-
 #' @examples
 #' number_founders = 20
 #' wildpop =  simulate_admixture(pop_size = 1000,

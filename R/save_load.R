@@ -6,6 +6,7 @@
 #' size. See for more information \code{saveRDS}
 #' @details This function functions as a wrapper for the base function
 #' \code{saveRDS}.
+#' @return No return value
 #' @export
 save_population <- function(population, file_name, compression = TRUE) {
   saveRDS(population, file = file_name, compress = compression)
@@ -17,6 +18,7 @@ save_population <- function(population, file_name, compression = TRUE) {
 #' @return A population object
 #' @seealso \code{\link{save_population}}
 #' @details This function is a wrapper for \code{readRDS}.
+#' @return an R object
 #' @export
 load_population <- function(file_name) {
   readRDS(file_name)

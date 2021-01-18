@@ -20,6 +20,7 @@ calculate_dist_junctions <- function(pop) {
 #' @description plots the distribution of junctions in the population using
 #' base R
 #' @param pop of the class 'population'
+#' @return No return value
 #' @export
 plot_dist_junctions <- function(pop) {
   junct <- calculate_dist_junctions(pop)

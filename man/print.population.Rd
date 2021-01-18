@@ -11,6 +11,9 @@
 
 \item{...}{other arguments}
 }
+\value{
+No return value
+}
 \description{
 prints the contents of a population nicely
 }

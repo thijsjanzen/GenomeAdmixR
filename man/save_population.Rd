@@ -14,6 +14,9 @@ save_population(population, file_name, compression = TRUE)
 \item{compression}{By default, the population is compressed to reduce file
 size. See for more information \code{saveRDS}}
 }
+\value{
+No return value
+}
 \description{
 Saves a population to file for later use
 }

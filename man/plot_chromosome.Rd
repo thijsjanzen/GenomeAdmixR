@@ -15,6 +15,9 @@ Morgan), the second column indicates the ancestry type.}
 
 \item{xmax}{maximum value of the range, default = 1.}
 }
+\value{
+No return value
+}
 \description{
 This function plots a chromosome in the range [xmin, xmax].
 Colors indicate different ancestry.

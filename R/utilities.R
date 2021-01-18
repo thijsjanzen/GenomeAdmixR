@@ -312,6 +312,7 @@ print.individual <- function(x, ...) {
 #' @description prints the contents of a population nicely
 #' @param x input population
 #' @param ... other arguments
+#' @return No return value
 #' @export
 print.population <- function(x, ...) {
   v1 <- paste("Population with",
@@ -325,6 +326,7 @@ print.population <- function(x, ...) {
 #' @param x object of type individual
 #' @param cols colors for the different ancestors
 #' @param ... other arguments
+#' @return No return value
 #' @export
 plot.individual <- function(x, cols = NA,  ...) {
   alleles_chrom1 <- unique(x$chromosome1[, 2])

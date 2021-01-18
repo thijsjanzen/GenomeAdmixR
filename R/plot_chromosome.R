@@ -6,6 +6,7 @@
 #' Morgan), the second column indicates the ancestry type.
 #' @param xmin minimum value of the range, default = 0.
 #' @param xmax maximum value of the range, default = 1.
+#' @return No return value
 #' @examples
 #' wildpop <- simulate_admixture(pop_size = 100,
 #'                               number_of_founders = 10,

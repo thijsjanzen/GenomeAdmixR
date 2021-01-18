@@ -13,6 +13,9 @@
 
 \item{...}{other arguments}
 }
+\value{
+No return value
+}
 \description{
 visualise ancestry blocks on both chromosomes
 }

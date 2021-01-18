@@ -9,6 +9,9 @@ plot_dist_junctions(pop)
 \arguments{
 \item{pop}{of the class 'population'}
 }
+\value{
+No return value
+}
 \description{
 plots the distribution of junctions in the population using
 base R
