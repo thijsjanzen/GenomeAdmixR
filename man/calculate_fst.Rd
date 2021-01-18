@@ -46,8 +46,8 @@ two_populations <- simulate_admixture_migration(pop_size = c(100, 100),
                                                 morgan = 1,
                                                 migration_rate = 0.01)
 
-FST <- calculate_fst(pop1 = two_populations$Population_1,
-                     pop2 = two_populations$Population_2,
+FST <- calculate_fst(pop1 = two_populations$population_1,
+                     pop2 = two_populations$population_2,
                      sampled_individuals = 10,
                      number_of_markers = 100,
                      random_markers = TRUE)
