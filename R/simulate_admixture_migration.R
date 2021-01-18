@@ -28,7 +28,7 @@
 #' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' representes the mutant allele A}
-#' @param progress_bar Displays a progress_bar if TRUE. Default value is FALSE
+#' @param verbose Verbose output if TRUE. Default value is FALSE
 #' @param markers A vector of locations of markers (relative locations in
 #' [0, 1]). If a vector is provided, ancestry at these marker positions is
 #' tracked for every generation.
@@ -75,7 +75,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          seed = NULL,
                                          select_matrix = NA,
                                          markers = NA,
-                                         progress_bar = FALSE,
+                                         verbose = FALSE,
                                          track_junctions = FALSE,
                                          multiplicative_selection = TRUE,
                                          migration_rate = 0.0,
@@ -96,7 +96,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                     seed = seed,
                                     select_matrix = select_matrix,
                                     markers = markers,
-                                    progress_bar = progress_bar,
+                                    verbose = verbose,
                                     track_junctions = track_junctions,
                                     multiplicative_selection =
                                       multiplicative_selection,
@@ -160,7 +160,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          init_freq_matrix,
                                          total_runtime,
                                          morgan,
-                                         progress_bar,
+                                         verbose,
                                          track_frequency,
                                          markers,
                                          track_junctions,

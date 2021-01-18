@@ -26,7 +26,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         int pop_size,
                                         int total_runtime,
                                         double morgan,
-                                        bool progress_bar,
+                                        bool verbose,
                                         arma::mat& frequencies,
                                         bool track_frequency,
                                         const NumericVector& track_markers,
@@ -55,7 +55,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
   int updateFreq = total_runtime / 20;
   if(updateFreq < 1) updateFreq = 1;
 
-  if(progress_bar) {
+  if(verbose) {
     Rcout << "0--------25--------50--------75--------100\n";
     Rcout << "*";
   }
@@ -111,11 +111,11 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
       newFitness.push_back(fit);
     }
 
-    if (t % updateFreq == 0 && progress_bar) {
+    if (t % updateFreq == 0 && verbose) {
       Rcout << "**";
     }
 
-    if (t > 2 && is_fixed(Pop)) {
+    if (t > 2 && is_fixed(Pop) && verbose) {
       Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
       R_FlushConsole();
       return(Pop);
@@ -127,7 +127,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     fitness.swap(newFitness);
     maxFitness = newMaxFitness;
   }
-  if(progress_bar) Rcout << "\n";
+  if(verbose) Rcout << "\n";
   return(Pop);
 }
 
@@ -139,7 +139,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   Rcpp::NumericVector starting_proportions,
                   size_t total_runtime,
                   double morgan,
-                  bool progress_bar,
+                  bool verbose,
                   bool track_frequency,
                   NumericVector track_markers,
                   bool track_junctions,
@@ -165,11 +165,6 @@ List simulate_cpp(Rcpp::NumericVector input_population,
       update_founder_labels((*it).chromosome2, founder_labels);
     }
     number_of_alleles = founder_labels.size();
-    for(int i = 0; i < founder_labels.size(); ++i) {
-      Rcout << founder_labels[i] << " ";
-    }
-    Rcout << "\n";
-
 
     if (Pop.size() != pop_size) {
       // the new population has to be seeded from the input!
@@ -215,7 +210,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                     pop_size,
                                                     total_runtime,
                                                     morgan,
-                                                    progress_bar,
+                                                    verbose,
                                                     frequencies_table,
                                                     track_frequency,
                                                     track_markers,

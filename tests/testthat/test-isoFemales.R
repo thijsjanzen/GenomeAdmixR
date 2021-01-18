@@ -1,7 +1,6 @@
 context("isoFemale creation")
 
 test_that("create_isofemale", {
- #skip("skip isofemales")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 100
@@ -16,10 +15,10 @@ test_that("create_isofemale", {
 
   testthat::expect_true(verify_population(pop))
 
-testthat::expect_output(
+testthat::expect_silent(
   females <- create_iso_female(pop, n = 5, run_time = 3000)
 )
-testthat::expect_output(
+testthat::expect_silent(
   females <- create_iso_female(pop, n = 1, run_time = 3000)
 )
 
@@ -27,7 +26,6 @@ testthat::expect_output(
 })
 
 test_that("create_population_from_isofemales", {
- # skip("skip pop")
   pop_size <- 100
   number_of_founders <- 10
   run_time <- 100
@@ -49,18 +47,18 @@ test_that("create_population_from_isofemales", {
   testthat::expect_true(verify_population(pop2))
 
 
-  testthat::expect_output(
+  testthat::expect_silent(
       female_1 <- create_iso_female(pop1, n = 1,
                                 run_time = 20000)
   )
-  testthat::expect_output(
+  testthat::expect_silent(
    female_2 <- create_iso_female(pop2, n = 1,
                                 run_time = 20000)
 )
   testthat::expect_true(verify_individual(female_1[[1]]))
   testthat::expect_true(verify_individual(female_2[[1]]))
 
-testthat::expect_output(
+testthat::expect_silent(
   females <- create_iso_female(pop1, n = 2, run_time = 2000)
 )
   pop_size = 100
@@ -86,44 +84,43 @@ testthat::expect_output(
 })
 
 test_that("cpp classes", {
- # skip("cpp classes")
   a <- matrix(c(0.1, 1, 2, 2), nrow = 2)
   b <- matrix(c(0, 1, 1, -1), nrow = 2)
   indiv <- list(chromosome1 = a, chromosome2 = a)
   class(indiv) <- "individual"
 
   # chromosome 1
-  testthat::expect_output(v <- verify_individual(indiv),
+  testthat::expect_warning(v <- verify_individual(indiv),
                            "Chromosome doesn't start at 0")
 
   indiv <- list(chromosome1 = b, chromosome2 = a)
   class(indiv) <- "individual"
 
   # chromosome 2
-  testthat::expect_output(v <- verify_individual(indiv),
+  testthat::expect_warning(v <- verify_individual(indiv),
                           "Chromosome doesn't start at 0")
 
   a <- matrix(c(0.0, 1, 2, 2), nrow = 2)
   b <- matrix(c(0, 1, 1, -1), nrow = 2)
   indiv <- list(chromosome1 = b, chromosome2 = a)
   class(indiv) <- "individual"
-  testthat::expect_output(v <- verify_individual(indiv),
+  testthat::expect_warning(v <- verify_individual(indiv),
                           "Chromosome doesn't end with -1")
   indiv$chromosome2 <-  indiv$chromosome1
   indiv$chromosome1 <- a
-  testthat::expect_output(v <- verify_individual(indiv),
+  testthat::expect_warning(v <- verify_individual(indiv),
                           "Chromosome doesn't end with -1")
 
 
   a <- matrix(c(0.0, 1, 0.5, 29192875037,  1, -1), ncol = 2)
 
   indiv$chromosome1 <- a
-  testthat::expect_output(v <- verify_individual(indiv),
+  testthat::expect_warning(v <- verify_individual(indiv),
                           "Memory error recorded in chromosome")
 
   a <- matrix(c(0.0, 1, 0.5, -92875037,  1, -1), ncol = 2)
   indiv$chromosome2 <- a
   indiv$chromosome1 <- b
-  testthat::expect_output(v <- verify_individual(indiv),
+  testthat::expect_warning(v <- verify_individual(indiv),
                           "Memory error recorded in chromosome")
 })

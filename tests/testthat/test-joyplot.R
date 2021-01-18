@@ -6,8 +6,7 @@ test_that("joyplot", {
                                      number_of_founders = 3,
                                      total_runtime = 101,
                                      morgan = 1,
-                                     markers = markers,
-                                     progress_bar = FALSE)
+                                     markers = markers)
 
   testthat::expect_lte(max(selected_pop$frequencies$location), max(markers))
   testthat::expect_gte(min(selected_pop$frequencies$location), min(markers))

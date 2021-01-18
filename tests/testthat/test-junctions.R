@@ -11,7 +11,7 @@ test_that("expected_number_junctions", {
                                number_of_founders = 2,
                                total_runtime = run_time,
                                morgan = morgan,
-                               progress_bar = FALSE)
+                               verbose = FALSE)
 
       junct <- calculate_dist_junctions(vx$population)
       found <- c(found, mean(junct))

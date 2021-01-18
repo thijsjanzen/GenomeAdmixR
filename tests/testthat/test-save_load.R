@@ -24,5 +24,5 @@ test_that("save_population", {
   for (i in seq_along(vx)) {
     testthat::expect_true(all.equal(vx[[i]], vy[[i]]))
   }
-  rm("test.pop")
+  testthat::expect_true(file.remove("test.pop"))
 })

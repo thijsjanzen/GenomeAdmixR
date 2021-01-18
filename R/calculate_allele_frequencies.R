@@ -10,7 +10,6 @@
 #' @return A tibble containing the allele frequencies
 
 #' @examples
-#' \dontrun{
 #' number_founders = 20
 #' wildpop =  simulate_admixture(pop_size = 1000,
 #'                               number_of_founders = number_founders,
@@ -24,7 +23,6 @@
 #' ggplot(freq_output, aes(x=location, y = frequency,
 #'                         col = as.factor(ancestor))) +
 #'   geom_line()
-#' }
 #' @export
 calculate_allele_frequencies <- function(source_pop,
                                          locations = seq(0, 1,

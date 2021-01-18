@@ -25,7 +25,7 @@ test_that("simulate admixture use", {
                              total_runtime = 100,
                              morgan = 1,
                              select_matrix = NA,
-                             progress_bar = TRUE,
+                             verbose = TRUE,
                              track_junctions = FALSE,
                              multiplicative_selection = TRUE)
   )
@@ -81,7 +81,7 @@ test_that("simulate admixture use", {
                            initial_frequencies = c(0.5, 0.5),
                            total_runtime = 100)
 
-  testthat::expect_message(
+  testthat::expect_silent(
     vx <- simulate_admixture(pop_size = 100,
                            number_of_founders = 2,
                            initial_frequencies = c(0.5, 0.6),

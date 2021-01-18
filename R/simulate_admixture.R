@@ -22,7 +22,7 @@
 #' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' represents the mutant allele A}
-#' @param progress_bar Displays a progress_bar if TRUE. Default value is FALSE
+#' @param verbose Verbose output if TRUE. Default value is FALSE
 #' @param markers A vector of locations of markers (relative locations in
 #' [0, 1]). If a vector is provided, ancestry at these marker positions is
 #' tracked for every generation.
@@ -49,7 +49,7 @@ simulate_admixture <- function(input_population = NA,
                                seed = NULL,
                                select_matrix = NA,
                                markers = NA,
-                               progress_bar = FALSE,
+                               verbose = FALSE,
                                track_junctions = FALSE,
                                multiplicative_selection = TRUE) {
 
@@ -70,7 +70,7 @@ simulate_admixture <- function(input_population = NA,
 
   if (sum(initial_frequencies) != 1) {
     initial_frequencies <- initial_frequencies / sum(initial_frequencies)
-    message("starting frequencies were normalized to 1\n")
+    if (verbose) message("starting frequencies were normalized to 1\n")
   }
 
   select_matrix <- check_select_matrix(select_matrix)
@@ -101,7 +101,7 @@ simulate_admixture <- function(input_population = NA,
                                initial_frequencies,
                                total_runtime,
                                morgan,
-                               progress_bar,
+                               verbose,
                                track_frequency,
                                markers,
                                track_junctions,

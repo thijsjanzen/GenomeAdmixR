@@ -48,7 +48,7 @@ check_initial_frequencies <- function(initial_frequencies) {
     }
 
     if (length(initial_frequencies) == 2) {
-      cat("Assuming a single population with two ancestors\n")
+      warning("Assuming a single population with two ancestors\n")
       if (sum(initial_frequencies) != 1) {
         initial_frequencies <- initial_frequencies / sum(initial_frequencies)
         warning("initial frequencies were normalized to 1")
@@ -83,8 +83,8 @@ check_initial_frequencies <- function(initial_frequencies) {
 #' @keywords internal
 check_select_matrix <- function(select_matrix) {
   if (is.matrix(select_matrix)) {
-    message("Found a selection matrix, performing simulation")
-    message("including selection")
+    message(
+      "Found a selection matrix, performing simulation including selection")
     if (sum(is.na(select_matrix))) {
       stop("Can't start, there are NA values in the selection matrix!\n")
     }
@@ -338,7 +338,8 @@ plot.individual <- function(x, cols = NA,  ...) {
   }
 
 
-  opar <- graphics::par("mar", "mfrow")
+  old_par <- graphics::par("mar", "mfrow", no.readonly = TRUE)
+  on.exit(graphics::par(old_par))
 
   graphics::par(mfrow = c(2, 1))
   graphics::par(mar = c(2, 2, 2, 2))
@@ -393,8 +394,6 @@ plot.individual <- function(x, cols = NA,  ...) {
                    col = colour_to_plot,
                    border = NA)
   }
-
-  graphics::par(opar)
 }
 
 #' @keywords internal
@@ -419,31 +418,31 @@ verify_individual <- function(indiv) {
   if (!methods::is(indiv, "individual")) return(FALSE)
 
   if (indiv$chromosome1[1, 1] != 0) {
-    cat("Chromosome doesn't start at 0\n")
+    warning("Chromosome doesn't start at 0\n")
     return(FALSE)
   }
   if (utils::tail(indiv$chromosome1, 1)[2] != -1) {
-    cat("Chromosome doesn't end with -1\n")
+    warning("Chromosome doesn't end with -1\n")
     return(FALSE)
   }
 
   if (max(abs(indiv$chromosome1[, 2])) > 10000) {
-    cat("Memory error recorded in chromosome\n")
+    warning("Memory error recorded in chromosome\n")
     return(FALSE)
   }
 
   if (indiv$chromosome2[1, 1] != 0) {
-    cat("Chromosome doesn't start at 0\n")
+    warning("Chromosome doesn't start at 0\n")
     return(FALSE)
   }
 
   if (utils::tail(indiv$chromosome2, 1)[2] != -1) {
-    cat("Chromosome doesn't end with -1\n")
+    warning("Chromosome doesn't end with -1\n")
     return(FALSE)
   }
 
   if (max(abs(indiv$chromosome2[, 2])) > 10000) {
-    cat("Memory error recorded in chromosome\n")
+    warning("Memory error recorded in chromosome\n")
     return(FALSE)
   }
 

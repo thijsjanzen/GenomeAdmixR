@@ -16,7 +16,7 @@
 #' are homozygous and genetically identical, whatever happens first.
 #' @return A list of length \code{n}, where each entry is a fully homozygous
 #' isofemale.
-#' @examples \dontrun{
+#' @examples \donttest{
 #' wildpop =  simulate_admixture(pop_size = 100,
 #'                               number_of_founders = 10,
 #'                               total_runtime = 5,

@@ -9,7 +9,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      seed = NULL,
                                      select_matrix = NA,
                                      markers = NA,
-                                     progress_bar = TRUE,
+                                     verbose = FALSE,
                                      track_junctions = FALSE,
                                      multiplicative_selection = TRUE,
                                      migration_rate = 0.0,
@@ -33,7 +33,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
     morgan = morgan,
     select_matrix = select_matrix,
     markers = markers,
-    progress_bar = progress_bar,
+    verbose = verbose,
     track_junctions = track_junctions,
     multiplicative_selection = multiplicative_selection,
     migration_rate = migration_rate)
@@ -44,8 +44,8 @@ simulate_admixture_until <- function(input_population_1 = NA,
                        random_markers = random_markers)
 
   cnt <- 3
-  cat("Number of Generations\tFST\n")
-  cat(generations_between_update, "\t", fst, "\n")
+  message("Number of Generations\tFST\n")
+  message(generations_between_update, "\t", fst, "\n")
 
   total_generations <- generations_between_update
   while (fst < critical_fst && total_generations < total_runtime) {
@@ -60,7 +60,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
       seed = seed + cnt,
       select_matrix = select_matrix,
       markers = markers,
-      progress_bar = progress_bar,
+      verbose = verbose,
       track_junctions = track_junctions,
       multiplicative_selection = multiplicative_selection,
       migration_rate = migration_rate)
@@ -72,7 +72,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                          random_markers = random_markers)
 
     total_generations <- total_generations + generations_between_update
-    cat(total_generations, "\t", fst, "\n")
+    message(total_generations, "\t", fst, "\n")
   }
   return(list("Population_1" = pops$population_1,
               "Population_2" = pops$population_2,

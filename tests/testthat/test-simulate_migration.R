@@ -7,7 +7,7 @@ test_that("simulate_migration", {
   testthat::expect_true(verify_population(vx$population_1))
   testthat::expect_true(verify_population(vx$population_2))
 
-  testthat::expect_output(
+  testthat::expect_silent(
     vz <- simulate_admixture_migration(input_population_1 = vx$population_1[[1]],
                                      input_population_2 = vx$population_2[[2]],
                                      total_runtime = 10)
@@ -38,15 +38,14 @@ test_that("simulate_migration", {
 
       markers <- seq(from = 0.4, to = 0.60, by = 0.01)
 
-      cat("starting with simulation of migration of 0.01\n")
-      vy <- simulate_admixture_migration(migration_rate = 0.01,
+      testthat::expect_message(
+        vy <- simulate_admixture_migration(migration_rate = 0.01,
                                          initial_frequencies = list(c(1, 0),
                                                                     c(0, 1)),
                                          select_matrix = select_matrix,
                                          total_runtime = 100,
                                          markers = markers)
-
-    cat("verify results\n")
+      )
 
     found <- c()
     for (loc in unique(vy$final_frequency$location)) {

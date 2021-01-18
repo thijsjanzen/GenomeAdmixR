@@ -114,7 +114,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     const NumericVector& pop_size,
     int total_runtime,
     double morgan,
-    bool progress_bar,
+    bool verbose,
     arma::mat& frequencies,
     bool track_frequency,
     const NumericVector& track_markers,
@@ -162,7 +162,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   int updateFreq = total_runtime / 20;
   if(updateFreq < 1) updateFreq = 1;
 
-  if(progress_bar) {
+  if(verbose) {
     Rcout << "0--------25--------50--------75--------100\n";
     Rcout << "*";
   }
@@ -223,7 +223,6 @@ std::vector< std::vector< Fish > > simulate_two_populations(
                                                            new_fitness_pop_2,
                                                            new_max_fitness_pop_2,
                                                            morgan);
-    // Rcout << "updating vectors\n";
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
     fitness_pop_1 = new_fitness_pop_1;
@@ -231,13 +230,12 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     max_fitness_pop_1 = new_max_fitness_pop_1;
     max_fitness_pop_2 = new_max_fitness_pop_2;
 
-    if (t % updateFreq == 0 && progress_bar) {
+    if (t % updateFreq == 0 && verbose) {
       Rcout << "**";
     }
 
-    // Rcout << "checking for fixation\n";
     if (t > 2 && is_fixed(pop_1) && is_fixed(pop_2)) {
-      Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
+      if (verbose) Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
       R_FlushConsole();
       std::vector< std::vector < Fish > > output;
       output.push_back(pop_1);
@@ -247,7 +245,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
 
     Rcpp::checkUserInterrupt();
   }
-  if (progress_bar) Rcout << "\n";
+  if (verbose) Rcout << "\n";
   std::vector< std::vector< Fish > > output;
   output.push_back(pop_1);
   output.push_back(pop_2);
@@ -262,7 +260,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             NumericMatrix starting_frequencies,
                             int total_runtime,
                             double morgan,
-                            bool progress_bar,
+                            bool verbose,
                             bool track_frequency,
                             NumericVector track_markers,
                             bool track_junctions,
@@ -278,7 +276,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
   std::vector<int> founder_labels;
 
   if (input_population_1[0] > -1e4) {
-    Rcout << "Found input populations\n";  R_FlushConsole();
+    if (verbose) Rcout << "Found input populations\n";  R_FlushConsole();
 
     Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
     Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
@@ -354,7 +352,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
                                                 pop_size,
                                                 total_runtime,
                                                 morgan,
-                                                progress_bar,
+                                                verbose,
                                                 frequencies_table,
                                                 track_frequency,
                                                 track_markers,
