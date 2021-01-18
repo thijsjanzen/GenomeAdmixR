@@ -129,7 +129,6 @@ isofemales <- create_iso_female(source_pop = population_1,
                                run_time = 10000,
                                morgan = 1)
 
-par(mfrow = c(1, 2))
 plot_chromosome(isofemales[[1]]$chromosome1, 0, 1)
 plot_chromosome(isofemales[[2]]$chromosome1, 0, 1)
 ```
@@ -175,7 +174,6 @@ have to simulate artificial markers along the chromosome.
                              number_of_markers = 10,
                              random_markers = TRUE)
 
-  par(mfrow = c(1, 3))
   plot(ld_results$ld_matrix~ld_results$dist_matrix,
        xlab = "Genetic Distance (Morgan)",
        ylab = "LD",
@@ -204,8 +202,6 @@ ld_results <- calculate_ld(no_ld_pop,
                            number_of_markers = 10,
                            random_markers = TRUE)
 
-par(mfrow = c(1, 1))
-par(mar = c(4, 4, 2, 2))
 plot(ld_results$ld_matrix~ld_results$dist_matrix,
      pch = 16,
      xlab = "Distance",
@@ -228,8 +224,6 @@ ld_results <- calculate_ld(strong_ld_pop,
                            number_of_markers = 10,
                            random_markers = TRUE)
 
-par(mfrow = c(1, 1))
-par(mar = c(4, 4, 2, 2))
 plot(ld_results$ld_matrix~ld_results$dist_matrix,
      pch = 16,
      xlab = "Distance",

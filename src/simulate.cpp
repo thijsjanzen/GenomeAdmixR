@@ -36,8 +36,6 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         int num_alleles,
                                         const std::vector<int>& founder_labels) {
 
-  //Rcout << "simulate_population: " << multiplicative_selection << "\n";
-
   bool use_selection = false;
   if(select(1, 1) >= 0) use_selection = true;
 
@@ -63,7 +61,6 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
   }
 
   for(int t = 0; t < total_runtime; ++t) {
-
     if(track_junctions) junctions.push_back(calc_mean_junctions(Pop));
 
     if(track_frequency) {
@@ -159,6 +156,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
   track_markers = scale_markers(track_markers, morgan);
 
   if (input_population[0] > -1e4) {
+
     Pop = convert_NumericVector_to_fishVector(input_population);
 
     number_of_founders = 0;
@@ -167,6 +165,11 @@ List simulate_cpp(Rcpp::NumericVector input_population,
       update_founder_labels((*it).chromosome2, founder_labels);
     }
     number_of_alleles = founder_labels.size();
+    for(int i = 0; i < founder_labels.size(); ++i) {
+      Rcout << founder_labels[i] << " ";
+    }
+    Rcout << "\n";
+
 
     if (Pop.size() != pop_size) {
       // the new population has to be seeded from the input!
@@ -175,7 +178,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
         int index = random_number(Pop.size());
         Pop_new.push_back(Pop[index]);
       }
-      std::swap(Pop, Pop_new);
+      Pop = Pop_new;
     }
   } else {
     for (size_t i = 0; i < pop_size; ++i) {
@@ -199,8 +202,6 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     arma::mat x(number_of_markers * number_of_alleles * total_runtime, 4); // 4 columns: time, loc, anc, type
     frequencies_table = x;
   }
-
-
 
   arma::mat initial_frequencies = update_all_frequencies_tibble(Pop,
                                                                 track_markers,

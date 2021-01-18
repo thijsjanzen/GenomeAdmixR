@@ -202,7 +202,7 @@ int draw_prop_fitness(const std::vector<double>& fitness,
 }
 
 
-std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector v) {
+std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) {
   std::vector< Fish > output;
 
   Fish temp;
@@ -239,6 +239,7 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector v) {
 
   return(output);
 }
+
 
 List convert_to_list(const std::vector<Fish>& v) {
   int list_size = (int)v.size();
