@@ -36,7 +36,7 @@ This function plots the distribution of allele frequencies
 within a region over time, making use of a 'joyplot'
 }
 \examples{
-\dontrun{
+\donttest{
 s <- 0.01
 select_matrix <- matrix(nrow = 1, ncol = 5)
 select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)

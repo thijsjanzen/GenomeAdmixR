@@ -46,7 +46,7 @@ to inbreed until either \code{run_time} is reached, or until all individuals
 are homozygous and genetically identical, whatever happens first.
 }
 \examples{
-\dontrun{
+\donttest{
 wildpop =  simulate_admixture(pop_size = 100,
                               number_of_founders = 10,
                               total_runtime = 5,

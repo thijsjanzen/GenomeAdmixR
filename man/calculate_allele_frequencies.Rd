@@ -30,7 +30,6 @@ Markers are equidistantly spaced, with a distance of
 \code{step_size} in between them.
 }
 \examples{
-\dontrun{
 number_founders = 20
 wildpop =  simulate_admixture(pop_size = 1000,
                               number_of_founders = number_founders,
@@ -44,5 +43,4 @@ require(ggplot2)
 ggplot(freq_output, aes(x=location, y = frequency,
                         col = as.factor(ancestor))) +
   geom_line()
-}
 }

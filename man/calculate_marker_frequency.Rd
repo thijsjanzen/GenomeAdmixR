@@ -23,7 +23,6 @@ Calculate the relative frequency of each ancestor in the
 population at a specific marker location
 }
 \examples{
-\dontrun{
 number_founders = 20
 wildpop =  simulate_admixture(pop_size = 1000,
                               number_of_founders = number_founders,
@@ -39,5 +38,4 @@ frequencies <- calculate_marker_frequency(pop = wildpop,
 ggplot(frequencies, aes(x = location, y = frequency, col = ancestor)) +
   geom_step()
 
-}
 }
