@@ -29,13 +29,13 @@ wildpop =  simulate_admixture(pop_size = 1000,
                               total_runtime = 10,
                               morgan = 1)
 
-calculate_marker_frequency(pop = wildpop,
-                           location = 0.5)
+avg_frequencies <- calculate_marker_frequency(pop = wildpop,
+                                              location = 0.5)
 
-frequencies <- calculate_marker_frequency(pop = wildpop,
-                                          location = seq(0.4, 0.5, by = 0.001))
-
+frequencies <-
+   calculate_marker_frequency(pop = wildpop,
+                              location = seq(0.4, 0.5, by = 0.001))
+require(ggplot2)
 ggplot(frequencies, aes(x = location, y = frequency, col = ancestor)) +
   geom_step()
-
 }
