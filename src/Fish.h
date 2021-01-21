@@ -72,8 +72,9 @@ struct chromosome_junctions {
     }
 
     int get_ancestry(double pos) const {
-        auto it = std::lower_bound(genome.cbegin(), genome.cend(), pos,
-                                   [](const auto& j, double p) { return j.pos < p;});
+        auto less = [](const auto& j, double p) { return j.pos < p; };
+
+        auto it = std::lower_bound(genome.cbegin(), genome.cend(), pos, less);
         return (it - 1)->right;
     }
 };
