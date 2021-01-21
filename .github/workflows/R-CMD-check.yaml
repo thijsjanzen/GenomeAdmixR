@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-      - develop_2
+      - emp_data
   pull_request:
     branches:
       - main
