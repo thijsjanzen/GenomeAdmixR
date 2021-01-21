@@ -21,7 +21,8 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
+template <typename FISH>
+std::vector< FISH > simulate_Population(const std::vector< FISH>& sourcePop,
                                         const NumericMatrix& select,
                                         int pop_size,
                                         int total_runtime,
@@ -39,7 +40,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
   bool use_selection = false;
   if(select(1, 1) >= 0) use_selection = true;
 
-  std::vector<Fish> Pop = sourcePop;
+  std::vector<FISH> Pop = sourcePop;
   std::vector<double> fitness;
   double maxFitness = -1;
 
@@ -66,11 +67,11 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     if(track_frequency) {
       for(int i = 0; i < track_markers.size(); ++i) {
         if(track_markers[i] < 0) break;
-        arma::mat local_mat = update_frequency_tibble(Pop,
-                                                      track_markers[i],
-                                                      founder_labels,
-                                                      t,
-                                                      morgan);
+        arma::mat local_mat = update_frequency_tibble<FISH>(Pop,
+                                                            track_markers[i],
+                                                            founder_labels,
+                                                            t,
+                                                            morgan);
 
         // now we have to find where to copy local_mat into frequencies
         int time_block = track_markers.size() * founder_labels.size(); // number of markers times number of alleles
@@ -86,7 +87,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
       }
     }
 
-    std::vector<Fish> newGeneration(pop_size);
+    std::vector<FISH> newGeneration(pop_size);
     std::vector<double> newFitness;
     double newMaxFitness = -1.0;
     for (int i = 0; i < pop_size; ++i)  {
@@ -102,8 +103,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
         while(index2 == index1) index2 = random_number( (int)Pop.size() );
       }
 
-      newGeneration[i] = mate(Pop[index1], Pop[index2], morgan);
-
+      newGeneration[i] = FISH(Pop[index1].gamete(morgan),
+                              Pop[index2].gamete(morgan));
       double fit = -2.0;
       if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
       if(fit > newMaxFitness) newMaxFitness = fit;
@@ -149,7 +150,9 @@ List simulate_cpp(Rcpp::NumericVector input_population,
   set_seed(seed);
   set_poisson(morgan);
 
-  std::vector< Fish > Pop;
+  using organism = Fish<chromosome_junctions>;
+
+  std::vector< organism > Pop;
   int number_of_alleles = number_of_founders;
   std::vector<int> founder_labels;
 
@@ -157,18 +160,18 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
   if (input_population[0] > -1e4) {
 
-    Pop = convert_NumericVector_to_fishVector(input_population);
+    Pop = convert_NumericVector_to_fishVector<organism>(input_population);
 
     number_of_founders = 0;
     for (auto it = Pop.begin(); it != Pop.end(); ++it) {
-      update_founder_labels((*it).chromosome1, founder_labels);
-      update_founder_labels((*it).chromosome2, founder_labels);
+      update_founder_labels((*it).chromosome1.genome, founder_labels);
+      update_founder_labels((*it).chromosome2.genome, founder_labels);
     }
     number_of_alleles = founder_labels.size();
 
     if (Pop.size() != pop_size) {
       // the new population has to be seeded from the input!
-      std::vector< Fish > Pop_new;
+      std::vector< organism > Pop_new;
       for (size_t j = 0; j < pop_size; ++j) {
         int index = random_number(Pop.size());
         Pop_new.push_back(Pop[index]);
@@ -180,10 +183,11 @@ List simulate_cpp(Rcpp::NumericVector input_population,
       int founder_1 = draw_random_founder(starting_proportions);
       int founder_2 = draw_random_founder(starting_proportions);
 
-      Fish p1 = Fish( founder_1 );
-      Fish p2 = Fish( founder_2 );
+      organism p1 = organism( founder_1 );
+      organism p2 = organism( founder_2 );
 
-      Pop.push_back(mate(p1,p2, morgan));
+      Pop.emplace_back( organism(p1.gamete(morgan),
+                                 p2.gamete(morgan)) );
     }
     for (int i = 0; i < number_of_alleles; ++i) {
       founder_labels.push_back(i);
@@ -205,20 +209,21 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                                 morgan);
 
   std::vector<double> junctions;
-  std::vector<Fish> outputPop = simulate_Population(Pop,
-                                                    select,
-                                                    pop_size,
-                                                    total_runtime,
-                                                    morgan,
-                                                    verbose,
-                                                    frequencies_table,
-                                                    track_frequency,
-                                                    track_markers,
-                                                    track_junctions,
-                                                    junctions,
-                                                    multiplicative_selection,
-                                                    number_of_alleles,
-                                                    founder_labels);
+  std::vector<organism> outputPop =
+    simulate_Population< organism >(Pop,
+                                    select,
+                                    pop_size,
+                                    total_runtime,
+                                    morgan,
+                                    verbose,
+                                    frequencies_table,
+                                    track_frequency,
+                                    track_markers,
+                                    track_junctions,
+                                    junctions,
+                                    multiplicative_selection,
+                                    number_of_alleles,
+                                    founder_labels);
 
   arma::mat final_frequencies = update_all_frequencies_tibble(outputPop,
                                                               track_markers,

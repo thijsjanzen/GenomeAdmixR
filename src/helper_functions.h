@@ -21,26 +21,32 @@ using namespace Rcpp;
 bool matching_chromosomes(const std::vector< junction >& v1,
                           const std::vector< junction >& v2);
 
-bool is_fixed(const std::vector< Fish >& v);
+template <typename FISH>
+bool is_fixed(const std::vector< FISH >& v);
 
-NumericVector update_frequency(const std::vector< Fish >& v,
+template <typename FISH>
+NumericVector update_frequency(const std::vector< FISH >& v,
                                double m,
                                int num_alleles);
 
-arma::mat update_all_frequencies(const std::vector< Fish >& pop,
+template <typename FISH>
+arma::mat update_all_frequencies(const std::vector< FISH >& pop,
                                  const NumericVector& markers,
                                  int number_of_founders);
 
-double calc_mean_junctions(const std::vector< Fish> & pop);
+template <typename FISH>
+double calc_mean_junctions(const std::vector< FISH> & pop);
 
 int draw_prop_fitness(const std::vector<double>& fitness,
                       double maxFitness);
 
-std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v);
+template <typename FISH>
+std::vector< FISH > convert_NumericVector_to_fishVector(const NumericVector& v);
 
-List convert_to_list(const std::vector<Fish>& v);
+List convert_to_list(const std::vector<Fish<chromosome_junctions>>& v);
 
-double calculate_fitness(const Fish& focal,
+template <typename FISH>
+double calculate_fitness(const FISH& focal,
                          const NumericMatrix& select,
                          bool multiplicative_selection);
 
@@ -48,27 +54,32 @@ int draw_random_founder(const NumericVector& v);
 void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels);
 
-arma::mat update_frequency_tibble(const std::vector< Fish >& v,
+
+template <typename FISH>
+arma::mat update_frequency_tibble(const std::vector< FISH >& v,
                                   double m,
                                   const std::vector<int>& founder_labels,
                                   int t,
                                   double morgan);
 
-arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
+template <typename FISH>
+arma::mat update_all_frequencies_tibble(const std::vector< FISH >& pop,
                                         const NumericVector& markers,
                                         const std::vector<int>& founder_labels,
                                         int t,
                                         double morgan);
 
-arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_1,
-                                                 const std::vector< Fish >& pop_2,
+template <typename FISH>
+arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< FISH >& pop_1,
+                                                 const std::vector< FISH >& pop_2,
                                                  const NumericVector& markers,
                                                  const std::vector<int>& founder_labels,
                                                  int t,
                                                  double morgan);
 
-arma::mat update_frequency_tibble_dual_pop(const std::vector< Fish >& pop_1,
-                                           const std::vector< Fish >& pop_2,
+template <typename FISH>
+arma::mat update_frequency_tibble_dual_pop(const std::vector< FISH >& pop_1,
+                                           const std::vector< FISH >& pop_2,
                                            double marker,
                                            const std::vector<int>& founder_labels,
                                            int t,
