@@ -101,7 +101,7 @@ std::vector< FISH > next_pop_migr(const std::vector< FISH>& pop_1,
                                      parent2.gamete(size_in_morgan)));
 
     double fit = -2.0;
-    if (use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
+    if (use_selection) fit = calc_fitness(new_generation[i], select, multiplicative_selection);
     if (fit > new_max_fitness) new_max_fitness = fit;
 
     new_fitness[i] = fit;
@@ -148,14 +148,14 @@ std::vector< std::vector< FISH > > simulate_two_populations(
     }
 
     for (auto it = pop_1.begin(); it != pop_1.end(); ++it){
-      double fit = calculate_fitness((*it), select, multiplicative_selection);
+      double fit = calc_fitness((*it), select, multiplicative_selection);
       if (fit > max_fitness_pop_1) max_fitness_pop_1 = fit;
 
       fitness_pop_1.push_back(fit);
     }
 
     for (auto it = pop_2.begin(); it != pop_2.end(); ++it){
-      double fit = calculate_fitness((*it), select, multiplicative_selection);
+      double fit = calc_fitness((*it), select, multiplicative_selection);
       if (fit > max_fitness_pop_2) max_fitness_pop_2 = fit;
 
       fitness_pop_2.push_back(fit);
@@ -273,34 +273,34 @@ List simulate_migration_cpp(NumericVector input_population_1,
   set_seed(seed);
   set_poisson(morgan);
 
-  using organism = Fish<chromosome_junctions>;
+  typedef Fish<chromosome_junctions> FOCAL_ANIMAL;
 
-  std::vector< organism > Pop_1;
-  std::vector< organism > Pop_2;
+  std::vector< FOCAL_ANIMAL > Pop_1;
+  std::vector< FOCAL_ANIMAL > Pop_2;
   int number_of_alleles = -1;
   std::vector<int> founder_labels;
 
   if (input_population_1[0] > -1e4) {
     if (verbose) Rcout << "Found input populations\n";  R_FlushConsole();
 
-    Pop_1 = convert_NumericVector_to_fishVector<organism>(input_population_1);
-    Pop_2 = convert_NumericVector_to_fishVector<organism>(input_population_2);
+    Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
+    Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
 
     for (auto it = Pop_1.begin(); it != Pop_1.end(); ++it) {
-      update_founder_labels((*it).chromosome1.genome, founder_labels);
-      update_founder_labels((*it).chromosome2.genome, founder_labels);
+      update_founder_labels((*it).chromosome1, founder_labels);
+      update_founder_labels((*it).chromosome2, founder_labels);
     }
 
     for (auto it = Pop_2.begin(); it != Pop_2.end(); ++it) {
-      update_founder_labels((*it).chromosome1.genome, founder_labels);
-      update_founder_labels((*it).chromosome2.genome, founder_labels);
+      update_founder_labels((*it).chromosome1, founder_labels);
+      update_founder_labels((*it).chromosome2, founder_labels);
     }
 
     number_of_alleles = founder_labels.size();
 
     if (Pop_1.size() != pop_size[0]) {
       // the populations have to be populated from the parents!
-      std::vector< organism > Pop_1_new;
+      std::vector< FOCAL_ANIMAL > Pop_1_new;
       for(int j = 0; j < pop_size[0]; ++j) {
         int index = random_number(Pop_1.size());
         Pop_1_new.push_back(Pop_1[index]);
@@ -309,7 +309,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
     }
 
     if (Pop_2.size() != pop_size[1]) {
-      std::vector< organism > Pop_2_new;
+      std::vector< FOCAL_ANIMAL > Pop_2_new;
       for (int j = 0; j < pop_size[1]; ++j) {
         int index = random_number(Pop_2.size());
         Pop_2_new.push_back(Pop_2[index]);
@@ -325,12 +325,12 @@ List simulate_migration_cpp(NumericVector input_population_1,
         int founder_1 = draw_random_founder(focal_freqs);
         int founder_2 = draw_random_founder(focal_freqs);
 
-        organism p1 = organism( founder_1 );
-        organism p2 = organism( founder_2 );
+        FOCAL_ANIMAL p1 = FOCAL_ANIMAL( founder_1 );
+        FOCAL_ANIMAL p2 = FOCAL_ANIMAL( founder_2 );
 
-        if(j == 0) Pop_1.push_back(organism(p1.gamete(morgan),
+        if(j == 0) Pop_1.push_back(FOCAL_ANIMAL(p1.gamete(morgan),
                                    p2.gamete(morgan)));
-        if(j == 1) Pop_2.push_back(organism(p1.gamete(morgan),
+        if(j == 1) Pop_2.push_back(FOCAL_ANIMAL(p1.gamete(morgan),
                                    p2.gamete(morgan)));
       }
     }
@@ -343,38 +343,38 @@ List simulate_migration_cpp(NumericVector input_population_1,
   int number_of_markers = track_markers.size();
   // 5 columns: time, loc, anc, type, population
   arma::mat frequencies_table(number_of_markers * number_of_alleles * total_runtime * 2, 5);
-  arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop<organism>(Pop_1,
-                                                                                   Pop_2,
-                                                                                   track_markers,
-                                                                                   founder_labels,
-                                                                                   0,
-                                                                                   morgan);
+  arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop<FOCAL_ANIMAL>(Pop_1,
+                                                                                       Pop_2,
+                                                                                       track_markers,
+                                                                                       founder_labels,
+                                                                                       0,
+                                                                                       morgan);
 
   std::vector<double> junctions;
-  std::vector< std::vector< organism > > output_populations;
+  std::vector< std::vector< FOCAL_ANIMAL > > output_populations;
 
-  output_populations = simulate_two_populations<organism>(Pop_1,
-                                                          Pop_2,
-                                                          select,
-                                                          pop_size,
-                                                          total_runtime,
-                                                          morgan,
-                                                          verbose,
-                                                          frequencies_table,
-                                                          track_frequency,
-                                                          track_markers,
-                                                          track_junctions,
-                                                          junctions,
-                                                          multiplicative_selection,
-                                                          number_of_alleles,
-                                                          founder_labels,
-                                                          migration_rate);
-  arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop<organism>(output_populations[0],
-                                                                                 output_populations[1],
-                                                                                                   track_markers,
-                                                                                                   founder_labels,
-                                                                                                   total_runtime,
-                                                                                                   morgan);
+  output_populations = simulate_two_populations<FOCAL_ANIMAL>(Pop_1,
+                                                              Pop_2,
+                                                              select,
+                                                              pop_size,
+                                                              total_runtime,
+                                                              morgan,
+                                                              verbose,
+                                                              frequencies_table,
+                                                              track_frequency,
+                                                              track_markers,
+                                                              track_junctions,
+                                                              junctions,
+                                                              multiplicative_selection,
+                                                              number_of_alleles,
+                                                              founder_labels,
+                                                              migration_rate);
+  arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop<FOCAL_ANIMAL>(output_populations[0],
+                                                                                     output_populations[1],
+                                                                                                       track_markers,
+                                                                                                       founder_labels,
+                                                                                                       total_runtime,
+                                                                                                       morgan);
 
   return List::create( Named("population_1") = convert_to_list(output_populations[0]),
                        Named("population_2") = convert_to_list(output_populations[1]),

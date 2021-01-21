@@ -33,7 +33,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // simulate_cpp
-List simulate_cpp(Rcpp::NumericVector input_population, NumericMatrix select, size_t pop_size, size_t number_of_founders, Rcpp::NumericVector starting_proportions, size_t total_runtime, double morgan, bool verbose, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, int seed);
+Rcpp::List simulate_cpp(Rcpp::NumericVector input_population, NumericMatrix select, size_t pop_size, size_t number_of_founders, Rcpp::NumericVector starting_proportions, size_t total_runtime, double morgan, bool verbose, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, int seed);
 RcppExport SEXP _GenomeAdmixR_simulate_cpp(SEXP input_populationSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP number_of_foundersSEXP, SEXP starting_proportionsSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP verboseSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

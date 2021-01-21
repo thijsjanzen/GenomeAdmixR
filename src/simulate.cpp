@@ -22,7 +22,7 @@
 using namespace Rcpp;
 
 template <typename FISH>
-std::vector< FISH > simulate_Population(const std::vector< FISH>& sourcePop,
+std::vector< FISH > simulate_Population(const std::vector<FISH>& sourcePop,
                                         const NumericMatrix& select,
                                         int pop_size,
                                         int total_runtime,
@@ -46,7 +46,7 @@ std::vector< FISH > simulate_Population(const std::vector< FISH>& sourcePop,
 
   if(use_selection) {
     for(auto it = Pop.begin(); it != Pop.end(); ++it){
-      double fit = calculate_fitness((*it), select, multiplicative_selection);
+      double fit = calc_fitness((*it), select, multiplicative_selection);
       if(fit > maxFitness) maxFitness = fit;
 
       fitness.push_back(fit);
@@ -106,7 +106,8 @@ std::vector< FISH > simulate_Population(const std::vector< FISH>& sourcePop,
       newGeneration[i] = FISH(Pop[index1].gamete(morgan),
                               Pop[index2].gamete(morgan));
       double fit = -2.0;
-      if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
+      if(use_selection) fit = calc_fitness(newGeneration[i],
+         select, multiplicative_selection);
       if(fit > newMaxFitness) newMaxFitness = fit;
 
       newFitness.push_back(fit);
@@ -133,26 +134,26 @@ std::vector< FISH > simulate_Population(const std::vector< FISH>& sourcePop,
 }
 
 // [[Rcpp::export]]
-List simulate_cpp(Rcpp::NumericVector input_population,
-                  NumericMatrix select,
-                  size_t pop_size,
-                  size_t number_of_founders,
-                  Rcpp::NumericVector starting_proportions,
-                  size_t total_runtime,
-                  double morgan,
-                  bool verbose,
-                  bool track_frequency,
-                  NumericVector track_markers,
-                  bool track_junctions,
-                  bool multiplicative_selection,
-                  int seed) {
+Rcpp::List simulate_cpp(Rcpp::NumericVector input_population,
+                        NumericMatrix select,
+                        size_t pop_size,
+                        size_t number_of_founders,
+                        Rcpp::NumericVector starting_proportions,
+                        size_t total_runtime,
+                        double morgan,
+                        bool verbose,
+                        bool track_frequency,
+                        NumericVector track_markers,
+                        bool track_junctions,
+                        bool multiplicative_selection,
+                        int seed) {
 
   set_seed(seed);
   set_poisson(morgan);
 
-  using organism = Fish<chromosome_junctions>;
+  typedef Fish<chromosome_junctions> FOCAL_ANIMAL;
 
-  std::vector< organism > Pop;
+  std::vector< FOCAL_ANIMAL > Pop;
   int number_of_alleles = number_of_founders;
   std::vector<int> founder_labels;
 
@@ -160,18 +161,18 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
   if (input_population[0] > -1e4) {
 
-    Pop = convert_NumericVector_to_fishVector<organism>(input_population);
+    Pop = convert_NumericVector_to_fishVector(input_population);
 
     number_of_founders = 0;
     for (auto it = Pop.begin(); it != Pop.end(); ++it) {
-      update_founder_labels((*it).chromosome1.genome, founder_labels);
-      update_founder_labels((*it).chromosome2.genome, founder_labels);
+      update_founder_labels((*it).chromosome1, founder_labels);
+      update_founder_labels((*it).chromosome2, founder_labels);
     }
     number_of_alleles = founder_labels.size();
 
     if (Pop.size() != pop_size) {
       // the new population has to be seeded from the input!
-      std::vector< organism > Pop_new;
+      std::vector< FOCAL_ANIMAL > Pop_new;
       for (size_t j = 0; j < pop_size; ++j) {
         int index = random_number(Pop.size());
         Pop_new.push_back(Pop[index]);
@@ -183,11 +184,11 @@ List simulate_cpp(Rcpp::NumericVector input_population,
       int founder_1 = draw_random_founder(starting_proportions);
       int founder_2 = draw_random_founder(starting_proportions);
 
-      organism p1 = organism( founder_1 );
-      organism p2 = organism( founder_2 );
+      FOCAL_ANIMAL p1 = FOCAL_ANIMAL( founder_1 );
+      FOCAL_ANIMAL p2 = FOCAL_ANIMAL( founder_2 );
 
-      Pop.emplace_back( organism(p1.gamete(morgan),
-                                 p2.gamete(morgan)) );
+      Pop.emplace_back( FOCAL_ANIMAL(p1.gamete(morgan),
+                                     p2.gamete(morgan)) );
     }
     for (int i = 0; i < number_of_alleles; ++i) {
       founder_labels.push_back(i);
@@ -202,34 +203,34 @@ List simulate_cpp(Rcpp::NumericVector input_population,
     frequencies_table = x;
   }
 
-  arma::mat initial_frequencies = update_all_frequencies_tibble(Pop,
-                                                                track_markers,
-                                                                founder_labels,
-                                                                0,
-                                                                morgan);
+  arma::mat initial_frequencies = update_all_frequencies_tibble<FOCAL_ANIMAL>(Pop,
+                                                                              track_markers,
+                                                                              founder_labels,
+                                                                              0,
+                                                                              morgan);
 
   std::vector<double> junctions;
-  std::vector<organism> outputPop =
-    simulate_Population< organism >(Pop,
-                                    select,
-                                    pop_size,
-                                    total_runtime,
-                                    morgan,
-                                    verbose,
-                                    frequencies_table,
-                                    track_frequency,
-                                    track_markers,
-                                    track_junctions,
-                                    junctions,
-                                    multiplicative_selection,
-                                    number_of_alleles,
-                                    founder_labels);
+  std::vector<FOCAL_ANIMAL> outputPop =
+    simulate_Population< FOCAL_ANIMAL >(Pop,
+                                        select,
+                                        pop_size,
+                                        total_runtime,
+                                        morgan,
+                                        verbose,
+                                        frequencies_table,
+                                        track_frequency,
+                                        track_markers,
+                                        track_junctions,
+                                        junctions,
+                                        multiplicative_selection,
+                                        number_of_alleles,
+                                        founder_labels);
 
-  arma::mat final_frequencies = update_all_frequencies_tibble(outputPop,
-                                                              track_markers,
-                                                              founder_labels,
-                                                              total_runtime,
-                                                              morgan);
+  arma::mat final_frequencies = update_all_frequencies_tibble<FOCAL_ANIMAL>(outputPop,
+                                                                            track_markers,
+                                                                            founder_labels,
+                                                                            total_runtime,
+                                                                            morgan);
 
   return List::create( Named("population") = convert_to_list(outputPop),
                        Named("frequencies") = frequencies_table,

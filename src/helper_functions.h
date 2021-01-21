@@ -15,9 +15,6 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
-
-// bool verify_individual_cpp(const Fish& Nemo);
-// bool verify_pop_cpp(const std::vector< Fish >& pop);
 bool matching_chromosomes(const std::vector< junction >& v1,
                           const std::vector< junction >& v2);
 
@@ -34,24 +31,18 @@ arma::mat update_all_frequencies(const std::vector< FISH >& pop,
                                  const NumericVector& markers,
                                  int number_of_founders);
 
-template <typename FISH>
-double calc_mean_junctions(const std::vector< FISH> & pop);
+double calc_mean_junctions(const std::vector< Fish<chromosome_junctions> > & pop);
 
 int draw_prop_fitness(const std::vector<double>& fitness,
                       double maxFitness);
 
-template <typename FISH>
-std::vector< FISH > convert_NumericVector_to_fishVector(const NumericVector& v);
+std::vector< Fish<chromosome_junctions> >
+  convert_NumericVector_to_fishVector(const Rcpp::NumericVector& v);
 
 List convert_to_list(const std::vector<Fish<chromosome_junctions>>& v);
 
-template <typename FISH>
-double calculate_fitness(const FISH& focal,
-                         const NumericMatrix& select,
-                         bool multiplicative_selection);
-
 int draw_random_founder(const NumericVector& v);
-void update_founder_labels(const std::vector<junction> chrom,
+void update_founder_labels(const chromosome_junctions& chrom,
                            std::vector<int>& founder_labels);
 
 
@@ -87,5 +78,9 @@ arma::mat update_frequency_tibble_dual_pop(const std::vector< FISH >& pop_1,
 
 NumericVector scale_markers(const Rcpp::NumericVector& markers,
                             double morgan);
+
+double calc_fitness(const Fish<chromosome_junctions> & focal,
+                    const Rcpp::NumericMatrix& select,
+                    bool multiplicative_selection);
 
 #endif /* helper_functions_hpp */

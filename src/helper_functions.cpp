@@ -8,6 +8,33 @@
 #include "helper_functions.h"
 #include <vector>
 
+//template <typename FISH>
+double calc_fitness(const Fish<chromosome_junctions> & focal,
+                    const Rcpp::NumericMatrix& select,
+                    bool multiplicative_selection) {
+
+  int number_of_markers = select.nrow();
+  std::vector<double> fitness_vec(number_of_markers);
+
+  for (int i = 0; i < number_of_markers; ++i) {
+    double focal_pos = select(i, 0);
+    double focal_anc = select(i, 4);
+    if (focal_anc < 0) continue; // do not take into account
+
+    int a1 = focal.chromosome1.get_ancestry(focal_pos);
+    int a2 = focal.chromosome2.get_ancestry(focal_pos);
+    int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
+    fitness_vec[i] = select(i, fit_index);
+  }
+
+  if (!multiplicative_selection) {
+    return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0);
+  }
+
+  return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0,
+                           std::multiplies<>());
+}
+
 bool matching_chromosomes(const std::vector< junction >& v1,
                           const std::vector< junction >& v2)
 {
@@ -82,6 +109,7 @@ arma::mat update_frequency_tibble(const std::vector< FISH >& v,
   }
 
   for(auto it = v.begin(); it != v.end(); ++it) {
+
     for(auto i = ((*it).chromosome1.genome.begin()+1);
         i != (*it).chromosome1.genome.end(); ++i) {
       if((*i).pos > m) {
@@ -152,10 +180,10 @@ arma::mat record_frequencies_pop(const std::vector< FISH >& pop,
 
   for(int i = 0; i < markers.size(); ++i) {
     arma::mat local_mat = update_frequency_tibble<FISH>(pop,
-                                                  markers[i],
-                                                         founder_labels,
-                                                         t,
-                                                         morgan);
+                                                        markers[i],
+                                                        founder_labels,
+                                                        t,
+                                                        morgan);
     // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
     // and we have to put that in the right place in the output matrix
     int start = i * number_of_alleles;
@@ -184,8 +212,7 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< FISH >& pop_
   return(output);
 }
 
-template <typename FISH>
-double calc_mean_junctions(const std::vector< FISH> & pop) {
+double calc_mean_junctions(const std::vector< Fish<chromosome_junctions> > & pop) {
 
   double mean_junctions = 0.0;
   for(auto it = pop.begin(); it != pop.end(); ++it) {
@@ -281,66 +308,6 @@ List convert_to_list(const std::vector<Fish<chromosome_junctions>>& v) {
   return output;
 }
 
-template <typename FISH>
-double calculate_fitness(const FISH& focal,
-                         const NumericMatrix& select,
-                         bool multiplicative_selection) {
-
-  int number_of_markers = select.nrow();
-  std::vector< int > num_alleles(number_of_markers, 0);
-
-  int focal_marker = 0;
-  double pos = select(focal_marker, 0);
-  double anc = select(focal_marker, 4);
-  // loc aa  Aa  AA ancestor
-  //  0  1   2  3  4
-
-  for(auto it = (focal.chromosome1.genome.begin()+1); it != focal.chromosome1.genome.end(); ++it) {
-    if((*it).pos > pos) {
-      if((*(it-1)).right == anc) num_alleles[focal_marker]++;
-      focal_marker++;
-      if(focal_marker >= number_of_markers) {
-        break;
-      }
-      pos = select(focal_marker, 0);
-      anc = select(focal_marker, 4);
-    }
-    if(anc < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-  }
-
-  focal_marker = 0;
-  pos = select(focal_marker, 0);
-  anc = select(focal_marker, 4);
-
-  for(auto it = (focal.chromosome2.genome.begin()+1); it != focal.genome.chromosome2.end(); ++it) {
-    if((*it).pos > pos) {
-      if((*(it-1)).right == anc) num_alleles[focal_marker]++;
-      focal_marker++;
-      if(focal_marker >= number_of_markers) {
-        break;
-      }
-      pos = select(focal_marker, 0);
-      anc = select(focal_marker, 4);
-    }
-    if(anc < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-  }
-
-  double fitness = 0.0;
-  if (multiplicative_selection) fitness = 1.0;
-  for(size_t i = 0; i < num_alleles.size(); ++i) {
-    if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-
-    int fitness_index = 1 + num_alleles[i];
-    if(multiplicative_selection) {
-      fitness *= select(i, fitness_index);
-    } else {
-      fitness += select(i, fitness_index);
-    }
-  }
-
-  return(fitness);
-}
-
 int draw_random_founder(const NumericVector& v) {
   double r = uniform();
   for(int i = 0; i < v.size(); ++i) {
@@ -357,9 +324,9 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
                                         Rcpp::NumericVector markers,
                                         bool progress_bar)
 {
-  std::vector< Fish<chromosome_junctions> > Pop;
+  std::vector< Fish<chromosome_junctions> > Pop =
+    convert_NumericVector_to_fishVector(input_population);
 
-  Pop = convert_NumericVector_to_fishVector(input_population);
   std::vector<int> founder_labels;
   for(auto it = Pop.begin(); it != Pop.end(); ++it) {
     update_founder_labels((*it).chromosome1, founder_labels);

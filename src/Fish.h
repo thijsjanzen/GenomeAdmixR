@@ -70,6 +70,12 @@ struct chromosome_junctions {
     chromosome_junctions(const chromosome_junctions& other) {
         genome = other.genome;
     }
+
+    int get_ancestry(double pos) const {
+        auto it = std::lower_bound(genome.cbegin(), genome.cend(), pos,
+                                   [](const auto& j, double p) { return j.pos < p;});
+        return (it - 1)->right;
+    }
 };
 
 template <typename CHROMO>

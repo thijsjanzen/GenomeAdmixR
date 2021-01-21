@@ -10,12 +10,6 @@
 #include "random_functions.h"
 #include <algorithm>
 
-
-#include <Rcpp.h>
-using namespace Rcpp;
-
-
-
 std::vector<junction> recombine_new(const chromosome_junctions& chromosome1,
                                     const chromosome_junctions& chromosome2,
                                     const std::vector<double>& recom_positions)
@@ -85,8 +79,8 @@ chromosome_junctions::chromosome_junctions(const chromosome_junctions& chromosom
   // do recombination
   if (uniform() < 0.5) {
     genome = recombine_new(chromosome1,
-                         chromosome2,
-                         recom_positions);
+                           chromosome2,
+                           recom_positions);
   } else {
     genome = recombine_new(chromosome2,
                            chromosome1,
