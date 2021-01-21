@@ -17,3 +17,4 @@ codecov.R
 *.tmp
 *.gz
 *.txt
+*.fasta
