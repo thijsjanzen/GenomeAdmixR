@@ -1,5 +1,7 @@
 
 test_that("expected_number_junctions", {
+  testthat::skip_on_os("solaris")
+  message("test expected_number_junctions")
 #  skip("skip junctions")
   test_expected_junction_number <- function(pop_size,
                                             run_time,

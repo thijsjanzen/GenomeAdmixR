@@ -1,6 +1,8 @@
 context("LD stats")
 
 test_that("calculate_average_LD", {
+  testthat::skip_on_os("solaris")
+  message("test calculate_average_LD")
 #  skip("average LD")
   pop_size <- 100
   number_of_founders <- 2
@@ -52,7 +54,7 @@ test_that("calculate_average_LD", {
                              morgan = morgan)$population
 
   number_of_markers <- 2
-  markers <- c(0.5, 0.5+1e-4)
+  markers <- c(0.5, 0.5 + 1e-4)
 
   all_loci <- matrix(nrow = length(pop1),
                      ncol = 2 * number_of_markers,
@@ -80,6 +82,8 @@ test_that("calculate_average_LD", {
 })
 
 test_that("calculate_LD_matrix", {
+  testthat::skip_on_os("solaris")
+  message("test calculate_LD_matrix")
 #  skip("LD matrix")
   pop_size <- 100
   number_of_founders <- 2

@@ -1,4 +1,6 @@
 test_that("joyplot", {
+  testthat::skip_on_os("solaris")
+  message("test joyplot")
 #  skip("joyplot")
   markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 
