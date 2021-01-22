@@ -106,8 +106,6 @@ test_that("calculate_LD_matrix", {
   vv2 <- as.vector(vv$dist_matrix[!is.na(vv$dist_matrix)])
 
   linear_model <- lm(vv1 ~ vv2)
-  testthat::expect_equal(linear_model$coefficients[[1]], 1, tolerance = 0.1)
-
   #it should at least be negative
-  testthat::expect_equal(linear_model$coefficients[[2]], -0.5, tolerance = 0.49)
+  testthat::expect_lt(linear_model$coefficients[[2]], 0.0)
 })
