@@ -34,7 +34,7 @@ avg_frequencies <- calculate_marker_frequency(pop = wildpop,
 
 frequencies <-
    calculate_marker_frequency(pop = wildpop,
-                              location = seq(0.4, 0.5, by = 0.001))
+                              location = seq(0.4, 0.5, by = 0.01))
 require(ggplot2)
 ggplot(frequencies, aes(x = location, y = frequency, col = ancestor)) +
   geom_step()

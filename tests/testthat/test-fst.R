@@ -1,7 +1,8 @@
 context("fst")
 
 testthat::test_that("fst", {
-#  skip("test fst")
+  testthat::skip_on_os("solaris")
+  message("testing fst")
   pop_size <- 100
   number_of_founders <- 20
   run_time <- 1
@@ -59,12 +60,4 @@ testthat::test_that("fst", {
                       number_of_markers, random_markers = TRUE)
 
   testthat::expect_equal(1.0, v1, tolerance = 0.1)
-})
-
-testthat::test_that("random markers", {
-#  skip("test random markers")
-  set.seed(42)
-  vx <- create_random_markers(1e3)
-  vy <- create_random_markers(1e6)
-  testthat::expect_true(length(vy) > length(vx))
 })

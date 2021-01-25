@@ -70,7 +70,6 @@ std::vector< FISH > next_pop_migr(const std::vector< FISH>& pop_1,
                                   bool multiplicative_selection,
                                   double migration_rate,
                                   std::vector< double >& new_fitness,
-                                  double& new_max_fitness,
                                   double size_in_morgan) {
 
   std::vector<FISH> new_generation;
@@ -102,7 +101,8 @@ std::vector< FISH > next_pop_migr(const std::vector< FISH>& pop_1,
 
     double fit = -2.0;
     if (use_selection) fit = calc_fitness(new_generation[i], select, multiplicative_selection);
-    if (fit > new_max_fitness) new_max_fitness = fit;
+    if (use_selection) fit = calculate_fitness(new_generation[i], select, multiplicative_selection);
+
 
     new_fitness[i] = fit;
   }
@@ -127,14 +127,14 @@ std::vector< std::vector< FISH > > simulate_two_populations(
     int num_alleles,
     const std::vector<int>& founder_labels,
     double migration_rate) {
-  bool use_selection = FALSE;
-  if (select(1, 1) >= 0) use_selection = TRUE;
+  bool use_selection = false;
+  if (select(1, 1) >= 0) use_selection = true;
 
   std::vector<FISH> pop_1 = source_pop_1;
   std::vector<FISH> pop_2 = source_pop_2;
 
-  double max_fitness_pop_1, max_fitness_pop_2;
-  std::vector<double> fitness_pop_1, fitness_pop_2;
+  std::vector<double> fitness_pop_1(pop_1.size(), 0.0);
+  std::vector<double> fitness_pop_2(pop_2.size(), 0.0);
 
   if (use_selection) {
     for (int j = 0; j < select.nrow(); ++j) {
@@ -147,20 +147,19 @@ std::vector< std::vector< FISH > > simulate_two_populations(
       }
     }
 
-    for (auto it = pop_1.begin(); it != pop_1.end(); ++it){
-      double fit = calc_fitness((*it), select, multiplicative_selection);
-      if (fit > max_fitness_pop_1) max_fitness_pop_1 = fit;
 
-      fitness_pop_1.push_back(fit);
+    for (size_t i = 0; i < pop_1.size(); ++i) {
+      fitness_pop_1[i] = calculate_fitness(pop_1[i], select, multiplicative_selection);
     }
 
-    for (auto it = pop_2.begin(); it != pop_2.end(); ++it){
-      double fit = calc_fitness((*it), select, multiplicative_selection);
-      if (fit > max_fitness_pop_2) max_fitness_pop_2 = fit;
-
-      fitness_pop_2.push_back(fit);
+    for (size_t i = 0; i < pop_2.size(); ++i) {
+      fitness_pop_2[i] = calculate_fitness(pop_2[i], select, multiplicative_selection);
     }
   }
+
+  double max_fitness_pop_1 = *std::max_element(fitness_pop_1.begin(), fitness_pop_1.end());
+  double max_fitness_pop_2 = *std::max_element(fitness_pop_2.begin(), fitness_pop_2.end());
+
 
   int updateFreq = total_runtime / 20;
   if(updateFreq < 1) updateFreq = 1;
@@ -192,10 +191,8 @@ std::vector< std::vector< FISH > > simulate_two_populations(
       }
     }
 
-    double new_max_fitness_pop_2 = 0.0;
-    double new_max_fitness_pop_1 = 0.0;
-
-    std::vector<double> new_fitness_pop_1, new_fitness_pop_2;
+    std::vector<double> new_fitness_pop_1(pop_1.size(), 0.0);
+    std::vector<double> new_fitness_pop_2(pop_2.size(), 0.0);
 
     std::vector<FISH> new_generation_pop_1 = next_pop_migr<FISH>(pop_1, // resident
                                                                  pop_2, // migrants
@@ -226,12 +223,15 @@ std::vector< std::vector< FISH > > simulate_two_populations(
                                                                          new_fitness_pop_2,
                                                                          new_max_fitness_pop_2,
                                                                          morgan);
+
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
     fitness_pop_1 = new_fitness_pop_1;
     fitness_pop_2 = new_fitness_pop_2;
-    max_fitness_pop_1 = new_max_fitness_pop_1;
-    max_fitness_pop_2 = new_max_fitness_pop_2;
+    max_fitness_pop_1 = *std::max_element(fitness_pop_1.begin(),
+                                          fitness_pop_1.end());
+    max_fitness_pop_2 = *std::max_element(fitness_pop_2.begin(),
+                                          fitness_pop_2.end());
 
     if (t % updateFreq == 0 && verbose) {
       Rcout << "**";

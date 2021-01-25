@@ -227,6 +227,10 @@ double calc_mean_junctions(const std::vector< Fish<chromosome_junctions> > & pop
 int draw_prop_fitness(const std::vector<double>& fitness,
                       double maxFitness) {
 
+  if (maxFitness <= 0.0) {
+    return random_number(fitness.size());
+  }
+
   while(true) {
     int index = random_number(fitness.size());
     double prob = 1.0 * fitness[index] / maxFitness;

@@ -1,7 +1,8 @@
 context("utilities")
 
 test_that("utilities", {
- # skip("utilities")
+  testthat::skip_on_os("solaris")
+ message("test utilities")
   vx <- simulate_admixture(pop_size = 100,
                            total_runtime = 5, number_of_founders = 50)
   testthat::expect_silent(
@@ -28,7 +29,8 @@ test_that("utilities", {
 })
 
 test_that("initial_frequencies", {
- # skip("initial_frequencies")
+  testthat::skip_on_os("solaris")
+  message("test initial_frequencies")
   testthat::expect_error(
     simulate_admixture_migration(total_runtime = 100,
                                  pop_size = c(1000, 1000),
@@ -54,4 +56,13 @@ testthat::expect_warning(
                                  initial_frequencies = c(1, 1, 0, 0,
                                                          0, 0, 1, 1, 1))
   )
+})
+
+testthat::test_that("random markers", {
+  testthat::skip_on_os("solaris")
+  #  skip("test random markers")
+  set.seed(42)
+  vx <- create_random_markers(1e3)
+  vy <- create_random_markers(1e6)
+  testthat::expect_true(length(vy) > length(vx))
 })
