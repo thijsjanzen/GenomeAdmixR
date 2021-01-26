@@ -7,20 +7,15 @@
 
 #include "helper_functions.h"
 #include <vector>
+#include <string>
 
-bool matching_chromosomes(const std::vector< junction >& v1,
-                          const std::vector< junction >& v2)
-{
-  if(v1.size() != v2.size()) {
-    return false;
-  }
-  for(size_t i = 0; i < v1.size(); ++i) {
-    if(v1[i] != v2[i]) {
-      return false;
-    }
-  }
-  return true;
+
+void force_output() {
+  R_FlushConsole();
+  R_ProcessEvents();
+  R_CheckUserInterrupt();
 }
+
 
 bool is_fixed(const std::vector< Fish >& v) {
 
@@ -46,7 +41,6 @@ int find_index(const std::vector<int>& v, int value) {
   //Rcout << "ERROR! Could not find ancestry label, returning -1, expect out of range error soon\n";
   return -1;
 }
-
 
 void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels) {
@@ -334,6 +328,7 @@ double calculate_fitness(const Fish& focal,
   return(fitness);
 }
 
+
 int draw_random_founder(const NumericVector& v) {
   double r = uniform();
   for(int i = 0; i < v.size(); ++i) {
@@ -460,4 +455,241 @@ NumericVector scale_markers(const Rcpp::NumericVector& markers,
   return outputmarkers;
 }
 
+std::vector<double> scale_markers(const std::vector<double>& markers,
+                                  double morgan) {
+  if (markers.size() == 1) {
+    return markers;
+  }
 
+  std::vector<double> outputmarkers(markers.size());
+
+  for(int i = 0; i < markers.size(); ++i) {
+    outputmarkers[i] = markers[i] * 1.0 / morgan;
+  }
+  return outputmarkers;
+}
+
+
+
+//// EMP helper functions ///
+//
+//
+//
+
+
+std::vector< Fish_emp > convert_numeric_matrix_to_fish_vector(
+  const Rcpp::NumericMatrix& input_population) {
+
+  std::vector< Fish_emp > output;
+  for(int i = 0; i < (input_population.nrow() - 1); i+= 2) {
+
+    Rcpp::NumericVector cc1 = input_population(i, _);
+    Rcpp::NumericVector cc2 = input_population(i + 1 , _);
+    std::vector<int> c1(cc1.begin(), cc1.end());
+    std::vector<int> c2(cc2.begin(), cc2.end());
+    output.emplace_back( Fish_emp(c1, c2));
+  }
+  return(output);
+}
+
+void update_founder_labels(const std::vector<int>& chrom,
+                           std::vector<int>& founder_labels) {
+  for(auto i = chrom.begin(); i != chrom.end(); ++i) {
+    if(founder_labels.empty()) {
+      if((*i) != -1) founder_labels.push_back((*i));
+    } else {
+      if(find_index(founder_labels, (*i)) == -1) {
+        if((*i) != -1) founder_labels.push_back((*i));
+      }
+    }
+  }
+  return;
+}
+
+
+
+double calculate_fitness(const Fish_emp& focal,
+                         const NumericMatrix& select,
+                         bool multiplicative_selection) {
+
+  int number_of_markers = select.size();
+  std::vector<double> fitness_vec(number_of_markers);
+
+  for (int i = 0; i < number_of_markers; ++i) {
+    auto focal_pos = select(i, 0);
+    auto focal_anc = select(i, 4);
+    if (focal_anc == -1) continue; // do not take into account
+
+    auto a1 = focal.chromosome1[focal_pos];
+    auto a2 = focal.chromosome2[focal_pos];
+    int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
+    fitness_vec[i] = select(i, fit_index);
+  }
+
+  if (!multiplicative_selection) {
+    return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0);
+  }
+
+  return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0,
+                         std::multiplies<>());
+}
+
+List convert_to_list(const std::vector<Fish_emp>& v,
+                     const std::vector<double>& locations) {
+  int list_size = (int)v.size();
+  List output(list_size);
+
+  for(size_t i = 0; i < v.size(); ++i) {
+
+    Fish_emp focal = v[i];
+
+    NumericMatrix chrom1(focal.chromosome1.size(), 2); // nrow = number of junctions, ncol = 2
+    for(size_t j = 0; j < focal.chromosome1.size(); ++j) {
+      chrom1(j, 0) = locations[j];
+      chrom1(j, 1) = focal.chromosome1[j];
+    }
+
+    NumericMatrix chrom2(focal.chromosome2.size(), 2); // nrow = number of junctions, ncol = 2
+    for(size_t j = 0; j < focal.chromosome2.size(); ++j) {
+      chrom2(j, 0) = locations[j];
+      chrom2(j, 1) = focal.chromosome2[j];
+    }
+
+    List toAdd = List::create( Named("chromosome1") = chrom1,
+                               Named("chromosome2") = chrom2
+    );
+
+    output(i) = toAdd;
+  }
+
+  return output;
+}
+
+std::vector< std::vector<double > > update_frequency_tibble(const std::vector< Fish_emp >& pop,
+                                  int marker_index,
+                                  double pos,
+                                  int t) {
+
+  int num_alleles = 5;
+  std::vector<double> temp(4, 0);
+  std::vector< std::vector< double >> allele_matrix(num_alleles, temp);
+
+//  Rcout << "start update_frequency_tibble\n"; force_output();
+  // initialize results
+  for(int i = 0; i < num_alleles; ++i) {
+    allele_matrix[i][0] = t;
+    allele_matrix[i][1] = pos;
+    allele_matrix[i][2] = i;
+    allele_matrix[i][3] = 0;
+  }
+
+//  Rcout << "go over population\n";
+
+  for(int i = 0; i < pop.size(); ++i) {
+    assert(marker_index < pop[i].chromosome1.size());
+    assert(marker_index < pop[i].chromosome2.size());
+
+ //   Rcout << pop[i].chromosome1.size() << " " <<
+//             pop[i].chromosome2.size() << " " << marker_index << "\n"; force_output();
+    size_t local_anc1 = pop[i].chromosome1[marker_index];
+//    Rcout << "anc1 " << marker_index << " " << local_anc1 << "\n"; force_output();
+    allele_matrix[local_anc1][3]++;
+//    Rcout << allele_matrix[local_anc1][3] << "\n"; force_output();
+    size_t local_anc2 = pop[i].chromosome2[marker_index];
+//    Rcout << "anc2 " << marker_index << " " << local_anc2 << "\n"; force_output();
+    allele_matrix[local_anc2][3]++;
+//    Rcout << allele_matrix[local_anc2][3] << "\n"; force_output();
+  }
+
+//  Rcout << "normalizing allele_matrix\n"; force_output();
+  for(int i = 0; i < allele_matrix.size(); ++i) {
+    allele_matrix[i][3] *= 1.0 / (2 * pop.size());
+  }
+//  Rcout << "updated allele_matrix\n"; force_output();
+  return(allele_matrix);
+}
+
+
+
+int find_location(const std::vector<double>& markers,
+                  double pos) {
+  return std::distance(markers.begin(), std::find(markers.begin(), markers.end(), pos));
+}
+
+arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
+                                        const std::vector<double>& markers,
+                                        const std::vector<double>& locations,
+                                        int t,
+                                        double morgan) {
+
+  int number_of_alleles = 5; // always the same: [0, 1, 2, 3, 4]
+  arma::mat output(markers.size() * number_of_alleles, 4);
+
+  for(int i = 0; i < markers.size(); ++i) {
+ //   Rcout << i << " " << markers.size() << "\n"; force_output();
+    int index = find_location(locations, markers[i]);
+ //   Rcout << "index: " << index << "\n";
+   // Rcout << markers[i] << " " << index << " " << locations[index] << "\n"; force_output();
+
+    std::vector<std::vector<double >> local_mat = update_frequency_tibble(pop,
+                                                  index,
+                                                  markers[i] * morgan,
+                                                  t);
+    // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
+    // and we have to put that in the right place in the output matrix
+ //   Rcout << "add local_mat to output\n"; force_output();
+    int start = i * number_of_alleles;
+    int end = start + number_of_alleles;
+    for(int j = start; j < end; ++j) {
+      for(int k = 0; k < 4; ++k) {
+        output(j, k) = local_mat[j - start][k];
+      }
+    }
+//    Rcout << "done with local_mat to output\n"; force_output();
+  }
+//  Rcout << "done with update_all_frequencies_tibble\n"; force_output();
+  return(output);
+}
+
+bool is_fixed(const std::vector< Fish_emp >& v) {
+
+  if(!matching_chromosomes(v[0].chromosome1, v[0].chromosome2)) {
+    return false;
+  }
+
+  for(auto it = v.begin(); it != v.end(); ++it) {
+    if(!matching_chromosomes((*it).chromosome1, v[0].chromosome1)) {
+      return false;
+    }
+    if(!matching_chromosomes((*it).chromosome1, (*it).chromosome2)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool matching_chromosomes(const std::vector< junction >& v1,
+                          const std::vector< junction >& v2) {
+  if(v1.size() != v2.size()) {
+    return false;
+  }
+  for(size_t i = 0; i < v1.size(); ++i) {
+    if(v1[i] != v2[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool matching_chromosomes(const std::vector< int >& v1,
+                          const std::vector< int >& v2) {
+  if(v1.size() != v2.size()) {
+    return false;
+  }
+  for(size_t i = 0; i < v1.size(); ++i) {
+    if(v1[i] != v2[i]) {
+      return false;
+    }
+  }
+  return true;
+}

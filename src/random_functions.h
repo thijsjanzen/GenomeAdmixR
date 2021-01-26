@@ -18,4 +18,9 @@ void set_seed(unsigned seed);
 
 int poisson_preset();
 void set_poisson(double lambda);
+
+void fill_cum_marker_dist(const std::vector<double>& positions);
+std::vector< size_t > recompos();
+
+
 #endif /* random_functions_hpp */

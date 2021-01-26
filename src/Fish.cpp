@@ -15,17 +15,9 @@
 using namespace Rcpp;
 
 
-
 std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<junction>& chromosome2,
-                                    const std::vector<double>& recom_positions)
-{
-
- /* // we need something that is cheaply swappable:
-  auto* g1 = &chromosome1;
-  auto* g2 = &chromosome2;
-  std::vector<junction> go;   // offspring genome: recycle what's already there...
-*/
+                                    const std::vector<double>& recom_positions) {
   static auto tl_go = decltype(chromosome1){};
 
   // we need something that is cheaply swappable:
@@ -65,66 +57,6 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
   go.emplace_back(1.0, -1);
   return go;
 }
-
-
-void add(std::vector< junction>& offspring,
-         const junction& new_junction) {
-
-  if (offspring.empty()) {
-    offspring.push_back(new_junction);
-    return;
-  }
-
-
-  if (new_junction.pos > offspring.back().pos &&
-      new_junction.right != offspring.back().right) {
-    offspring.push_back(new_junction);
-  }
-  return;
-}
-/*
- std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
- const std::vector<junction>& chromosome2,
- const std::vector<double>& recomPos) {
-
- std::vector<junction> offspring;
- std::vector < std::vector<junction>::const_iterator > iters =
- { chromosome1.begin(), chromosome2.begin() };
-
- int index = 0;
- int recompos_cnt = 0;
-
- while(true) {
-
- if ( iters[index]->pos > recomPos[recompos_cnt]  ) {
- // encountered junction point
- // create junction
- index = 1 - index;
- while( iters[index]->pos < recomPos[recompos_cnt]) {
- iters[index]++;
- }
-
- auto prev_iter = iters[index];
- prev_iter--;
- assert(prev_iter->pos < recomPos[recompos_cnt]);
- junction new_junction(recomPos[recompos_cnt], prev_iter->right);
- // offspring.push_back(new_junction);
- add(offspring, new_junction);
-
- recompos_cnt++;
- } else {
- add(offspring, (*iters[index]));
- iters[index]++;
- }
-
- if (offspring.back().right == -1) {
- break;
- }
- }
- return offspring;
- }
-
- */
 
 std::vector<double> generate_recomPos(size_t number_of_recombinations) {
 

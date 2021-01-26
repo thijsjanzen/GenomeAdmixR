@@ -16,6 +16,7 @@ std::mt19937 rndgen(rd());  //< The one and only random number generator
 std::uniform_real_distribution<> unif_dist = std::uniform_real_distribution<>(0, 1.0);
 std::poisson_distribution<int> poisson_preset_dist;
 std::uniform_int_distribution<> rand_num_dist;
+std::vector< double > cum_marker_dist;
 
 int random_number(int n)    {
     return std::uniform_int_distribution<> (0, n-1)(rndgen);
@@ -37,3 +38,38 @@ void set_seed(unsigned seed)    {
     std::mt19937 new_randomizer(seed);
     rndgen = new_randomizer;
 }
+
+
+void fill_cum_marker_dist(const std::vector<double>& positions) {
+    auto max = *std::max_element(positions.begin(), positions.end());
+    double s = 0.0;
+    cum_marker_dist.clear();
+    cum_marker_dist.resize(positions.size());
+    for(int i = 0; i < positions.size(); ++i) {
+        s += positions[i] * 1.0 / max;
+        cum_marker_dist[i] = s;
+    }
+    return;
+}
+
+size_t index_from_cdf(double p) {
+    // find index belonging to p
+    return static_cast<size_t>(std::distance(cum_marker_dist.begin(),
+                                             std::lower_bound(cum_marker_dist.begin(),
+                                                              cum_marker_dist.end(),
+                                                              p)));
+}
+
+std::vector< size_t > recompos() {
+    int num_break_points = poisson_preset();
+    std::vector< size_t > indices;
+    for(size_t i = 0; i < num_break_points; ++i) {
+        auto found_index = index_from_cdf(uniform());
+        if (found_index > 0)
+            indices.push_back(found_index);
+    }
+    std::sort(indices.begin(), indices.end());
+    indices.push_back(cum_marker_dist.size());
+    return indices;
+}
+
