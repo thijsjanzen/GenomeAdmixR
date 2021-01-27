@@ -510,28 +510,34 @@ void update_founder_labels(const std::vector<int>& chrom,
 
 double calculate_fitness(const Fish_emp& focal,
                          const NumericMatrix& select,
+                         const std::vector<double>& markers,
                          bool multiplicative_selection) {
 
-  int number_of_markers = select.size();
+  int number_of_markers = select.nrow();
   std::vector<double> fitness_vec(number_of_markers);
 
   for (int i = 0; i < number_of_markers; ++i) {
     auto focal_pos = select(i, 0);
     auto focal_anc = select(i, 4);
     if (focal_anc == -1) continue; // do not take into account
+    int focal_index = find_location(markers, focal_pos);
 
-    auto a1 = focal.chromosome1[focal_pos];
-    auto a2 = focal.chromosome2[focal_pos];
+    auto a1 = focal.chromosome1[focal_index];
+    auto a2 = focal.chromosome2[focal_index];
     int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
     fitness_vec[i] = select(i, fit_index);
+ //   Rcout << a1 << " " << a2 << " " << select(i, fit_index) << "\n";
   }
 
   if (!multiplicative_selection) {
     return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0);
   }
 
-  return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0,
+  return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 1.0,
                          std::multiplies<>());
+
+
+
 }
 
 List convert_to_list(const std::vector<Fish_emp>& v,

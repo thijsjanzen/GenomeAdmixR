@@ -9,7 +9,7 @@ create_input_data(file_names, type, chosen_chromosome)
 \arguments{
 \item{file_names}{names of input files}
 
-\item{type}{type of data, options are 'ped', 'vcf', 'fasta'}
+\item{type}{type of data, options are 'ped' and 'vcf'}
 
 \item{chosen_chromosome}{GenomeAdmixR simulates only a single chromosome.}
 }

@@ -37,20 +37,30 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
   int num_alleles = 5;
   bool use_selection = false;
-  if(select_matrix(1, 1) >= 0) use_selection = true;
+  if(select_matrix(0, 5) >= 0) use_selection = true;
+ /* for(int i = 0; i < select_matrix.nrow(); ++i) {
+    for(int j = 0; j < select_matrix.ncol(); ++j) {
+      Rcout << select_matrix(i, j) << " ";
+    }
+    Rcout << "\n";
+ }*/
+
 
   std::vector<Fish_emp> Pop = sourcePop;
   std::vector<double> fitness;
-  double maxFitness = -1;
+
 
   if(use_selection) {
     for(auto it = Pop.begin(); it != Pop.end(); ++it){
-      double fit = calculate_fitness((*it), select_matrix, multiplicative_selection);
-      if(fit > maxFitness) maxFitness = fit;
+      double fit = calculate_fitness((*it),
+                                     select_matrix,
+                                     marker_positions,
+                                     multiplicative_selection);
 
       fitness.push_back(fit);
     }
   }
+  double maxFitness = *std::max_element(fitness.begin(), fitness.end());
 
   int updateFreq = total_runtime / 20;
   if(updateFreq < 1) updateFreq = 1;
@@ -60,14 +70,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
     Rcout << "*";
   }
 
-  bool debug = false;
-
   for(int t = 0; t < total_runtime; ++t) {
-  if (debug) {
-    Rcout << number_of_junctions(Pop) << "\n";
-  }
-
-
 
     if(track_frequency) {
       for(int i = 0; i < track_markers.size(); ++i) {
@@ -76,9 +79,9 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
         int index = find_location(marker_positions, track_markers[i]);
 
         std::vector<std::vector<double>> local_mat = update_frequency_tibble(Pop,
-                                                      index,
-                                                      track_markers[i] * morgan,
-                                                      t);
+                                                                             index,
+                                                                             track_markers[i] * morgan,
+                                                                             t);
 
         // now we have to find where to copy local_mat into frequencies
         int time_block = track_markers.size() * num_alleles; // number of markers times number of alleles
@@ -96,7 +99,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
     std::vector<Fish_emp> newGeneration(pop_size);
     std::vector<double> newFitness;
-    double newMaxFitness = -1.0;
+
     for (int i = 0; i < pop_size; ++i)  {
       int index1 = 0;
       int index2 = 0;
@@ -114,12 +117,15 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
                                   Pop[index2].gamete(recompos()));
 
 
-      double fit = -2.0;
-      if(use_selection) fit = calculate_fitness(newGeneration[i], select_matrix,
-                                                multiplicative_selection);
-      if(fit > newMaxFitness) newMaxFitness = fit;
 
-      newFitness.push_back(fit);
+      if(use_selection) {
+          double fit = calculate_fitness(newGeneration[i],
+                                                select_matrix,
+                                                marker_positions,
+                                                multiplicative_selection);
+
+          newFitness.push_back(fit);
+      }
     }
 
     if (t % updateFreq == 0 && verbose) {
@@ -136,7 +142,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
     Pop.swap(newGeneration);
     fitness.swap(newFitness);
-    maxFitness = newMaxFitness;
+    maxFitness = *std::max_element(fitness.begin(), fitness.end());
   }
   if(verbose) Rcout << "\n";
   return(Pop);
@@ -161,7 +167,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
   auto inv_max_marker_pos = 1.0 / *std::max_element(marker_positions.begin(),
-                                          marker_positions.end());
+                                                    marker_positions.end());
   for (auto& i : marker_positions) {
     i *= inv_max_marker_pos;
   }
@@ -173,6 +179,9 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
     i *= inv_max_marker_pos;
   }
 
+  for (int i = 0; i < select.nrow(); ++i) {
+    select(i, 0) = select(i, 0) * inv_max_marker_pos;
+  }
 
   fill_cum_marker_dist(marker_positions);
 
@@ -189,8 +198,8 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
     // the new population has to be seeded from the input!
     std::vector< Fish_emp > Pop_new;
     for (size_t j = 0; j < pop_size; ++j) {
-        int index = random_number(Pop.size());
-        Pop_new.push_back(Pop[index]);
+      int index = random_number(Pop.size());
+      Pop_new.push_back(Pop[index]);
     }
     Pop = Pop_new;
   } else {
@@ -212,16 +221,16 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                                 morgan);
 
   std::vector<Fish_emp> output_pop = simulate_population_emp(Pop,
-                                                         select,
-                                                         marker_positions,
-                                                         pop_size,
-                                                         total_runtime,
-                                                         morgan,
-                                                         verbose,
-                                                         frequencies_table,
-                                                         track_frequency,
-                                                         track_markers,
-                                                         multiplicative_selection);
+                                                             select,
+                                                             marker_positions,
+                                                             pop_size,
+                                                             total_runtime,
+                                                             morgan,
+                                                             verbose,
+                                                             frequencies_table,
+                                                             track_frequency,
+                                                             track_markers,
+                                                             multiplicative_selection);
 
   arma::mat final_frequencies = update_all_frequencies_tibble(output_pop,
                                                               marker_positions,
@@ -230,8 +239,8 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                               morgan);
 
   return List::create( Named("population") = convert_to_list(output_pop,
-                                                            marker_positions),
-                       Named("frequencies") = frequencies_table,
-                       Named("initial_frequencies") = initial_frequencies,
-                       Named("final_frequencies") = final_frequencies);
+                             marker_positions),
+                             Named("frequencies") = frequencies_table,
+                             Named("initial_frequencies") = initial_frequencies,
+                             Named("final_frequencies") = final_frequencies);
 }

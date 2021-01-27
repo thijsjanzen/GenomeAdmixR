@@ -90,6 +90,7 @@ void update_founder_labels(const std::vector<int>& chrom,
 
 double calculate_fitness(const Fish_emp& focal,
                          const NumericMatrix& select,
+                         const std::vector<double>& markers,
                          bool multiplicative_selection);
 
 std::vector< std::vector<double > > update_frequency_tibble(const std::vector< Fish_emp >& pop,
