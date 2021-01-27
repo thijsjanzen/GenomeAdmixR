@@ -58,7 +58,7 @@ struct Fish_emp {
     int index = random_number(2);
     size_t prev_start = 0;
 
-    for(int i = 0; i < recom_pos.size(); ++i) {
+    for(size_t i = 0; i < recom_pos.size(); ++i) {
       auto start = iters[index] + prev_start;
       auto end   = iters[index] + recom_pos[i];
 

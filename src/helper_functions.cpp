@@ -463,7 +463,7 @@ std::vector<double> scale_markers(const std::vector<double>& markers,
 
   std::vector<double> outputmarkers(markers.size());
 
-  for(int i = 0; i < markers.size(); ++i) {
+  for (size_t i = 0; i < markers.size(); ++i) {
     outputmarkers[i] = markers[i] * 1.0 / morgan;
   }
   return outputmarkers;
@@ -589,29 +589,16 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
     allele_matrix[i][3] = 0;
   }
 
-//  Rcout << "go over population\n";
-
-  for(int i = 0; i < pop.size(); ++i) {
-    assert(marker_index < pop[i].chromosome1.size());
-    assert(marker_index < pop[i].chromosome2.size());
-
- //   Rcout << pop[i].chromosome1.size() << " " <<
-//             pop[i].chromosome2.size() << " " << marker_index << "\n"; force_output();
+  for(size_t i = 0; i < pop.size(); ++i) {
     size_t local_anc1 = pop[i].chromosome1[marker_index];
-//    Rcout << "anc1 " << marker_index << " " << local_anc1 << "\n"; force_output();
     allele_matrix[local_anc1][3]++;
-//    Rcout << allele_matrix[local_anc1][3] << "\n"; force_output();
     size_t local_anc2 = pop[i].chromosome2[marker_index];
-//    Rcout << "anc2 " << marker_index << " " << local_anc2 << "\n"; force_output();
     allele_matrix[local_anc2][3]++;
-//    Rcout << allele_matrix[local_anc2][3] << "\n"; force_output();
   }
 
-//  Rcout << "normalizing allele_matrix\n"; force_output();
-  for(int i = 0; i < allele_matrix.size(); ++i) {
+  for (size_t i = 0; i < allele_matrix.size(); ++i) {
     allele_matrix[i][3] *= 1.0 / (2 * pop.size());
   }
-//  Rcout << "updated allele_matrix\n"; force_output();
   return(allele_matrix);
 }
 
@@ -631,11 +618,8 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
   int number_of_alleles = 5; // always the same: [0, 1, 2, 3, 4]
   arma::mat output(markers.size() * number_of_alleles, 4);
 
-  for(int i = 0; i < markers.size(); ++i) {
- //   Rcout << i << " " << markers.size() << "\n"; force_output();
+  for (size_t i = 0; i < markers.size(); ++i) {
     int index = find_location(locations, markers[i]);
- //   Rcout << "index: " << index << "\n";
-   // Rcout << markers[i] << " " << index << " " << locations[index] << "\n"; force_output();
 
     std::vector<std::vector<double >> local_mat = update_frequency_tibble(pop,
                                                   index,
@@ -643,7 +627,6 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
                                                   t);
     // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
     // and we have to put that in the right place in the output matrix
- //   Rcout << "add local_mat to output\n"; force_output();
     int start = i * number_of_alleles;
     int end = start + number_of_alleles;
     for(int j = start; j < end; ++j) {
@@ -702,7 +685,7 @@ bool matching_chromosomes(const std::vector< int >& v1,
 
 int count_num_j(const std::vector< int >& chrom) {
   int num_j = 0;
-  for(int i = 1; i < chrom.size(); ++i) {
+  for (size_t i = 1; i < chrom.size(); ++i) {
     if (chrom[i] != chrom[i - 1]) num_j++;
   }
   return(num_j);
