@@ -41,12 +41,14 @@ void set_seed(unsigned seed)    {
 
 
 void fill_cum_marker_dist(const std::vector<double>& positions) {
-    auto max = *std::max_element(positions.begin(), positions.end());
+    auto total_sum = std::accumulate(positions.begin(),
+                                     positions.end(), 0.0);
     double s = 0.0;
+    double mult = 1.0 / total_sum;
     cum_marker_dist.clear();
     cum_marker_dist.resize(positions.size());
-    for(int i = 0; i < positions.size(); ++i) {
-        s += positions[i] * 1.0 / max;
+    for (int i = 0; i < positions.size(); ++i) {
+        s += positions[i] * mult;
         cum_marker_dist[i] = s;
     }
     return;
@@ -70,6 +72,10 @@ std::vector< size_t > recompos() {
     }
     std::sort(indices.begin(), indices.end());
     indices.push_back(cum_marker_dist.size());
+  //  for(size_t i = 0; i < indices.size(); ++i) {
+//        Rcout << indices[i] << " ";
+  //  }
+//    Rcout << "\n";
     return indices;
 }
 

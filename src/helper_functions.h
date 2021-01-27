@@ -115,4 +115,7 @@ bool matching_chromosomes(const std::vector< int >& v1,
 int find_location(const std::vector<double>& markers,
                   double pos);
 
+double number_of_junctions(const std::vector< Fish_emp>& pop);
+
+
 #endif /* helper_functions_hpp */

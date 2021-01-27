@@ -693,3 +693,22 @@ bool matching_chromosomes(const std::vector< int >& v1,
   }
   return true;
 }
+
+int count_num_j(const std::vector< int >& chrom) {
+  int num_j = 0;
+  for(int i = 1; i < chrom.size(); ++i) {
+    if (chrom[i] != chrom[i - 1]) num_j++;
+  }
+  return(num_j);
+}
+
+
+double number_of_junctions(const std::vector< Fish_emp>& pop) {
+  double num_j = 0.0;
+  for(const auto& i : pop) {
+    num_j += count_num_j(i.chromosome1);
+    num_j += count_num_j(i.chromosome2);
+  }
+  num_j *= 1.0 / (2 * pop.size());
+  return(num_j);
+}

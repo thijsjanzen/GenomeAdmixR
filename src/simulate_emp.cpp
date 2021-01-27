@@ -60,7 +60,14 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
     Rcout << "*";
   }
 
+  bool debug = false;
+
   for(int t = 0; t < total_runtime; ++t) {
+  if (debug) {
+    Rcout << number_of_junctions(Pop) << "\n";
+  }
+
+
 
     if(track_frequency) {
       for(int i = 0; i < track_markers.size(); ++i) {
