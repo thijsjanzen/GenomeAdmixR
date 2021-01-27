@@ -25,7 +25,9 @@ Imports:
     tibble,
     ggplot2,
     rlang,
-    ggridges
+    ggridges,
+    vcfR,
+    stringr
 Suggests: 
     covr,
     dplyr,

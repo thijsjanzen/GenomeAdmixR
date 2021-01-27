@@ -169,7 +169,7 @@ convert_vcf_to_alleles <- function(v) {
     output[i] <- available_alleles[ 1 + as.numeric(alleles[[1]][i]) ]
   }
   if (output[1] != output[2]) {
-    if (runif(1,0,1) < 0.5) { # we don't know the phasing, so we shuffle
+    if (stats::runif(1,0,1) < 0.5) { # we don't know the phasing, so we shuffle
       output <- rev(output)
     }
   }
