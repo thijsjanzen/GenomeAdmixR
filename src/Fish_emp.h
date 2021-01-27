@@ -66,8 +66,6 @@ struct Fish_emp {
       recombined_chromosome.insert(recombined_chromosome.end(), start, end);
       index = 1 - index;
     }
-    assert(!recombined_chromosome.empty());
-    assert(recombined_chromosome.size() > 0);
 
     return recombined_chromosome;
   }
