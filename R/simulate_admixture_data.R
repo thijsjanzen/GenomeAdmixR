@@ -101,5 +101,22 @@ simulate_admixture_data <- function(input_data = NA,
                                          final_freq_tibble,
                                          track_frequency)
 
+  output$frequencies <- convert_to_dna(output$frequencies)
+  output$initial_frequency <- convert_to_dna(output$initial_frequency)
+  output$final_frequency <- convert_to_dna(output$final_frequency)
+
   return(output)
+}
+
+#' @keywords internal
+convert_to_dna <- function(frequency_tibble) {
+  alleles <- frequency_tibble$ancestor
+  alleles[alleles == 1] <- "a"
+  alleles[alleles == 2] <- "c"
+  alleles[alleles == 3] <- "t"
+  alleles[alleles == 4] <- "g"
+  alleles[alleles == 0] <- "-"
+
+  frequency_tibble$ancestor <- alleles
+  return(frequency_tibble)
 }

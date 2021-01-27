@@ -156,12 +156,16 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                        marker_positions_R.end());
   auto inv_max_marker_pos = 1.0 / *std::max_element(marker_positions.begin(),
                                           marker_positions.end());
-  for(auto& i : marker_positions) {
+  for (auto& i : marker_positions) {
     i *= inv_max_marker_pos;
   }
 
   std::vector<double> track_markers(track_markers_R.begin(),
                                     track_markers_R.end());
+
+  for (auto& i : track_markers) {
+    i *= inv_max_marker_pos;
+  }
 
 
   fill_cum_marker_dist(marker_positions);
