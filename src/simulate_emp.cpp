@@ -43,7 +43,6 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
   std::vector<double> fitness;
   double maxFitness = -1;
 
-  Rcout << "calculating initial fitness\n";
   if(use_selection) {
     for(auto it = Pop.begin(); it != Pop.end(); ++it){
       double fit = calculate_fitness((*it), select_matrix, multiplicative_selection);
@@ -178,9 +177,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   track_markers = scale_markers(track_markers, morgan);
 
   if (input_population[0] > -1e4) {
-    Rcout << "reading input genomes\n";
     Pop = convert_numeric_matrix_to_fish_vector(input_population);
-    Rcout << Pop.size() << "\n";
 
     // the new population has to be seeded from the input!
     std::vector< Fish_emp > Pop_new;
@@ -201,15 +198,12 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
     frequencies_table = x;
   }
 
-  Rcout << "counting first frequencies\n";
   arma::mat initial_frequencies = update_all_frequencies_tibble(Pop,
                                                                 marker_positions,
                                                                 marker_positions,
                                                                 0,
                                                                 morgan);
 
-
-  Rcout << "starting simultion\n"; force_output();
   std::vector<Fish_emp> output_pop = simulate_population_emp(Pop,
                                                          select,
                                                          marker_positions,

@@ -18,7 +18,8 @@ simulate_admixture_data(
 }
 \arguments{
 \item{input_data}{Genomic data used as input, should be created by the
-function \code{create_input_data}.}
+function \code{create_input_data} or by the function
+\code{combine_input_data}}
 
 \item{pop_size}{Vector containing the number of individuals in both
 populations.}

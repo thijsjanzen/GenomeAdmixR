@@ -1,8 +1,15 @@
-
+#' read sequence data from file to be used in simulation
 #' @description Create data in a format that can be used by GenomeAdmixR
-#' @param path path to input data
+#' @param file_names names of input files
 #' @param type type of data, options are 'ped', 'vcf', 'fasta'
 #' @param chosen_chromosome GenomeAdmixR simulates only a single chromosome.
+#' @return list with two properties: \code{genomes} a matrix with the
+#' sequence translated to numerics, such that [actg] corresponds to [1234], and
+#' missing data is represented with "-". Rows in the matrix correspond to
+#' chromosomes, and columns represent bases. Two consecutive rows represent an
+#' individual, such that rows 1-2 are individual, rows 3-4 are one individual
+#' etc. \code{markers} corresponds to the locations of the markers (in bp) on
+#' the chosen chromosome.
 #' @export
 create_input_data <- function(file_names, type, chosen_chromosome) {
   input_data <- c()
@@ -20,6 +27,60 @@ create_input_data <- function(file_names, type, chosen_chromosome) {
   }
   return(input_data)
 }
+
+#' combine sequence data that was previously read from file into a population
+#' @description Create data in a format that can be used by GenomeAdmixR,
+#' entries are sampled randomly from each input data set, with replacement.
+#' Probability of sampling from each input data set is driven by the input
+#' frequencies, and total number of individuals sampled is driven by pop_size.
+#' @param input_data_list list where each entry is the result of
+#' \code{create_input_data}
+#' @param frequencies frequency of each entry in the list in the starting
+#' population
+#' @param pop_size intended population size
+#' @return the input data entries are combined to one single population that can
+#' be used to seed \code{simulate_admixture_data}. Output is identical to
+#' \code{create_input_data}
+#' @export
+combine_input_data <- function(input_data_list,
+                               frequencies = NA,
+                               pop_size) {
+
+  output_matrix <- c()
+
+  testit::assert(length(frequencies) == length(input_data_list))
+  for (i in 1:length(input_data_list))  {
+    for (j in 1:length(input_data_list)) {
+      if (!all.equal(input_data_list[[i]]$markers,
+                               input_data_list[[j]]$markers)) {
+        stop("all input data sets need to use the same marker positions")
+      }
+    }
+  }
+
+  if (sum(frequencies) != 1) {
+    message("frequencies normalized")
+    frequencies <- frequencies / sum(frequencies)
+  }
+
+
+  for (indiv in 1:pop_size) {
+    chosen_pop <- sample(seq_along(input_data_list), size = 1,
+                         prob = frequencies)
+
+    focal_pop <- input_data_list[[chosen_pop]]$genomes
+    indivs <- seq(from = 1, to = length(focal_pop[, 1]), by = 2)
+    sampled_indiv <- sample(indivs, size = 1)
+    output_matrix <- rbind(output_matrix,
+                           focal_pop[sampled_indiv, ],
+                           focal_pop[sampled_indiv + 1, ])
+  }
+  output <- list()
+  output$genomes <- output_matrix
+  output$markers <- input_data_list[[1]]$markers
+  return(output)
+}
+
 
 #' @keywords internal
 read_ped <- function(ped_name, map_name, chosen_chromosome) {

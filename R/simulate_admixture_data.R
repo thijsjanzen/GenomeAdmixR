@@ -3,7 +3,8 @@
 #' ancestry blocks, with or without selection. Simulations can be started from
 #' scratch, or from a predefined input population.
 #' @param input_data Genomic data used as input, should be created by the
-#' function \code{create_input_data}.
+#' function \code{create_input_data} or by the function
+#' \code{combine_input_data}
 #' @param pop_size Vector containing the number of individuals in both
 #' populations.
 #' @param total_runtime  Number of generations
