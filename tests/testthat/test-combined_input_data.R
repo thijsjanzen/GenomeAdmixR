@@ -47,7 +47,7 @@ test_that("input data", {
 
   simulation_result <- simulate_admixture_data(input_data = combined_data,
                                                pop_size = 1000,
-                                               total_runtime = 100,
+                                               total_runtime = 10,
                                                morgan = 1)
 
   num_j <- c()
@@ -59,7 +59,6 @@ test_that("input data", {
     num_j_2 <- sum(abs(diff(chrom2[,2])))
     num_j <- c(num_j, num_j_1, num_j_2)
   }
-  expected_j <- junctions::number_of_junctions(N = 1000, R = 1000, t = 100)
-  testthat::expect_equal(mean(num_j), expected_j, tolerance = 0.1)
-
+  expected_j <- junctions::number_of_junctions(N = 1000, R = 1000, t = 10)
+  testthat::expect_equal(mean(num_j), expected_j, tolerance = 0.2)
 })
