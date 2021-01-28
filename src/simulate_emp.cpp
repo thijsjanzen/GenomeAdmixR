@@ -185,9 +185,20 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
     i *= inv_max_marker_pos;
   }
 
-  for (int i = 0; i < select.nrow(); ++i) {
-    select(i, 0) = select(i, 0) * inv_max_marker_pos;
+  if (select.nrow() > 0) {
+    if (select(0, 0) > 10) {// location in bp
+      for (int i = 0; i < select.nrow(); ++i) {
+        select(i, 0) = select(i, 0) * inv_max_marker_pos;
+      }
+    } else {
+      if (select(0, 0) > 1) {
+        for (int i = 0; i < select.nrow(); ++i) {
+          select(i, 0) = select(i, 0) / morgan;
+        }
+      }
+    }
   }
+
 
   fill_cum_marker_dist(marker_positions);
 
