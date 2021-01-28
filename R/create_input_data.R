@@ -99,14 +99,15 @@ convert_dna_to_numeric <- function(dna_matrix) {
   return(dna_matrix)
 }
 
-
-#' @keywords internal
-read_ped <- function(ped_name, map_name, chosen_chromosome) {
-  message(paste("reading ped file:", ped_name))
-  ped_data <- utils::read.table(ped_name, header = F)
-  message(paste("reading map file:", map_name))
-  map_data <- utils::read.table(map_name, header = F)
-
+#' function to convert ped/map data to genome_admixr_data
+#' @param ped_data result of read.table(ped_file, header = F)
+#' @param map_data result of read.table(map_file, header = F)
+#' @param chosen_chromosome chromosome of choice
+#' @return genomeadmixr_data object ready for simulate_admixture_data
+#' @export
+ped_map_table_to_genomeadmixr_data <- function(ped_data,
+                                               map_data,
+                                               chosen_chromosome) {
   map_data_duplicated <- map_data[rep(seq_len(nrow(map_data)), each = 2), ]  # Base R
 
   map_indices <- which(map_data[, 1] == chosen_chromosome)
@@ -136,7 +137,7 @@ read_ped <- function(ped_name, map_name, chosen_chromosome) {
   num_markers <- length(ped_data[1, ]) / 2
 
   output_matrix <- matrix(NA, ncol = num_markers,
-                              nrow = num_indiv * 2)
+                          nrow = num_indiv * 2)
 
   odd_indices <- seq(1, length(ped_data[1, ]), by = 2)
   even_indices <- seq(2, length(ped_data[1, ]), by = 2)
@@ -154,7 +155,23 @@ read_ped <- function(ped_name, map_name, chosen_chromosome) {
   output <- list()
   output$genomes <- output_matrix
   output$markers <- map_data[, 4]
+
+  class(output) <- "genomeadmixr_data"
   return(output)
+}
+
+
+
+#' @keywords internal
+read_ped <- function(ped_name, map_name, chosen_chromosome) {
+  message(paste("reading ped file:", ped_name))
+  ped_data <- utils::read.table(ped_name, header = F)
+  message(paste("reading map file:", map_name))
+  map_data <- utils::read.table(map_name, header = F)
+
+  return(ped_map_table_to_genomeadmixr_data(ped_data,
+                                            map_data,
+                                            chosen_chromosome))
 }
 
 convert_vcf_to_alleles <- function(v) {
@@ -176,16 +193,18 @@ convert_vcf_to_alleles <- function(v) {
   return(output)
 }
 
-#' @keywords internal
-read_vcf <- function(vcf_name, chosen_chromosome) {
-  message("reading vcf file")
-  vcf_data <- vcfR::read.vcfR(vcf_name)
 
+#' function to convert a vcfR object to genome_admixr_data
+#' @param vcfr_object result of vcfR::read.vcfR
+#' @param chosen_chromosome chromosome of choice
+#' @return genomeadmixr_data object ready for simulate_admixture_data
+#' @export
+vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome) {
   # now need to extract relevant data
-  indices <- which(vcf_data@fix[,1] == chosen_chromosome)
+  indices <- which(vcfr_object@fix[,1] == chosen_chromosome)
 
-  map_data <- vcf_data@fix[indices, ]
-  genome_data <- vcf_data@gt[indices, ]
+  map_data <- vcfr_object@fix[indices, ]
+  genome_data <- vcfr_object@gt[indices, ]
   genome_data <- genome_data[, -1]
 
   num_indiv <- ncol(genome_data)
@@ -206,8 +225,8 @@ read_vcf <- function(vcf_name, chosen_chromosome) {
   message("converting atcg/ATCG entries to 1/2/3/4")
   genome_matrix <- convert_dna_to_numeric(genome_matrix)
   genome_matrix <- as.matrix(genome_matrix,
-                        nrow = length(genome_matrix[, 1]),
-                        ncol = length(genome_matrix[1, ]))
+                             nrow = length(genome_matrix[, 1]),
+                             ncol = length(genome_matrix[1, ]))
 
   to_numeric <- function(v) {
     return(as.numeric(v))
@@ -217,5 +236,16 @@ read_vcf <- function(vcf_name, chosen_chromosome) {
   output <- list()
   output$genomes <- genome_matrix
   output$markers <- marker_data
+  class(output) <- "genomeadmixr_data"
   return(output)
+}
+
+
+#' @keywords internal
+read_vcf <- function(vcf_name, chosen_chromosome) {
+  message("reading vcf file")
+  vcf_data <- vcfR::read.vcfR(vcf_name)
+
+  return(vcfR_to_genomeadmixr_data(vcf_data, chosen_chromosome))
+
 }

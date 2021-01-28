@@ -488,3 +488,18 @@ findtype <- function(chrom, pos) {
 
   return(chromtype[[1]])
 }
+
+#' print an individual to the console
+#' @description prints an object of class genomeadmixr_data to the console
+#' @param x individual
+#' @param ... other arguments
+#' @export
+print.genomeadmixr_data <- function(x, ...) {
+  print("Data to use as input for GenomeAdmixR")
+  v1 <- paste("Number of individuals:",
+              length(x$genomes[, 1]))
+  v2 <- paste("Number of markers::",
+              length(x$genomes[1, ]))
+  print(v1)
+  print(v2)
+}

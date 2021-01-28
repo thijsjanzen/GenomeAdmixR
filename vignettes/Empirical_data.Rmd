@@ -1,5 +1,5 @@
 ---
-title: "Using Empirical Data"
+title: "Empirical data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Empirical data}

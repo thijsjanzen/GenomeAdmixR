@@ -44,6 +44,13 @@ simulate_admixture_data <- function(input_data = NA,
                                     verbose = FALSE,
                                     multiplicative_selection = TRUE) {
 
+  if (class(input_data) != "genomeadmixr_data") {
+    stop("input_data should be of class genomeadmixr_data\n
+          you can create such data with the functions\n
+          create_input_data or vcfR_to_genomeadmixr_data")
+  }
+
+
   if (is.na(pop_size)) {
     if (length(input_data) == 2) {
       pop_size = length(input_data$genomes[, 1]) / 2
