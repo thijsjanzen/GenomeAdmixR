@@ -11,8 +11,8 @@ plot_difference_frequencies(
 )
 }
 \arguments{
-\item{results}{An object which is the result of \code{select_population} or
-\code{create_population_selection}, being a list with four properties:
+\item{results}{An object which is the result of \code{simulate_admixture}
+ being a list with four properties:
 \code{population}, \code{frequencies}, \code{initial_frequencies} and
 \code{final frequencies}}
 

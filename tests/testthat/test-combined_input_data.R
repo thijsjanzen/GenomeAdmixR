@@ -60,5 +60,5 @@ test_that("input data", {
     num_j <- c(num_j, num_j_1, num_j_2)
   }
   expected_j <- junctions::number_of_junctions(N = 1000, R = 1000, t = 10)
-  testthat::expect_equal(mean(num_j), expected_j, tolerance = 0.2)
+  testthat::expect_equal(mean(num_j), expected_j, tolerance = 1)
 })

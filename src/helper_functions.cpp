@@ -207,6 +207,8 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
   int indic_chrom = 1;
   bool add_indiv = false;
 
+  junction prev_j(0, -1);
+
   for(int i = 0; i < v.size(); i += 2) {
     junction temp_j;
     temp_j.pos = v[i];
@@ -218,13 +220,14 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
       temp.chromosome2.push_back(temp_j);
     }
 
-    if(temp_j.right == -1) {
+    if(temp_j.pos < prev_j.pos) {
       if(indic_chrom == 1) {
         indic_chrom = 2;
       } else {
         add_indiv = true;
       }
     }
+    prev_j = temp_j;
 
     if(add_indiv) {
       output.push_back(temp);
@@ -353,7 +356,6 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
     update_founder_labels((*it).chromosome1, founder_labels);
     update_founder_labels((*it).chromosome2, founder_labels);
   }
-  //Rcout << "number of alleles: " << founder_labels.size() << "\n";
 
   double morgan = markers[markers.size() - 1];
   markers = scale_markers(markers, morgan); // make sure they are in [0, 1];
@@ -606,7 +608,13 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
 
 int find_location(const std::vector<double>& markers,
                   double pos) {
-  return std::distance(markers.begin(), std::find(markers.begin(), markers.end(), pos));
+
+  auto loc = std::find(markers.begin(), markers.end(), pos);
+  if (loc == markers.end()) {
+    return -1;
+  }
+
+  return std::distance(markers.begin(), loc);
 }
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,

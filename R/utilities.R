@@ -481,7 +481,10 @@ verify_population <- function(pop) {
 findtype <- function(chrom, pos) {
 
   b <- which(chrom[, 1] > pos)
-  chromtype <- chrom[b[1] - 1, 2]
+  chromtype <- NA
+
+  if (b[1] > 1)
+    chromtype <- chrom[b[1] - 1, 2]
 
   return(chromtype[[1]])
 }

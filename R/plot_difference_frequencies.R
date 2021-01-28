@@ -1,8 +1,8 @@
 #' Plot the change in frequency between the start and end of a simulation
 #' @description This function plots the change in frequency of one or
 #' multiple ancestors after performing a simulation.
-#' @param results An object which is the result of \code{select_population} or
-#' \code{create_population_selection}, being a list with four properties:
+#' @param results An object which is the result of \code{simulate_admixture}
+#'  being a list with four properties:
 #' \code{population}, \code{frequencies}, \code{initial_frequencies} and
 #' \code{final frequencies}
 #' @param picked_ancestor Default is "ALL", where different colors indicate

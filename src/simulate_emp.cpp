@@ -73,10 +73,13 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
   for(int t = 0; t < total_runtime; ++t) {
 
     if(track_frequency) {
+ //     Rcout << t << " update frequency tibble\n";
       for(int i = 0; i < track_markers.size(); ++i) {
         if(track_markers[i] < 0) break;
 
         int index = find_location(marker_positions, track_markers[i]);
+        if (index < 0)
+          continue;
 
         std::vector<std::vector<double>> local_mat = update_frequency_tibble(Pop,
                                                                              index,
@@ -95,6 +98,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
           }
         }
       }
+      //Rcout << "tibble updated\n";
     }
 
     std::vector<Fish_emp> newGeneration(pop_size);
@@ -166,8 +170,10 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
 
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
-  auto inv_max_marker_pos = 1.0 / *std::max_element(marker_positions.begin(),
-                                                    marker_positions.end());
+
+  auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
+                                                    marker_positions.end()));
+
   for (auto& i : marker_positions) {
     i *= inv_max_marker_pos;
   }
@@ -220,6 +226,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                                 0,
                                                                 morgan);
 
+ // Rcout << "simulate\n"; force_output();
   std::vector<Fish_emp> output_pop = simulate_population_emp(Pop,
                                                              select,
                                                              marker_positions,
@@ -232,12 +239,14 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                              track_markers,
                                                              multiplicative_selection);
 
+ // Rcout << "final frequencies\n"; force_output();
   arma::mat final_frequencies = update_all_frequencies_tibble(output_pop,
                                                               marker_positions,
                                                               marker_positions,
                                                               total_runtime,
                                                               morgan);
 
+ // Rcout << "convert to list\n"; force_output();
   return List::create( Named("population") = convert_to_list(output_pop,
                              marker_positions),
                              Named("frequencies") = frequencies_table,

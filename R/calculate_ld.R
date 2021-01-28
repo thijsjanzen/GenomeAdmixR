@@ -103,6 +103,11 @@ count_ab <- function(alleles_pos_1, alleles_pos_2, a, b) {
 #' @export
 calculate_average_ld <- function(alleles_pos_1, alleles_pos_2) {
   all_alleles <- c(as.vector(alleles_pos_1), as.vector(alleles_pos_2))
+  if (sum(is.na(all_alleles)) > 0) {
+    return(list("LD" = NA,
+                "r_sq" = NA))
+  }
+
   all_alleles <- sort(unique(all_alleles))
 
   ld <- 0
