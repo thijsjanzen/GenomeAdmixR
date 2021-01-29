@@ -11,7 +11,7 @@ create_iso_female(
   run_time = 2000,
   morgan = 1,
   seed = 42,
-  progress_bar = FALSE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -29,7 +29,7 @@ during meiosis)}
 
 \item{seed}{Random number generator seed}
 
-\item{progress_bar}{Displays a progress_bar if TRUE. Default value is FALSE}
+\item{verbose}{Displays verbose output if TRUE. Default value is FALSE}
 }
 \value{
 A list of length \code{n}, where each entry is a fully homozygous

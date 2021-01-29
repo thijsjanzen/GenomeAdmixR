@@ -78,7 +78,6 @@ test_that("calculate_average_LD", {
 
   vv <- calculate_average_ld(g1, g2)
   testthat::expect_equal(vv$LD, 1.0)
-
 })
 
 test_that("calculate_LD_matrix", {

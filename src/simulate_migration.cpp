@@ -163,6 +163,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   R_FlushConsole();
 
   for (int t = 0; t < total_runtime; ++t) {
+    // Rcout << t << "\n"; force_output();
     if(track_frequency) {
       arma::mat local_mat = update_all_frequencies_tibble_dual_pop (pop_1,
                                                                     pop_2,
@@ -228,7 +229,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
 
     if (t > 2 && is_fixed(pop_1) && is_fixed(pop_2)) {
       if (verbose) Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
-      R_FlushConsole();
+      force_output();
       std::vector< std::vector < Fish > > output;
       output.push_back(pop_1);
       output.push_back(pop_2);
@@ -268,10 +269,12 @@ List simulate_migration_cpp(NumericVector input_population_1,
   std::vector<int> founder_labels;
 
   if (input_population_1[0] > -1e4) {
-    if (verbose) Rcout << "Found input populations\n";  R_FlushConsole();
+  //  if (verbose) Rcout << "Found input populations\n";  force_output();
 
     Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
     Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
+
+  //  Rcout << "done converting\n"; force_output();
 
     for (auto it = Pop_1.begin(); it != Pop_1.end(); ++it) {
       update_founder_labels((*it).chromosome1, founder_labels);
@@ -283,28 +286,34 @@ List simulate_migration_cpp(NumericVector input_population_1,
       update_founder_labels((*it).chromosome2, founder_labels);
     }
 
+   // Rcout << "updated founder labels\n"; force_output();
     number_of_alleles = founder_labels.size();
 
     if (Pop_1.size() != pop_size[0]) {
+   //   Rcout << "drawing pop 1: " << pop_size[0] << " from: " << Pop_1.size() << "\n"; force_output();
       // the populations have to be populated from the parents!
       std::vector< Fish > Pop_1_new;
       for(int j = 0; j < pop_size[0]; ++j) {
         int index = random_number(Pop_1.size());
         Pop_1_new.push_back(Pop_1[index]);
       }
-      std::swap(Pop_1, Pop_1_new);
+      Pop_1 = Pop_1_new;
+      Pop_1_new.clear(); // free up memory
     }
+ //   Rcout << "drawn pop 1\n"; force_output();
 
     if (Pop_2.size() != pop_size[1]) {
       std::vector< Fish > Pop_2_new;
+    //  Rcout << "drawing pop 2: " << pop_size[1] << "\n"; force_output();
       for (int j = 0; j < pop_size[1]; ++j) {
         int index = random_number(Pop_2.size());
         Pop_2_new.push_back(Pop_2[index]);
       }
-      std::swap(Pop_2, Pop_2_new);
+      Pop_2 = Pop_2_new;
+      Pop_2_new.clear(); // free up memory
     }
+   // Rcout << "drawn pop 2\n"; force_output();
   } else {
-
     for (int j = 0; j < 2; ++j) {
       for (int i = 0; i < pop_size[j]; ++i) {
         NumericVector focal_freqs = starting_frequencies(j, _);
@@ -325,6 +334,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
     number_of_alleles = founder_labels.size();
   }
 
+ // Rcout << "initial frequencies\n"; force_output();
   int number_of_markers = track_markers.size();
   // 5 columns: time, loc, anc, type, population
   arma::mat frequencies_table(number_of_markers * number_of_alleles * total_runtime * 2, 5);
@@ -337,7 +347,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
 
   std::vector<double> junctions;
   std::vector< std::vector< Fish> > output_populations;
-
+ // Rcout << "starting simulation\n"; force_output();
   output_populations = simulate_two_populations(Pop_1,
                                                 Pop_2,
                                                 select,
@@ -354,13 +364,15 @@ List simulate_migration_cpp(NumericVector input_population_1,
                                                 number_of_alleles,
                                                 founder_labels,
                                                 migration_rate);
+
+ // Rcout << "done simulating\n"; force_output();
+
   arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
                                                                        output_populations[1],
                                                                        track_markers,
                                                                        founder_labels,
                                                                        total_runtime,
                                                                        morgan);
-
   return List::create( Named("population_1") = convert_to_list(output_populations[0]),
                        Named("population_2") = convert_to_list(output_populations[1]),
                        Named("frequencies") = frequencies_table,

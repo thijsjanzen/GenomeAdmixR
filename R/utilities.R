@@ -423,10 +423,10 @@ verify_individual <- function(indiv) {
     warning("Chromosome doesn't start at 0\n")
     return(FALSE)
   }
-  if (utils::tail(indiv$chromosome1, 1)[2] != -1) {
-    warning("Chromosome doesn't end with -1\n")
-    return(FALSE)
-  }
+  # if (utils::tail(indiv$chromosome1, 1)[2] != -1) {
+  #  warning("Chromosome doesn't end with -1\n")
+  #  return(FALSE)
+  #}
 
   if (max(abs(indiv$chromosome1[, 2])) > 10000) {
     warning("Memory error recorded in chromosome\n")
@@ -438,10 +438,10 @@ verify_individual <- function(indiv) {
     return(FALSE)
   }
 
-  if (utils::tail(indiv$chromosome2, 1)[2] != -1) {
-    warning("Chromosome doesn't end with -1\n")
-    return(FALSE)
-  }
+  #if (utils::tail(indiv$chromosome2, 1)[2] != -1) {
+  #  warning("Chromosome doesn't end with -1\n")
+  #  return(FALSE)
+  #}
 
   if (max(abs(indiv$chromosome2[, 2])) > 10000) {
     warning("Memory error recorded in chromosome\n")
@@ -480,11 +480,16 @@ verify_population <- function(pop) {
 #' @keywords internal
 findtype <- function(chrom, pos) {
 
-  b <- which(chrom[, 1] > pos)
-  chromtype <- NA
+  if (pos < chrom[1, 1]) {
+    return(NA)
+  }
 
-  if (b[1] > 1)
-    chromtype <- chrom[b[1] - 1, 2]
+  if (pos > utils::tail(chrom[, 1], 1)) {
+    return(utils::tail(chrom[, 2], 1)) # return the last ancestry
+  }
+
+  b <- which(chrom[, 1] > pos)
+  chromtype <- chrom[b[1] - 1, 2]
 
   return(chromtype[[1]])
 }

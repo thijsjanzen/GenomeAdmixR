@@ -115,14 +115,13 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
       Rcout << "**";
     }
 
-    if (t > 2 && is_fixed(Pop) && verbose) {
-      Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
+    if (t > 2 && is_fixed(Pop)) {
+      if (verbose) Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
       R_FlushConsole();
       return(Pop);
     }
 
     Rcpp::checkUserInterrupt();
-
     Pop.swap(newGeneration);
     fitness.swap(newFitness);
     maxFitness = newMaxFitness;
@@ -156,6 +155,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
   track_markers = scale_markers(track_markers, morgan);
 
   if (input_population[0] > -1e4) {
+  //  Rcout << "found input population, converting\n"; force_output();
 
     Pop = convert_NumericVector_to_fishVector(input_population);
 
@@ -220,6 +220,9 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                     number_of_alleles,
                                                     founder_labels);
 
+ // if (verbose) {
+//    Rcout << "done simulating\n";
+//  }
   arma::mat final_frequencies = update_all_frequencies_tibble(outputPop,
                                                               track_markers,
                                                               founder_labels,

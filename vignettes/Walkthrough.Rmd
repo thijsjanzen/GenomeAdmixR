@@ -136,7 +136,7 @@ plot_chromosome(isofemales[[2]]$chromosome1, 0, 1)
 We can now use these two isofemales to seed a new inbreeding population:
 ```{r seed mixed population}
 mixed_population <-
-  simulate_admixture(list(isofemales[[1]],
+  simulate_admixture(input_population = list(isofemales[[1]],
                           isofemales[[2]]),
                      pop_size = 100, total_runtime = 100,
                      morgan = 1)

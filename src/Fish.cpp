@@ -11,10 +11,6 @@
 #include <algorithm>
 
 
-#include <Rcpp.h>
-using namespace Rcpp;
-
-
 std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<junction>& chromosome2,
                                     const std::vector<double>& recom_positions) {
@@ -54,7 +50,7 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
     std::swap(g1, g2);
     left_pos = right_pos;
   }
-  go.emplace_back(1.0, -1);
+  //go.emplace_back(1.0, -1);
   return go;
 }
 
@@ -164,11 +160,11 @@ bool junction::operator !=(const junction& other) const {
 
 Fish::Fish(int initLoc)    {
   junction left(0.0, initLoc);
-  junction right(1,  -1);
+ // junction right(1,  -1);
   chromosome1.push_back( left  );
-  chromosome1.push_back( right );
+//  chromosome1.push_back( right );
   chromosome2.push_back( left  );
-  chromosome2.push_back( right );
+//  chromosome2.push_back( right );
 }
 
 Fish::Fish(Fish&& other) {

@@ -11,6 +11,7 @@
 
 
 void force_output() {
+ // ::sleep(1);
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
@@ -35,8 +36,8 @@ bool is_fixed(const std::vector< Fish >& v) {
 }
 
 int find_index(const std::vector<int>& v, int value) {
-  for(size_t i = 0; i < v.size(); ++i) {
-    if(v[i] == value) return i;
+  for (size_t i = 0; i < v.size(); ++i) {
+    if (v[i] == value) return i;
   }
   //Rcout << "ERROR! Could not find ancestry label, returning -1, expect out of range error soon\n";
   return -1;
@@ -137,6 +138,10 @@ arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
                                  double morgan) {
   int number_of_alleles = founder_labels.size();
   arma::mat output(markers.size() * number_of_alleles, 5);
+  if (markers.size() < 1) {
+    Rcout << "markers empty\n"; force_output();
+    return(output);
+  }
 
   for(int i = 0; i < markers.size(); ++i) {
     arma::mat local_mat = update_frequency_tibble(pop,
@@ -203,22 +208,22 @@ int draw_prop_fitness(const std::vector<double>& fitness,
 std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) {
   std::vector< Fish > output;
 
+//  Rcout << "converting input data to fish vector\n"; force_output();
+
   Fish temp;
   int indic_chrom = 1;
   bool add_indiv = false;
 
-  junction prev_j(0, -1);
+  junction prev_j(0, 0);
+
+  int num_indiv = 0;
 
   for(int i = 0; i < v.size(); i += 2) {
     junction temp_j;
     temp_j.pos = v[i];
     temp_j.right = v[i+1];
 
-    if(indic_chrom == 1) {
-      temp.chromosome1.push_back(temp_j);
-    } else {
-      temp.chromosome2.push_back(temp_j);
-    }
+  //  Rcout << temp_j.pos << " " << temp_j.right << "\n"; force_output();
 
     if(temp_j.pos < prev_j.pos) {
       if(indic_chrom == 1) {
@@ -227,7 +232,6 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
         add_indiv = true;
       }
     }
-    prev_j = temp_j;
 
     if(add_indiv) {
       output.push_back(temp);
@@ -235,14 +239,28 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
       indic_chrom = 1;
       temp.chromosome1.clear();
       temp.chromosome2.clear();
+
+      num_indiv++;
+  //    Rcout << num_indiv << "\n"; force_output();
     }
+
+    if(indic_chrom == 1) {
+      temp.chromosome1.push_back(temp_j);
+    } else {
+      temp.chromosome2.push_back(temp_j);
+    }
+    prev_j = temp_j;
   }
+
+  // last individual is not added:
+  output.push_back(temp);
 
   return(output);
 }
 
 
 List convert_to_list(const std::vector<Fish>& v) {
+//  Rcout << "converting to list\n"; force_output();
   int list_size = (int)v.size();
   List output(list_size);
 
@@ -346,19 +364,26 @@ int draw_random_founder(const NumericVector& v) {
 // [[Rcpp::export]]
 arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
                                         Rcpp::NumericVector markers,
-                                        bool progress_bar)
-{
+                                        bool progress_bar) {
   std::vector< Fish > Pop;
 
   Pop = convert_NumericVector_to_fishVector(input_population);
   std::vector<int> founder_labels;
+ // Rcout << "updating founder labels\n"; force_output();
   for(auto it = Pop.begin(); it != Pop.end(); ++it) {
     update_founder_labels((*it).chromosome1, founder_labels);
     update_founder_labels((*it).chromosome2, founder_labels);
   }
+ // Rcout << "founder labels updated\n"; force_output();
+
+ // for(auto i : markers) {
+ //   Rcout << i << " ";
+ // }
+  //Rcout << "\n";
 
   double morgan = markers[markers.size() - 1];
   markers = scale_markers(markers, morgan); // make sure they are in [0, 1];
+ // Rcout << morgan << " markers rescaled\n"; force_output();
 
   arma::mat frequencies = update_all_frequencies_tibble(Pop,
                                                         markers,
@@ -498,10 +523,10 @@ void update_founder_labels(const std::vector<int>& chrom,
                            std::vector<int>& founder_labels) {
   for(auto i = chrom.begin(); i != chrom.end(); ++i) {
     if(founder_labels.empty()) {
-      if((*i) != -1) founder_labels.push_back((*i));
+       founder_labels.push_back((*i));
     } else {
       if(find_index(founder_labels, (*i)) == -1) {
-        if((*i) != -1) founder_labels.push_back((*i));
+        founder_labels.push_back((*i));
       }
     }
   }

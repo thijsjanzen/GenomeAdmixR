@@ -9,7 +9,7 @@
 #' @export
 calculate_heterozygosity <- function(source_pop,
                                      locations,
-                                     progress_bar = TRUE) {
+                                     progress_bar = FALSE) {
 
   source_pop <- check_input_pop(source_pop)
 

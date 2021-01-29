@@ -78,6 +78,7 @@ combine_input_data <- function(input_data_list,
   output <- list()
   output$genomes <- output_matrix
   output$markers <- input_data_list[[1]]$markers
+  class(output) <- "genomeadmixr_data"
   return(output)
 }
 

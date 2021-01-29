@@ -6,8 +6,8 @@
 #' @export
 calculate_dist_junctions <- function(pop) {
   get_num_junctions <- function(indiv) {
-    v1 <- length(indiv$chromosome1[, 1]) - 2
-    v2 <- length(indiv$chromosome2[, 1]) - 2 #subract one for start
+    v1 <- length(indiv$chromosome1[, 1]) - 1
+    v2 <- length(indiv$chromosome2[, 1]) - 1 #subract one for start
     return(c(v1, v2))
   }
 

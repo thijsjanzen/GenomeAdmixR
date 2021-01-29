@@ -4,8 +4,6 @@ context("allele_frequencies")
 test_that("calculate_allele_frequencies", {
   testthat::skip_on_os("solaris")
   message("testing allele frequencies")
-  testthat::skip_on_os("solaris")
- # skip("test this")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 5

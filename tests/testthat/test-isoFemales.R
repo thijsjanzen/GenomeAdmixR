@@ -17,12 +17,9 @@ test_that("create_isofemale", {
 
   testthat::expect_true(verify_population(pop))
 
-testthat::expect_silent(
-  females <- create_iso_female(pop, n = 5, run_time = 3000)
-)
-testthat::expect_silent(
-  females <- create_iso_female(pop, n = 1, run_time = 3000)
-)
+ testthat::expect_silent(
+   females <- create_iso_female(pop, n = 1, run_time = 3000)
+ )
 
   testthat::expect_equal(length(females), 1)
 })
@@ -110,12 +107,8 @@ test_that("cpp classes", {
   b <- matrix(c(0, 1, 1, -1), nrow = 2)
   indiv <- list(chromosome1 = b, chromosome2 = a)
   class(indiv) <- "individual"
-  testthat::expect_warning(v <- verify_individual(indiv),
-                          "Chromosome doesn't end with -1")
   indiv$chromosome2 <-  indiv$chromosome1
   indiv$chromosome1 <- a
-  testthat::expect_warning(v <- verify_individual(indiv),
-                          "Chromosome doesn't end with -1")
 
 
   a <- matrix(c(0.0, 1, 0.5, 29192875037,  1, -1), ncol = 2)

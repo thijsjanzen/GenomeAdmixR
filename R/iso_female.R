@@ -8,7 +8,7 @@
 #' @param morgan Size of the chromosome in Morgan (e.g. the number of crossovers
 #' during meiosis)
 #' @param seed Random number generator seed
-#' @param progress_bar Displays a progress_bar if TRUE. Default value is FALSE
+#' @param verbose Displays verbose output if TRUE. Default value is FALSE
 #' @details To create an isofemale, two individuals are randomly picked from
 #' the source population. Using these two individuals, a new population is
 #' seeded, of size \code{inbreeding_pop_size}. Then, this population is allowed
@@ -35,7 +35,7 @@ create_iso_female <- function(source_pop,
                              run_time = 2000,
                              morgan = 1,
                              seed = 42,
-                             progress_bar = FALSE) {
+                             verbose = FALSE) {
 
   source_pop <- check_input_pop(source_pop)
 
@@ -55,7 +55,8 @@ create_iso_female <- function(source_pop,
     inbred_population <- simulate_admixture(input_population = parents,
                                             pop_size = inbreeding_pop_size,
                                             total_runtime = run_time,
-                                            morgan = morgan)
+                                            morgan = morgan,
+                                            verbose = verbose)
     output_females[[i]] <-
           inbred_population$population[[
               sample(seq_along(inbred_population$population), 1)
