@@ -484,6 +484,10 @@ findtype <- function(chrom, pos) {
     return(NA)
   }
 
+  if (pos == chrom[1, 1]) {
+    return(chrom[1, 2])
+  }
+
   if (pos > utils::tail(chrom[, 1], 1)) {
     return(utils::tail(chrom[, 2], 1)) # return the last ancestry
   }

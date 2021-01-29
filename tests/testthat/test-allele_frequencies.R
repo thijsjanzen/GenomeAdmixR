@@ -58,10 +58,10 @@ test_that("calculate_allele_frequencies", {
 
 
   number_of_founders <- 20
-  sourcepop <- simulate_admixture(pop_size = 10000,
+  sourcepop <- simulate_admixture(pop_size = 1000,
                                   number_of_founders = number_of_founders,
-                                  total_runtime = 1,
-                                  morgan = morgan)
+                                  total_runtime = 100,
+                                  morgan = 1)
 
   testthat::expect_true(verify_population(sourcepop))
 
@@ -76,6 +76,12 @@ test_that("calculate_allele_frequencies", {
                          tolerance = 1 / number_of_founders)
   testthat::expect_equal(sum(b$mean_freq), 1,
                          tolerance = 1 / number_of_founders)
+
+  b <- freq_output %>%
+    dplyr::group_by(as.factor(location)) %>%
+    dplyr::summarise("mean_freq" = mean(frequency))
+
+  plot(b)
 
   number_of_founders <- 5
   sourcepop <- simulate_admixture(pop_size = 1000,

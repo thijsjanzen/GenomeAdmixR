@@ -4,7 +4,7 @@
 \alias{calculate_heterozygosity}
 \title{Calculate heterozygosity}
 \usage{
-calculate_heterozygosity(source_pop, locations, progress_bar = TRUE)
+calculate_heterozygosity(source_pop, locations, progress_bar = FALSE)
 }
 \arguments{
 \item{source_pop}{Population for which to estimate allele frequencies, or a

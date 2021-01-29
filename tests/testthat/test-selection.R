@@ -16,7 +16,7 @@ test_that("select population two_alleles", {
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
 
-  vv <- calculate_marker_frequency(selected_pop$population, 0.5)
+  vv <- calculate_marker_frequency(selected_pop$population, 0.05)
   a <- which.max(vv$frequency)
   b <- vv$ancestor[a]
   testthat::expect_equal(as.numeric(b), 0)

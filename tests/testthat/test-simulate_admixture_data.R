@@ -37,7 +37,7 @@ test_that("simulate_admixture_data", {
                                        total_runtime = 100,
                                        markers = chosen_markers,
                                        morgan = 1,
-                                       verbose = TRUE)
+                                       verbose = FALSE)
 
   testthat::expect_silent(
     plot_chromosome(simul_pop$population[[1]]$chromosome1)

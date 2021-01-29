@@ -57,6 +57,44 @@ void update_founder_labels(const std::vector<junction> chrom,
   return;
 }
 
+void update_anc_chrom(const std::vector<junction>& chrom,
+                      const std::vector<int>& founder_labels,
+                      double m,
+                      arma::mat& allele_matrix) {
+
+  if (chrom.size() == 1) {
+    if (m >= chrom[0].pos) {
+      int local_anc = chrom[0].right;
+      int index = find_index(founder_labels, local_anc);
+      allele_matrix(index, 3)++;
+      return;
+    }
+  }
+
+
+  for(auto i = chrom.begin(); i != chrom.end(); ++i) {
+    if(i->pos == m) {
+      int local_anc = i->right;
+      int index = find_index(founder_labels, local_anc);
+      allele_matrix(index, 3)++;
+      break;
+    }
+
+    if(i->pos > m) {
+      if (i != chrom.begin()) {
+
+        int local_anc = (*(i-1)).right;
+        int index = find_index(founder_labels, local_anc);
+        allele_matrix(index, 3)++;
+        break;
+      }
+    }
+  }
+  return;
+}
+
+
+
 arma::mat update_frequency_tibble(const std::vector< Fish >& v,
                                   double m,
                                   const std::vector<int>& founder_labels,
@@ -74,23 +112,11 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
   }
 
   for(auto it = v.begin(); it != v.end(); ++it) {
-    for(auto i = ((*it).chromosome1.begin()+1); i != (*it).chromosome1.end(); ++i) {
-      if((*i).pos > m) {
-        int local_anc = (*(i-1)).right;
-        int index = find_index(founder_labels, local_anc);
-        allele_matrix(index, 3)++;
-        break;
-      }
-    }
 
-    for(auto i = ((*it).chromosome2.begin()+1); i != (*it).chromosome2.end(); ++i) {
-      if((*i).pos > m) {
-        int local_anc = (*(i-1)).right;
-        int index = find_index(founder_labels, local_anc);
-        allele_matrix(index, 3)++;
-        break;
-      }
-    }
+    update_anc_chrom((*it).chromosome1, founder_labels,
+                     m, allele_matrix);
+    update_anc_chrom((*it).chromosome2, founder_labels,
+                     m, allele_matrix);
   }
 
   for(int i = 0; i < num_alleles; ++i) {

@@ -1,4 +1,4 @@
-context("simulate_Admixture")
+context("simulate_admixture")
 
 test_that("simulate_admixture", {
   testthat::skip_on_os("solaris")
