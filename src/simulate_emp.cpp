@@ -71,7 +71,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
   }
 
   for(int t = 0; t < total_runtime; ++t) {
-
+  //  Rcout << t << " " << Pop.size() << "\n";
     if(track_frequency) {
  //     Rcout << t << " update frequency tibble\n";
       for(int i = 0; i < track_markers.size(); ++i) {
@@ -174,6 +174,8 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
                                                     marker_positions.end()));
 
+//  Rcout << inv_max_marker_pos << "\n"; force_output();
+
   for (auto& i : marker_positions) {
     i *= inv_max_marker_pos;
   }
@@ -181,8 +183,10 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   std::vector<double> track_markers(track_markers_R.begin(),
                                     track_markers_R.end());
 
-  for (auto& i : track_markers) {
-    i *= inv_max_marker_pos;
+  if (*std::max_element(track_markers_R.begin(), track_markers_R.end()) > 1) {
+    for (auto& i : track_markers) {
+      i *= inv_max_marker_pos;
+    }
   }
 
   if (select.nrow() > 0) {
@@ -210,6 +214,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   track_markers = scale_markers(track_markers, morgan);
 
   if (input_population[0] > -1e4) {
+ //   Rcout << "converting\n"; force_output();
     Pop = convert_numeric_matrix_to_fish_vector(input_population);
 
     // the new population has to be seeded from the input!
@@ -257,7 +262,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                               total_runtime,
                                                               morgan);
 
- // Rcout << "convert to list\n"; force_output();
+  //Rcout << "convert to list\n"; force_output();
   return List::create( Named("population") = convert_to_list(output_pop,
                              marker_positions),
                              Named("frequencies") = frequencies_table,

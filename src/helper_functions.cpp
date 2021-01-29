@@ -11,7 +11,7 @@
 
 
 void force_output() {
- // ::sleep(1);
+  ::sleep(1);
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
