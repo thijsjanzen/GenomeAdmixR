@@ -37,18 +37,19 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
   int num_alleles = 5;
   bool use_selection = false;
-  if(select_matrix(0, 5) >= 0) use_selection = true;
- /* for(int i = 0; i < select_matrix.nrow(); ++i) {
+  if(select_matrix(0, 0) >= 0) use_selection = true;
+
+  /*for(int i = 0; i < select_matrix.nrow(); ++i) {
     for(int j = 0; j < select_matrix.ncol(); ++j) {
       Rcout << select_matrix(i, j) << " ";
     }
     Rcout << "\n";
- }*/
+  } force_output();*/
 
 
   std::vector<Fish_emp> Pop = sourcePop;
   std::vector<double> fitness;
-
+  double maxFitness = 0.0;
 
   if(use_selection) {
     for(auto it = Pop.begin(); it != Pop.end(); ++it){
@@ -59,8 +60,8 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
       fitness.push_back(fit);
     }
+    maxFitness = *std::max_element(fitness.begin(), fitness.end());
   }
-  double maxFitness = *std::max_element(fitness.begin(), fitness.end());
 
   int updateFreq = total_runtime / 20;
   if(updateFreq < 1) updateFreq = 1;
@@ -71,15 +72,17 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
   }
 
   for(int t = 0; t < total_runtime; ++t) {
-  //  Rcout << t << " " << Pop.size() << "\n";
+   // Rcout << t << " " << Pop.size() << "\n"; force_output();
     if(track_frequency) {
- //     Rcout << t << " update frequency tibble\n";
+     // Rcout << t << " update frequency tibble\n";
       for(int i = 0; i < track_markers.size(); ++i) {
         if(track_markers[i] < 0) break;
 
         int index = find_location(marker_positions, track_markers[i]);
         if (index < 0)
           continue;
+
+      //  Rcout << track_markers[i] << " " << index << "\n"; force_output();
 
         std::vector<std::vector<double>> local_mat = update_frequency_tibble(Pop,
                                                                              index,
@@ -98,7 +101,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
           }
         }
       }
-      //Rcout << "tibble updated\n";
+   //   Rcout << "tibble updated\n"; force_output();
     }
 
     std::vector<Fish_emp> newGeneration(pop_size);
@@ -136,8 +139,8 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
       Rcout << "**";
     }
 
-    if (t > 2 && is_fixed(Pop) && verbose) {
-      Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
+    if (t > 2 && is_fixed(Pop)) {
+      if (verbose) Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
       R_FlushConsole();
       return(Pop);
     }
@@ -146,7 +149,8 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
     Pop.swap(newGeneration);
     fitness.swap(newFitness);
-    maxFitness = *std::max_element(fitness.begin(), fitness.end());
+    if (!fitness.empty())
+      maxFitness = *std::max_element(fitness.begin(), fitness.end());
   }
   if(verbose) Rcout << "\n";
   return(Pop);

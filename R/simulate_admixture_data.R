@@ -73,7 +73,6 @@ simulate_admixture_data <- function(input_data = NA,
     }
     select_matrix <- other_matrix
 
-
     sites_under_selection <- select_matrix[, 1]
     normalized_markers <- (input_data$markers / max(input_data$markers)) * morgan
     if (!(sites_under_selection %in% normalized_markers)) {
