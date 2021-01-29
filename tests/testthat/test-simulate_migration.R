@@ -4,7 +4,7 @@ test_that("simulate_migration base", {
   testthat::skip_on_os("solaris")
   message("test simulate_migration")
   vx <- simulate_admixture_migration(migration_rate = 0.1,
-                                     total_runtime = 100);
+                                     total_runtime = 100)
 })
 
 test_that("simulate_migration", {
@@ -17,8 +17,10 @@ test_that("simulate_migration", {
   testthat::expect_true(verify_population(vx$population_2))
 
   testthat::expect_silent(
-    vz <- simulate_admixture_migration(input_population_1 = vx$population_1[[1]],
-                                       input_population_2 = vx$population_2[[2]],
+    vz <- simulate_admixture_migration(input_population_1 =
+                                          vx$population_1[[1]],
+                                       input_population_2 =
+                                          vx$population_2[[2]],
                                        total_runtime = 10)
   )
 

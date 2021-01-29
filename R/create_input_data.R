@@ -45,8 +45,8 @@ combine_input_data <- function(input_data_list,
 
 
   testit::assert(length(frequencies) == length(input_data_list))
-  for (i in 1:length(input_data_list))  {
-    for (j in 1:length(input_data_list)) {
+  for (i in seq_along(input_data_list))  {
+    for (j in seq_along(input_data_list)) {
       if (!all.equal(input_data_list[[i]]$markers,
                                input_data_list[[j]]$markers)) {
         stop("all input data sets need to use the same marker positions")
@@ -109,7 +109,8 @@ convert_dna_to_numeric <- function(dna_matrix) {
 ped_map_table_to_genomeadmixr_data <- function(ped_data,
                                                map_data,
                                                chosen_chromosome) {
-  map_data_duplicated <- map_data[rep(seq_len(nrow(map_data)), each = 2), ]  # Base R
+  # Base R
+  map_data_duplicated <- map_data[rep(seq_len(nrow(map_data)), each = 2), ]
 
   map_indices <- which(map_data[, 1] == chosen_chromosome)
   map_data <- map_data[map_indices, ]
@@ -143,7 +144,7 @@ ped_map_table_to_genomeadmixr_data <- function(ped_data,
   odd_indices <- seq(1, length(ped_data[1, ]), by = 2)
   even_indices <- seq(2, length(ped_data[1, ]), by = 2)
 
-  for (j in 1:length(ped_data[, 1])) {
+  for (j in seq_along(ped_data[, 1])) {
     chrom1 <- ped_data[j, odd_indices]
     chrom2 <- ped_data[j, even_indices]
     index1 <- 1 + (j - 1) * 2
@@ -214,7 +215,7 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome) {
 
   message("extracting genotypes")
   genome_matrix <- matrix(NA, nrow = num_indiv * 2, ncol = num_markers)
-  for (i in 1:length(genome_data[1, ])) {
+  for (i in seq_along(genome_data[1, ])) {
     indiv_seq <- genome_data[, i]
     to_convert <- cbind(indiv_seq, map_data[, 4], map_data[, 5])
     sequences <- apply(to_convert, 1, convert_vcf_to_alleles)

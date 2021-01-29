@@ -61,7 +61,7 @@ plot_difference_frequencies <- function(results,
     p1 <- ggplot2::ggplot(to_plot,
                           ggplot2::aes(x = .data[["location"]],
                                        y = .data[["diff_frequency"]],
-                                       colour = as.factor(.data[["ancestor"]]))) +
+                                    colour = as.factor(.data[["ancestor"]]))) +
       ggplot2::geom_step()
   } else {
 
@@ -71,7 +71,7 @@ plot_difference_frequencies <- function(results,
     p1 <- ggplot2::ggplot(to_plot,
                           ggplot2::aes(x = .data[["location"]],
                                        y = .data[["diff_frequency"]],
-                                       colour = as.factor(.data[["ancestor"]]))) +
+                                    colour = as.factor(.data[["ancestor"]]))) +
       ggplot2::geom_step()
   }
 

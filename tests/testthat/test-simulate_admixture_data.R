@@ -10,7 +10,8 @@ test_that("simulate_admixture_data", {
 
   fake_input_data1 <- list()
   fake_input_data1$genomes <- matrix(data = sample(x = 1:2,
-                                                   size = num_indiv * num_markers,
+                                                   size = num_indiv *
+                                                           num_markers,
                                                    replace = T),
                                      nrow = num_indiv,
                                      ncol = num_markers)
@@ -20,7 +21,8 @@ test_that("simulate_admixture_data", {
 
   fake_input_data2 <- list()
   fake_input_data2$genomes <- matrix(data = sample(x = 3:4,
-                                                   size = num_indiv * num_markers,
+                                                   size = num_indiv *
+                                                           num_markers,
                                                    replace = T),
                                      nrow = num_indiv,
                                      ncol = num_markers)
@@ -64,7 +66,7 @@ test_that("simulate_admixture_data", {
 
   testthat::expect_silent(
     calculate_heterozygosity(simul_pop$population,
-                                  locations = unique(simul_pop$frequencies$location))
+                             locations = unique(simul_pop$frequencies$location))
   )
 
   testthat::expect_silent(

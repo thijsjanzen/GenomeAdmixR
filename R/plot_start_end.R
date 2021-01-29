@@ -50,11 +50,11 @@ plot_start_end <- function(results,
     to_plot <- to_plot_m
 
     p1 <- ggplot2::ggplot(to_plot,
-                        ggplot2::aes(x = .data[["location"]],
-                                     y = .data[["frequency"]],
-                                     colour = as.factor(.data[["ancestor"]]),
-                                     group = interaction(.data[["ancestor"]],
-                                                         .data[["timepoint"]]))) +
+                      ggplot2::aes(x = .data[["location"]],
+                                   y = .data[["frequency"]],
+                                   colour = as.factor(.data[["ancestor"]]),
+                                   group = interaction(.data[["ancestor"]],
+                                                       .data[["timepoint"]]))) +
       ggplot2::geom_step(ggplot2::aes(lty = .data[["timepoint"]]))
   } else {
 
@@ -62,11 +62,11 @@ plot_start_end <- function(results,
                       to_plot_m$ancestor %in% picked_ancestor)
 
     p1 <- ggplot2::ggplot(to_plot,
-                          ggplot2::aes(x = .data[["location"]],
-                                     y =  .data[["frequency"]],
-                                     colour = as.factor(.data[["ancestor"]]),
-                                     group = interaction(.data[["ancestor"]],
-                                                         .data[["timepoint"]]))) +
+                        ggplot2::aes(x = .data[["location"]],
+                                   y =  .data[["frequency"]],
+                                   colour = as.factor(.data[["ancestor"]]),
+                                   group = interaction(.data[["ancestor"]],
+                                                       .data[["timepoint"]]))) +
       ggplot2::geom_step(ggplot2::aes(lty = .data[["timepoint"]]))
   }
 

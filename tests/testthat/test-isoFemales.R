@@ -62,7 +62,7 @@ test_that("create_population_from_isofemales", {
 testthat::expect_silent(
   females <- create_iso_female(pop1, n = 2, run_time = 2000)
 )
-  pop_size = 100
+  pop_size <- 100
   vy <- simulate_admixture(input_population = females,
                            pop_size = pop_size,
                            total_runtime = 200,

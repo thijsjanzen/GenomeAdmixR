@@ -53,7 +53,7 @@ simulate_admixture_data <- function(input_data = NA,
 
   if (is.na(pop_size)) {
     if (length(input_data) == 2) {
-      pop_size = length(input_data$genomes[, 1]) / 2
+      pop_size <- length(input_data$genomes[, 1]) / 2
     } else {
       stop("pop_size is undefined, need an input population")
     }
@@ -66,7 +66,7 @@ simulate_admixture_data <- function(input_data = NA,
     # this is super ugly code, but at least it works.
     other_matrix <- matrix(NA, nrow = length(select_matrix[, 1]),
                            ncol = 5)
-    for (i in 1:length(select_matrix[, 1])) {
+    for (i in seq_along(select_matrix[, 1])) {
       for (j in 1:5) {
         other_matrix[i, j] <- as.numeric(select_matrix[i, j])
       }
@@ -74,7 +74,8 @@ simulate_admixture_data <- function(input_data = NA,
     select_matrix <- other_matrix
 
     sites_under_selection <- select_matrix[, 1]
-    normalized_markers <- (input_data$markers / max(input_data$markers)) * morgan
+    normalized_markers <-
+           (input_data$markers / max(input_data$markers)) * morgan
     if (!(sites_under_selection %in% normalized_markers)) {
       stop("location of sites under selection have to exist in original data")
     }

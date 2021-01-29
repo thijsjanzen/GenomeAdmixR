@@ -67,7 +67,7 @@ simulate_admixture <- function(input_population = NA,
 
   if (is.na(pop_size)) {
     if (class(input_population) == "population") {
-      pop_size = length(input_population)
+      pop_size <- length(input_population)
     } else {
       stop("pop_size is undefined, need an input population")
     }
