@@ -104,6 +104,13 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
                                         int t,
                                         double morgan);
 
+arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& pop_1,
+                                                 const std::vector< Fish_emp >& pop_2,
+                                                 const std::vector<double>& markers,
+                                                 const std::vector<double>& locations,
+                                                 int t,
+                                                 double morgan);
+
 List convert_to_list(const std::vector<Fish_emp>& v,
                      const std::vector<double>& locations);
 

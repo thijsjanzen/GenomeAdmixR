@@ -760,3 +760,50 @@ double number_of_junctions(const std::vector< Fish_emp>& pop) {
   num_j *= 1.0 / (2 * pop.size());
   return(num_j);
 }
+
+arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
+                                 const std::vector<double>& markers,
+                                 const std::vector<double>& locations,
+                                 int t,
+                                 int pop_indicator,
+                                 double morgan) {
+  int number_of_alleles = 5;
+  arma::mat output(markers.size() * number_of_alleles, 5);
+  if (markers.size() < 1) {
+    Rcout << "markers empty\n"; force_output();
+    return(output);
+  }
+
+  for(int i = 0; i < markers.size(); ++i) {
+
+   int index = find_location(locations, markers[i]);
+   std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
+                                                                           index,
+                                                            markers[i] * morgan,
+                                                            t);
+    // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
+    // and we have to put that in the right place in the output matrix
+    int start = i * number_of_alleles;
+    int end = start + number_of_alleles;
+    for(int j = start; j < end; ++j) {
+      for(int k = 0; k < 4; ++k) {
+        output(j, k) = local_mat[j - start][k];
+      }
+      output(j, 4) = pop_indicator;
+    }
+  }
+  return(output);
+}
+
+arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& pop_1,
+                                                 const std::vector< Fish_emp >& pop_2,
+                                                 const std::vector<double>& markers,
+                                                 const std::vector<double>& locations,
+                                                 int t,
+                                                 double morgan) {
+  arma::mat output_1 = record_frequencies_pop(pop_1, markers, locations, t, 1, morgan);
+  arma::mat output_2 = record_frequencies_pop(pop_2, markers, locations, t, 2, morgan);
+
+  arma::mat output = arma::join_cols(output_1, output_2);
+  return(output);
+}
