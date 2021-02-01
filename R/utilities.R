@@ -452,13 +452,17 @@ verify_population <- function(pop) {
 
   if (!methods::is(pop, "population"))  {
     if (!methods::is(pop$population, "population")) {
+      warning("pop is nog of class population")
       return(FALSE)
     } else {
       return(verify_population(pop$population))
     }
   }
   v <- unlist(lapply(pop, verify_individual))
-  if (sum(v) != length(v)) return(FALSE)
+  if (sum(v) != length(v)) {
+    warning("not all individuals passed test")
+    return(FALSE)
+  }
 
   return(TRUE)
 }
