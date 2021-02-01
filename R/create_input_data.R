@@ -106,7 +106,7 @@ convert_dna_to_numeric <- function(dna_matrix) {
 #' @param chosen_chromosome chromosome of choice
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
-ped_map_table_to_genomeadmixr_data <- function(ped_data,
+ped_map_table_to_genomeadmixr_data <- function(ped_data,  # nolint
                                                map_data,
                                                chosen_chromosome) {
   # Base R
@@ -202,7 +202,7 @@ convert_vcf_to_alleles <- function(v) {
 #' @param chosen_chromosome chromosome of choice
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
-vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome) {
+vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome) { # nolint
   # now need to extract relevant data
   indices <- which(vcfr_object@fix[, 1] == chosen_chromosome)
 
