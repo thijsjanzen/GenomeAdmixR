@@ -4,11 +4,11 @@
 #' ancestry blocks, with or without selection. Simulations can be started from
 #' scratch, or from a predefined input population. Two populations are
 #' simulated, connected by migration
-#' @param input_data_population_1 Genomic data used as input, should be created by the
-#' function \code{create_input_data} or by the function
+#' @param input_data_population_1 Genomic data used as input, should be created
+#' by the function \code{create_input_data} or by the function
 #' \code{combine_input_data}
-#' @param input_data_population_2 Genomic data used as input, should be created by the
-#' function \code{create_input_data} or by the function
+#' @param input_data_population_2 Genomic data used as input, should be created
+#' by thefunction \code{create_input_data} or by the function
 #' \code{combine_input_data}
 #' @param pop_size Vector containing the number of individuals in both
 #' populations.
@@ -58,7 +58,7 @@
 #' terminate the simulation, and object \code{FST} with the final FST estimate
 #' is returned as well.
 #' @export
-simulate_admixture_migration_data <- function(input_data_population_1 = NA,
+simulate_admixture_migration_data <- function(input_data_population_1 = NA, # nolint
                                               input_data_population_2 = NA,
                                          pop_size = c(100, 100),
                                          total_runtime = 100,
@@ -77,8 +77,10 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA,
                                          random_markers = TRUE) {
 
   if (stop_at_critical_fst) {
-    return(simulate_admixture_until_data(input_data_population_1 = input_data_population_1,
-                                         input_data_population_2 = input_data_population_2,
+    return(simulate_admixture_until_data(input_data_population_1 =
+                                           input_data_population_1,
+                                         input_data_population_2 =
+                                           input_data_population_2,
                                     pop_size = pop_size,
                                     total_runtime = total_runtime,
                                     morgan = morgan,
@@ -120,7 +122,8 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA,
 
     sites_under_selection <- select_matrix[, 1]
     normalized_markers <-
-      (input_data_population_1$markers / max(input_data_population_1$markers)) * morgan
+      (input_data_population_1$markers /
+         max(input_data_population_1$markers)) * morgan
     if (!(sites_under_selection %in% normalized_markers)) {
       stop("location of sites under selection have to exist in original data")
     }
@@ -136,6 +139,7 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA,
       markers <- c(-1, -1)
       track_frequency <- FALSE
     } else {
+      markers <- c(markers)
       track_frequency <- TRUE
     }
   } else {

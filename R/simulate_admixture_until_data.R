@@ -45,10 +45,12 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
   total_generations <- generations_between_update
   while (fst < critical_fst && total_generations < total_runtime) {
 
-    pop1_for_data_cpp <- convert_to_genomeadmixr_data(pops$population_1,
-                                                      input_data_population_1$markers)
-    pop2_for_data_cpp <- convert_to_genomeadmixr_data(pops$population_2,
-                                                      input_data_population_1$markers)
+    pop1_for_data_cpp <-
+      convert_to_genomeadmixr_data(pops$population_1,
+                                   input_data_population_1$markers)
+    pop2_for_data_cpp <-
+      convert_to_genomeadmixr_data(pops$population_2,
+                                   input_data_population_1$markers)
 
     pops <- simulate_admixture_migration_data(
       input_data_population_1 = pop1_for_data_cpp,
