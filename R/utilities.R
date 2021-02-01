@@ -503,3 +503,28 @@ print.genomeadmixr_data <- function(x, ...) {
   print(v1)
   print(v2)
 }
+
+#' @keywords internal
+convert_to_genomeadmixr_data <- function(input_population,
+                             markers) {
+
+  genomes <- matrix(NA, nrow = 2 * length(input_population),
+                        ncol = length(markers))
+
+  for (i in seq_along(input_population)) {
+    indiv <- input_population[[i]]
+    chrom_1  <- indiv$chromosome1[, 2]
+    chrom_2  <- indiv$chromosome2[, 2]
+
+    index_chrom1 <- 1 + (i - 1) * 2
+    index_chrom2 <- index_chrom1 + 1
+    genomes[index_chrom1, ] <- chrom_1
+    genomes[index_chrom2, ] <- chrom_2
+  }
+
+  output <- list()
+  output$genomes <- genomes
+  output$markers <- markers
+  class(output) <- "genomeadmixr_data"
+  return(output)
+}
