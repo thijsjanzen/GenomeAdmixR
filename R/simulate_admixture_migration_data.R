@@ -77,8 +77,8 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA,
                                          random_markers = TRUE) {
 
   if (stop_at_critical_fst) {
-    return(simulate_admixture_until_data(input_population_1 = input_data_population_1,
-                                    input_population_2 = input_data_population_1,
+    return(simulate_admixture_until_data(input_data_population_1 = input_data_population_1,
+                                         input_data_population_1 = input_data_population_1,
                                     pop_size = pop_size,
                                     total_runtime = total_runtime,
                                     morgan = morgan,
