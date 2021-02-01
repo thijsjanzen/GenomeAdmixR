@@ -58,8 +58,8 @@ test_that("input data", {
     focal_indiv <- simulation_result$population[[i]]
     chrom1 <- focal_indiv$chromosome1
     chrom2 <- focal_indiv$chromosome2
-    num_j_1 <- sum(abs(diff(chrom1[,2])))
-    num_j_2 <- sum(abs(diff(chrom2[,2])))
+    num_j_1 <- sum(abs(diff(chrom1[, 2])))
+    num_j_2 <- sum(abs(diff(chrom2[, 2])))
     num_j <- c(num_j, num_j_1, num_j_2)
   }
   expected_j <- junctions::number_of_junctions(N = 1000, R = 1000, t = 10)

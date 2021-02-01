@@ -101,7 +101,7 @@ test_that("simulate admixture use", {
   testthat::expect_silent(plot(vx$population[[1]]))
 
   testthat::expect_output(
-    testthat::expect_equal( print(vx$population),
+    testthat::expect_equal(print(vx$population),
                           "Population with 100 individuals")
   )
   testthat::expect_output(print(vx$population[[1]]))

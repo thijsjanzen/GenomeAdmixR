@@ -181,14 +181,15 @@ convert_vcf_to_alleles <- function(v) {
     return(c(0, 0))
   }
 
-  available_alleles <- c(v[[2]], v[[3]])  # ref / alt
+  available_alleles <- c(v[[2]], v[[3]])  # using ref / alt
   alleles <- stringr::str_split(v[[1]], pattern = "/")
   output <- c(NA, NA)
   for (i in 1:2) {
-    output[i] <- available_alleles[ 1 + as.numeric(alleles[[1]][i]) ]
+    output[i] <- available_alleles[1 + as.numeric(alleles[[1]][i])]
   }
   if (output[1] != output[2]) {
-    if (stats::runif(1,0,1) < 0.5) { # we don't know the phasing, so we shuffle
+    # we don't know the phasing, so we shuffle
+    if (stats::runif(1, 0, 1) < 0.5) {
       output <- rev(output)
     }
   }
@@ -203,7 +204,7 @@ convert_vcf_to_alleles <- function(v) {
 #' @export
 vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome) {
   # now need to extract relevant data
-  indices <- which(vcfr_object@fix[,1] == chosen_chromosome)
+  indices <- which(vcfr_object@fix[, 1] == chosen_chromosome)
 
   map_data <- vcfr_object@fix[indices, ]
   genome_data <- vcfr_object@gt[indices, ]

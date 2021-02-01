@@ -17,7 +17,7 @@ test_that("utilities", {
     plot_over_time(vx$frequencies, focal_location = 0.5)
   )
 
-  vy <- simulate_admixture_migration(migration_rate = 0.01,)
+  vy <- simulate_admixture_migration(migration_rate = 0.01)
   testthat::expect_error(plot_over_time(vy$frequencies, focal_location = 0.5))
 
   vy <- simulate_admixture_migration(migration_rate = 0.01,
@@ -60,7 +60,6 @@ testthat::expect_warning(
 
 testthat::test_that("random markers", {
   testthat::skip_on_os("solaris")
-  #  skip("test random markers")
   set.seed(42)
   vx <- create_random_markers(1e3)
   vy <- create_random_markers(1e6)

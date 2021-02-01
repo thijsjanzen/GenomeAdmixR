@@ -423,10 +423,6 @@ verify_individual <- function(indiv) {
     warning("Chromosome doesn't start at 0\n")
     return(FALSE)
   }
-  # if (utils::tail(indiv$chromosome1, 1)[2] != -1) {
-  #  warning("Chromosome doesn't end with -1\n")
-  #  return(FALSE)
-  #}
 
   if (max(abs(indiv$chromosome1[, 2])) > 10000) {
     warning("Memory error recorded in chromosome\n")
@@ -437,11 +433,6 @@ verify_individual <- function(indiv) {
     warning("Chromosome doesn't start at 0\n")
     return(FALSE)
   }
-
-  #if (utils::tail(indiv$chromosome2, 1)[2] != -1) {
-  #  warning("Chromosome doesn't end with -1\n")
-  #  return(FALSE)
-  #}
 
   if (max(abs(indiv$chromosome2[, 2])) > 10000) {
     warning("Memory error recorded in chromosome\n")

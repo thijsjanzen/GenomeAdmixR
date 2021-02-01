@@ -14,33 +14,37 @@ Authors@R:
       person(given = "Richèl J.C.",
              family = "Bilderbeek",
              role = "ctb"))
-Description: Individual-based simulations forward in time, simulating how patterns in ancestry along the genome change after admixture. Full description can be found in Janzen (2020) <doi:10.1101/2020.10.19.343491>.
+Description: Individual-based simulations forward in time,
+    simulating how patterns in ancestry along the genome change after
+    admixture. Full description can be found in Janzen (2020)
+    <doi:10.1101/2020.10.19.343491>.
 License: GPL (>= 2)
 URL: https://github.com/thijsjanzen/GenomeAdmixR
 BugReports: https://github.com/thijsjanzen/GenomeAdmixR/issues
 Imports: 
+    ggplot2,
+    ggridges,
     hierfstat,
     methods,
     Rcpp,
-    tibble,
-    ggplot2,
     rlang,
-    ggridges,
-    vcfR,
-    stringr
+    stringr,
+    tibble,
+    vcfR
 Suggests: 
     covr,
     dplyr,
     junctions,
+    knitr,
     magrittr,
     rmarkdown,
     testit,
-    testthat,
-    knitr
+    testthat
 LinkingTo: 
     Rcpp,
     RcppArmadillo
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 SystemRequirements: C++14, GNU make
