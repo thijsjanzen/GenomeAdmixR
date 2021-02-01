@@ -79,6 +79,11 @@ simulation has to check again whether the critical Fst value is exceeded}
 
 \item{sampled_individuals}{Number of individuals to be sampled at random from
 the population to estimate Fst}
+
+\item{number_of_markers}{Number of markers to be used to estimate Fst}
+
+\item{random_markers}{Are the markers to estimate Fst randomly distributed,
+or regularly distributed? Default is TRUE.}
 }
 \value{
 A list with: \code{population_1}, \code{population_2} two population
