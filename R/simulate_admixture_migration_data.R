@@ -70,11 +70,15 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                          multiplicative_selection = TRUE,
                                          migration_rate = 0.0,
                                          stop_at_critical_fst = FALSE,
-                                         critical_fst = 0.1,
+                                         critical_fst = NA,
                                          generations_between_update = 100,
                                          sampled_individuals = 10,
                                          number_of_markers = 100,
                                          random_markers = TRUE) {
+
+  if (!is.na(critical_fst)) {
+    stop_at_critical_fst <- TRUE
+  }
 
   if (stop_at_critical_fst) {
     return(simulate_admixture_until_data(input_data_population_1 =

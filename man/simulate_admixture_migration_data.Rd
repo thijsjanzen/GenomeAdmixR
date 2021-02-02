@@ -18,7 +18,7 @@ simulate_admixture_migration_data(
   multiplicative_selection = TRUE,
   migration_rate = 0,
   stop_at_critical_fst = FALSE,
-  critical_fst = 0.1,
+  critical_fst = NA,
   generations_between_update = 100,
   sampled_individuals = 10,
   number_of_markers = 100,
@@ -26,12 +26,12 @@ simulate_admixture_migration_data(
 )
 }
 \arguments{
-\item{input_data_population_1}{Genomic data used as input, should be created by the
-function \code{create_input_data} or by the function
+\item{input_data_population_1}{Genomic data used as input, should be created
+by the function \code{create_input_data} or by the function
 \code{combine_input_data}}
 
-\item{input_data_population_2}{Genomic data used as input, should be created by the
-function \code{create_input_data} or by the function
+\item{input_data_population_2}{Genomic data used as input, should be created
+by thefunction \code{create_input_data} or by the function
 \code{combine_input_data}}
 
 \item{pop_size}{Vector containing the number of individuals in both

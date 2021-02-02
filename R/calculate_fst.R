@@ -39,6 +39,10 @@ calculate_fst <- function(pop1,
 
   number_of_markers <- round(number_of_markers)
 
+  if (sampled_individuals > max(length(pop1), length(pop2))) {
+    sampled_individuals = max(length(pop1), length(pop2))
+  }
+
   all_loci <- create_loci_matrix(
                 pop1[sample(seq_along(pop1), sampled_individuals)],
                 pop2[sample(seq_along(pop2), sampled_individuals)],
@@ -73,6 +77,9 @@ create_loci_matrix <- function(pop1,
       allele_1 <- 10 + findtype(pop1[[i]]$chromosome1, focal_marker)
       allele_2 <- 10 + findtype(pop1[[i]]$chromosome2, focal_marker)
       final_allele <- paste0(allele_1, allele_2)
+      if (is.na(allele_1) && is.na(allele_2)) {
+        final_allele <- NA
+      }
       all_loci[i, x + 1] <- as.numeric(final_allele)
     }
 
@@ -80,6 +87,9 @@ create_loci_matrix <- function(pop1,
       allele_1 <- 10 + findtype(pop2[[i]]$chromosome1, focal_marker)
       allele_2 <- 10 + findtype(pop2[[i]]$chromosome2, focal_marker)
       final_allele <- paste0(allele_1, allele_2)
+      if (is.na(allele_1) && is.na(allele_2)) {
+        final_allele <- NA
+      }
       all_loci[length(pop1) + i, x + 1] <- as.numeric(final_allele)
     }
   }
