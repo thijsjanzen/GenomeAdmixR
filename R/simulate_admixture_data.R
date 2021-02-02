@@ -25,6 +25,11 @@
 #' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated
 #' for multiple markers by multiplying fitness values for each marker. If FALSE,
 #' fitness is calculated by adding fitness values for each marker.
+#' @param mutation_rate the per base probability of mutation. Default is 0.
+#' @param substitution_matrix a 4x4 matrix representing the probability of
+#' mutating to another base (where [1/2/3/4] = [a/c/t/g]), conditional on the
+#' event of a mutation happening. Default is the JC69 matrix, with equal
+#' probabilities for all transitions / transversions.
 #' @return A list with: \code{population} a population object, and three tibbles
 #' with allele frequencies (only contain values of a vector was provided to the
 #' argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and
@@ -44,7 +49,7 @@ simulate_admixture_data <- function(input_data = NA,
                                     verbose = FALSE,
                                     multiplicative_selection = TRUE,
                                     mutation_rate = 0,
-                                    substitution_matrix = NULL) {
+                                    substitution_matrix = matrix(1/4, 4, 4)) {
 
   if (class(input_data) != "genomeadmixr_data") {
     stop("input_data should be of class genomeadmixr_data\n
