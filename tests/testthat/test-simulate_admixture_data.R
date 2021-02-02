@@ -132,6 +132,27 @@ test_that("simulate_admixture_data_mutation", {
     dplyr::group_by(ancestor) %>%
     dplyr::summarise("mean_freq" = mean(frequency))
 
+  testthat::expect_equal(mean(bb$mean_freq[2:5]), 0.25)
 
+  bases <- c('a', 'c', 't', 'g')
+  for (i in 1:4) {
+    sub_matrix <- matrix(0, nrow = 4, ncol = 4)
+    sub_matrix[, i] <- 1
+
+    simul_pop <- simulate_admixture_data(input_data = combined_data,
+                                         pop_size = 100,
+                                         total_runtime = 100,
+                                         markers = chosen_markers,
+                                         morgan = 1,
+                                         verbose = FALSE,
+                                         mutation_rate = 1.0,
+                                         substitution_matrix = sub_matrix)
+
+    bb <- simul_pop$final_frequency %>%
+      dplyr::group_by(ancestor) %>%
+      dplyr::summarise("mean_freq" = mean(frequency))
+
+    highest_base <- bb$ancestor[which.max(bb$mean_freq)]
+    testthat::expect_equal(bases[i], highest_base)
+  }
 })
-

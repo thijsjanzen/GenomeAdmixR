@@ -814,14 +814,16 @@ int draw_mutated_base(int source_base,
   if (source_base == 0) // no data
     return 0;
 
+  static int alleles[4] = {1, 2, 3, 4};
+
   double r = uniform();
   for (int i = 0; i < 4; ++i) {
-    r -= sub_matrix(source_base, i);
+    r -= sub_matrix(source_base - 1, i);
     if (r <= 0.0) {
-      return i + 1;
+      return( alleles[i] );
     }
   }
-  return 4;
+  return alleles[3];
 }
 
 void mutate_chrom(std::vector<int>& chrom,
