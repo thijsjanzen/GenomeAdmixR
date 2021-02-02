@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-      - emp_data_two_pop
+      - mutation
   pull_request:
     branches:
       - main
