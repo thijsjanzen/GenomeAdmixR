@@ -14,7 +14,9 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                                           critical_fst = 0.1,
                                           sampled_individuals = 10,
                                           number_of_markers = 100,
-                                          random_markers = TRUE) {
+                                          random_markers = TRUE,
+                                          mutation_rate,
+                                          substitution_matrix) {
 
   if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))
@@ -31,7 +33,9 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
     markers = markers,
     verbose = verbose,
     multiplicative_selection = multiplicative_selection,
-    migration_rate = migration_rate)
+    migration_rate = migration_rate,
+    mutation_rate = mutation_rate,
+    substitution_matrix = substitution_matrix)
 
   fst <- calculate_fst(pops$population_1, pops$population_2,
                        sampled_individuals = sampled_individuals,
@@ -63,7 +67,9 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
       markers = markers,
       verbose = verbose,
       multiplicative_selection = multiplicative_selection,
-      migration_rate = migration_rate)
+      migration_rate = migration_rate,
+      mutation_rate = mutation_rate,
+      substitution_matrix = substitution_matrix)
 
     cnt <- cnt + 2
     fst <- calculate_fst(pops$population_1, pops$population_2,

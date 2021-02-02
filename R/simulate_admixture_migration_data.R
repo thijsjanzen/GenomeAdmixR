@@ -46,6 +46,11 @@
 #' @param number_of_markers Number of markers to be used to estimate Fst
 #' @param random_markers Are the markers to estimate Fst randomly distributed,
 #' or regularly distributed? Default is TRUE.
+#' @param mutation_rate the per base probability of mutation. Default is 0.
+#' @param substitution_matrix a 4x4 matrix representing the probability of
+#' mutating to another base (where [1/2/3/4] = [a/c/t/g]), conditional on the
+#' event of a mutation happening. Default is the JC69 matrix, with equal
+#' probabilities for all transitions / transversions.
 #' @return A list with: \code{population_1}, \code{population_2} two population
 #' objects, and three tibbles with allele frequencies (only contain values of a
 #' vector was provided to the argument \code{markers}: \code{frequencies},
@@ -74,7 +79,10 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                          generations_between_update = 100,
                                          sampled_individuals = 10,
                                          number_of_markers = 100,
-                                         random_markers = TRUE) {
+                                         random_markers = TRUE,
+                                         mutation_rate = 0,
+                                         substitution_matrix =
+                                             matrix(1/4, 4, 4)) {
 
   if (!is.na(critical_fst)) {
     stop_at_critical_fst <- TRUE
@@ -100,7 +108,9 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                       generations_between_update,
                                     sampled_individuals = sampled_individuals,
                                     number_of_markers = number_of_markers,
-                                    random_markers = random_markers))
+                                    random_markers = random_markers,
+                                    mutation_rate = mutation_rate,
+                                    substitution_matrix = substitution_matrix))
   }
 
   if (class(input_data_population_1) != "genomeadmixr_data" ||
@@ -154,6 +164,7 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
     seed <- round(as.numeric(Sys.time()))
   }
 
+  verify_substitution_matrix(substitution_matrix)
 
   selected_pop <- simulate_migration_emp_cpp(input_data_population_1$genomes,
                                              input_data_population_2$genomes,
@@ -167,7 +178,9 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                              markers,
                                              multiplicative_selection,
                                              migration_rate,
-                                             seed)
+                                             seed,
+                                             mutation_rate,
+                                             substitution_matrix)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)

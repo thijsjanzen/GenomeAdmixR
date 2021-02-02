@@ -70,7 +70,9 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       bool multiplicative_selection,
                                       double migration_rate,
                                       std::vector< double >& new_fitness,
-                                      double size_in_morgan) {
+                                      double size_in_morgan,
+                                      double mutation_rate,
+                                      const NumericMatrix& substitution_matrix) {
 
   std::vector<Fish_emp> new_generation(pop_size);
 
@@ -96,6 +98,9 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
 
     new_generation[i] = Fish_emp(parent1.gamete(recompos()),
                                  parent2.gamete(recompos()));
+
+    if (mutation_rate > 0)
+      mutate(new_generation[i], substitution_matrix);
 
     double fit = -2.0;
     if (use_selection) {
@@ -123,7 +128,9 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     bool multiplicative_selection,
     int num_alleles,
     const std::vector<int>& founder_labels,
-    double migration_rate) {
+    double migration_rate,
+    double mutation_rate,
+    const NumericMatrix& substitution_matrix) {
 
   bool use_selection = false;
   if (select(1, 1) >= 0) use_selection = true;
@@ -210,7 +217,9 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                multiplicative_selection,
                                                                migration_rate,
                                                                new_fitness_pop_1,
-                                                               morgan);
+                                                               morgan,
+                                                               mutation_rate,
+                                                               substitution_matrix);
 
     std::vector<Fish_emp> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                                pop_1,  // migrants
@@ -225,7 +234,9 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                multiplicative_selection,
                                                                migration_rate,
                                                                new_fitness_pop_2,
-                                                               morgan);
+                                                               morgan,
+                                                               mutation_rate,
+                                                               substitution_matrix);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
     fitness_pop_1 = new_fitness_pop_1;
@@ -270,7 +281,9 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                             const NumericVector& track_markers_R,
                             bool multiplicative_selection,
                             double migration_rate,
-                            int seed) {
+                            int seed,
+                            double mutation_rate,
+                            const NumericMatrix& substitution_matrix) {
   set_seed(seed);
   set_poisson(morgan);
 
@@ -281,6 +294,11 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
 
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
+
+  if (mutation_rate > 0) {
+    set_mutation_rate(mutation_rate,
+                      marker_positions.size());
+  }
 
   auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
                                                      marker_positions.end()));
@@ -378,7 +396,9 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                                 multiplicative_selection,
                                                 number_of_alleles,
                                                 founder_labels,
-                                                migration_rate);
+                                                migration_rate,
+                                                mutation_rate,
+                                                substitution_matrix);
 
   // Rcout << "done simulating\n"; force_output();
 

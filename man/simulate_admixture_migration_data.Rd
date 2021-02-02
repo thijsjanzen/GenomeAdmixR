@@ -22,7 +22,9 @@ simulate_admixture_migration_data(
   generations_between_update = 100,
   sampled_individuals = 10,
   number_of_markers = 100,
-  random_markers = TRUE
+  random_markers = TRUE,
+  mutation_rate = 0,
+  substitution_matrix = matrix(1/4, 4, 4)
 )
 }
 \arguments{
@@ -84,6 +86,13 @@ the population to estimate Fst}
 
 \item{random_markers}{Are the markers to estimate Fst randomly distributed,
 or regularly distributed? Default is TRUE.}
+
+\item{mutation_rate}{the per base probability of mutation. Default is 0.}
+
+\item{substitution_matrix}{a 4x4 matrix representing the probability of
+mutating to another base (where [1/2/3/4] = [a/c/t/g]), conditional on the
+event of a mutation happening. Default is the JC69 matrix, with equal
+probabilities for all transitions / transversions.}
 }
 \value{
 A list with: \code{population_1}, \code{population_2} two population
