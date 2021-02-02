@@ -18,6 +18,9 @@ std::poisson_distribution<int> poisson_preset_dist;
 std::uniform_int_distribution<> rand_num_dist;
 std::vector< double > cum_marker_dist;
 
+std::binomial_distribution<int> mutate_num;
+
+
 int random_number(int n)    {
     return std::uniform_int_distribution<> (0, n-1)(rndgen);
 }
@@ -79,3 +82,11 @@ std::vector< size_t > recompos() {
     return indices;
 }
 
+void set_mutation_rate(double mu,
+                       int num_markers) {
+  mutate_num = std::binomial_distribution<int>(num_markers, mu);
+}
+
+int num_mutations() {
+  return mutate_num(rndgen);
+}

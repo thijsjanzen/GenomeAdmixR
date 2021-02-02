@@ -13,7 +13,9 @@ simulate_admixture_data(
   select_matrix = NA,
   markers = NA,
   verbose = FALSE,
-  multiplicative_selection = TRUE
+  multiplicative_selection = TRUE,
+  mutation_rate = 0,
+  substitution_matrix = NULL
 )
 }
 \arguments{

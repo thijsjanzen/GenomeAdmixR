@@ -532,3 +532,22 @@ convert_to_genomeadmixr_data <- function(input_population,
   class(output) <- "genomeadmixr_data"
   return(output)
 }
+
+verify_substitution_matrix <- function(substitution_matrix) {
+  if (length(substitution_matrix == 1)) {
+    if (is.na(substitution_matrix[[1]])) {
+      stop("No substitution matrix provided")
+    }
+  }
+
+  if (dim(substitution_matrix)[[1]] != 4 ||
+      dim(substitution_matrix)[[2]] != 4) {
+    stop("\nCan not include mutations without proper substitution matrix\n",
+         "substitution matrix should be a 4x4 matrix")
+  }
+
+  rs <- rowSums(substitution_matrix)
+  if (sum(rs != 1) > 0) {
+    stop("all rows in the substitution matrix have to sum to 1")
+  }
+}

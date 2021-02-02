@@ -33,7 +33,9 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
                                                 arma::mat& frequencies,
                                                 bool track_frequency,
                                                 const std::vector<double>& track_markers,
-                                                bool multiplicative_selection) {
+                                                bool multiplicative_selection,
+                                                double mutation_rate,
+                                                const NumericMatrix& sub_matrix) {
 
   int num_alleles = 5;
   bool use_selection = false;
@@ -123,6 +125,8 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
       newGeneration[i] = Fish_emp(Pop[index1].gamete(recompos()),
                                   Pop[index2].gamete(recompos()));
 
+      if (mutation_rate > 0)
+        mutate(newGeneration[i], sub_matrix);
 
 
       if(use_selection) {
@@ -167,13 +171,19 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                       bool track_frequency,
                       Rcpp::NumericVector track_markers_R,
                       bool multiplicative_selection,
-                      int seed) {
+                      int seed,
+                      double mutation_rate,
+                      NumericMatrix sub_matrix) {
 
   set_seed(seed);
   set_poisson(morgan);
 
+
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
+
+  if (mutation_rate > 0) set_mutation_rate(mutation_rate,
+                                           marker_positions.size());
 
   auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
                                                     marker_positions.end()));
@@ -257,7 +267,9 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                              frequencies_table,
                                                              track_frequency,
                                                              track_markers,
-                                                             multiplicative_selection);
+                                                             multiplicative_selection,
+                                                             mutation_rate,
+                                                             sub_matrix);
 
  // Rcout << "final frequencies\n"; force_output();
   arma::mat final_frequencies = update_all_frequencies_tibble(output_pop,

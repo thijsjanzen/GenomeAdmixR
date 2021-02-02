@@ -22,5 +22,9 @@ void set_poisson(double lambda);
 void fill_cum_marker_dist(const std::vector<double>& positions);
 std::vector< size_t > recompos();
 
+int num_mutations();
+void set_mutation_rate(double mu,
+                       int num_markers);
+
 
 #endif /* random_functions_hpp */

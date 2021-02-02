@@ -42,7 +42,9 @@ simulate_admixture_data <- function(input_data = NA,
                                     select_matrix = NA,
                                     markers = NA,
                                     verbose = FALSE,
-                                    multiplicative_selection = TRUE) {
+                                    multiplicative_selection = TRUE,
+                                    mutation_rate = 0,
+                                    substitution_matrix = NULL) {
 
   if (class(input_data) != "genomeadmixr_data") {
     stop("input_data should be of class genomeadmixr_data\n
@@ -97,6 +99,11 @@ simulate_admixture_data <- function(input_data = NA,
   }
 
 
+
+  if (mutation_rate > 0) {
+    verify_substitution_matrix(substitution_matrix)
+  }
+
   selected_pop <- simulate_emp_cpp(input_data$genomes,
                                    input_data$markers,
                                    select_matrix,
@@ -107,7 +114,9 @@ simulate_admixture_data <- function(input_data = NA,
                                    track_frequency,
                                    markers,
                                    multiplicative_selection,
-                                   seed)
+                                   seed,
+                                   mutation_rate,
+                                   substitution_matrix)
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 

@@ -807,3 +807,40 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& 
   arma::mat output = arma::join_cols(output_1, output_2);
   return(output);
 }
+
+
+int draw_mutated_base(int source_base,
+                      const NumericMatrix& sub_matrix) {
+  if (source_base == 0) // no data
+    return 0;
+
+  double r = uniform();
+  for (int i = 0; i < 4; ++i) {
+    r -= sub_matrix(source_base, i);
+    if (r <= 0.0) {
+      return i + 1;
+    }
+  }
+  return 4;
+}
+
+void mutate_chrom(std::vector<int>& chrom,
+                  const NumericMatrix& sub_matrix) {
+  int num_mutated_bases = num_mutations();
+  for (int i = 0; i < num_mutated_bases; ++i) {
+    int index = random_number(chrom.size());
+    int mutated_base = draw_mutated_base(chrom[index],
+                                         sub_matrix);
+    chrom[index] = mutated_base;
+  }
+  return;
+}
+
+void mutate(Fish_emp& indiv,
+            const NumericMatrix& sub_matrix) {
+
+  mutate_chrom(indiv.chromosome1, sub_matrix);
+  mutate_chrom(indiv.chromosome2, sub_matrix);
+
+  return;
+}
