@@ -44,8 +44,8 @@ simulate_admixture_until <- function(input_population_1 = NA,
                        random_markers = random_markers)
 
   cnt <- 3
-  message("Number of Generations\tFST\n")
-  message(generations_between_update, "\t", fst, "\n")
+  message("Number of Generations\tFST")
+  message(generations_between_update, "\t", fst)
 
   total_generations <- generations_between_update
   while (fst < critical_fst && total_generations < total_runtime) {

@@ -161,7 +161,7 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
   }
 
   if (track_frequency) {
-    markers <- check_markers(markers, input_data$markers)
+    markers <- check_markers(markers, input_data_population_1$markers)
   }
 
   if (is.null(seed)) {
