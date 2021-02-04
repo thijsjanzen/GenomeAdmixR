@@ -4,7 +4,7 @@
 \alias{create_input_data}
 \title{read sequence data from file to be used in simulation}
 \usage{
-create_input_data(file_names, type, chosen_chromosome)
+create_input_data(file_names, type, chosen_chromosome, verbose = FALSE)
 }
 \arguments{
 \item{file_names}{names of input files}
@@ -12,6 +12,8 @@ create_input_data(file_names, type, chosen_chromosome)
 \item{type}{type of data, options are 'ped' and 'vcf'}
 
 \item{chosen_chromosome}{GenomeAdmixR simulates only a single chromosome.}
+
+\item{verbose}{give verbose output}
 }
 \value{
 list with two properties: \code{genomes} a matrix with the

@@ -3,6 +3,7 @@
 #' @param file_names names of input files
 #' @param type type of data, options are 'ped' and 'vcf'
 #' @param chosen_chromosome GenomeAdmixR simulates only a single chromosome.
+#' @param verbose give verbose output
 #' @return list with two properties: \code{genomes} a matrix with the
 #' sequence translated to numerics, such that [actg] corresponds to [1234], and
 #' missing data is represented with "-". Rows in the matrix correspond to
@@ -11,7 +12,8 @@
 #' etc. \code{markers} corresponds to the locations of the markers (in bp) on
 #' the chosen chromosome.
 #' @export
-create_input_data <- function(file_names, type, chosen_chromosome) {
+create_input_data <- function(file_names, type, chosen_chromosome,
+                              verbose = FALSE) {
   input_data <- c()
   if (type == "ped") {
     message("reading plink style data: ped/map pair")
@@ -19,7 +21,7 @@ create_input_data <- function(file_names, type, chosen_chromosome) {
   }
   if (type == "vcf") {
     message("reading vcf data")
-    input_data <- read_vcf(file_names[1], chosen_chromosome)
+    input_data <- read_vcf(file_names[1], chosen_chromosome, verbose)
   }
   return(input_data)
 }
@@ -269,7 +271,7 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
   message("extracting genotypes, this may take a while")
   genome_matrix <- matrix(NA, nrow = num_indiv * 2, ncol = num_markers)
   pb <- c()
-  if (verbose) pb <- txtProgressBar(min = 0, max = num_indiv, style = 3)
+  if (verbose) pb <- utils::txtProgressBar(min = 0, max = num_indiv, style = 3)
   for (i in seq_along(genome_data[1, ])) {
     indiv_seq <- genome_data[, i]
     to_convert <- cbind(indiv_seq, map_data[, 1], map_data[, 2])
@@ -277,7 +279,7 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
     indiv_index <- 1 + (i - 1) * 2
     genome_matrix[indiv_index, ] <- sequences[1, ]
     genome_matrix[indiv_index + 1, ] <- sequences[2, ]
-    if (verbose) setTxtProgressBar(pb, i)
+    if (verbose) utils::setTxtProgressBar(pb, i)
   }
 
   message("converting atcg/ATCG entries to 1/2/3/4")
@@ -298,10 +300,10 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
 
 
 #' @keywords internal
-read_vcf <- function(vcf_name, chosen_chromosome) {
+read_vcf <- function(vcf_name, chosen_chromosome, verbose = FALSE) {
   message("reading vcf file")
   vcf_data <- vcfR::read.vcfR(vcf_name)
 
-  return(vcfR_to_genomeadmixr_data(vcf_data, chosen_chromosome))
+  return(vcfR_to_genomeadmixr_data(vcf_data, chosen_chromosome, verbose))
 
 }
