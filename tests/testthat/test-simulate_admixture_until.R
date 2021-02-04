@@ -83,4 +83,3 @@ test_that("simulate_admixture_until_data", {
   testthat::expect_true(length(all.equal(vx$population_1,
                                          vx$population_2)) > 10)
 })
-

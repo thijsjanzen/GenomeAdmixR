@@ -82,7 +82,7 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                          random_markers = TRUE,
                                          mutation_rate = 0,
                                          substitution_matrix =
-                                             matrix(1/4, 4, 4)) {
+                                             matrix(1 / 4, 4, 4)) {
 
   if (!is.na(critical_fst)) {
     stop_at_critical_fst <- TRUE
@@ -158,6 +158,10 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
     }
   } else {
     track_frequency <- TRUE
+  }
+
+  if (track_frequency) {
+    markers <- check_markers(markers, input_data$markers)
   }
 
   if (is.null(seed)) {

@@ -4,12 +4,14 @@
 \alias{vcfR_to_genomeadmixr_data}
 \title{function to convert a vcfR object to genome_admixr_data}
 \usage{
-vcfR_to_genomeadmixr_data(vcfr_object, chosen_chromosome)
+vcfR_to_genomeadmixr_data(vcfr_object, chosen_chromosome, verbose = FALSE)
 }
 \arguments{
 \item{vcfr_object}{result of vcfR::read.vcfR}
 
 \item{chosen_chromosome}{chromosome of choice}
+
+\item{verbose}{if true, print progress bar}
 }
 \value{
 genomeadmixr_data object ready for simulate_admixture_data

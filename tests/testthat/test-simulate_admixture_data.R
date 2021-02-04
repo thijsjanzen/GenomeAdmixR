@@ -134,7 +134,7 @@ test_that("simulate_admixture_data_mutation", {
 
   testthat::expect_equal(mean(bb$mean_freq[2:5]), 0.25)
 
-  bases <- c('a', 'c', 't', 'g')
+  bases <- c("a", "c", "t", "g")
   for (i in 1:4) {
     sub_matrix <- matrix(0, nrow = 4, ncol = 4)
     sub_matrix[, i] <- 1

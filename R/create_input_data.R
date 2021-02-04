@@ -97,6 +97,14 @@ convert_dna_to_numeric <- function(dna_matrix) {
   dna_matrix[dna_matrix == "0"] <- 0
   dna_matrix[dna_matrix == "?"] <- 0
   dna_matrix[dna_matrix == "N"] <- 0
+
+  odd_entries <- which( !(dna_matrix %in% c("0", "1", "2", "3", "4")))
+  if (length(odd_entries) > 0) {
+    message(paste0("found ", length(odd_entries), " non-biallelic entries"))
+    message(paste0("these were set to missing data"))
+    dna_matrix[odd_entries] <- 0
+  }
+
   return(dna_matrix)
 }
 
@@ -196,33 +204,80 @@ convert_vcf_to_alleles <- function(v) {
   return(output)
 }
 
+convert_map_data_to_numeric <- function(map_data) {
+  map_data <- map_data[, c(4, 5)]
+  map_data[map_data == "a"] <- 1
+  map_data[map_data == "A"] <- 1
+  map_data[map_data == "c"] <- 2
+  map_data[map_data == "C"] <- 2
+  map_data[map_data == "t"] <- 3
+  map_data[map_data == "T"] <- 3
+  map_data[map_data == "TRUE"] <- 3
+  map_data[map_data == "g"] <- 4
+  map_data[map_data == "G"] <- 4
+  map_data[is.na(map_data)] <- 0
+  map_data[map_data == "0"] <- 0
+  map_data[map_data == "?"] <- 0
+  map_data[map_data == "N"] <- 0
+
+  odd_entries <- which( !(map_data[, 1] %in% c("0", "1", "2", "3", "4")))
+  odd_entries2 <- which( !(map_data[, 2] %in% c("0", "1", "2", "3", "4")))
+  odd_entries <- unique(c(odd_entries, odd_entries2))
+
+  map_data[odd_entries, 1] <- -1
+  if (sum(map_data[, 1] == "-1") > 0) {
+    message(paste0("found ", sum(map_data[, 1] == "-1"), " INDELs"))
+    message(paste0("these were removed from the dataset"))
+  }
+
+  return(map_data)
+}
+
 
 #' function to convert a vcfR object to genome_admixr_data
 #' @param vcfr_object result of vcfR::read.vcfR
 #' @param chosen_chromosome chromosome of choice
+#' @param verbose if true, print progress bar
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
-vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome) { # nolint
+vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
+                                      verbose = FALSE) {
   # now need to extract relevant data
   indices <- which(vcfr_object@fix[, 1] == chosen_chromosome)
 
-  map_data <- vcfr_object@fix[indices, ]
+  map_data <- convert_map_data_to_numeric(vcfr_object@fix[indices, ])
+  to_remove <- which(map_data[, 1] == "-1")
+
   genome_data <- vcfr_object@gt[indices, ]
   genome_data <- genome_data[, -1]
 
+
+  genome_data <- genome_data[-to_remove, ]
+
+  marker_data <- vcfr_object@fix[indices, 2]
+  marker_data <- marker_data[-to_remove]
+
   num_indiv <- ncol(genome_data)
-  marker_data <- as.numeric(map_data[, 2])
   num_markers <- length(marker_data)
 
-  message("extracting genotypes")
+  map_data <- map_data[-to_remove, ]
+  v1 <- as.numeric(map_data[, 1])
+  v2 <- as.numeric(map_data[, 2])
+  map_data <- cbind(v1, v2)  # this is an ugly solution... but it works?
+
+
+  message("extracting genotypes, this may take a while")
   genome_matrix <- matrix(NA, nrow = num_indiv * 2, ncol = num_markers)
+  pb <- c()
+  if (verbose) pb <- txtProgressBar(min = 0, max = num_indiv, style = 3)
   for (i in seq_along(genome_data[1, ])) {
     indiv_seq <- genome_data[, i]
-    to_convert <- cbind(indiv_seq, map_data[, 4], map_data[, 5])
+    to_convert <- cbind(indiv_seq, map_data[, 1], map_data[, 2])
     sequences <- apply(to_convert, 1, convert_vcf_to_alleles)
     indiv_index <- 1 + (i - 1) * 2
     genome_matrix[indiv_index, ] <- sequences[1, ]
     genome_matrix[indiv_index + 1, ] <- sequences[2, ]
+    if (verbose) setTxtProgressBar(pb, i)
   }
 
   message("converting atcg/ATCG entries to 1/2/3/4")
@@ -231,14 +286,12 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome) { # nolint
                              nrow = length(genome_matrix[, 1]),
                              ncol = length(genome_matrix[1, ]))
 
-  to_numeric <- function(v) {
-    return(as.numeric(v))
-  }
-  genome_matrix <- apply(genome_matrix, 2, to_numeric)
+  genome_matrix <- apply(genome_matrix, 2, as.numeric)
+
   message("done")
   output <- list()
   output$genomes <- genome_matrix
-  output$markers <- marker_data
+  output$markers <- as.numeric(marker_data)
   class(output) <- "genomeadmixr_data"
   return(output)
 }

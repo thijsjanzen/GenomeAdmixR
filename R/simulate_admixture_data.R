@@ -49,7 +49,7 @@ simulate_admixture_data <- function(input_data = NA,
                                     verbose = FALSE,
                                     multiplicative_selection = TRUE,
                                     mutation_rate = 0,
-                                    substitution_matrix = matrix(1/4, 4, 4)) {
+                                    substitution_matrix = matrix(1 / 4, 4, 4)) {
 
   if (class(input_data) != "genomeadmixr_data") {
     stop("input_data should be of class genomeadmixr_data\n
@@ -101,6 +101,10 @@ simulate_admixture_data <- function(input_data = NA,
 
   if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))
+  }
+
+  if (track_frequency) {
+    markers <- check_markers(markers, input_data$markers)
   }
 
 

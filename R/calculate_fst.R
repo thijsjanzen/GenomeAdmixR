@@ -40,7 +40,7 @@ calculate_fst <- function(pop1,
   number_of_markers <- round(number_of_markers)
 
   if (sampled_individuals > max(length(pop1), length(pop2))) {
-    sampled_individuals = max(length(pop1), length(pop2))
+    sampled_individuals <- max(length(pop1), length(pop2))
   }
 
   all_loci <- create_loci_matrix(

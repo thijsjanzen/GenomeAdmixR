@@ -533,6 +533,7 @@ convert_to_genomeadmixr_data <- function(input_population,
   return(output)
 }
 
+#' @keywords internal
 verify_substitution_matrix <- function(substitution_matrix) {
   if (length(substitution_matrix == 1)) {
     if (is.na(substitution_matrix[[1]])) {
@@ -550,4 +551,20 @@ verify_substitution_matrix <- function(substitution_matrix) {
   if (sum(rs != 1) > 0) {
     stop("all rows in the substitution matrix have to sum to 1")
   }
+}
+
+#' @keywords internal
+check_markers <- function(markers, data_markers) {
+  markers_in_data <- markers %in% data_markers
+  which_markers_not_in_data <- which(markers_in_data == FALSE)
+
+  if (length(which_markers_not_in_data) > 0) {
+    warning(paste0("removing: ", length(which_markers_not_in_data), " markers as these do not exist in the original dataset"))
+    markers <- markers[-which_markers_not_in_data]
+  }
+
+  if (length(markers) == 0) {
+    stop("you have to provide markers that exist in the original dataset")
+  }
+  return(markers)
 }
