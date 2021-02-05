@@ -21,6 +21,43 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
+void update_pop(const std::vector<Fish>& Pop,
+                std::vector<Fish>& new_generation,
+                std::vector<double>& new_fitness,
+                const NumericMatrix& select,
+                int pop_size,
+                double morgan,
+                const std::vector<double>& fitness,
+                const double& maxFitness,
+                bool use_selection,
+                double multiplicative_selection,
+                rnd_t& rndgen) {
+
+  for (int i = 0; i < pop_size; ++i)  {
+    int index1 = 0;
+    int index2 = 0;
+    if (use_selection) {
+      index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
+      index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
+      while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
+    } else {
+      index1 = rndgen.random_number( (int)Pop.size() );
+      index2 = rndgen.random_number( (int)Pop.size() );
+      while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
+    }
+
+    new_generation[i] = mate(Pop[index1], Pop[index2], morgan, rndgen);
+
+
+    if(use_selection) {
+      new_fitness[i] = calculate_fitness(new_generation[i], select, multiplicative_selection);
+    }
+  }
+}
+
+
+
+
 std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         const NumericMatrix& select,
                                         int pop_size,
@@ -87,30 +124,13 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
       }
     }
 
-    std::vector<Fish> newGeneration(pop_size);
-    std::vector<double> newFitness;
-    double newMaxFitness = -1.0;
-    for (int i = 0; i < pop_size; ++i)  {
-      int index1 = 0;
-      int index2 = 0;
-      if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
-        index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-      } else {
-        index1 = rndgen.random_number( (int)Pop.size() );
-        index2 = rndgen.random_number( (int)Pop.size() );
-        while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
-      }
+    std::vector<Fish> new_generation(pop_size);
+    std::vector<double> new_fitness(pop_size);
 
-      newGeneration[i] = mate(Pop[index1], Pop[index2], morgan, rndgen);
+    update_pop(Pop, new_generation, new_fitness, select, pop_size,
+               morgan, fitness, maxFitness,  use_selection,
+               multiplicative_selection, rndgen);
 
-      double fit = -2.0;
-      if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
-      if(fit > newMaxFitness) newMaxFitness = fit;
-
-      newFitness.push_back(fit);
-    }
 
     if (t % updateFreq == 0 && verbose) {
       Rcout << "**";
@@ -123,9 +143,11 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     }
 
     Rcpp::checkUserInterrupt();
-    Pop.swap(newGeneration);
-    fitness.swap(newFitness);
-    maxFitness = newMaxFitness;
+    Pop.swap(new_generation);
+    if (use_selection) {
+      fitness = new_fitness;
+      maxFitness = *std::max_element(fitness.begin(), fitness.end());
+    }
   }
   if(verbose) Rcout << "\n";
   return(Pop);

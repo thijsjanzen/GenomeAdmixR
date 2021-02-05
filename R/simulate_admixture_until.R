@@ -72,7 +72,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                          random_markers = random_markers)
 
     total_generations <- total_generations + generations_between_update
-    message(total_generations, "\t", fst, "\n")
+    message(total_generations, "\t", fst)
   }
   return(list("population_1" = pops$population_1,
               "population_2" = pops$population_2,

@@ -2,8 +2,8 @@ context("simulate_admixture_until")
 
 test_that("simulate_admixture_until", {
   testthat::skip_on_os("solaris")
- message("test simulate_admixture_until")
-    vx <- simulate_admixture_migration(total_runtime = 1000,
+  message("test simulate_admixture_until")
+  vx <- simulate_admixture_migration(total_runtime = 1000,
                                      pop_size = c(100, 100),
                                      initial_frequencies = list(c(0.5, 0.5),
                                                                 c(0.5, 0.5)),
