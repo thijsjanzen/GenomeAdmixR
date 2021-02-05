@@ -69,6 +69,7 @@
 #' @examples
 #' two_populations <- simulate_admixture_migration(pop_size = c(100, 100),
 #'                                                 morgan = 1,
+#'                                                 total_runtime = 10,
 #'                                                 migration_rate = 0.01)
 #' @export
 simulate_admixture_migration <- function(input_population_1 = NA,

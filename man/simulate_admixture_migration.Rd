@@ -122,5 +122,6 @@ simulated, connected by migration
 \examples{
 two_populations <- simulate_admixture_migration(pop_size = c(100, 100),
                                                 morgan = 1,
+                                                total_runtime = 10,
                                                 migration_rate = 0.01)
 }
