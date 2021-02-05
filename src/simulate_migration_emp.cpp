@@ -101,8 +101,8 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                             rndgen);
     }
 
-    new_generation[i] = Fish_emp(parent1.gamete(rndgen),
-                                 parent2.gamete(rndgen));
+    new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen),
+                                 parent2.gamete(size_in_morgan, rndgen));
 
     if (mutation_rate > 0)
       mutate(new_generation[i], substitution_matrix, rndgen);
@@ -294,7 +294,6 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                             const NumericMatrix& substitution_matrix) {
 
   rnd_t rndgen(seed);
-  rndgen.set_poisson(morgan);
 
   std::vector< Fish_emp > Pop_1;
   std::vector< Fish_emp > Pop_2;

@@ -21,6 +21,8 @@
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
 #' @param seed Seed of the pseudo-random number generator
+#' @param num_threads number of threads. Default is 1. Set to -1 to use all
+#' available threads
 #' @param select_matrix Selection matrix indicating the markers which are under
 #' selection. If not provided by the user, the simulation proceeds neutrally.
 #' If provided, each row in the matrix should contain five entries:
@@ -77,6 +79,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          total_runtime = 100,
                                          morgan = 1,
                                          seed = NULL,
+                                         num_threads = 1,
                                          select_matrix = NA,
                                          markers = NA,
                                          verbose = FALSE,
@@ -98,6 +101,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                     total_runtime = total_runtime,
                                     morgan = morgan,
                                     seed = seed,
+                                    num_threads = num_threads,
                                     select_matrix = select_matrix,
                                     markers = markers,
                                     verbose = verbose,
@@ -172,7 +176,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          track_junctions,
                                          multiplicative_selection,
                                          migration_rate,
-                                         seed)
+                                         seed,
+                                         num_threads)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)
   selected_popstruct_2 <- create_pop_class(selected_pop$population_2)

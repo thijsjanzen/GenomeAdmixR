@@ -194,7 +194,6 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   int num_threads) {
 
   rnd_t rndgen(seed);
-  rndgen.set_poisson(morgan);
 
   std::vector< Fish > Pop;
   int number_of_alleles = number_of_founders;

@@ -20,7 +20,6 @@
 struct rnd_t {
   std::mt19937 rndgen_;
   std::uniform_real_distribution<> unif_dist = std::uniform_real_distribution<>(0, 1.0);
-  std::poisson_distribution<int> poisson_preset_dist;
   std::vector< double > cum_marker_dist;
   std::uniform_int_distribution<> rand_num_dist;
   std::binomial_distribution<int> mutate_num;
@@ -51,16 +50,8 @@ struct rnd_t {
     return std::poisson_distribution<int>(lambda)(rndgen_);
   }
 
-  void set_poisson(double lambda) {
-    poisson_preset_dist = std::poisson_distribution<int>(lambda);
-  }
-
-  int poisson_preset() {
-    return poisson_preset_dist(rndgen_);
-  }
-
-  std::vector< size_t > recompos() {
-    int num_break_points = poisson_preset();
+  std::vector< size_t > recompos(double morgan) {
+    int num_break_points = poisson(morgan);
     std::vector< size_t > indices;
     for(size_t i = 0; i < num_break_points; ++i) {
       auto found_index = index_from_cdf(uniform());

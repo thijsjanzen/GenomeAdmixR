@@ -115,8 +115,8 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
         while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
       }
 
-      newGeneration[i] = Fish_emp(Pop[index1].gamete(rndgen),
-                                  Pop[index2].gamete(rndgen));
+      newGeneration[i] = Fish_emp(Pop[index1].gamete(morgan, rndgen),
+                                  Pop[index2].gamete(morgan, rndgen));
 
       if (mutation_rate > 0)
         mutate(newGeneration[i], sub_matrix, rndgen);
@@ -169,7 +169,6 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                       NumericMatrix sub_matrix) {
 
   rnd_t rndgen(seed);
-  rndgen.set_poisson(morgan);
 
 
   std::vector<double> marker_positions(marker_positions_R.begin(),
