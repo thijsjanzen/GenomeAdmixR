@@ -29,26 +29,27 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
                      const std::vector< double >& fitness_migr,
                      double max_fitness_source,
                      double max_fitness_migr,
-                     int &index) {
+                     int &index,
+                     rnd_t& rndgen) {
 
   Fish_emp parent;
   index = -1;
 
-  if (uniform() < migration_rate) {
+  if (rndgen.uniform() < migration_rate) {
     // migration
     if(use_selection) {
-      index = draw_prop_fitness(fitness_migr, max_fitness_migr);
+      index = draw_prop_fitness(fitness_migr, max_fitness_migr, rndgen);
     } else {
-      index = random_number( (int)pop_2.size() );
+      index = rndgen.random_number( (int)pop_2.size() );
     }
     parent = pop_2[index];
     index = index + pop_1.size();
     // to ensure different indices for pop_1 and pop_2
   } else {
     if(use_selection)  {
-      index = draw_prop_fitness(fitness_source, max_fitness_source);
+      index = draw_prop_fitness(fitness_source, max_fitness_source, rndgen);
     } else {
-      index = random_number( (int)pop_1.size() );
+      index = rndgen.random_number( (int)pop_1.size() );
     }
     parent = pop_1[index];
   }
@@ -72,7 +73,8 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       std::vector< double >& new_fitness,
                                       double size_in_morgan,
                                       double mutation_rate,
-                                      const NumericMatrix& substitution_matrix) {
+                                      const NumericMatrix& substitution_matrix,
+                                      rnd_t& rndgen) {
 
   std::vector<Fish_emp> new_generation(pop_size);
 
@@ -82,25 +84,28 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                    use_selection,
                                    fitness_source, fitness_migr,
                                    max_fitness_source, max_fitness_migr,
-                                   index1);
+                                   index1,
+                                   rndgen);
     Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
                                    use_selection,
                                    fitness_source, fitness_migr,
                                    max_fitness_source, max_fitness_migr,
-                                   index2);
+                                   index2,
+                                   rndgen);
     while (index1 == index2) {
       parent2 = draw_parent(pop_1, pop_2, migration_rate,
                             use_selection,
                             fitness_source, fitness_migr,
                             max_fitness_source, max_fitness_migr,
-                            index2);
+                            index2,
+                            rndgen);
     }
 
-    new_generation[i] = Fish_emp(parent1.gamete(recompos()),
-                                 parent2.gamete(recompos()));
+    new_generation[i] = Fish_emp(parent1.gamete(rndgen),
+                                 parent2.gamete(rndgen));
 
     if (mutation_rate > 0)
-      mutate(new_generation[i], substitution_matrix);
+      mutate(new_generation[i], substitution_matrix, rndgen);
 
     double fit = -2.0;
     if (use_selection) {
@@ -130,7 +135,8 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     const std::vector<int>& founder_labels,
     double migration_rate,
     double mutation_rate,
-    const NumericMatrix& substitution_matrix) {
+    const NumericMatrix& substitution_matrix,
+    rnd_t& rndgen) {
 
   bool use_selection = false;
   if (select(1, 1) >= 0) use_selection = true;
@@ -219,7 +225,8 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                new_fitness_pop_1,
                                                                morgan,
                                                                mutation_rate,
-                                                               substitution_matrix);
+                                                               substitution_matrix,
+                                                               rndgen);
 
     std::vector<Fish_emp> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                                pop_1,  // migrants
@@ -236,7 +243,8 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                new_fitness_pop_2,
                                                                morgan,
                                                                mutation_rate,
-                                                               substitution_matrix);
+                                                               substitution_matrix,
+                                                               rndgen);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
     fitness_pop_1 = new_fitness_pop_1;
@@ -284,8 +292,9 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                             int seed,
                             double mutation_rate,
                             const NumericMatrix& substitution_matrix) {
-  set_seed(seed);
-  set_poisson(morgan);
+
+  rnd_t rndgen(seed);
+  rndgen.set_poisson(morgan);
 
   std::vector< Fish_emp > Pop_1;
   std::vector< Fish_emp > Pop_2;
@@ -296,7 +305,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                        marker_positions_R.end());
 
   if (mutation_rate > 0) {
-    set_mutation_rate(mutation_rate,
+    rndgen.set_mutation_rate(mutation_rate,
                       marker_positions.size());
   }
 
@@ -346,7 +355,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
       // the populations have to be populated from the parents!
       std::vector< Fish_emp > Pop_1_new;
       for(int j = 0; j < pop_size[0]; ++j) {
-        int index = random_number(Pop_1.size());
+        int index = rndgen.random_number(Pop_1.size());
         Pop_1_new.push_back(Pop_1[index]);
       }
       Pop_1 = Pop_1_new;
@@ -360,7 +369,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
       std::vector< Fish_emp > Pop_2_new;
       //  Rcout << "drawing pop 2: " << pop_size[1] << "\n"; force_output();
       for (int j = 0; j < pop_size[1]; ++j) {
-        int index = random_number(Pop_2.size());
+        int index = rndgen.random_number(Pop_2.size());
         Pop_2_new.push_back(Pop_2[index]);
       }
       Pop_2 = Pop_2_new;
@@ -398,7 +407,8 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                                 founder_labels,
                                                 migration_rate,
                                                 mutation_rate,
-                                                substitution_matrix);
+                                                substitution_matrix,
+                                                rndgen);
 
   // Rcout << "done simulating\n"; force_output();
 

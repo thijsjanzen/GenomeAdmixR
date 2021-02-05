@@ -215,16 +215,17 @@ double calc_mean_junctions(const std::vector< Fish> & pop) {
 }
 
 int draw_prop_fitness(const std::vector<double>& fitness,
-                      double maxFitness) {
+                      double maxFitness,
+                      rnd_t& rndgen) {
 
   if (maxFitness <= 0.0) {
-    return random_number(fitness.size());
+    return rndgen.random_number(fitness.size());
   }
 
   while(true) {
-    int index = random_number(fitness.size());
+    int index = rndgen.random_number(fitness.size());
     double prob = 1.0 * fitness[index] / maxFitness;
-    if(uniform() < prob) {
+    if(rndgen.uniform() < prob) {
       return index;
     }
   }
@@ -376,8 +377,9 @@ double calculate_fitness(const Fish& focal,
 }
 
 
-int draw_random_founder(const NumericVector& v) {
-  double r = uniform();
+int draw_random_founder(const NumericVector& v,
+                        rnd_t& rndgen) {
+  double r = rndgen.uniform();
   for(int i = 0; i < v.size(); ++i) {
     r -= v[i];
     if(r <= 0) {
@@ -810,13 +812,14 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& 
 
 
 int draw_mutated_base(int source_base,
-                      const NumericMatrix& sub_matrix) {
+                      const NumericMatrix& sub_matrix,
+                      rnd_t& rndgen) {
   if (source_base == 0) // no data
     return 0;
 
   static int alleles[4] = {1, 2, 3, 4};
 
-  double r = uniform();
+  double r = rndgen.uniform();
   for (int i = 0; i < 4; ++i) {
     r -= sub_matrix(source_base - 1, i);
     if (r <= 0.0) {
@@ -827,22 +830,25 @@ int draw_mutated_base(int source_base,
 }
 
 void mutate_chrom(std::vector<int>& chrom,
-                  const NumericMatrix& sub_matrix) {
-  int num_mutated_bases = num_mutations();
+                  const NumericMatrix& sub_matrix,
+                  rnd_t& rndgen) {
+  int num_mutated_bases = rndgen.num_mutations();
   for (int i = 0; i < num_mutated_bases; ++i) {
-    int index = random_number(chrom.size());
+    int index = rndgen.random_number(chrom.size());
     int mutated_base = draw_mutated_base(chrom[index],
-                                         sub_matrix);
+                                         sub_matrix,
+                                         rndgen);
     chrom[index] = mutated_base;
   }
   return;
 }
 
 void mutate(Fish_emp& indiv,
-            const NumericMatrix& sub_matrix) {
+            const NumericMatrix& sub_matrix,
+            rnd_t& rndgen) {
 
-  mutate_chrom(indiv.chromosome1, sub_matrix);
-  mutate_chrom(indiv.chromosome2, sub_matrix);
+  mutate_chrom(indiv.chromosome1, sub_matrix, rndgen);
+  mutate_chrom(indiv.chromosome2, sub_matrix, rndgen);
 
   return;
 }

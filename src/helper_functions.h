@@ -35,7 +35,8 @@ arma::mat update_all_frequencies(const std::vector< Fish >& pop,
 double calc_mean_junctions(const std::vector< Fish> & pop);
 
 int draw_prop_fitness(const std::vector<double>& fitness,
-                      double maxFitness);
+                      double maxFitness,
+                      rnd_t& rndgen);
 
 std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v);
 
@@ -45,7 +46,9 @@ double calculate_fitness(const Fish& focal,
                          const NumericMatrix& select,
                          bool multiplicative_selection);
 
-int draw_random_founder(const NumericVector& v);
+int draw_random_founder(const NumericVector& v,
+                        rnd_t& rndgen);
+
 void update_founder_labels(const std::vector<junction> chrom,
                            std::vector<int>& founder_labels);
 
@@ -126,6 +129,7 @@ int find_location(const std::vector<double>& markers,
 double number_of_junctions(const std::vector< Fish_emp>& pop);
 
 void mutate(Fish_emp& indiv,
-            const NumericMatrix& sub_matrix);
+            const NumericMatrix& sub_matrix,
+            rnd_t& rndgen);
 
 #endif /* helper_functions_hpp */

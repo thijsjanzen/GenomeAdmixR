@@ -43,10 +43,12 @@ struct Fish_emp {
     return *this;
   }
 
-  std::vector< int > gamete(const std::vector< size_t >& recom_pos) {
+  std::vector< int > gamete(rnd_t& rndgen) {
+
+    std::vector<size_t> recom_pos = rndgen.recompos();
 
     if (recom_pos.size() == 1) {
-      if(random_number(2)) {
+      if(rndgen.random_number(2)) {
         return chromosome1;
       }
       return chromosome2;
@@ -55,7 +57,7 @@ struct Fish_emp {
     std::vector < std::vector<int>::const_iterator > iters = {chromosome1.begin(),
                                                               chromosome2.begin()};
     std::vector< int > recombined_chromosome;
-    int index = random_number(2);
+    int index = rndgen.random_number(2);
     size_t prev_start = 0;
 
     for(size_t i = 0; i < recom_pos.size(); ++i) {

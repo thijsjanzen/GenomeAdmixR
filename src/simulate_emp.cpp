@@ -35,19 +35,12 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
                                                 const std::vector<double>& track_markers,
                                                 bool multiplicative_selection,
                                                 double mutation_rate,
-                                                const NumericMatrix& sub_matrix) {
+                                                const NumericMatrix& sub_matrix,
+                                                rnd_t& rndgen) {
 
   int num_alleles = 5;
   bool use_selection = false;
   if(select_matrix(0, 0) >= 0) use_selection = true;
-
-  /*for(int i = 0; i < select_matrix.nrow(); ++i) {
-    for(int j = 0; j < select_matrix.ncol(); ++j) {
-      Rcout << select_matrix(i, j) << " ";
-    }
-    Rcout << "\n";
-  } force_output();*/
-
 
   std::vector<Fish_emp> Pop = sourcePop;
   std::vector<double> fitness;
@@ -113,20 +106,20 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
       int index1 = 0;
       int index2 = 0;
       if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness);
-        index2 = draw_prop_fitness(fitness, maxFitness);
-        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness);
+        index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
+        index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
+        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
       } else {
-        index1 = random_number( (int)Pop.size() );
-        index2 = random_number( (int)Pop.size() );
-        while(index2 == index1) index2 = random_number( (int)Pop.size() );
+        index1 = rndgen.random_number( (int)Pop.size() );
+        index2 = rndgen.random_number( (int)Pop.size() );
+        while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
       }
 
-      newGeneration[i] = Fish_emp(Pop[index1].gamete(recompos()),
-                                  Pop[index2].gamete(recompos()));
+      newGeneration[i] = Fish_emp(Pop[index1].gamete(rndgen),
+                                  Pop[index2].gamete(rndgen));
 
       if (mutation_rate > 0)
-        mutate(newGeneration[i], sub_matrix);
+        mutate(newGeneration[i], sub_matrix, rndgen);
 
 
       if(use_selection) {
@@ -175,15 +168,15 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                       double mutation_rate,
                       NumericMatrix sub_matrix) {
 
-  set_seed(seed);
-  set_poisson(morgan);
+  rnd_t rndgen(seed);
+  rndgen.set_poisson(morgan);
 
 
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
 
-  if (mutation_rate > 0) set_mutation_rate(mutation_rate,
-                                           marker_positions.size());
+  if (mutation_rate > 0)
+      rndgen.set_mutation_rate(mutation_rate, marker_positions.size());
 
   auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
                                                     marker_positions.end()));
@@ -218,7 +211,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   }
 
 
-  fill_cum_marker_dist(marker_positions);
+  rndgen.fill_cum_marker_dist(marker_positions);
 
   std::vector< Fish_emp > Pop;
 
@@ -234,7 +227,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
     // the new population has to be seeded from the input!
     std::vector< Fish_emp > Pop_new;
     for (size_t j = 0; j < pop_size; ++j) {
-      int index = random_number(Pop.size());
+      int index = rndgen.random_number(Pop.size());
       Pop_new.push_back(Pop[index]);
     }
     Pop = Pop_new;
@@ -269,7 +262,8 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                              track_markers,
                                                              multiplicative_selection,
                                                              mutation_rate,
-                                                             sub_matrix);
+                                                             sub_matrix,
+                                                             rndgen);
 
  // Rcout << "final frequencies\n"; force_output();
   arma::mat final_frequencies = update_all_frequencies_tibble(output_pop,

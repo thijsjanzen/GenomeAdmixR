@@ -34,7 +34,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         std::vector<double>& junctions,
                                         bool multiplicative_selection,
                                         int num_alleles,
-                                        const std::vector<int>& founder_labels) {
+                                        const std::vector<int>& founder_labels,
+                                        rnd_t& rndgen) {
 
   bool use_selection = false;
   if(select(1, 1) >= 0) use_selection = true;
@@ -93,16 +94,16 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
       int index1 = 0;
       int index2 = 0;
       if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness);
-        index2 = draw_prop_fitness(fitness, maxFitness);
-        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness);
+        index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
+        index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
+        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
       } else {
-        index1 = random_number( (int)Pop.size() );
-        index2 = random_number( (int)Pop.size() );
-        while(index2 == index1) index2 = random_number( (int)Pop.size() );
+        index1 = rndgen.random_number( (int)Pop.size() );
+        index2 = rndgen.random_number( (int)Pop.size() );
+        while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
       }
 
-      newGeneration[i] = mate(Pop[index1], Pop[index2], morgan);
+      newGeneration[i] = mate(Pop[index1], Pop[index2], morgan, rndgen);
 
       double fit = -2.0;
       if(use_selection) fit = calculate_fitness(newGeneration[i], select, multiplicative_selection);
@@ -145,8 +146,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   bool multiplicative_selection,
                   int seed) {
 
-  set_seed(seed);
-  set_poisson(morgan);
+  rnd_t rndgen(seed);
+  rndgen.set_poisson(morgan);
 
   std::vector< Fish > Pop;
   int number_of_alleles = number_of_founders;
@@ -170,20 +171,20 @@ List simulate_cpp(Rcpp::NumericVector input_population,
       // the new population has to be seeded from the input!
       std::vector< Fish > Pop_new;
       for (size_t j = 0; j < pop_size; ++j) {
-        int index = random_number(Pop.size());
+        int index = rndgen.random_number(Pop.size());
         Pop_new.push_back(Pop[index]);
       }
       Pop = Pop_new;
     }
   } else {
     for (size_t i = 0; i < pop_size; ++i) {
-      int founder_1 = draw_random_founder(starting_proportions);
-      int founder_2 = draw_random_founder(starting_proportions);
+      int founder_1 = draw_random_founder(starting_proportions, rndgen);
+      int founder_2 = draw_random_founder(starting_proportions, rndgen);
 
       Fish p1 = Fish( founder_1 );
       Fish p2 = Fish( founder_2 );
 
-      Pop.push_back(mate(p1,p2, morgan));
+      Pop.push_back(mate(p1,p2, morgan, rndgen));
     }
     for (int i = 0; i < number_of_alleles; ++i) {
       founder_labels.push_back(i);
@@ -218,7 +219,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                     junctions,
                                                     multiplicative_selection,
                                                     number_of_alleles,
-                                                    founder_labels);
+                                                    founder_labels,
+                                                    rndgen);
 
  // if (verbose) {
 //    Rcout << "done simulating\n";
