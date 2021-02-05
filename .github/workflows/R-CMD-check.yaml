@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-      - mutation
+      - threading
   pull_request:
     branches:
       - main
