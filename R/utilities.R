@@ -3,6 +3,7 @@
 # #' @return corrected input population, or error if not supplied
 #' @rawNamespace useDynLib(GenomeAdmixR, .registration = TRUE)
 #' @rawNamespace import(Rcpp)
+#' @rawNamespace importFrom(RcppParallel, RcppParallelLibs)
 #' @keywords internal
 check_input_pop <- function(pop) {
 

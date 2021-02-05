@@ -27,6 +27,7 @@ Imports:
     hierfstat,
     methods,
     Rcpp,
+    RcppParallel,
     rlang,
     stringr,
     tibble,
@@ -42,7 +43,8 @@ Suggests:
     testthat
 LinkingTo: 
     Rcpp,
-    RcppArmadillo
+    RcppArmadillo,
+    RcppParallel
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

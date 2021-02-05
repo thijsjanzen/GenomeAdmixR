@@ -14,13 +14,15 @@
 std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<junction>& chromosome2,
                                     const std::vector<double>& recom_positions) {
-  static auto tl_go = decltype(chromosome1){};
+//  static auto tl_go = decltype(chromosome1){};
 
   // we need something that is cheaply swappable:
   auto* g1 = &chromosome1;
   auto* g2 = &chromosome2;
-  auto& go = tl_go;   // offspring genome: recycle what's already there...
-  go.clear();
+ // auto& go = tl_go;   // offspring genome: recycle what's already there...
+//  go.clear();
+
+  std::vector<junction> go;
 
   // predicate for lower_bound
   auto less = [](const auto& j, double p) { return j.pos < p; };
@@ -74,7 +76,7 @@ void Recombine(      std::vector<junction>& offspring,
                      double MORGAN,
                      rnd_t& rndgen)  {
 
-  int numRecombinations = rndgen.poisson_preset();
+  int numRecombinations = rndgen.poisson(MORGAN);
 
   if (numRecombinations == 0) {
     offspring.insert(offspring.end(),

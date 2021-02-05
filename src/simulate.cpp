@@ -13,9 +13,13 @@
 #include <vector>
 #include <algorithm>
 
+#include <iostream>
+
 #include "Fish.h"
 #include "random_functions.h"
 #include "helper_functions.h"
+
+#include <RcppParallel.h>
 
 #include <RcppArmadillo.h>
 // [[Rcpp::depends("RcppArmadillo")]]
@@ -23,40 +27,55 @@ using namespace Rcpp;
 
 void update_pop(const std::vector<Fish>& Pop,
                 std::vector<Fish>& new_generation,
-                std::vector<double>& new_fitness,
-                const NumericMatrix& select,
                 int pop_size,
                 double morgan,
                 const std::vector<double>& fitness,
                 const double& maxFitness,
                 bool use_selection,
                 double multiplicative_selection,
-                rnd_t& rndgen) {
+                int num_threads) {
 
-  for (int i = 0; i < pop_size; ++i)  {
-    int index1 = 0;
-    int index2 = 0;
-    if (use_selection) {
-      index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
-      index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-      while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-    } else {
-      index1 = rndgen.random_number( (int)Pop.size() );
-      index2 = rndgen.random_number( (int)Pop.size() );
-      while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
-    }
-
-    new_generation[i] = mate(Pop[index1], Pop[index2], morgan, rndgen);
-
-
-    if(use_selection) {
-      new_fitness[i] = calculate_fitness(new_generation[i], select, multiplicative_selection);
-    }
+  if (Pop.size() != pop_size) {
+    stop("wrong size pop");
   }
+  if (new_generation.size() != pop_size) {
+    stop("new_generation wrong size");
+  }
+ // std::cerr << " " << num_threads << " " <<
+  //                use_selection << " " << maxFitness << " " << std::flush;
+
+  //force_output();
+
+
+  tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+
+  tbb::parallel_for(
+    tbb::blocked_range<unsigned>(0, pop_size),
+    [&](const tbb::blocked_range<unsigned>& r) {
+
+      thread_local rnd_t rndgen2; // calls get_seed
+
+      for (unsigned i = r.begin(); i < r.end(); ++i) {
+  //  for (int i = 0; i < pop_size; ++i) {
+        int index1 = 0;
+        int index2 = 0;
+        if (use_selection) {
+          index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+          index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+          while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+        } else {
+          index1 = rndgen2.random_number( pop_size );
+          index2 = rndgen2.random_number( pop_size );
+          while(index2 == index1) index2 = rndgen2.random_number( pop_size );
+        }
+
+      //  std::cerr << index1 << " " << index2 << " " << std::endl << std::flush;
+
+        new_generation[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
+      }
+  });
+  return;
 }
-
-
-
 
 std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         const NumericMatrix& select,
@@ -72,7 +91,8 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         bool multiplicative_selection,
                                         int num_alleles,
                                         const std::vector<int>& founder_labels,
-                                        rnd_t& rndgen) {
+                                        rnd_t& rndgen,
+                                        int num_threads) {
 
   bool use_selection = false;
   if(select(1, 1) >= 0) use_selection = true;
@@ -94,6 +114,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
   if(updateFreq < 1) updateFreq = 1;
 
   if(verbose) {
+  //  Rcout << "running until: " << total_runtime << "\n";
     Rcout << "0--------25--------50--------75--------100\n";
     Rcout << "*";
   }
@@ -125,12 +146,13 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     }
 
     std::vector<Fish> new_generation(pop_size);
-    std::vector<double> new_fitness(pop_size);
 
-    update_pop(Pop, new_generation, new_fitness, select, pop_size,
+  //  std::cerr << "t " << t << std::flush;
+    update_pop(Pop, new_generation, pop_size,
                morgan, fitness, maxFitness,  use_selection,
-               multiplicative_selection, rndgen);
+               multiplicative_selection, num_threads);
 
+  //  std::cerr << " updated\n" << std::flush;
 
     if (t % updateFreq == 0 && verbose) {
       Rcout << "**";
@@ -145,7 +167,9 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     Rcpp::checkUserInterrupt();
     Pop.swap(new_generation);
     if (use_selection) {
-      fitness = new_fitness;
+      for (int i = 0; i < pop_size; ++i) {
+        fitness[i] = calculate_fitness(Pop[i], select, multiplicative_selection);
+      }
       maxFitness = *std::max_element(fitness.begin(), fitness.end());
     }
   }
@@ -166,7 +190,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericVector track_markers,
                   bool track_junctions,
                   bool multiplicative_selection,
-                  int seed) {
+                  int seed,
+                  int num_threads) {
 
   rnd_t rndgen(seed);
   rndgen.set_poisson(morgan);
@@ -242,7 +267,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                                                     multiplicative_selection,
                                                     number_of_alleles,
                                                     founder_labels,
-                                                    rndgen);
+                                                    rndgen,
+                                                    num_threads);
 
  // if (verbose) {
 //    Rcout << "done simulating\n";

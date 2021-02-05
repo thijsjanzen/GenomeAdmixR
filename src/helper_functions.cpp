@@ -8,10 +8,12 @@
 #include "helper_functions.h"
 #include <vector>
 #include <string>
+#include <thread>
+#include <chrono>
 
 
 void force_output() {
- // ::sleep(1);
+  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();

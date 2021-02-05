@@ -12,6 +12,10 @@
 #include <random>
 #include <vector>
 #include <algorithm> // std::sort
+#include <thread>
+#include <chrono>
+#include <iostream>
+#include <cmath>
 
 struct rnd_t {
   std::mt19937 rndgen_;
@@ -22,8 +26,9 @@ struct rnd_t {
   std::binomial_distribution<int> mutate_num;
 
   rnd_t() {
-    std::random_device rd;
-    rndgen_ = std::mt19937(rd());
+    auto seed = get_seed();
+  //  std::cerr << "initializing rnd_t with: " << seed << "\n" << std::flush;
+    rndgen_ = std::mt19937(seed);
   }
 
   rnd_t(unsigned int seed) {
@@ -96,6 +101,15 @@ struct rnd_t {
 
   int num_mutations() {
     return mutate_num(rndgen_);
+  }
+
+  int get_seed() {
+    const auto tt = static_cast<int64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    auto tid = std::this_thread::get_id();
+    const uint64_t e3{ std::hash<std::remove_const_t<decltype(tid)>>()(tid) };
+    auto output = static_cast<int>(tt + e3);
+    if (output < 0) output *= -1;
+    return output;
   }
 };
 
