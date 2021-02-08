@@ -3,6 +3,11 @@
 #' @param file_names names of input files
 #' @param type type of data, options are 'ped' and 'vcf'
 #' @param chosen_chromosome GenomeAdmixR simulates only a single chromosome.
+#' @param number_of_snps number of snps to be loaded from file, default
+#' is to load all snps
+#' @param random_snps if a subset of all snps has to be taken, should these
+#' be sampled sequentially (e.g. the first 100 snps) or randomly (100 randomly
+#' sampled snps) (examples are for 'number_of_snps' = 100).
 #' @param verbose give verbose output
 #' @return list with two properties: \code{genomes} a matrix with the
 #' sequence translated to numerics, such that [actg] corresponds to [1234], and
@@ -12,7 +17,9 @@
 #' etc. \code{markers} corresponds to the locations of the markers (in bp) on
 #' the chosen chromosome.
 #' @export
-create_input_data <- function(file_names, type, chosen_chromosome,
+create_input_data <- function(file_names,
+                              type,
+                              chosen_chromosome,
                               number_of_snps = NA,
                               random_snps = TRUE,
                               verbose = FALSE) {

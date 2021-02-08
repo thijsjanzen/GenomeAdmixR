@@ -20,6 +20,13 @@ create_input_data(
 
 \item{chosen_chromosome}{GenomeAdmixR simulates only a single chromosome.}
 
+\item{number_of_snps}{number of snps to be loaded from file, default
+is to load all snps}
+
+\item{random_snps}{if a subset of all snps has to be taken, should these
+be sampled sequentially (e.g. the first 100 snps) or randomly (100 randomly
+sampled snps) (examples are for 'number_of_snps' = 100).}
+
 \item{verbose}{give verbose output}
 }
 \value{

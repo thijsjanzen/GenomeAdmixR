@@ -39,7 +39,8 @@ Suggests:
     magrittr,
     rmarkdown,
     testit,
-    testthat
+    testthat,
+    pbapply
 LinkingTo: 
     Rcpp,
     RcppArmadillo

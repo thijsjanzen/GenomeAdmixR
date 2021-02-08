@@ -135,6 +135,9 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
     select_matrix <- other_matrix
 
     sites_under_selection <- select_matrix[, 1]
+    if (max(sites_under_selection) > morgan) {
+      sites_under_selection <- morgan * sites_under_selection / max(sites_under_selection)
+    }
     normalized_markers <-
       (input_data_population_1$markers /
          max(input_data_population_1$markers)) * morgan
