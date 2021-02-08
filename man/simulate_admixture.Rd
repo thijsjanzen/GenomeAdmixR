@@ -24,8 +24,10 @@ simulate_admixture(
 starting point for the simulation. If not provided by the user, the
 simulation starts from scratch.}
 
-\item{pop_size}{Vector containing the number of individuals in both
-populations.}
+\item{pop_size}{The number of individuals in the population. If the number is
+larger than the number of individuals in the input population (if provided),
+additional individuals are sampled randomly from the input population to
+reach the intended size.}
 
 \item{number_of_founders}{Number of unique ancestors}
 

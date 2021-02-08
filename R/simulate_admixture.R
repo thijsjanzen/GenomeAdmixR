@@ -5,8 +5,10 @@
 #' @param input_population Potential earlier simulated population used as
 #' starting point for the simulation. If not provided by the user, the
 #' simulation starts from scratch.
-#' @param pop_size Vector containing the number of individuals in both
-#' populations.
+#' @param pop_size The number of individuals in the population. If the number is
+#' larger than the number of individuals in the input population (if provided),
+#' additional individuals are sampled randomly from the input population to
+#' reach the intended size.
 #' @param number_of_founders Number of unique ancestors
 #' @param initial_frequencies A vector describing the initial frequency of each
 #' ancestor. By default, equal frequencies are assumed. If a vector not summing
