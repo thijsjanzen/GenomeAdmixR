@@ -311,6 +311,11 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
                                       number_of_snps = NULL,
                                       random_snps = TRUE,
                                       verbose = FALSE) {
+
+  if (class(vcfr_object) != "vcfR") {
+    stop("input has to be of class vcfR")
+  }
+
   # now need to extract relevant data
   indices <- which(vcfr_object@fix[, 1] == chosen_chromosome)
 
@@ -343,6 +348,9 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
     map_data <- map_data[snp_indices, ]
     genome_data <- genome_data[snp_indices, ]
     marker_data <- marker_data[snp_indices]
+
+    num_indiv <- ncol(genome_data)
+    num_markers <- length(marker_data)
   }
 
   message("extracting genotypes, this may take a while")
