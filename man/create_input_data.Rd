@@ -4,7 +4,14 @@
 \alias{create_input_data}
 \title{read sequence data from file to be used in simulation}
 \usage{
-create_input_data(file_names, type, chosen_chromosome, verbose = FALSE)
+create_input_data(
+  file_names,
+  type,
+  chosen_chromosome,
+  number_of_snps = NA,
+  random_snps = TRUE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{file_names}{names of input files}

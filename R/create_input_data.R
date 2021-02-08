@@ -13,6 +13,8 @@
 #' the chosen chromosome.
 #' @export
 create_input_data <- function(file_names, type, chosen_chromosome,
+                              number_of_snps = NA,
+                              random_snps = TRUE,
                               verbose = FALSE) {
   input_data <- c()
   if (type == "ped") {
@@ -21,7 +23,10 @@ create_input_data <- function(file_names, type, chosen_chromosome,
   }
   if (type == "vcf") {
     message("reading vcf data")
-    input_data <- read_vcf(file_names[1], chosen_chromosome, verbose)
+    input_data <- read_vcf(file_names[1], chosen_chromosome,
+                           number_of_snps,
+                           random_snps,
+                           verbose)
   }
   return(input_data)
 }
@@ -50,7 +55,7 @@ combine_input_data <- function(input_data_list,
   for (i in seq_along(input_data_list))  {
     for (j in seq_along(input_data_list)) {
       if (!all.equal(input_data_list[[i]]$markers,
-                               input_data_list[[j]]$markers)) {
+                     input_data_list[[j]]$markers)) {
         stop("all input data sets need to use the same marker positions")
       }
     }
@@ -108,6 +113,61 @@ convert_dna_to_numeric <- function(dna_matrix) {
   }
 
   return(dna_matrix)
+}
+
+#' function to convert ped/map data to genome_admixr_data
+#' @param simulation_data result of simulate_admixture
+#' @param markers vector of locations of markers (in Morgan). If no vector is
+#' provided, the function searches for marker locations in the simulation_data.
+#' @return genomeadmixr_data object ready for simulate_admixture_data
+#' @export
+simulation_data_to_genomeadmixr_data <- function(simulation_data,
+                                                 markers = NULL,
+                                                 verbose = FALSE) {
+  output <- list()
+
+  if (is.null(markers)) {
+    output$markers <- sort(unique(simulation_data$frequencies$location))
+    if (is.null(output$markers)) {
+      stop("no markers found, either provide them as argument, or make sure
+           the simulation used to generate the data included markers")
+    }
+  }
+
+  genome_matrix <- matrix(NA,
+                          nrow = 2 * length(simulation_data$population),
+                          ncol = length(output$markers))
+
+
+  find_allele <- function(pos, chrom) {
+    return(findtype(chrom, pos))
+  }
+
+  get_alleles <- function(indiv, markers) {
+    c1 <- sapply(markers, find_allele, indiv$chromosome1)
+    c2 <- sapply(markers, find_allele, indiv$chromosome2)
+    return(rbind(c1, c2))
+  }
+
+  gen_mat <- c()
+  if (verbose) {
+    gen_mat <- pbapply::pblapply(simulation_data$population,
+                                 get_alleles,
+                                 output$markers)
+  } else {
+    gen_mat <- lapply(simulation_data$population,
+                      get_alleles,
+                      output$markers)
+  }
+
+  gen_mat2 <- unlist(gen_mat)
+  output$genomes <- matrix(gen_mat2,
+                           nrow = 2 * length(simulation_data$population),
+                           ncol = length(output$markers),
+                           byrow = TRUE)
+
+  class(output) <- "genomeadmixr_data"
+  return(output)
 }
 
 #' function to convert ped/map data to genome_admixr_data
@@ -239,10 +299,17 @@ convert_map_data_to_numeric <- function(map_data) {
 #' function to convert a vcfR object to genome_admixr_data
 #' @param vcfr_object result of vcfR::read.vcfR
 #' @param chosen_chromosome chromosome of choice
+#' @param number_of_snps number of snps to be loaded from the vcf file, default
+#' is to load all snps
+#' @param random_snps if a subset of all snps has to be taken, should these
+#' be sampled sequentially (e.g. the first 100 snps) or randomly (100 randomly
+#' sampled snps) (examples are for 'number_of_snps' = 100).
 #' @param verbose if true, print progress bar
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
 vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
+                                      number_of_snps = NULL,
+                                      random_snps = TRUE,
                                       verbose = FALSE) {
   # now need to extract relevant data
   indices <- which(vcfr_object@fix[, 1] == chosen_chromosome)
@@ -252,8 +319,6 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
 
   genome_data <- vcfr_object@gt[indices, ]
   genome_data <- genome_data[, -1]
-
-
   genome_data <- genome_data[-to_remove, ]
 
   marker_data <- vcfr_object@fix[indices, 2]
@@ -267,6 +332,18 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
   v2 <- as.numeric(map_data[, 2])
   map_data <- cbind(v1, v2)  # this is an ugly solution... but it works?
 
+  if (!is.null(number_of_snps)) {
+    # subsample snps
+    snp_indices <- seq_along(map_data[, 1])
+    if (random_snps) {
+      snp_indices <- sort(sample(snp_indices, size = number_of_snps))
+    } else {
+      snp_indices <- 1:number_of_snps
+    }
+    map_data <- map_data[snp_indices, ]
+    genome_data <- genome_data[snp_indices, ]
+    marker_data <- marker_data[snp_indices]
+  }
 
   message("extracting genotypes, this may take a while")
   genome_matrix <- matrix(NA, nrow = num_indiv * 2, ncol = num_markers)
@@ -300,10 +377,14 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
 
 
 #' @keywords internal
-read_vcf <- function(vcf_name, chosen_chromosome, verbose = FALSE) {
+read_vcf <- function(vcf_name, chosen_chromosome,
+                     number_of_snps,
+                     random_snps, verbose = FALSE) {
   message("reading vcf file")
   vcf_data <- vcfR::read.vcfR(vcf_name)
 
-  return(vcfR_to_genomeadmixr_data(vcf_data, chosen_chromosome, verbose))
+  return(vcfR_to_genomeadmixr_data(vcf_data, chosen_chromosome,
+                                   number_of_snps,
+                                   random_snps, verbose))
 
 }

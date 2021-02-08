@@ -65,3 +65,41 @@ test_that("input data", {
   expected_j <- junctions::number_of_junctions(N = 1000, R = 1000, t = 10)
   testthat::expect_equal(mean(num_j), expected_j, tolerance = 1)
 })
+
+test_that("input data simulation", {
+  testthat::skip_on_os("solaris")
+  message("test input data simulation")
+
+  obs_j <- c()
+  for (r in 1:30) {
+    vx <- simulate_admixture(pop_size = 100,
+                             total_runtime = 100,
+                             markers = seq(0, 1,  length.out = 100))
+
+    vy <- simulation_data_to_genomeadmixr_data(vx)
+
+    vz <- simulate_admixture_data(input_data = vy,
+                                  pop_size = 100,
+                                  total_runtime = 100,
+                                  markers = seq(0, 1, length.out = 100))
+
+    num_j <- 0
+    for (i in seq_along(vz$population)) {
+      num_j <- num_j + sum(abs(diff(vz$population[[i]]$chromosome1[, 2])))
+      num_j <- num_j + sum(abs(diff(vz$population[[i]]$chromosome2[, 2])))
+    }
+    num_j <- num_j / (2 * length(vz$population))
+    obs_j <- c(obs_j, num_j)
+    cat(r, num_j, "\n")
+  }
+
+  obs_j <- mean(obs_j)
+
+  exp_j <- junctions::number_of_junctions(N = 100,
+                                          R = 100,
+                                          H_0 = 0.5,
+                                          C = 1,
+                                          t = 200)
+
+  testthat::expect_equal(num_j, exp_j, tolerance = 0.2)
+})
