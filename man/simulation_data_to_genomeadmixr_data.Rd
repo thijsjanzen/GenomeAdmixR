@@ -15,6 +15,8 @@ simulation_data_to_genomeadmixr_data(
 
 \item{markers}{vector of locations of markers (in Morgan). If no vector is
 provided, the function searches for marker locations in the simulation_data.}
+
+\item{verbose}{provide verbose output (default is FALSE)}
 }
 \value{
 genomeadmixr_data object ready for simulate_admixture_data

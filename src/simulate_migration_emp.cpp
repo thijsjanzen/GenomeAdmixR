@@ -310,11 +310,19 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
   std::vector<double> track_markers(track_markers_R.begin(),
                                     track_markers_R.end());
 
+  int number_of_markers = track_markers.size();
+ // if (verbose) Rcout << number_of_markers << "\n";
+
   if (*std::max_element(track_markers_R.begin(), track_markers_R.end()) > 1) {
     for (auto& i : track_markers) {
       i *= inv_max_marker_pos;
+      if (verbose) {
+        Rcout << i << " "; force_output();
+      }
     }
   }
+
+ // if (verbose) { Rcout << "markers loaded\n"; force_output(); }
 
   if (select.nrow() > 0) {
     if (select(0, 0) > 10) {// location in bp
@@ -329,47 +337,58 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
       }
     }
   }
-
-
-
+ // if (verbose) { Rcout << "selection matrix loaded\n"; force_output(); }
 
   if (input_population_1[0] > -1e4) {
-    //  if (verbose) Rcout << "Found input populations\n";  force_output();
+    if (verbose) { Rcout << "Found input populations\n";  force_output(); }
+
+    if (pop_size.size() != 2) {
+      stop("pop_size.size() != 2, need two separate population sizes as input");
+    }
 
     Pop_1 = convert_numeric_matrix_to_fish_vector(input_population_1);
     Pop_2 = convert_numeric_matrix_to_fish_vector(input_population_2);
 
-    //  Rcout << "done converting\n"; force_output();
+ ///   if (verbose) { Rcout << "done converting\n"; force_output(); }
+  //  if (verbose) { Rcout << "pop1: " << Pop_1.size() << "\n"; force_output(); }
+  //  if (verbose) { Rcout << "pop2: " << Pop_2.size() << "\n"; force_output(); }
+  //  if (verbose) { Rcout << pop_size[0] << " " << pop_size[1] << "\n"; force_output(); }
 
-    if (Pop_1.size() != pop_size[0]) {
-      //   Rcout << "drawing pop 1: " << pop_size[0] << " from: " << Pop_1.size() << "\n"; force_output();
+    if (static_cast<size_t>(Pop_1.size()) !=
+        static_cast<size_t>(pop_size[0])) {
+  //    if (verbose) {Rcout << "drawing pop 1: " << pop_size[0] <<
+   //     " from: " << Pop_1.size() << "\n"; force_output(); }
       // the populations have to be populated from the parents!
-      std::vector< Fish_emp > Pop_1_new;
-      for(int j = 0; j < pop_size[0]; ++j) {
+      std::vector< Fish_emp > Pop_1_new(pop_size[0]);
+      for(size_t j = 0; j < pop_size[0]; ++j) {
         int index = random_number(Pop_1.size());
-        Pop_1_new.push_back(Pop_1[index]);
+        Pop_1_new[j] = Pop_1[index];
       }
       Pop_1 = Pop_1_new;
-      Pop_1_new.clear(); // free up memory
-    } else {
-      Rcpp::stop("can not run without input data");
     }
-    //   Rcout << "drawn pop 1\n"; force_output();
+ //   if (verbose)  {Rcout << "drawn pop 1\n"; force_output();}
 
-    if (Pop_2.size() != pop_size[1]) {
-      std::vector< Fish_emp > Pop_2_new;
-      //  Rcout << "drawing pop 2: " << pop_size[1] << "\n"; force_output();
+    if (static_cast<size_t>(Pop_2.size()) !=
+        static_cast<size_t>(pop_size[1])) {
+      std::vector< Fish_emp > Pop_2_new(pop_size[1]);
+   //   if (verbose) { Rcout << "drawing pop 2: " << pop_size[1] << " " <<
+    //                          Pop_2.size() << "\n"; force_output(); }
       for (int j = 0; j < pop_size[1]; ++j) {
         int index = random_number(Pop_2.size());
-        Pop_2_new.push_back(Pop_2[index]);
+        Pop_2_new[j] = Pop_2[index];
       }
       Pop_2 = Pop_2_new;
-      Pop_2_new.clear(); // free up memory
     }
 
+   // if (verbose) {Rcout << "drawing done: " << Pop_1.size() << " " <<
+   //                                           Pop_2.size() << "\n"; force_output();}
   }
-  // Rcout << "initial frequencies\n"; force_output();
-  int number_of_markers = track_markers.size();
+
+  //if (verbose) {Rcout << "input_data loaded\n"; force_output();}
+
+//  if (verbose) {Rcout << "initial frequencies\n"; force_output();}
+
+ // if (verbose) {Rcout << track_markers.size() << "\n"; force_output; }
   // 5 columns: time, loc, anc, type, population
   arma::mat frequencies_table(number_of_markers * number_of_alleles * total_runtime * 2, 5);
   arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1,
@@ -379,9 +398,10 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                                                          0,
                                                                          morgan);
 
-  std::vector<double> junctions;
   std::vector< std::vector< Fish_emp > > output_populations;
-  // Rcout << "starting simulation\n"; force_output();
+ // if (verbose) {
+ //   Rcout << "starting simulation\n"; force_output();
+  //}
   output_populations = simulate_two_populations(Pop_1,
                                                 Pop_2,
                                                 marker_positions,
@@ -410,6 +430,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                            total_runtime,
                                            morgan);
 
+  std::vector<double> junctions;
   return List::create( Named("population_1") = convert_to_list(output_populations[0],
                              marker_positions),
                        Named("population_2") = convert_to_list(output_populations[1],

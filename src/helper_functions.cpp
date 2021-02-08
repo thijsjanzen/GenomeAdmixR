@@ -9,9 +9,12 @@
 #include <vector>
 #include <string>
 
+#include <chrono>
+#include <thread>
 
 void force_output() {
- // ::sleep(1);
+  static std::chrono::milliseconds timespan(100);
+  std::this_thread::sleep_for(timespan);
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
@@ -775,7 +778,7 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
   }
 
   for(int i = 0; i < markers.size(); ++i) {
-
+   if (markers[i] < 0) continue;
    int index = find_location(locations, markers[i]);
    std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
                                                                            index,

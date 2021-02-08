@@ -126,6 +126,7 @@ convert_dna_to_numeric <- function(dna_matrix) {
 #' @param simulation_data result of simulate_admixture
 #' @param markers vector of locations of markers (in Morgan). If no vector is
 #' provided, the function searches for marker locations in the simulation_data.
+#' @param verbose provide verbose output (default is FALSE)
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
 simulation_data_to_genomeadmixr_data <- function(simulation_data,

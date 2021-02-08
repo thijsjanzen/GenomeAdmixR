@@ -171,6 +171,10 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
     seed <- round(as.numeric(Sys.time()))
   }
 
+  if (verbose) {
+    cat("markers: ", length(markers), "\n")
+  }
+
   verify_substitution_matrix(substitution_matrix)
 
   selected_pop <- simulate_migration_emp_cpp(input_data_population_1$genomes,
