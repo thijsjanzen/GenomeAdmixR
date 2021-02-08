@@ -22,7 +22,7 @@ If, however, you are more interested in admixing sequence data, the GenomeAdmixR
 package provides this optionality as well, where you can import your own 
 sequences and admix those in a similar fashion.
 
-```{r creating fake data}
+```{r creating fake data 2}
   num_markers <- 100
   num_indiv <- 100
   chosen_markers <- 1:num_markers

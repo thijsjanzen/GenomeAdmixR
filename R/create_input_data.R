@@ -140,12 +140,9 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data,
       stop("no markers found, either provide them as argument, or make sure
            the simulation used to generate the data included markers")
     }
+  } else {
+    output$markers <- markers
   }
-
-  genome_matrix <- matrix(NA,
-                          nrow = 2 * length(simulation_data$population),
-                          ncol = length(output$markers))
-
 
   find_allele <- function(pos, chrom) {
     return(findtype(chrom, pos))
