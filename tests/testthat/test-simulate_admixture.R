@@ -111,11 +111,9 @@ test_that("simulate admixture use", {
 test_that("simulate admixture use, junctions", {
   testthat::skip_on_os("solaris")
   message("simulate admixture use, junctions")
-  vx <- simulate_admixture(pop_size = 100,
+  vx <- simulate_admixture(pop_size = 1000,
                            number_of_founders = 2,
                            total_runtime = 100,
-                           num_threads = 1,
-                           verbose = TRUE,
                            track_junctions = TRUE)
 
   num_j <- length(vx$junctions)
