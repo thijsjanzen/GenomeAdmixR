@@ -75,10 +75,6 @@ std::vector< size_t > recompos() {
     }
     std::sort(indices.begin(), indices.end());
     indices.push_back(cum_marker_dist.size());
-  //  for(size_t i = 0; i < indices.size(); ++i) {
-//        Rcout << indices[i] << " ";
-  //  }
-//    Rcout << "\n";
     return indices;
 }
 

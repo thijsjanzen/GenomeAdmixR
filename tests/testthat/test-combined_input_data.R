@@ -78,49 +78,22 @@ test_that("input data simulation", {
   testthat::skip_on_os("solaris")
   message("test input data simulation")
 
-  obs_j <- c()
-  for (r in 1:30) {
-    vx <- simulate_admixture(pop_size = 100,
-                             total_runtime = 100,
-                             markers = seq(0, 1,  length.out = 100))
+  vx <- simulate_admixture(pop_size = 100,
+                             total_runtime = 100)
 
-    vy <- simulation_data_to_genomeadmixr_data(vx,
-                                               markers = seq(0, 1, length.out = 100))
+  vy <- simulation_data_to_genomeadmixr_data(vx,
+                                              markers = seq(0, 1,
+                                                            length.out = 1000))
 
-    for (i in seq_along(vx$population)) {
-      num_j_1 <- sum(abs(diff(vx$population[[i]]$chromosome1)))
-      num_j_2 <- sum(abs(diff(vx$population[[i]]$chromosome2)))
+  for (i in seq_along(vx$population)) {
+    num_j_1 <- sum(abs(diff(vx$population[[i]]$chromosome1)))
+    num_j_2 <- sum(abs(diff(vx$population[[i]]$chromosome2)))
 
-      index_c1 <- 1 + (i - 1) * 2
-      index_c2 <- index_c1 + 1
-      nj1 <- sum(abs(diff(vy$genomes[index_c1, ])))
-      nj2 <- sum(abs(diff(vy$genomes[index_c2, ])))
-      testthat::expect_lte(nj1, num_j_1)
-      testthat::expect_lte(nj2, num_j_2)
-    }
-
-    vz <- simulate_admixture_data(input_data = vy,
-                                  pop_size = 100,
-                                  total_runtime = 100,
-                                  markers = seq(0, 1, length.out = 100))
-
-    num_j <- c()
-    for (i in seq_along(vz$population)) {
-      num_j <- c(num_j, sum(abs(diff(vz$population[[i]]$chromosome1[, 2]))))
-      num_j <- c(num_j, sum(abs(diff(vz$population[[i]]$chromosome2[, 2]))))
-    }
-    num_j <- mean(num_j)
-    obs_j <- c(obs_j, num_j)
-    cat(r, num_j, "\n")
+    index_c1 <- 1 + (i - 1) * 2
+    index_c2 <- index_c1 + 1
+    nj1 <- sum(abs(diff(vy$genomes[index_c1, ])))
+    nj2 <- sum(abs(diff(vy$genomes[index_c2, ])))
+    testthat::expect_lte(nj1, num_j_1)
+    testthat::expect_lte(nj2, num_j_2)
   }
-
-  obs_j <- mean(obs_j)
-
-  exp_j <- junctions::number_of_junctions(N = 100,
-                                          R = 100,
-                                          H_0 = 0.5,
-                                          C = 1,
-                                          t = 200)
-
-  testthat::expect_equal(num_j, exp_j, tolerance = 0.2)
 })
