@@ -422,12 +422,19 @@ create_artificial_genomeadmixr_data <- function(number_of_individuals,
   num_markers <- length(marker_locations)
   fake_data <- list()
   fake_data$markers <- marker_locations
-  fake_data$genomes <- matrix(data = sample(x = used_nucleotides,
-                                                  size = number_of_individuals * 2 *
-                                                    num_markers,
-                                                  replace = T),
-                                    nrow = number_of_individuals * 2,
-                                    ncol = num_markers)
+
+  if (length(used_nucleotides) == 1) {
+    fake_data$genomes <- matrix(data = used_nucleotides,
+                                nrow = number_of_individuals * 2,
+                                ncol = num_markers)
+  } else {
+    fake_data$genomes <- matrix(data = sample(x = used_nucleotides,
+                                                    size = number_of_individuals * 2 *
+                                                      num_markers,
+                                                    replace = T),
+                                      nrow = number_of_individuals * 2,
+                                      ncol = num_markers)
+  }
 
   class(fake_data) <- "genomeadmixr_data"
   return(fake_data)
