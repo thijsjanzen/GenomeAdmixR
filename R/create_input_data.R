@@ -165,11 +165,18 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data,
                       output$markers)
   }
 
-  gen_mat2 <- unlist(gen_mat)
-  output$genomes <- matrix(gen_mat2,
-                           nrow = 2 * length(simulation_data$population),
-                           ncol = length(output$markers),
-                           byrow = TRUE)
+  output_matrix <- matrix(NA,
+                          nrow = 2 * length(simulation_data$population),
+                          ncol = length(output$markers))
+
+  for (i in seq_along(gen_mat)) {
+    index_c1 <- 1 + (i - 1) * 2
+    index_c2 <- index_c1 + 1
+    output_matrix[index_c1, ] <- gen_mat[[i]][1, ]
+    output_matrix[index_c2, ] <- gen_mat[[i]][2, ]
+  }
+
+  output$genomes <- output_matrix
 
   class(output) <- "genomeadmixr_data"
   return(output)
