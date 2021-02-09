@@ -224,9 +224,11 @@ int draw_prop_fitness(const std::vector<double>& fitness,
     return random_number(fitness.size());
   }
 
+  size_t fitness_size = fitness.size();
+  double inv_fitness = 1.0 / maxFitness;
   while(true) {
-    int index = random_number(fitness.size());
-    double prob = 1.0 * fitness[index] / maxFitness;
+    int index = random_number(fitness_size);
+    double prob = inv_fitness * fitness[index];
     if(uniform() < prob) {
       return index;
     }
@@ -238,7 +240,6 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
   std::vector< Fish > output;
 
 //  Rcout << "converting input data to fish vector\n"; force_output();
-
   Fish temp;
   int indic_chrom = 1;
   bool add_indiv = false;
@@ -681,6 +682,8 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
   arma::mat output(markers.size() * number_of_alleles, 4);
 
   for (size_t i = 0; i < markers.size(); ++i) {
+    if (markers[i] < 0) continue;
+
     int index = find_location(locations, markers[i]);
 
     std::vector<std::vector<double >> local_mat = update_frequency_tibble(pop,
@@ -779,6 +782,7 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
 
   for(int i = 0; i < markers.size(); ++i) {
    if (markers[i] < 0) continue;
+
    int index = find_location(locations, markers[i]);
    std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
                                                                            index,

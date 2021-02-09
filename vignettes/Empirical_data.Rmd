@@ -11,6 +11,15 @@ vignette: >
 library(GenomeAdmixR)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.width = 6)
+print_mat <- function(mat) {
+  n <- nrow(mat)
+  c('\\begin{bmatrix}',
+    paste0(sapply(seq_len(n - 1),
+                  function(i) paste0(mat[i, ], collapse = ' & ')),
+           ' \\\\'),
+    paste0(mat[n, ], collapse = ' & '),
+    '\\end{bmatrix}')
+} 
 ```
 
 ## Empirical data
@@ -23,20 +32,13 @@ package provides this optionality as well, where you can import your own
 sequences and admix those in a similar fashion.
 
 ```{r creating fake data 2}
-  num_markers <- 100
-  num_indiv <- 100
-  chosen_markers <- 1:num_markers
+  fake_input_data <- 
+    create_artificial_genomeadmixr_data(number_of_individuals = 10,
+                                        marker_locations = 1:10)
 
-  fake_input_data <- list()
-  fake_input_data$genomes <- matrix(data = sample(x = 1:4,
-                                                   size = num_indiv * 2 *
-                                                          num_markers,
-                                                   replace = T),
-                                     nrow = num_indiv * 2,
-                                     ncol = num_markers)
+  fake_input_data$markers
+  fake_input_data$genomes
 
-  fake_input_data$markers <- chosen_markers
-  class(fake_input_data) <- "genomeadmixr_data"
 ```
 Here, we create fake input data in absence of an example file. The data consists
 of two components: a genome matrix and a vector with marker locations. The 
@@ -64,28 +66,16 @@ multiple VCF files, and then randomly sampling individuals from these datasets
 in order to form the starting dataset. We can do so using the function
 combine_input_data:
 ```{r creating fake data}
-  num_markers <- 100
-  num_indiv <- 100
-  chosen_markers <- 1:num_markers
-
-  fake_input_data1 <- list()
-  fake_input_data1$genomes <- matrix(data = sample(x = 1:2,
-                                                   size = num_indiv * 2 *
-                                                          num_markers,
-                                                   replace = T),
-                                     nrow = num_indiv,
-                                     ncol = num_markers)
-
-  fake_input_data1$markers <- chosen_markers
-  fake_input_data2 <- list()
-  fake_input_data2$genomes <- matrix(data = sample(x = 3:4,
-                                                   size = num_indiv * 2 *
-                                                          num_markers,
-                                                   replace = T),
-                                     nrow = num_indiv,
-                                     ncol = num_markers)
-  fake_input_data2$markers <- chosen_markers
-
+  chosen_markers <- 1:100
+   fake_input_data1 <- 
+    create_artificial_genomeadmixr_data(number_of_individuals = 100,
+                                        marker_locations = chosen_markers,
+                                        used_nucleotides = 1:2)
+  fake_input_data2 <- 
+    create_artificial_genomeadmixr_data(number_of_individuals = 100,
+                                        marker_locations = chosen_markers,
+                                        used_nucleotides = 3:4)
+  
   combined_data <- combine_input_data(input_data_list = list(fake_input_data1,
                                                              fake_input_data2),
                                       frequencies = c(0.5, 0.5),
@@ -97,7 +87,7 @@ simulated_pop <- simulate_admixture_data(input_data = combined_data,
                                          pop_size = 1000,
                                          total_runtime = 100,
                                          morgan = 1,
-                                         markers = chosen_markers,
+                                         markers = 1:100,
                                          verbose = FALSE)
 ```
 We have simulated here a population of 1000 individuals (initially randomly 
@@ -135,8 +125,6 @@ Sequence data can also be used to seed a simulation where two populations
 exchange migrants:
 
 ```{r migration}
-class(fake_input_data1) <- "genomeadmixr_data"
-class(fake_input_data2) <- "genomeadmixr_data"
 
 migr_pop <- 
   simulate_admixture_migration_data(input_data_population_1 = fake_input_data1,
@@ -156,10 +144,77 @@ new locations.
 ```{r from_simulation}
 simulated_pop <- simulate_admixture(pop_size = 100, 
                                     total_runtime = 100)
-prepared_pop  <- simulation_data_to_genomeadmixr_data(simulation_data = simulated_pop,
-                                                      markers = seq(0, 1, length.out = 100))
+prepared_pop  <- 
+  simulation_data_to_genomeadmixr_data(simulation_data = simulated_pop,
+                                       markers = seq(0, 1, length.out = 100))
 
 simulated_pop2 <- simulate_admixture_data(input_data = prepared_pop,
                                           pop_size = 100,
                                           total_runtime = 100)
 ```
+
+# Mutation rate
+When using sequencing data, the simulations can also be extended using mutation.
+One can do so by specifying the mutation rate (in probability per bp per 
+generation), and by specifying the substitution matrix, where the substitution 
+matrix is a 4x4 matrix, that specifies the probability of the different 
+substitutions and transversions. For instance, for the JC69 model, 
+the substitution matrix is given by:
+```{r, results = 'asis'}
+writeLines(print_mat(matrix(1/4, nrow = 4, ncol = 4)))
+```
+Please note that this is not necessarily the rate matrix! In the substitution 
+matrix we use, all rows MUST sum to 1 (as these represent the probabilities 
+of mutating into another base). 
+For instance, for the K80 model with parameter kappa, we would get the following
+substitution matrix, with kappa = 0.2:
+```{r, results = 'asis'}
+kappa <- 0.2
+diag_entry <- 1 - (1/4 + 1/4 + 0.2 / 4)
+
+writeLines(print_mat(matrix(c(diag_entry, kappa, 1/4, 1/4,
+                              kappa, diag_entry, 1/4, 1/4,
+                              1/4, 1/4, diag_entry, kappa,
+                              1/4, 1/4, kappa, diag_entry), nrow = 4, ncol = 4)))
+```
+We understand that it might be tricky to make these calculations a priori, 
+therefore we automatically translate the substitution matrix to the probability 
+matrix required in case the matrix is a rate matrix. Thus, summarising, the
+substitution matrix provides the conditional probability of mutating to another
+base, given that mutation occurs (as governed by the overall mutation rate).
+Using artificial sequencing data, we can for instance show how new bases arise 
+in the population due to mutation:
+```{r example mutation}
+  fake_input_data3 <- 
+  create_artificial_genomeadmixr_data(number_of_individuals = 100,
+                                      marker_locations = chosen_markers,
+                                      used_nucleotides = 1)
+  
+  kappa <- 0.5
+  rate_matrix <- matrix(c(0, kappa, 1, 1,
+                          kappa, 0, 1, 1,
+                          1, 1, 0, kappa,
+                          1, 1, kappa, 0), nrow = 4, ncol = 4)
+  
+  mutation_rate <- 1e-9
+  
+  simulated_pop <- simulate_admixture_data(input_data = fake_input_data3,
+                                         pop_size = 1000,
+                                         total_runtime = 100,
+                                         morgan = 1,
+                                         markers = chosen_markers,
+                                         mutation_rate = mutation_rate,
+                                         substitution_matrix = rate_matrix,
+                                         verbose = FALSE)
+  
+  freqs <- calculate_allele_frequencies(simulated_pop)
+  require(dplyr)
+  freqs %>%
+    group_by(ancestor) %>%
+    summarise(mean(frequency))
+
+```
+The final results show that indeed mutations have arisen in the population: 
+the initial fake data only contained 'a' for all sequences, whereas at the end
+of the simulation, we see that the other bases also exist in non-zero 
+frequencies.

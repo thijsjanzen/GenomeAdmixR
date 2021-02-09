@@ -401,3 +401,34 @@ read_vcf <- function(vcf_name, chosen_chromosome,
                                    random_snps, verbose))
 
 }
+
+#' function to generate artificial genomeadmixr_data
+#' @param number_of_individuals number of individuals
+#' @param marker_locations location of markers, either in bp or Morgan
+#' @param used_nucleotides subset or full set of [1/2/3/4] (reflecting a/c/t/g)
+#' @param nucleotide_frequencies frequencies of the used nucleotides, if not
+#' provided, equal frequencies are assumed.
+#' @return genomeadmixr_data object ready for simulate_admixture_data
+#' @export
+create_artificial_genomeadmixr_data <- function(number_of_individuals,
+                                                marker_locations,
+                                                used_nucleotides = 1:4,
+                                                nucleotide_frequencies = NA) {
+
+  if (is.na(nucleotide_frequencies)) {
+    nucleotide_frequencies <- rep(1, length(used_nucleotides))
+    nucleotide_frequencies <- nucleotide_frequencies / sum(nucleotide_frequencies)
+  }
+  num_markers <- length(marker_locations)
+  fake_data <- list()
+  fake_data$markers <- marker_locations
+  fake_data$genomes <- matrix(data = sample(x = used_nucleotides,
+                                                  size = number_of_individuals * 2 *
+                                                    num_markers,
+                                                  replace = T),
+                                    nrow = number_of_individuals * 2,
+                                    ncol = num_markers)
+
+  class(fake_data) <- "genomeadmixr_data"
+  return(fake_data)
+}

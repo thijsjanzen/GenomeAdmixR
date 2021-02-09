@@ -114,7 +114,7 @@ simulate_admixture_data <- function(input_data = NA,
 
 
   if (mutation_rate > 0) {
-    verify_substitution_matrix(substitution_matrix)
+    substitution_matrix <- verify_substitution_matrix(substitution_matrix)
   }
 
   selected_pop <- simulate_emp_cpp(input_data$genomes,

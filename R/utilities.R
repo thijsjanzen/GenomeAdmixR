@@ -547,10 +547,38 @@ verify_substitution_matrix <- function(substitution_matrix) {
          "substitution matrix should be a 4x4 matrix")
   }
 
+  is_rate_matrix <- FALSE
+  if (sum(substitution_matrix == 1) > 0) {
+    warning("found rate matrix, rescaled all entries")
+    # we have to rewrite as relative matrix
+    for (i in 1:4) {
+      row_entry <- substitution_matrix[i, ]
+      row_entry <- row_entry * 0.25
+      row_entry[i] <- 0
+      row_entry[i] <- 1 - sum(row_entry)
+      substitution_matrix[i, ] <- row_entry
+    }
+  }
+
   rs <- rowSums(substitution_matrix)
   if (sum(rs != 1) > 0) {
-    stop("all rows in the substitution matrix have to sum to 1")
+    warning("normalized rows to ensure they sum to 1")
+    for (i in 1:4) {
+      substitution_matrix[i, ] <- substitution_matrix[i, ] / rs[i]
+    }
   }
+
+  message("using mutation with the following substitution matrix: ")
+  for (i in 1:4) {
+    print_str <- ""
+    for (j in 1:4) {
+      print_str <- paste(print_str, substitution_matrix[i, j])
+    }
+
+    message(print_str)
+  }
+
+  return(substitution_matrix)
 }
 
 #' @keywords internal
