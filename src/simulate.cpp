@@ -47,7 +47,7 @@ void update_pop(const std::vector<Fish>& Pop,
   std::vector< int > seed_values(num_seeds);
 
   for (int i = 0; i < num_seeds; ++i) {
-    seed_values[i] = rndgen.random_number(4294967295); // large value
+    seed_values[i] = rndgen.random_number(INT_MAX); // large value
   }
 
   int seed_index = 0;
@@ -65,7 +65,7 @@ void update_pop(const std::vector<Fish>& Pop,
           seed_index++;
           if (seed_index > num_seeds) { // just in case.
             for (int i = 0; i < num_seeds; ++i) {
-              seed_values[i] = rndgen.random_number(4294967295);
+              seed_values[i] = rndgen.random_number(INT_MAX);
             }
             seed_index = 0;
           }

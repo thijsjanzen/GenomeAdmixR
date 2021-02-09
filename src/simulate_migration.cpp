@@ -78,7 +78,7 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
   std::vector< int > seed_values(num_seeds);
 
   for (int i = 0; i < num_seeds; ++i) {
-    seed_values[i] = rndgen.random_number(4294967295); // large value
+    seed_values[i] = rndgen.random_number(INT_MAX); // large value
   }
 
   int seed_index = 0;
@@ -96,7 +96,7 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
         seed_index++;
         if (seed_index > num_seeds) { // just in case.
           for (int i = 0; i < num_seeds; ++i) {
-            seed_values[i] = rndgen.random_number(4294967295);
+            seed_values[i] = rndgen.random_number(INT_MAX);
           }
           seed_index = 0;
         }
