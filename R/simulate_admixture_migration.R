@@ -66,11 +66,6 @@
 #' in which it was recorded (1 or 2). If a critical fst value was used to
 #' terminate the simulation, and object \code{FST} with the final FST estimate
 #' is returned as well.
-#' @examples
-#' two_populations <- simulate_admixture_migration(pop_size = c(100, 100),
-#'                                                 morgan = 1,
-#'                                                 total_runtime = 10,
-#'                                                 migration_rate = 0.01)
 #' @export
 simulate_admixture_migration <- function(input_population_1 = NA,
                                          input_population_2 = NA,
