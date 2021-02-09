@@ -35,23 +35,22 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
                  rnd_t& rndgen) {
 
   Fish parent;
-  index = -1;
 
   if (rndgen.uniform() < migration_rate) {
     // migration
     if(use_selection) {
       index = draw_prop_fitness(fitness_migr, max_fitness_migr, rndgen);
     } else {
-      index = rndgen.random_number( (int)pop_2.size() );
+      index = rndgen.random_number( static_cast<int>(pop_2.size()) );
     }
     parent = pop_2[index];
-    index = index + pop_1.size();
     // to ensure different indices for pop_1 and pop_2
+    index += pop_1.size();
   } else {
     if(use_selection)  {
       index = draw_prop_fitness(fitness_source, max_fitness_source, rndgen);
     } else {
-      index = rndgen.random_number( (int)pop_1.size() );
+      index = rndgen.random_number( static_cast<int>(pop_1.size()) );
     }
     parent = pop_1[index];
   }
@@ -63,10 +62,10 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
 std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                   const std::vector< Fish>& pop_2,
                                   size_t pop_size,
-                                  std::vector< double > fitness_source,
-                                  std::vector< double > fitness_migr,
-                                  double max_fitness_source,
-                                  double max_fitness_migr,
+                                  const std::vector< double >& fitness_source,
+                                  const std::vector< double >& fitness_migr,
+                                  const double& max_fitness_source,
+                                  const double& max_fitness_migr,
                                   bool use_selection,
                                   double migration_rate,
                                   double size_in_morgan,
@@ -83,7 +82,8 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
       thread_local rnd_t rndgen2; // calls get_seed
 
       for (unsigned i = r.begin(); i < r.end(); ++i) {
-          int index1, index2;
+          int index1 = -1;
+          int index2 = -1;
           Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
                                      use_selection,
                                      fitness_source, fitness_migr,

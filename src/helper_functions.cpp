@@ -217,16 +217,17 @@ double calc_mean_junctions(const std::vector< Fish> & pop) {
 }
 
 int draw_prop_fitness(const std::vector<double>& fitness,
-                      double maxFitness,
+                      const double& maxFitness,
                       rnd_t& rndgen) {
 
   if (maxFitness <= 0.0) {
     return rndgen.random_number(fitness.size());
   }
-
+  size_t fitness_size = fitness.size();
+  double inv_fitness = 1.0 / maxFitness;
   while(true) {
-    int index = rndgen.random_number(fitness.size());
-    double prob = 1.0 * fitness[index] / maxFitness;
+    int index = rndgen.random_number(fitness_size);
+    double prob = inv_fitness * fitness[index];
     if(rndgen.uniform() < prob) {
       return index;
     }

@@ -130,8 +130,7 @@ Fish mate(const Fish& A, const Fish& B, double numRecombinations,
   return offspring;
 }
 
-Fish::Fish(){
-
+Fish::Fish() {
 }
 
 junction::junction(){

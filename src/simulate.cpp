@@ -41,11 +41,6 @@ void update_pop(const std::vector<Fish>& Pop,
   if (new_generation.size() != pop_size) {
     stop("new_generation wrong size");
   }
- // std::cerr << " " << num_threads << " " <<
-  //                use_selection << " " << maxFitness << " " << std::flush;
-
-  //force_output();
-
 
   tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
 
@@ -56,7 +51,6 @@ void update_pop(const std::vector<Fish>& Pop,
       thread_local rnd_t rndgen2; // calls get_seed
 
       for (unsigned i = r.begin(); i < r.end(); ++i) {
-  //  for (int i = 0; i < pop_size; ++i) {
         int index1 = 0;
         int index2 = 0;
         if (use_selection) {
@@ -68,8 +62,6 @@ void update_pop(const std::vector<Fish>& Pop,
           index2 = rndgen2.random_number( pop_size );
           while(index2 == index1) index2 = rndgen2.random_number( pop_size );
         }
-
-      //  std::cerr << index1 << " " << index2 << " " << std::endl << std::flush;
 
         new_generation[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
       }

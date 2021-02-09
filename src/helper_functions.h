@@ -35,7 +35,7 @@ arma::mat update_all_frequencies(const std::vector< Fish >& pop,
 double calc_mean_junctions(const std::vector< Fish> & pop);
 
 int draw_prop_fitness(const std::vector<double>& fitness,
-                      double maxFitness,
+                      const double& maxFitness,
                       rnd_t& rndgen);
 
 std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v);
