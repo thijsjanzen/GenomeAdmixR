@@ -42,31 +42,34 @@ void update_pop(const std::vector<Fish>& Pop,
     stop("new_generation wrong size");
   }
 
-  if (num_threads == 1) {  // super lame workaround...
-    rnd_t rndgen;
-    for (size_t i = 0; i < pop_size; ++i) {
-      int index1 = 0;
-      int index2 = 0;
-      if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
-        index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-      } else {
-        index1 = rndgen.random_number( pop_size );
-        index2 = rndgen.random_number( pop_size );
-        while(index2 == index1) index2 = rndgen.random_number( pop_size );
-      }
+  rnd_t rndgen;
+  int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+  std::vector< int > seed_values(num_seeds);
 
-      new_generation[i] = mate(Pop[index1], Pop[index2], morgan, rndgen);
-    }
-  } else {
+  for (int i = 0; i < num_seeds; ++i) {
+    seed_values[i] = rndgen.random_number(4294967295); // large value
+  }
+
+  int seed_index = 0;
+  std::mutex mutex;
+
     tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
 
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
 
-        thread_local rnd_t rndgen2; // calls get_seed
+        rnd_t rndgen2(seed_values[seed_index]);
+        {
+          std::lock_guard<std::mutex> _(mutex);
+          seed_index++;
+          if (seed_index > num_seeds) { // just in case.
+            for (int i = 0; i < num_seeds; ++i) {
+              seed_values[i] = rndgen.random_number(4294967295);
+            }
+            seed_index = 0;
+          }
+        }
 
         for (unsigned i = r.begin(); i < r.end(); ++i) {
           int index1 = 0;
@@ -84,7 +87,6 @@ void update_pop(const std::vector<Fish>& Pop,
           new_generation[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
         }
     });
-  }
   return;
 }
 

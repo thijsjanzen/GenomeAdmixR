@@ -31,7 +31,8 @@ struct rnd_t {
   }
 
   rnd_t(unsigned int seed) {
-    rndgen_ = std::mt19937(seed);
+    auto local_seed = get_seed() + seed;
+    rndgen_ = std::mt19937(local_seed);
   }
 
   void set_seed(unsigned int s) {

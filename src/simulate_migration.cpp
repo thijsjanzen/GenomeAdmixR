@@ -73,13 +73,34 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
 
   std::vector<Fish> new_generation(pop_size);
 
+  rnd_t rndgen;
+  int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+  std::vector< int > seed_values(num_seeds);
+
+  for (int i = 0; i < num_seeds; ++i) {
+    seed_values[i] = rndgen.random_number(4294967295); // large value
+  }
+
+  int seed_index = 0;
+  std::mutex mutex;
+
   tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
 
   tbb::parallel_for(
     tbb::blocked_range<unsigned>(0, pop_size),
     [&](const tbb::blocked_range<unsigned>& r) {
 
-      thread_local rnd_t rndgen2; // calls get_seed
+      rnd_t rndgen2(seed_values[seed_index]);
+      {
+        std::lock_guard<std::mutex> _(mutex);
+        seed_index++;
+        if (seed_index > num_seeds) { // just in case.
+          for (int i = 0; i < num_seeds; ++i) {
+            seed_values[i] = rndgen.random_number(4294967295);
+          }
+          seed_index = 0;
+        }
+      }
 
       for (unsigned i = r.begin(); i < r.end(); ++i) {
         int index1 = -1;
@@ -119,7 +140,19 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                            double migration_rate,
                                            double size_in_morgan,
                                            int num_threads) {
+  return next_pop_migr_threaded(pop_1,
+                                pop_2,
+                                pop_size,
+                                fitness_source,
+                                fitness_migr,
+                                max_fitness_source,
+                                max_fitness_migr,
+                                use_selection,
+                                migration_rate,
+                                size_in_morgan,
+                                num_threads);
 
+/*
   if (num_threads > 1) {
     return next_pop_migr_threaded(pop_1,
                                   pop_2,
@@ -162,7 +195,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
 
     new_generation[i] = mate(parent1, parent2, size_in_morgan, rndgen2);
   }
-  return new_generation;
+  return new_generation;*/
 }
 
 std::vector< std::vector< Fish > > simulate_two_populations(
