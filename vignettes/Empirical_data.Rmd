@@ -187,7 +187,7 @@ in the population due to mutation:
 ```{r example mutation}
   fake_input_data3 <- 
   create_artificial_genomeadmixr_data(number_of_individuals = 100,
-                                      marker_locations = chosen_markers,
+                                      marker_locations = 1:1000,
                                       used_nucleotides = 1)
   
   kappa <- 0.5
@@ -196,7 +196,7 @@ in the population due to mutation:
                           1, 1, 0, kappa,
                           1, 1, kappa, 0), nrow = 4, ncol = 4)
   
-  mutation_rate <- 1e-9
+  mutation_rate <- 1e-5
   
   simulated_pop <- simulate_admixture_data(input_data = fake_input_data3,
                                          pop_size = 1000,
@@ -208,10 +208,11 @@ in the population due to mutation:
                                          verbose = FALSE)
   
   freqs <- calculate_allele_frequencies(simulated_pop)
-  require(dplyr)
+  
+  require(magrittr, quietly = TRUE)
   freqs %>%
-    group_by(ancestor) %>%
-    summarise(mean(frequency))
+    dplyr::group_by(ancestor) %>%
+    dplyr::summarise(mean(frequency))
 
 ```
 The final results show that indeed mutations have arisen in the population: 
