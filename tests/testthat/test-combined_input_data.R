@@ -6,13 +6,17 @@ test_that("input data", {
 
   chosen_markers <- 1:100
 
-  fake_input_data1 <- list()
-  fake_input_data1$genomes <- matrix(data = 1, nrow = 100, ncol = 100)
-  fake_input_data1$markers <- chosen_markers
+  fake_input_data1 <- GenomeAdmixR::create_artificial_genomeadmixr_data(
+    number_of_individuals = 100,
+    marker_locations = chosen_markers,
+    used_nucleotides = 1
+  )
 
-  fake_input_data2 <- list()
-  fake_input_data2$genomes <- matrix(data = 2, nrow = 100, ncol = 100)
-  fake_input_data2$markers <- chosen_markers
+  fake_input_data2 <- GenomeAdmixR::create_artificial_genomeadmixr_data(
+    number_of_individuals = 100,
+    marker_locations = chosen_markers,
+    used_nucleotides = 2
+  )
 
   combined_data <- combine_input_data(input_data_list = list(fake_input_data1,
                                                              fake_input_data2),
@@ -33,13 +37,17 @@ test_that("input data", {
 
   chosen_markers <- 1:1000
 
-  fake_input_data1 <- list()
-  fake_input_data1$genomes <- matrix(data = 1, nrow = 100, ncol = 1000)
-  fake_input_data1$markers <- chosen_markers
+  fake_input_data1 <- GenomeAdmixR::create_artificial_genomeadmixr_data(
+    number_of_individuals = 100,
+    marker_locations = chosen_markers,
+    used_nucleotides = 1
+  )
 
-  fake_input_data2 <- list()
-  fake_input_data2$genomes <- matrix(data = 2, nrow = 100, ncol = 1000)
-  fake_input_data2$markers <- chosen_markers
+  fake_input_data2 <- GenomeAdmixR::create_artificial_genomeadmixr_data(
+    number_of_individuals = 100,
+    marker_locations = chosen_markers,
+    used_nucleotides = 2
+  )
 
   combined_data <- combine_input_data(input_data_list = list(fake_input_data1,
                                                              fake_input_data2),
