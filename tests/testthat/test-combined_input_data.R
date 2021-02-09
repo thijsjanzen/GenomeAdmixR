@@ -82,21 +82,35 @@ test_that("input data simulation", {
   for (r in 1:30) {
     vx <- simulate_admixture(pop_size = 100,
                              total_runtime = 100,
-                             markers = seq(0, 1,  length.out = 100))
+                             markers = seq(0, 1,  length.out = 1000))
 
-    vy <- simulation_data_to_genomeadmixr_data(vx)
+    vy <- simulation_data_to_genomeadmixr_data(vx,
+                                               markers = seq(0, 1, length.out = 1000))
+
+    for (i in seq_along(vx$population)) {
+      num_j_1 <- sum(abs(diff(vx$population[[i]]$chromosome1)))
+      num_j_2 <- sum(abs(diff(vx$population[[i]]$chromosome2)))
+
+      index_c1 <- 1 + (i - 1) * 2
+      index_c2 <- index_c1 + 1
+      nj1 <- sum(abs(diff(vy$genomes[index_c1, ])))
+      nj2 <- sum(abs(diff(vy$genomes[index_c2, ])))
+
+    }
+
+
 
     vz <- simulate_admixture_data(input_data = vy,
                                   pop_size = 100,
                                   total_runtime = 100,
-                                  markers = seq(0, 1, length.out = 100))
+                                  markers = seq(0, 1, length.out = 1000))
 
-    num_j <- 0
+    num_j <- c()
     for (i in seq_along(vz$population)) {
-      num_j <- num_j + sum(abs(diff(vz$population[[i]]$chromosome1[, 2])))
-      num_j <- num_j + sum(abs(diff(vz$population[[i]]$chromosome2[, 2])))
+      num_j <- c(num_j, sum(abs(diff(vz$population[[i]]$chromosome1[, 2]))))
+      num_j <- c(num_j, sum(abs(diff(vz$population[[i]]$chromosome2[, 2]))))
     }
-    num_j <- num_j / (2 * length(vz$population))
+    num_j <- mean(num_j)
     obs_j <- c(obs_j, num_j)
     cat(r, num_j, "\n")
   }
@@ -104,7 +118,7 @@ test_that("input data simulation", {
   obs_j <- mean(obs_j)
 
   exp_j <- junctions::number_of_junctions(N = 100,
-                                          R = 100,
+                                          R = 1000,
                                           H_0 = 0.5,
                                           C = 1,
                                           t = 200)
