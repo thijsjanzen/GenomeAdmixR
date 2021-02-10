@@ -12,6 +12,7 @@ simulate_admixture_migration_data(
   total_runtime = 100,
   morgan = 1,
   seed = NULL,
+  num_threads = 1,
   select_matrix = NA,
   markers = NA,
   verbose = FALSE,
@@ -45,6 +46,9 @@ populations.}
 crossovers during meiosis)}
 
 \item{seed}{Seed of the pseudo-random number generator}
+
+\item{num_threads}{number of threads. Default is 1. Set to -1 to use all
+available threads}
 
 \item{select_matrix}{Selection matrix indicating the markers which are under
 selection. If not provided by the user, the simulation proceeds neutrally.

@@ -121,7 +121,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
       seed_values[i] = rndgen.random_number(INT_MAX); // large value
     }
 
-    if (verbose) {Rcout << "starting parallel threading\n"; force_output();}
+   // if (verbose) {Rcout << "starting parallel threading\n"; force_output();}
 
     tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
 
@@ -171,7 +171,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
       }
     });
 
-    if (verbose) {Rcout << "done threading\n";}
+  //  if (verbose) {Rcout << "done threading\n";}
 
     if (t % updateFreq == 0 && verbose) {
       Rcout << "**";

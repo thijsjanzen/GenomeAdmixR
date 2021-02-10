@@ -17,6 +17,7 @@
 #include "random_functions.h"
 #include "helper_functions.h"
 
+#include <RcppParallel.h>
 #include <RcppArmadillo.h>
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
@@ -75,48 +76,82 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       double mutation_rate,
                                       const NumericMatrix& substitution_matrix,
                                       rnd_t& rndgen,
-                                      const emp_genome& emp_gen) {
+                                      const emp_genome& emp_gen,
+                                      int num_threads) {
 
   std::vector<Fish_emp> new_generation(pop_size);
 
-  for (size_t i = 0; i < pop_size; ++i)  {
-    int index1, index2;
-    Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
-                                   use_selection,
-                                   fitness_source, fitness_migr,
-                                   max_fitness_source, max_fitness_migr,
-                                   index1,
-                                   rndgen);
-    Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                                   use_selection,
-                                   fitness_source, fitness_migr,
-                                   max_fitness_source, max_fitness_migr,
-                                   index2,
-                                   rndgen);
-    while (index1 == index2) {
-      parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                            use_selection,
-                            fitness_source, fitness_migr,
-                            max_fitness_source, max_fitness_migr,
-                            index2,
-                            rndgen);
-    }
-
-    new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen, emp_gen),
-                                 parent2.gamete(size_in_morgan, rndgen, emp_gen));
-
-    if (mutation_rate > 0)
-      mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen);
-
-    double fit = -2.0;
-    if (use_selection) {
-        fit = calculate_fitness(new_generation[i], select,
-                  marker_positions, multiplicative_selection);
-
-      new_fitness[i] = fit;
-    }
+  int seed_index = 0;
+  std::mutex mutex;
+  int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+  if (num_threads == -1) {
+    num_seeds = 20;
   }
-  return new_generation;
+  std::vector< int > seed_values(num_seeds);
+
+  for (int i = 0; i < num_seeds; ++i) {
+    seed_values[i] = rndgen.random_number(INT_MAX); // large value
+  }
+
+  tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+
+  tbb::parallel_for(
+    tbb::blocked_range<unsigned>(0, pop_size),
+    [&](const tbb::blocked_range<unsigned>& r) {
+
+      rnd_t rndgen2(seed_values[seed_index]);
+      {
+        std::lock_guard<std::mutex> _(mutex);
+        seed_index++;
+        if (seed_index > num_seeds) { // just in case.
+          for (int i = 0; i < num_seeds; ++i) {
+            seed_values[i] = rndgen.random_number(INT_MAX);
+          }
+          seed_index = 0;
+        }
+      }
+
+      for (unsigned i = r.begin(); i < r.end(); ++i) {
+
+
+        int index1, index2;
+        Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
+                                       use_selection,
+                                       fitness_source, fitness_migr,
+                                       max_fitness_source, max_fitness_migr,
+                                       index1,
+                                       rndgen);
+        Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                       use_selection,
+                                       fitness_source, fitness_migr,
+                                       max_fitness_source, max_fitness_migr,
+                                       index2,
+                                       rndgen);
+        while (index1 == index2) {
+          parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                use_selection,
+                                fitness_source, fitness_migr,
+                                max_fitness_source, max_fitness_migr,
+                                index2,
+                                rndgen);
+        }
+
+        new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen, emp_gen),
+                                     parent2.gamete(size_in_morgan, rndgen, emp_gen));
+
+        if (mutation_rate > 0)
+          mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen);
+
+        double fit = -2.0;
+        if (use_selection) {
+          fit = calculate_fitness(new_generation[i], select,
+                                  marker_positions, multiplicative_selection);
+
+          new_fitness[i] = fit;
+        }
+      }
+    });
+    return new_generation;
 }
 
 std::vector< std::vector< Fish_emp > > simulate_two_populations(
@@ -138,7 +173,8 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     double mutation_rate,
     const NumericMatrix& substitution_matrix,
     rnd_t& rndgen,
-    const emp_genome& emp_gen) {
+    const emp_genome& emp_gen,
+    int num_threads) {
 
   bool use_selection = false;
   if (select(1, 1) >= 0) use_selection = true;
@@ -216,39 +252,41 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                pop_2, // migrants
                                                                marker_positions,
                                                                pop_size[0],
-                                                               fitness_pop_1,
-                                                               fitness_pop_2,
-                                                               max_fitness_pop_1,
-                                                               max_fitness_pop_2,
-                                                               select,
-                                                               use_selection,
-                                                               multiplicative_selection,
-                                                               migration_rate,
-                                                               new_fitness_pop_1,
-                                                               morgan,
-                                                               mutation_rate,
-                                                               substitution_matrix,
-                                                               rndgen,
-                                                               emp_gen);
+                                                                       fitness_pop_1,
+                                                                       fitness_pop_2,
+                                                                       max_fitness_pop_1,
+                                                                       max_fitness_pop_2,
+                                                                       select,
+                                                                       use_selection,
+                                                                       multiplicative_selection,
+                                                                       migration_rate,
+                                                                       new_fitness_pop_1,
+                                                                       morgan,
+                                                                       mutation_rate,
+                                                                       substitution_matrix,
+                                                                       rndgen,
+                                                                       emp_gen,
+                                                                       num_threads);
 
     std::vector<Fish_emp> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                                pop_1,  // migrants
                                                                marker_positions,
                                                                pop_size[1],
-                                                               fitness_pop_2,
-                                                               fitness_pop_1,
-                                                               max_fitness_pop_2,
-                                                               max_fitness_pop_1,
-                                                               select,
-                                                               use_selection,
-                                                               multiplicative_selection,
-                                                               migration_rate,
-                                                               new_fitness_pop_2,
-                                                               morgan,
-                                                               mutation_rate,
-                                                               substitution_matrix,
-                                                               rndgen,
-                                                               emp_gen);
+                                                                       fitness_pop_2,
+                                                                       fitness_pop_1,
+                                                                       max_fitness_pop_2,
+                                                                       max_fitness_pop_1,
+                                                                       select,
+                                                                       use_selection,
+                                                                       multiplicative_selection,
+                                                                       migration_rate,
+                                                                       new_fitness_pop_2,
+                                                                       morgan,
+                                                                       mutation_rate,
+                                                                       substitution_matrix,
+                                                                       rndgen,
+                                                                       emp_gen,
+                                                                       num_threads);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
     fitness_pop_1 = new_fitness_pop_1;
@@ -282,20 +320,21 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
 
 // [[Rcpp::export]]
 List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
-                            const NumericMatrix& input_population_2,
-                            const NumericVector& marker_positions_R,
-                            NumericMatrix select,
-                            NumericVector pop_size,
-                            int total_runtime,
-                            double morgan,
-                            bool verbose,
-                            bool track_frequency,
-                            const NumericVector& track_markers_R,
-                            bool multiplicative_selection,
-                            double migration_rate,
-                            int seed,
-                            double mutation_rate,
-                            const NumericMatrix& substitution_matrix) {
+                                const NumericMatrix& input_population_2,
+                                const NumericVector& marker_positions_R,
+                                NumericMatrix select,
+                                NumericVector pop_size,
+                                int total_runtime,
+                                double morgan,
+                                bool verbose,
+                                bool track_frequency,
+                                const NumericVector& track_markers_R,
+                                bool multiplicative_selection,
+                                double migration_rate,
+                                int seed,
+                                double mutation_rate,
+                                const NumericMatrix& substitution_matrix,
+                                int num_threads) {
 
   rnd_t rndgen(seed);
 
@@ -406,24 +445,25 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                                 mutation_rate,
                                                 substitution_matrix,
                                                 rndgen,
-                                                emp_gen);
+                                                emp_gen,
+                                                num_threads);
 
   // Rcout << "done simulating\n"; force_output();
 
   arma::mat final_frequencies =
     update_all_frequencies_tibble_dual_pop(output_populations[0],
                                            output_populations[1],
-                                           track_markers,
-                                           marker_positions,
-                                           total_runtime,
-                                           morgan);
+                                                             track_markers,
+                                                             marker_positions,
+                                                             total_runtime,
+                                                             morgan);
 
   return List::create( Named("population_1") = convert_to_list(output_populations[0],
                              marker_positions),
-                       Named("population_2") = convert_to_list(output_populations[1],
-                             marker_positions),
-                       Named("frequencies") = frequencies_table,
-                       Named("initial_frequencies") = initial_frequencies,
-                       Named("final_frequencies") = final_frequencies,
-                       Named("junctions") = junctions);
+                             Named("population_2") = convert_to_list(output_populations[1],
+                                   marker_positions),
+                                   Named("frequencies") = frequencies_table,
+                                   Named("initial_frequencies") = initial_frequencies,
+                                   Named("final_frequencies") = final_frequencies,
+                                   Named("junctions") = junctions);
 }

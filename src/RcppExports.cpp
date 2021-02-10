@@ -111,8 +111,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // simulate_migration_emp_cpp
-List simulate_migration_emp_cpp(const NumericMatrix& input_population_1, const NumericMatrix& input_population_2, const NumericVector& marker_positions_R, NumericMatrix select, NumericVector pop_size, int total_runtime, double morgan, bool verbose, bool track_frequency, const NumericVector& track_markers_R, bool multiplicative_selection, double migration_rate, int seed, double mutation_rate, const NumericMatrix& substitution_matrix);
-RcppExport SEXP _GenomeAdmixR_simulate_migration_emp_cpp(SEXP input_population_1SEXP, SEXP input_population_2SEXP, SEXP marker_positions_RSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP verboseSEXP, SEXP track_frequencySEXP, SEXP track_markers_RSEXP, SEXP multiplicative_selectionSEXP, SEXP migration_rateSEXP, SEXP seedSEXP, SEXP mutation_rateSEXP, SEXP substitution_matrixSEXP) {
+List simulate_migration_emp_cpp(const NumericMatrix& input_population_1, const NumericMatrix& input_population_2, const NumericVector& marker_positions_R, NumericMatrix select, NumericVector pop_size, int total_runtime, double morgan, bool verbose, bool track_frequency, const NumericVector& track_markers_R, bool multiplicative_selection, double migration_rate, int seed, double mutation_rate, const NumericMatrix& substitution_matrix, int num_threads);
+RcppExport SEXP _GenomeAdmixR_simulate_migration_emp_cpp(SEXP input_population_1SEXP, SEXP input_population_2SEXP, SEXP marker_positions_RSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP verboseSEXP, SEXP track_frequencySEXP, SEXP track_markers_RSEXP, SEXP multiplicative_selectionSEXP, SEXP migration_rateSEXP, SEXP seedSEXP, SEXP mutation_rateSEXP, SEXP substitution_matrixSEXP, SEXP num_threadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -131,7 +131,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
     Rcpp::traits::input_parameter< double >::type mutation_rate(mutation_rateSEXP);
     Rcpp::traits::input_parameter< const NumericMatrix& >::type substitution_matrix(substitution_matrixSEXP);
-    rcpp_result_gen = Rcpp::wrap(simulate_migration_emp_cpp(input_population_1, input_population_2, marker_positions_R, select, pop_size, total_runtime, morgan, verbose, track_frequency, track_markers_R, multiplicative_selection, migration_rate, seed, mutation_rate, substitution_matrix));
+    Rcpp::traits::input_parameter< int >::type num_threads(num_threadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(simulate_migration_emp_cpp(input_population_1, input_population_2, marker_positions_R, select, pop_size, total_runtime, morgan, verbose, track_frequency, track_markers_R, multiplicative_selection, migration_rate, seed, mutation_rate, substitution_matrix, num_threads));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -142,7 +143,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_GenomeAdmixR_simulate_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_cpp, 14},
     {"_GenomeAdmixR_simulate_emp_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_emp_cpp, 14},
     {"_GenomeAdmixR_simulate_migration_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_migration_cpp, 15},
-    {"_GenomeAdmixR_simulate_migration_emp_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_migration_emp_cpp, 15},
+    {"_GenomeAdmixR_simulate_migration_emp_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_migration_emp_cpp, 16},
     {NULL, NULL, 0}
 };
 
