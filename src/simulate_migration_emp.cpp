@@ -139,11 +139,9 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
 
         if (mutation_rate > 0)
           mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen);
-
-        double fit = -2.0;
       }
     });
-    return new_generation;
+  return new_generation;
 }
 
 std::vector< std::vector< Fish_emp > > simulate_two_populations(
@@ -273,7 +271,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     if (use_selection) {
       for (int i = 0; i < pop_1.size(); ++i) {
         fitness_pop_1[i] = calculate_fitness(pop_1[i], select,
-                              marker_positions, multiplicative_selection);
+                                             marker_positions, multiplicative_selection);
       }
       for (int i = 0; i < pop_2.size(); ++i) {
         fitness_pop_2[i] = calculate_fitness(pop_2[i], select,
@@ -395,36 +393,36 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
         static_cast<size_t>(pop_size[0])) {
       if (verbose) {Rcout << "drawing pop 1: " << pop_size[0] <<
         " from: " << Pop_1.size() << "\n"; force_output(); }
-    //   the populations have to be populated from the parents!
+      //   the populations have to be populated from the parents!
       std::vector< Fish_emp > Pop_1_new(pop_size[0]);
       for(size_t j = 0; j < pop_size[0]; ++j) {
-        int index = random_number(Pop_1.size());
+        int index = rndgen.random_number(Pop_1.size());
         Pop_1_new[j] = Pop_1[index];
-    //  Rcout << "done converting\n"; force_output();
-
+      }
+    }
     if (verbose)  {Rcout << "drawn pop 1\n"; force_output();}
 
     if (static_cast<size_t>(Pop_2.size()) !=
         static_cast<size_t>(pop_size[1])) {
       std::vector< Fish_emp > Pop_2_new(pop_size[1]);
       if (verbose) { Rcout << "drawing pop 2: " << pop_size[1] << " " <<
-                              Pop_2.size() << "\n"; force_output(); }
+        Pop_2.size() << "\n"; force_output(); }
       for (int j = 0; j < pop_size[1]; ++j) {
-        int index = random_number(Pop_2.size());
+        int index = rndgen.random_number(Pop_2.size());
         Pop_2_new[j] = Pop_2[index];
       }
       Pop_2 = Pop_2_new;
     }
 
     if (verbose) {Rcout << "drawing done: " << Pop_1.size() << " " <<
-                                              Pop_2.size() << "\n"; force_output();}
+      Pop_2.size() << "\n"; force_output();}
   }
 
   if (verbose) {Rcout << "input_data loaded\n"; force_output();}
 
   if (verbose) {Rcout << "initial frequencies\n"; force_output();}
 
-  if (verbose) {Rcout << track_markers.size() << "\n"; force_output; }
+  if (verbose) {Rcout << track_markers.size() << "\n"; force_output(); }
   // 5 columns: time, loc, anc, type, population
   arma::mat frequencies_table(number_of_markers * number_of_alleles * total_runtime * 2, 5);
   arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1,
