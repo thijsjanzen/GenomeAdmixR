@@ -107,7 +107,6 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
     }
 
     std::vector<Fish_emp> newGeneration(pop_size);
-    std::vector<double> newFitness;
 
     int seed_index = 0;
     std::mutex mutex;
@@ -159,17 +158,19 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
           if (mutation_rate > 0)
             mutate(newGeneration[i], sub_matrix, mutation_rate, rndgen2);
-
-
-          if(use_selection) {
-              double fit = calculate_fitness(newGeneration[i],
-                                                    select_matrix,
-                                                    marker_positions,
-                                                    multiplicative_selection);
-              newFitness[i] = fit;
-          }
       }
     });
+
+    if(use_selection) {
+      for(int i = 0; i < newGeneration.size(); ++i) {
+        fitness[i] = calculate_fitness(newGeneration[i],
+                                     select_matrix,
+                                     marker_positions,
+                                     multiplicative_selection);
+      }
+      maxFitness = *std::max_element(fitness.begin(), fitness.end());
+    }
+
 
   //  if (verbose) {Rcout << "done threading\n";}
 
@@ -186,9 +187,6 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
     Rcpp::checkUserInterrupt();
 
     Pop.swap(newGeneration);
-    fitness.swap(newFitness);
-    if (!fitness.empty())
-      maxFitness = *std::max_element(fitness.begin(), fitness.end());
   }
   if(verbose) Rcout << "\n";
   return(Pop);
