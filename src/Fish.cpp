@@ -14,13 +14,15 @@
 std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<junction>& chromosome2,
                                     const std::vector<double>& recom_positions) {
-  static auto tl_go = decltype(chromosome1){};
+//  static auto tl_go = decltype(chromosome1){};
 
   // we need something that is cheaply swappable:
   auto* g1 = &chromosome1;
   auto* g2 = &chromosome2;
-  auto& go = tl_go;   // offspring genome: recycle what's already there...
-  go.clear();
+ // auto& go = tl_go;   // offspring genome: recycle what's already there...
+//  go.clear();
+
+  std::vector<junction> go;
 
   // predicate for lower_bound
   auto less = [](const auto& j, double p) { return j.pos < p; };
@@ -54,11 +56,12 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
   return go;
 }
 
-std::vector<double> generate_recomPos(size_t number_of_recombinations) {
+std::vector<double> generate_recomPos(size_t number_of_recombinations,
+                                      rnd_t& rndgen) {
 
   std::vector<double> recomPos(number_of_recombinations, 0);
   for (size_t i = 0; i < number_of_recombinations; ++i) {
-    recomPos[i] = uniform();
+    recomPos[i] = rndgen.uniform();
   }
   std::sort(recomPos.begin(), recomPos.end() );
   recomPos.erase(std::unique(recomPos.begin(), recomPos.end()), recomPos.end());
@@ -70,9 +73,10 @@ std::vector<double> generate_recomPos(size_t number_of_recombinations) {
 void Recombine(      std::vector<junction>& offspring,
                      const std::vector<junction>& chromosome1,
                      const std::vector<junction>& chromosome2,
-                     double MORGAN)  {
+                     double MORGAN,
+                     rnd_t& rndgen)  {
 
-  int numRecombinations = poisson_preset();
+  int numRecombinations = rndgen.poisson(MORGAN);
 
   if (numRecombinations == 0) {
     offspring.insert(offspring.end(),
@@ -82,42 +86,43 @@ void Recombine(      std::vector<junction>& offspring,
     return;
   }
 
-  std::vector<double> recomPos = generate_recomPos(numRecombinations);
+  std::vector<double> recomPos = generate_recomPos(numRecombinations, rndgen);
 
   offspring = recombine_new(chromosome1, chromosome2, recomPos);
 
   return;
 }
 
-Fish mate(const Fish& A, const Fish& B, double numRecombinations)
+Fish mate(const Fish& A, const Fish& B, double numRecombinations,
+          rnd_t& rndgen)
 {
   Fish offspring;
   offspring.chromosome1.clear();
   offspring.chromosome2.clear(); //just to be sure.
 
   //first the father chromosome
-  int event = random_number(2);
+  int event = rndgen.random_number(2);
   switch(event) {
   case 0:  {
-    Recombine(offspring.chromosome1, A.chromosome1, A.chromosome2, numRecombinations);
+    Recombine(offspring.chromosome1, A.chromosome1, A.chromosome2, numRecombinations, rndgen);
     break;
   }
   case 1: {
-    Recombine(offspring.chromosome1, A.chromosome2, A.chromosome1, numRecombinations);
+    Recombine(offspring.chromosome1, A.chromosome2, A.chromosome1, numRecombinations, rndgen);
     break;
   }
   }
 
 
   //then the mother chromosome
-  event = random_number(2);
+  event = rndgen.random_number(2);
   switch(event) {
   case 0:  {
-    Recombine(offspring.chromosome2, B.chromosome1, B.chromosome2, numRecombinations);
+    Recombine(offspring.chromosome2, B.chromosome1, B.chromosome2, numRecombinations, rndgen);
     break;
   }
   case 1: {
-    Recombine(offspring.chromosome2, B.chromosome2, B.chromosome1, numRecombinations);
+    Recombine(offspring.chromosome2, B.chromosome2, B.chromosome1, numRecombinations, rndgen);
     break;
   }
   }
@@ -125,8 +130,7 @@ Fish mate(const Fish& A, const Fish& B, double numRecombinations)
   return offspring;
 }
 
-Fish::Fish(){
-
+Fish::Fish() {
 }
 
 junction::junction(){

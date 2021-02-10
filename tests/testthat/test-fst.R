@@ -33,7 +33,7 @@ testthat::test_that("fst", {
                       sampled_individuals,
                       number_of_markers, random_markers = FALSE)
 
-  testthat::expect_equal(v1, v2, tolerance = 0.05)
+  testthat::expect_equal(v1, v2, tolerance = 0.1)
 
   pop_size <- 100
   number_of_founders <- 10

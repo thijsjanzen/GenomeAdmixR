@@ -111,16 +111,14 @@ test_that("simulate admixture use", {
 test_that("simulate admixture use, junctions", {
   testthat::skip_on_os("solaris")
   message("simulate admixture use, junctions")
-  markers <- 0.5
-  vx <- simulate_admixture(pop_size = 100,
+  vx <- simulate_admixture(pop_size = 1000,
                            number_of_founders = 2,
                            total_runtime = 100,
-                           markers = markers,
                            track_junctions = TRUE)
 
   num_j <- length(vx$junctions)
   testthat::expect_gt(num_j, 0)
-  testthat::expect_equal(num_j, 100)
+  testthat::expect_equal(num_j, 100)  # for some reason the population becomes fixed?
 })
 
 test_that("simulate admixture use, markers", {

@@ -8,13 +8,14 @@
 #include "helper_functions.h"
 #include <vector>
 #include <string>
+#include <thread>
+#include <chrono>
 
 #include <chrono>
 #include <thread>
 
 void force_output() {
-  static std::chrono::milliseconds timespan(100);
-  std::this_thread::sleep_for(timespan);
+  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
@@ -218,18 +219,19 @@ double calc_mean_junctions(const std::vector< Fish> & pop) {
 }
 
 int draw_prop_fitness(const std::vector<double>& fitness,
-                      double maxFitness) {
+                      const double& maxFitness,
+                      rnd_t& rndgen) {
 
   if (maxFitness <= 0.0) {
-    return random_number(fitness.size());
+    return rndgen.random_number(fitness.size());
   }
 
   size_t fitness_size = fitness.size();
   double inv_fitness = 1.0 / maxFitness;
   while(true) {
-    int index = random_number(fitness_size);
+    int index = rndgen.random_number(fitness_size);
     double prob = inv_fitness * fitness[index];
-    if(uniform() < prob) {
+    if(rndgen.uniform() < prob) {
       return index;
     }
   }
@@ -380,8 +382,9 @@ double calculate_fitness(const Fish& focal,
 }
 
 
-int draw_random_founder(const NumericVector& v) {
-  double r = uniform();
+int draw_random_founder(const NumericVector& v,
+                        rnd_t& rndgen) {
+  double r = rndgen.uniform();
   for(int i = 0; i < v.size(); ++i) {
     r -= v[i];
     if(r <= 0) {
@@ -817,13 +820,14 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& 
 
 
 int draw_mutated_base(int source_base,
-                      const NumericMatrix& sub_matrix) {
+                      const NumericMatrix& sub_matrix,
+                      rnd_t& rndgen) {
   if (source_base == 0) // no data
     return 0;
 
   static int alleles[4] = {1, 2, 3, 4};
 
-  double r = uniform();
+  double r = rndgen.uniform();
   for (int i = 0; i < 4; ++i) {
     r -= sub_matrix(source_base - 1, i);
     if (r <= 0.0) {
@@ -833,23 +837,40 @@ int draw_mutated_base(int source_base,
   return alleles[3];
 }
 
+int num_mutations(int num_markers,
+                  double mu,
+                  rnd_t& rndgen)  {
+  std::binomial_distribution<> mutate_num(num_markers, mu);
+  int result = mutate_num(rndgen.rndgen_);
+  return result;
+}
+
 void mutate_chrom(std::vector<int>& chrom,
-                  const NumericMatrix& sub_matrix) {
-  int num_mutated_bases = num_mutations();
+                  const NumericMatrix& sub_matrix,
+                  const double& mutation_rate,
+                  rnd_t& rndgen) {
+
+  int num_mutated_bases = num_mutations(chrom.size(),
+                                        mutation_rate,
+                                        rndgen);
+
   for (int i = 0; i < num_mutated_bases; ++i) {
-    int index = random_number(chrom.size());
+    int index = rndgen.random_number(chrom.size());
     int mutated_base = draw_mutated_base(chrom[index],
-                                         sub_matrix);
+                                         sub_matrix,
+                                         rndgen);
     chrom[index] = mutated_base;
   }
   return;
 }
 
 void mutate(Fish_emp& indiv,
-            const NumericMatrix& sub_matrix) {
+            const NumericMatrix& sub_matrix,
+            const double& mutation_rate,
+            rnd_t& rndgen) {
 
-  mutate_chrom(indiv.chromosome1, sub_matrix);
-  mutate_chrom(indiv.chromosome2, sub_matrix);
+  mutate_chrom(indiv.chromosome1, sub_matrix, mutation_rate, rndgen);
+  mutate_chrom(indiv.chromosome2, sub_matrix, mutation_rate, rndgen);
 
   return;
 }

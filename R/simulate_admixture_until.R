@@ -7,6 +7,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      total_runtime = 100,
                                      morgan = 1,
                                      seed = NULL,
+                                     num_threads = 1,
                                      select_matrix = NA,
                                      markers = NA,
                                      verbose = FALSE,
@@ -30,6 +31,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
     initial_frequencies = initial_frequencies,
     total_runtime = generations_between_update,
     seed = seed,
+    num_threads = num_threads,
     morgan = morgan,
     select_matrix = select_matrix,
     markers = markers,
@@ -58,6 +60,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
       total_runtime = generations_between_update,
       morgan = morgan,
       seed = seed + cnt,
+      num_threads = num_threads,
       select_matrix = select_matrix,
       markers = markers,
       verbose = verbose,
@@ -72,7 +75,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                          random_markers = random_markers)
 
     total_generations <- total_generations + generations_between_update
-    message(total_generations, "\t", fst, "\n")
+    message(total_generations, "\t", fst)
   }
   return(list("population_1" = pops$population_1,
               "population_2" = pops$population_2,
