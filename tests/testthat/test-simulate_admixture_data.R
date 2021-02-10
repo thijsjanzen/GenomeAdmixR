@@ -49,7 +49,7 @@ test_that("simulate_admixture_data", {
                      locations = unique(simul_pop$frequencies$location))
   )
   testthat::expect_silent(
-    plot_over_time(simul_pop$frequencies, focal_location = 0.5)
+    plot_over_time(simul_pop$frequencies, focal_location = 50)
   )
   testthat::expect_silent(
     plot_start_end(simul_pop)
@@ -69,7 +69,7 @@ test_that("simulate_admixture_data", {
     calculate_ld(simul_pop$population)
   )
   testthat::expect_silent(
-    calculate_marker_frequency(simul_pop, location = 0.5)
+    calculate_marker_frequency(simul_pop, location = 50)
   )
 })
 
