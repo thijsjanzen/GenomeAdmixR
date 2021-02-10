@@ -75,8 +75,16 @@ plot_difference_frequencies <- function(results,
       ggplot2::geom_step()
   }
 
+  if (max(to_plot$location) < 10) {
+    p1 <- p1 +
+      ggplot2::xlab("Location (Morgan)")
+  } else {
+    p1 <- p1 +
+      ggplot2::xlab("Location (bp)")
+  }
+
+
   p1 <- p1 +
-    ggplot2::xlab("Location (Morgan)") +
     ggplot2::ylab("Change in Frequency") +
     ggplot2::labs(col = "Ancestor")
 
