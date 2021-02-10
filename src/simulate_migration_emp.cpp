@@ -74,7 +74,8 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       double size_in_morgan,
                                       double mutation_rate,
                                       const NumericMatrix& substitution_matrix,
-                                      rnd_t& rndgen) {
+                                      rnd_t& rndgen,
+                                      const emp_genome& emp_gen) {
 
   std::vector<Fish_emp> new_generation(pop_size);
 
@@ -101,11 +102,11 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                             rndgen);
     }
 
-    new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen),
-                                 parent2.gamete(size_in_morgan, rndgen));
+    new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen, emp_gen),
+                                 parent2.gamete(size_in_morgan, rndgen, emp_gen));
 
     if (mutation_rate > 0)
-      mutate(new_generation[i], substitution_matrix, rndgen);
+      mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen);
 
     double fit = -2.0;
     if (use_selection) {
@@ -136,7 +137,8 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     double migration_rate,
     double mutation_rate,
     const NumericMatrix& substitution_matrix,
-    rnd_t& rndgen) {
+    rnd_t& rndgen,
+    const emp_genome& emp_gen) {
 
   bool use_selection = false;
   if (select(1, 1) >= 0) use_selection = true;
@@ -226,7 +228,8 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                morgan,
                                                                mutation_rate,
                                                                substitution_matrix,
-                                                               rndgen);
+                                                               rndgen,
+                                                               emp_gen);
 
     std::vector<Fish_emp> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                                pop_1,  // migrants
@@ -244,7 +247,8 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                morgan,
                                                                mutation_rate,
                                                                substitution_matrix,
-                                                               rndgen);
+                                                               rndgen,
+                                                               emp_gen);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
     fitness_pop_1 = new_fitness_pop_1;
@@ -303,11 +307,6 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
 
-  if (mutation_rate > 0) {
-    rndgen.set_mutation_rate(mutation_rate,
-                      marker_positions.size());
-  }
-
   auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
                                                      marker_positions.end()));
 
@@ -338,8 +337,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
     }
   }
 
-
-
+  emp_genome emp_gen(marker_positions);
 
   if (input_population_1[0] > -1e4) {
     //  if (verbose) Rcout << "Found input populations\n";  force_output();
@@ -407,7 +405,8 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                                 migration_rate,
                                                 mutation_rate,
                                                 substitution_matrix,
-                                                rndgen);
+                                                rndgen,
+                                                emp_gen);
 
   // Rcout << "done simulating\n"; force_output();
 

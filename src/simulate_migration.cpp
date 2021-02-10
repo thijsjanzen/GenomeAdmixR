@@ -75,6 +75,9 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
 
   rnd_t rndgen;
   int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+  if (num_threads == -1) {
+    num_seeds = 20;
+  }
   std::vector< int > seed_values(num_seeds);
 
   for (int i = 0; i < num_seeds; ++i) {

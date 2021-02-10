@@ -44,9 +44,11 @@ struct Fish_emp {
   }
 
   std::vector< int > gamete(double morgan,
-                            rnd_t& rndgen) {
+                            rnd_t& rndgen,
+                            const emp_genome& emp_gen) {
 
-    std::vector<size_t> recom_pos = rndgen.recompos(morgan);
+    std::vector<size_t> recom_pos = emp_gen.recompos(morgan,
+                                                     rndgen);
 
     if (recom_pos.size() == 1) {
       if(rndgen.random_number(2)) {

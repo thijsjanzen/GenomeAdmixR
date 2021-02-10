@@ -13,10 +13,15 @@
 #include <vector>
 #include <algorithm>
 #include <tuple>
+#include <mutex>
+
 
 #include "Fish_emp.h"
 #include "random_functions.h"
 #include "helper_functions.h"
+
+
+#include <RcppParallel.h>
 
 #include <RcppArmadillo.h>
 // [[Rcpp::depends("RcppArmadillo")]]
@@ -36,7 +41,9 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
                                                 bool multiplicative_selection,
                                                 double mutation_rate,
                                                 const NumericMatrix& sub_matrix,
-                                                rnd_t& rndgen) {
+                                                rnd_t& rndgen,
+                                                const emp_genome& emp_gen,
+                                                int num_threads) {
 
   int num_alleles = 5;
   bool use_selection = false;
@@ -102,35 +109,69 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
     std::vector<Fish_emp> newGeneration(pop_size);
     std::vector<double> newFitness;
 
-    for (int i = 0; i < pop_size; ++i)  {
-      int index1 = 0;
-      int index2 = 0;
-      if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
-        index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
-      } else {
-        index1 = rndgen.random_number( (int)Pop.size() );
-        index2 = rndgen.random_number( (int)Pop.size() );
-        while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
-      }
-
-      newGeneration[i] = Fish_emp(Pop[index1].gamete(morgan, rndgen),
-                                  Pop[index2].gamete(morgan, rndgen));
-
-      if (mutation_rate > 0)
-        mutate(newGeneration[i], sub_matrix, rndgen);
-
-
-      if(use_selection) {
-          double fit = calculate_fitness(newGeneration[i],
-                                                select_matrix,
-                                                marker_positions,
-                                                multiplicative_selection);
-
-          newFitness.push_back(fit);
-      }
+    int seed_index = 0;
+    std::mutex mutex;
+    int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+    if (num_threads == -1) {
+      num_seeds = 20;
     }
+    std::vector< int > seed_values(num_seeds);
+
+    for (int i = 0; i < num_seeds; ++i) {
+      seed_values[i] = rndgen.random_number(INT_MAX); // large value
+    }
+
+    if (verbose) {Rcout << "starting parallel threading\n"; force_output();}
+
+    tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+      [&](const tbb::blocked_range<unsigned>& r) {
+
+        rnd_t rndgen2(seed_values[seed_index]);
+        {
+          std::lock_guard<std::mutex> _(mutex);
+          seed_index++;
+          if (seed_index > num_seeds) { // just in case.
+            for (int i = 0; i < num_seeds; ++i) {
+              seed_values[i] = rndgen.random_number(INT_MAX);
+            }
+            seed_index = 0;
+          }
+        }
+
+        for (unsigned i = r.begin(); i < r.end(); ++i) {
+          int index1 = 0;
+          int index2 = 0;
+          if (use_selection) {
+            index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+          } else {
+            index1 = rndgen.random_number( (int)Pop.size() );
+            index2 = rndgen.random_number( (int)Pop.size() );
+            while(index2 == index1) index2 = rndgen.random_number( (int)Pop.size() );
+          }
+
+          newGeneration[i] = Fish_emp(Pop[index1].gamete(morgan, rndgen2, emp_gen),
+                                      Pop[index2].gamete(morgan, rndgen2, emp_gen));
+
+          if (mutation_rate > 0)
+            mutate(newGeneration[i], sub_matrix, mutation_rate, rndgen2);
+
+
+          if(use_selection) {
+              double fit = calculate_fitness(newGeneration[i],
+                                                    select_matrix,
+                                                    marker_positions,
+                                                    multiplicative_selection);
+              newFitness[i] = fit;
+          }
+      }
+    });
+
+    if (verbose) {Rcout << "done threading\n";}
 
     if (t % updateFreq == 0 && verbose) {
       Rcout << "**";
@@ -166,16 +207,14 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                       bool multiplicative_selection,
                       int seed,
                       double mutation_rate,
-                      NumericMatrix sub_matrix) {
+                      NumericMatrix sub_matrix,
+                      int num_threads) {
 
   rnd_t rndgen(seed);
 
 
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
-
-  if (mutation_rate > 0)
-      rndgen.set_mutation_rate(mutation_rate, marker_positions.size());
 
   auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
                                                     marker_positions.end()));
@@ -209,8 +248,8 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
     }
   }
 
-
-  rndgen.fill_cum_marker_dist(marker_positions);
+  if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
+  emp_genome emp_gen(marker_positions);
 
   std::vector< Fish_emp > Pop;
 
@@ -248,7 +287,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                                 0,
                                                                 morgan);
 
- // Rcout << "simulate\n"; force_output();
+  if (verbose) {Rcout << "simulate\n"; force_output();}
   std::vector<Fish_emp> output_pop = simulate_population_emp(Pop,
                                                              select,
                                                              marker_positions,
@@ -262,7 +301,9 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                              multiplicative_selection,
                                                              mutation_rate,
                                                              sub_matrix,
-                                                             rndgen);
+                                                             rndgen,
+                                                             emp_gen,
+                                                             num_threads);
 
  // Rcout << "final frequencies\n"; force_output();
   arma::mat final_frequencies = update_all_frequencies_tibble(output_pop,

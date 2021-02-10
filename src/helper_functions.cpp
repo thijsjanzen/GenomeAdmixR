@@ -832,10 +832,23 @@ int draw_mutated_base(int source_base,
   return alleles[3];
 }
 
+int num_mutations(int num_markers,
+                  double mu,
+                  rnd_t& rndgen)  {
+  std::binomial_distribution<> mutate_num(num_markers, mu);
+  int result = mutate_num(rndgen.rndgen_);
+  return result;
+}
+
 void mutate_chrom(std::vector<int>& chrom,
                   const NumericMatrix& sub_matrix,
+                  const double& mutation_rate,
                   rnd_t& rndgen) {
-  int num_mutated_bases = rndgen.num_mutations();
+
+  int num_mutated_bases = num_mutations(chrom.size(),
+                                        mutation_rate,
+                                        rndgen);
+
   for (int i = 0; i < num_mutated_bases; ++i) {
     int index = rndgen.random_number(chrom.size());
     int mutated_base = draw_mutated_base(chrom[index],
@@ -848,10 +861,11 @@ void mutate_chrom(std::vector<int>& chrom,
 
 void mutate(Fish_emp& indiv,
             const NumericMatrix& sub_matrix,
+            const double& mutation_rate,
             rnd_t& rndgen) {
 
-  mutate_chrom(indiv.chromosome1, sub_matrix, rndgen);
-  mutate_chrom(indiv.chromosome2, sub_matrix, rndgen);
+  mutate_chrom(indiv.chromosome1, sub_matrix, mutation_rate, rndgen);
+  mutate_chrom(indiv.chromosome2, sub_matrix, mutation_rate, rndgen);
 
   return;
 }
