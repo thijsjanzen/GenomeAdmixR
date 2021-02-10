@@ -62,18 +62,17 @@ struct rnd_t {
 struct emp_genome {
 
   std::vector< double > cdf_;
-
+  int total_sum;
 
   emp_genome() {
 
   }
 
-  emp_genome(const std::vector<double>& positions) {
-    auto total_sum = std::accumulate(positions.begin(),
-                                     positions.end(), 0.0);
+  emp_genome(const std::vector<int>& positions) {
+    total_sum = std::accumulate(positions.begin(),
+                                positions.end(), 0.0);
     double s = 0.0;
     double mult = 1.0 / total_sum;
-    cdf_.clear();
     cdf_.resize(positions.size());
     for (int i = 0; i < positions.size(); ++i) {
       s += positions[i] * mult;
@@ -81,7 +80,6 @@ struct emp_genome {
     }
     return;
   }
-
 
   std::vector< size_t > recompos(double morgan,
                                  rnd_t& rndgen) const {

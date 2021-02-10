@@ -118,7 +118,7 @@ test_that("simulate admixture use, junctions", {
 
   num_j <- length(vx$junctions)
   testthat::expect_gt(num_j, 0)
-  testthat::expect_equal(num_j, 100)  # for some reason the population becomes fixed?
+  testthat::expect_equal(num_j, 100)
 })
 
 test_that("simulate admixture use, markers", {

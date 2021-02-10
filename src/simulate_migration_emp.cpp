@@ -60,7 +60,7 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
 
 std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       const std::vector< Fish_emp >& pop_2,
-                                      const std::vector< double >& marker_positions,
+                                      const std::vector< int >& marker_positions,
                                       size_t pop_size,
                                       std::vector< double > fitness_source,
                                       std::vector< double > fitness_migr,
@@ -147,7 +147,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
 std::vector< std::vector< Fish_emp > > simulate_two_populations(
     const std::vector< Fish_emp>& source_pop_1,
     const std::vector< Fish_emp>& source_pop_2,
-    const std::vector<double>& marker_positions,
+    const std::vector<int>& marker_positions,
     const NumericMatrix& select,
     const NumericVector& pop_size,
     int total_runtime,
@@ -155,7 +155,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     bool verbose,
     arma::mat& frequencies,
     bool track_frequency,
-    const std::vector<double>& track_markers,
+    const std::vector<int>& track_markers,
     bool multiplicative_selection,
     int num_alleles,
     const std::vector<int>& founder_labels,
@@ -330,47 +330,17 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
   std::vector<int> founder_labels = {0, 1, 2, 3, 4};
   int number_of_alleles = founder_labels.size();
 
-  std::vector<double> marker_positions(marker_positions_R.begin(),
+  std::vector<int> marker_positions(marker_positions_R.begin(),
                                        marker_positions_R.end());
 
   auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
                                                      marker_positions.end()));
 
-  for (auto& i : marker_positions) {
-    i *= inv_max_marker_pos;
-  }
-
-  std::vector<double> track_markers(track_markers_R.begin(),
+  std::vector<int> track_markers(track_markers_R.begin(),
                                     track_markers_R.end());
 
   int number_of_markers = track_markers.size();
   if (verbose) Rcout << number_of_markers << "\n";
-
-  if (*std::max_element(track_markers_R.begin(), track_markers_R.end()) > 1) {
-    for (auto& i : track_markers) {
-      i *= inv_max_marker_pos;
-      if (verbose) {
-        Rcout << i << " "; force_output();
-      }
-    }
-  }
-
-  if (verbose) { Rcout << "markers loaded\n"; force_output(); }
-
-  if (select.nrow() > 0) {
-    if (select(0, 0) > 10) {// location in bp
-      for (int i = 0; i < select.nrow(); ++i) {
-        select(i, 0) = select(i, 0) * inv_max_marker_pos;
-      }
-    } else {
-      if (select(0, 0) > 1) {
-        for (int i = 0; i < select.nrow(); ++i) {
-          select(i, 0) = select(i, 0) / morgan;
-        }
-      }
-    }
-  }
-
 
   emp_genome emp_gen(marker_positions);
 

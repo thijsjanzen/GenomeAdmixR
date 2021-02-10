@@ -247,10 +247,13 @@ increase_ancestor <- function(population, increment = 20) {
 }
 
 #' @keywords internal
-create_random_markers <- function(number_of_markers) {
+create_random_markers <- function(number_of_markers,
+                                  min_pos = 0,
+                                  max_pos = 1) {
   markers <- c()
   while (length(markers) < number_of_markers) {
-    temp_markers <- stats::runif(number_of_markers - length(markers), 0, 1)
+    temp_markers <- stats::runif(number_of_markers - length(markers),
+                                 min_pos, max_pos)
     which_dupl <- which(duplicated(temp_markers))
     if (length(which_dupl)) {
       temp_markers <- temp_markers[-which_dupl]
@@ -548,7 +551,6 @@ verify_substitution_matrix <- function(substitution_matrix) {
          "substitution matrix should be a 4x4 matrix")
   }
 
-  is_rate_matrix <- FALSE
   if (sum(substitution_matrix == 1) > 0) {
     warning("found rate matrix, rescaled all entries")
     # we have to rewrite as relative matrix
@@ -588,12 +590,36 @@ check_markers <- function(markers, data_markers) {
   which_markers_not_in_data <- which(markers_in_data == FALSE)
 
   if (length(which_markers_not_in_data) > 0) {
-    warning(paste0("removing: ", length(which_markers_not_in_data), " markers as these do not exist in the original dataset"))
+    warning(paste0("removing: ",
+                   length(which_markers_not_in_data),
+                   " markers as these do not exist in the original dataset"))
     markers <- markers[-which_markers_not_in_data]
   }
 
   if (length(markers) == 0) {
     stop("you have to provide markers that exist in the original dataset")
   }
-  return(markers)
+  return(sort(markers))
+}
+
+#' @keywords internal
+get_marker_range <- function(pop1, pop2) {
+  get_min_pos <- function(indiv) {
+    return(min(indiv$chromosome1[, 1],
+               indiv$chromosome2[, 1]))
+  }
+  get_max_pos <- function(indiv) {
+    return(max(indiv$chromosome1[, 1],
+               indiv$chromosome2[, 1]))
+  }
+
+  min_positions1 <- unlist(lapply(pop1, get_min_pos))
+  min_positions2 <- unlist(lapply(pop2, get_min_pos))
+
+  max_positions1 <- unlist(lapply(pop1, get_max_pos))
+  max_positions2 <- unlist(lapply(pop2, get_max_pos))
+
+  min_pos <- min(min_positions1, min_positions2)
+  max_pos <- max(max_positions1, max_positions2)
+  return(c(min_pos, max_pos))
 }

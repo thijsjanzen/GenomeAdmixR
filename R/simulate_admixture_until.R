@@ -40,7 +40,8 @@ simulate_admixture_until <- function(input_population_1 = NA,
     multiplicative_selection = multiplicative_selection,
     migration_rate = migration_rate)
 
-  fst <- calculate_fst(pops$population_1, pops$population_2,
+  fst <- calculate_fst(pop1 = pops$population_1,
+                       pop2 = pops$population_2,
                        sampled_individuals = sampled_individuals,
                        number_of_markers = number_of_markers,
                        random_markers = random_markers)

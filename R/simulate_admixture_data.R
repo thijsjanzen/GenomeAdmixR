@@ -55,9 +55,17 @@ simulate_admixture_data <- function(input_data = NA,
                                     substitution_matrix = matrix(1 / 4, 4, 4)) {
 
   if (class(input_data) != "genomeadmixr_data") {
-    stop("input_data should be of class genomeadmixr_data\n
-          you can create such data with the functions\n
-          create_input_data or vcfR_to_genomeadmixr_data")
+    input_data2 <- check_input_pop(input_data)
+    if (class(input_data2) == "population") {
+      message("found simulation output, converting to genomeadmixr_data")
+       input_data <-
+         simulation_data_to_genomeadmixr_data(simulation_data = input_data)
+      message("done converting, continuing as normal")
+    } else {
+      stop("input_data should be of class genomeadmixr_data\n
+            you can create such data with the functions\n
+            create_input_data or vcfR_to_genomeadmixr_data")
+    }
   }
 
 
@@ -84,13 +92,8 @@ simulate_admixture_data <- function(input_data = NA,
     select_matrix <- other_matrix
 
     sites_under_selection <- select_matrix[, 1]
-    if (max(sites_under_selection) > morgan) {
-      sites_under_selection <- morgan * sites_under_selection / max(sites_under_selection)
-    }
 
-    normalized_markers <-
-           (input_data$markers / max(input_data$markers)) * morgan
-    if (!(sites_under_selection %in% normalized_markers)) {
+    if (!(sites_under_selection %in% markers)) {
       stop("location of sites under selection have to exist in original data")
     }
   }
@@ -113,8 +116,6 @@ simulate_admixture_data <- function(input_data = NA,
   if (track_frequency) {
     markers <- check_markers(markers, input_data$markers)
   }
-
-
 
   if (mutation_rate > 0) {
     substitution_matrix <- verify_substitution_matrix(substitution_matrix)

@@ -35,26 +35,19 @@ test_that("simulate_admixture_until_data", {
   testthat::skip_on_os("solaris")
   message("test simulate_admixture_until_data")
 
-  num_markers <- 100
   num_indiv <- 100
-  chosen_markers <- 1:num_markers
+  chosen_markers <- 1:100
 
-  fake_input_data1 <- list()
-  fake_input_data1$genomes <- matrix(data = 1,
-                                     nrow = num_indiv,
-                                     ncol = num_markers)
+  fake_input_data1 <-
+    create_artificial_genomeadmixr_data(number_of_individuals = num_indiv,
+                                        marker_locations = chosen_markers,
+                                        used_nucleotides = 1)
 
+  fake_input_data2 <-
+    create_artificial_genomeadmixr_data(number_of_individuals = num_indiv,
+                                        marker_locations = chosen_markers,
+                                        used_nucleotides = 2)
 
-  fake_input_data1$markers <- chosen_markers
-
-  fake_input_data2 <- list()
-  fake_input_data2$genomes <- matrix(data = 2,
-                                     nrow = num_indiv,
-                                     ncol = num_markers)
-  fake_input_data2$markers <- chosen_markers
-
-  class(fake_input_data1) <- "genomeadmixr_data"
-  class(fake_input_data2) <- "genomeadmixr_data"
 
   vx <- simulate_admixture_migration_data(
     input_data_population_1 = fake_input_data1,

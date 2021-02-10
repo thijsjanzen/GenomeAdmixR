@@ -570,7 +570,7 @@ void update_founder_labels(const std::vector<int>& chrom,
 
 double calculate_fitness(const Fish_emp& focal,
                          const NumericMatrix& select,
-                         const std::vector<double>& markers,
+                         const std::vector<int>& locations,
                          bool multiplicative_selection) {
 
   int number_of_markers = select.nrow();
@@ -580,7 +580,7 @@ double calculate_fitness(const Fish_emp& focal,
     auto focal_pos = select(i, 0);
     auto focal_anc = select(i, 4);
     if (focal_anc == -1) continue; // do not take into account
-    int focal_index = find_location(markers, focal_pos);
+    int focal_index = find_location(locations, focal_pos);
 
     auto a1 = focal.chromosome1[focal_index];
     auto a2 = focal.chromosome2[focal_index];
@@ -601,7 +601,7 @@ double calculate_fitness(const Fish_emp& focal,
 }
 
 List convert_to_list(const std::vector<Fish_emp>& v,
-                     const std::vector<double>& locations) {
+                     const std::vector<int>& locations) {
   int list_size = (int)v.size();
   List output(list_size);
 
@@ -623,8 +623,7 @@ List convert_to_list(const std::vector<Fish_emp>& v,
 
     List toAdd = List::create( Named("chromosome1") = chrom1,
                                Named("chromosome2") = chrom2
-    );
-
+                              );
     output(i) = toAdd;
   }
 
@@ -664,8 +663,8 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
 
 
 
-int find_location(const std::vector<double>& markers,
-                  double pos) {
+int find_location(const std::vector<int>& markers,
+                  int pos) {
 
   auto loc = std::find(markers.begin(), markers.end(), pos);
   if (loc == markers.end()) {
@@ -676,8 +675,8 @@ int find_location(const std::vector<double>& markers,
 }
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
-                                        const std::vector<double>& markers,
-                                        const std::vector<double>& locations,
+                                        const std::vector<int>& markers,
+                                        const std::vector<int>& locations,
                                         int t,
                                         double morgan) {
 
@@ -691,7 +690,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
 
     std::vector<std::vector<double >> local_mat = update_frequency_tibble(pop,
                                                   index,
-                                                  markers[i] * morgan,
+                                                  markers[i],
                                                   t);
     // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
     // and we have to put that in the right place in the output matrix
@@ -771,8 +770,8 @@ double number_of_junctions(const std::vector< Fish_emp>& pop) {
 }
 
 arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
-                                 const std::vector<double>& markers,
-                                 const std::vector<double>& locations,
+                                 const std::vector<int>& markers,
+                                 const std::vector<int>& locations,
                                  int t,
                                  int pop_indicator,
                                  double morgan) {
@@ -789,7 +788,7 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
    int index = find_location(locations, markers[i]);
    std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
                                                                            index,
-                                                            markers[i] * morgan,
+                                                            markers[i],
                                                             t);
     // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
     // and we have to put that in the right place in the output matrix
@@ -807,8 +806,8 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
 
 arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& pop_1,
                                                  const std::vector< Fish_emp >& pop_2,
-                                                 const std::vector<double>& markers,
-                                                 const std::vector<double>& locations,
+                                                 const std::vector<int>& markers,
+                                                 const std::vector<int>& locations,
                                                  int t,
                                                  double morgan) {
   arma::mat output_1 = record_frequencies_pop(pop_1, markers, locations, t, 1, morgan);

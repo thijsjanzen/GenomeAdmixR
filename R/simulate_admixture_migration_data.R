@@ -83,7 +83,7 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                          sampled_individuals = 10,
                                          number_of_markers = 100,
                                          random_markers = TRUE,
-                                         mutation_rate = 0,
+                                         mutation_rate = 0.0,
                                          substitution_matrix =
                                              matrix(1 / 4, 4, 4)) {
 
@@ -139,13 +139,7 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
     select_matrix <- other_matrix
 
     sites_under_selection <- select_matrix[, 1]
-    if (max(sites_under_selection) > morgan) {
-      sites_under_selection <- morgan * sites_under_selection / max(sites_under_selection)
-    }
-    normalized_markers <-
-      (input_data_population_1$markers /
-         max(input_data_population_1$markers)) * morgan
-    if (!(sites_under_selection %in% normalized_markers)) {
+    if (!(sites_under_selection %in% markers)) {
       stop("location of sites under selection have to exist in original data")
     }
   }
@@ -179,7 +173,9 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
     cat("markers: ", length(markers), "\n")
   }
 
-  verify_substitution_matrix(substitution_matrix)
+  if (mutation_rate > 0) {
+    verify_substitution_matrix(substitution_matrix)
+  }
 
   selected_pop <- simulate_migration_emp_cpp(input_data_population_1$genomes,
                                              input_data_population_2$genomes,

@@ -5,6 +5,7 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                                           total_runtime = 100,
                                           morgan = 1,
                                           seed = NULL,
+                                          num_threads = 1,
                                           select_matrix = NA,
                                           markers = NA,
                                           verbose = FALSE,
@@ -15,9 +16,9 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                                           sampled_individuals = 10,
                                           number_of_markers = 100,
                                           random_markers = TRUE,
-                                          mutation_rate,
-                                          substitution_matrix,
-                                          num_threads = 1) {
+                                          mutation_rate = 0,
+                                          substitution_matrix =
+                                            matrix(1/4, nrow = 4, ncol = 4)) {
 
   if (is.null(seed)) {
     seed <- round(as.numeric(Sys.time()))

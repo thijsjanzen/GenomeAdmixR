@@ -112,7 +112,7 @@ convert_dna_to_numeric <- function(dna_matrix) {
   dna_matrix[dna_matrix == "?"] <- 0
   dna_matrix[dna_matrix == "N"] <- 0
 
-  odd_entries <- which( !(dna_matrix %in% c("0", "1", "2", "3", "4")))
+  odd_entries <- which(!(dna_matrix %in% c("0", "1", "2", "3", "4")))
   if (length(odd_entries) > 0) {
     message(paste0("found ", length(odd_entries), " non-biallelic entries"))
     message(paste0("these were set to missing data"))
@@ -129,7 +129,7 @@ convert_dna_to_numeric <- function(dna_matrix) {
 #' @param verbose provide verbose output (default is FALSE)
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
-simulation_data_to_genomeadmixr_data <- function(simulation_data,
+simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
                                                  markers = NULL,
                                                  verbose = FALSE) {
   output <- list()
@@ -142,6 +142,14 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data,
     }
   } else {
     output$markers <- markers
+  }
+
+  if (max(output$markers) <= 1.0) {
+    # we have to rescale the markers to bp
+    mark <- output$markers[output$markers > 0]
+    min_mark <- min(mark)
+    rescale_val <- 1 / min_mark
+    output$markers <- output$markers * rescale_val
   }
 
   find_allele <- function(pos, chrom) {
@@ -294,8 +302,8 @@ convert_map_data_to_numeric <- function(map_data) {
   map_data[map_data == "?"] <- 0
   map_data[map_data == "N"] <- 0
 
-  odd_entries <- which( !(map_data[, 1] %in% c("0", "1", "2", "3", "4")))
-  odd_entries2 <- which( !(map_data[, 2] %in% c("0", "1", "2", "3", "4")))
+  odd_entries <- which(!(map_data[, 1] %in% c("0", "1", "2", "3", "4")))
+  odd_entries2 <- which(!(map_data[, 2] %in% c("0", "1", "2", "3", "4")))
   odd_entries <- unique(c(odd_entries, odd_entries2))
 
   map_data[odd_entries, 1] <- -1
@@ -417,14 +425,15 @@ read_vcf <- function(vcf_name, chosen_chromosome,
 #' provided, equal frequencies are assumed.
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
-create_artificial_genomeadmixr_data <- function(number_of_individuals,
+create_artificial_genomeadmixr_data <- function(number_of_individuals, # nolint
                                                 marker_locations,
                                                 used_nucleotides = 1:4,
                                                 nucleotide_frequencies = NA) {
 
   if (is.na(nucleotide_frequencies)) {
     nucleotide_frequencies <- rep(1, length(used_nucleotides))
-    nucleotide_frequencies <- nucleotide_frequencies / sum(nucleotide_frequencies)
+    nucleotide_frequencies <-
+        nucleotide_frequencies / sum(nucleotide_frequencies)
   }
   num_markers <- length(marker_locations)
   fake_data <- list()
@@ -436,9 +445,9 @@ create_artificial_genomeadmixr_data <- function(number_of_individuals,
                                 ncol = num_markers)
   } else {
     fake_data$genomes <- matrix(data = sample(x = used_nucleotides,
-                                                    size = number_of_individuals * 2 *
-                                                      num_markers,
-                                                    replace = T),
+                                              size = number_of_individuals * 2 *
+                                                     num_markers,
+                                              replace = T),
                                       nrow = number_of_individuals * 2,
                                       ncol = num_markers)
   }

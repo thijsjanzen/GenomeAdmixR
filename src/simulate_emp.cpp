@@ -30,14 +30,14 @@ using namespace Rcpp;
 
 std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& sourcePop,
                                                 const NumericMatrix& select_matrix,
-                                                const std::vector<double>& marker_positions,
+                                                const std::vector<int>& marker_positions,
                                                 int pop_size,
                                                 int total_runtime,
                                                 double morgan,
                                                 bool verbose,
                                                 arma::mat& frequencies,
                                                 bool track_frequency,
-                                                const std::vector<double>& track_markers,
+                                                const std::vector<int>& track_markers,
                                                 bool multiplicative_selection,
                                                 double mutation_rate,
                                                 const NumericMatrix& sub_matrix,
@@ -85,10 +85,10 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
           continue;
 
       //  Rcout << track_markers[i] << " " << index << "\n"; force_output();
-
+        int pos_in_bp = track_markers[i];
         std::vector<std::vector<double>> local_mat = update_frequency_tibble(Pop,
                                                                              index,
-                                                                             track_markers[i] * morgan,
+                                                                             pos_in_bp,
                                                                              t);
 
         // now we have to find where to copy local_mat into frequencies
@@ -211,40 +211,11 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   rnd_t rndgen(seed);
 
 
-  std::vector<double> marker_positions(marker_positions_R.begin(),
-                                       marker_positions_R.end());
+  std::vector<int> marker_positions(marker_positions_R.begin(),
+                                    marker_positions_R.end());
 
-  auto inv_max_marker_pos = 1.0 / (*std::max_element(marker_positions.begin(),
-                                                    marker_positions.end()));
-
-//  Rcout << inv_max_marker_pos << "\n"; force_output();
-
-  for (auto& i : marker_positions) {
-    i *= inv_max_marker_pos;
-  }
-
-  std::vector<double> track_markers(track_markers_R.begin(),
-                                    track_markers_R.end());
-
-  if (*std::max_element(track_markers_R.begin(), track_markers_R.end()) > 1) {
-    for (auto& i : track_markers) {
-      i *= inv_max_marker_pos;
-    }
-  }
-
-  if (select.nrow() > 0) {
-    if (select(0, 0) > 10) {// location in bp
-      for (int i = 0; i < select.nrow(); ++i) {
-        select(i, 0) = select(i, 0) * inv_max_marker_pos;
-      }
-    } else {
-      if (select(0, 0) > 1) {
-        for (int i = 0; i < select.nrow(); ++i) {
-          select(i, 0) = select(i, 0) / morgan;
-        }
-      }
-    }
-  }
+  std::vector<int> track_markers(track_markers_R.begin(),
+                                 track_markers_R.end());
 
   if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
   emp_genome emp_gen(marker_positions);
@@ -254,7 +225,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   std::vector<int> founder_labels = {0, 1, 2, 3, 4};
   int number_of_alleles = founder_labels.size();
 
-  track_markers = scale_markers(track_markers, morgan);
+//  track_markers = scale_markers(track_markers, morgan);
 
   if (input_population[0] > -1e4) {
  //   Rcout << "converting\n"; force_output();

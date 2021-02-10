@@ -93,7 +93,7 @@ void update_founder_labels(const std::vector<int>& chrom,
 
 double calculate_fitness(const Fish_emp& focal,
                          const NumericMatrix& select,
-                         const std::vector<double>& markers,
+                         const std::vector<int>& locations,
                          bool multiplicative_selection);
 
 std::vector< std::vector<double > > update_frequency_tibble(const std::vector< Fish_emp >& pop,
@@ -102,20 +102,20 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
                                                             int t);
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
-                                        const std::vector<double>& markers,
-                                        const std::vector<double>& locations,
+                                        const std::vector<int>& markers,
+                                        const std::vector<int>& locations,
                                         int t,
                                         double morgan);
 
 arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& pop_1,
                                                  const std::vector< Fish_emp >& pop_2,
-                                                 const std::vector<double>& markers,
-                                                 const std::vector<double>& locations,
+                                                 const std::vector<int>& markers,
+                                                 const std::vector<int>& locations,
                                                  int t,
                                                  double morgan);
 
 List convert_to_list(const std::vector<Fish_emp>& v,
-                     const std::vector<double>& locations);
+                     const std::vector<int>& locations);
 
 bool is_fixed(const std::vector< Fish_emp >& v);
 
@@ -123,8 +123,8 @@ bool matching_chromosomes(const std::vector< int >& v1,
                           const std::vector< int >& v2);
 
 
-int find_location(const std::vector<double>& markers,
-                  double pos);
+int find_location(const std::vector<int>& markers,
+                  int pos);
 
 double number_of_junctions(const std::vector< Fish_emp>& pop);
 

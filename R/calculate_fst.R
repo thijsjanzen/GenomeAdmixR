@@ -66,9 +66,14 @@ create_loci_matrix <- function(pop1,
   all_loci[, 1] <- c(rep(1, length(pop1)), rep(2, length(pop1)))
   colnames(all_loci) <- c("population", 1:number_of_markers)
 
-  markers <- seq(1e-9, 1 - (1e-9), length.out = number_of_markers)
+  marker_range <- get_marker_range(pop1, pop2)
+
+
+  markers <- seq(marker_range[1], marker_range[2], length.out = number_of_markers)
   if (random_markers) {
-    markers <- create_random_markers(number_of_markers)
+    markers <- create_random_markers(number_of_markers,
+                                     marker_range[1],
+                                     marker_range[2])
   }
 
   for (x in seq_along(markers)) {
