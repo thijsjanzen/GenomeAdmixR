@@ -97,7 +97,7 @@ The result is identical in structure to results from 'simulate_admixture' and we
 can use the same visualisation and analytical devices:
 
 ```{r visualise}
-plot_over_time(simulated_pop$frequencies, focal_location = 0.5)
+plot_over_time(simulated_pop$frequencies, focal_location = 50)
 plot_joyplot_frequencies(simulated_pop$frequencies, time_points = c(0, 50, 100))
 ```
 
@@ -107,7 +107,7 @@ the original dataset.
 
 ```{r simulate selection}
 selection_matrix <- matrix(NA, nrow = 1, ncol = 5)
-selection_matrix[1, ] <- c(0.5, 1, 1.1, 1.2, 1)
+selection_matrix[1, ] <- c(50, 1, 1.1, 1.2, 1)
 
 # we expect allele 'a' to do well at 0.5 Morgan:
 selected_pop <- simulate_admixture_data(input_data = combined_data,
@@ -117,7 +117,7 @@ selected_pop <- simulate_admixture_data(input_data = combined_data,
                                          select_matrix = selection_matrix,
                                          markers = chosen_markers,
                                          verbose = FALSE)
-plot_over_time(selected_pop$frequencies, focal_location = 0.5)
+plot_over_time(selected_pop$frequencies, focal_location = 50)
 ```
 
 # Migration
