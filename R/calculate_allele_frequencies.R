@@ -40,7 +40,7 @@ calculate_allele_frequencies <- function(source_pop,
   colnames(output) <- c("time", "location", "ancestor", "frequency")
   output <- tibble::as_tibble(output)
 
-  using_sequencing_data <- check_for_bases(pop)
+  using_sequencing_data <- check_for_bases(source_pop)
   if (using_sequencing_data) {
     output$ancestor[output$ancestor == 0] <- 0
     output$ancestor[output$ancestor == 1] <- "a"
