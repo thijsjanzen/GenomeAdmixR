@@ -644,3 +644,23 @@ check_for_bases <- function(pop) {
   }
   return(using_sequencing_data)
 }
+
+#' @keywords internal
+create_recombination_map <- function(markers,
+                                     recombination_rate) {
+  distances <- diff(markers)
+  recomb_map <- c(0, distances)
+
+  # recombination rate is in cM per kb
+  rate_in_morgan <- recombination_rate / 100
+  rate_per_bp <- rate_in_morgan / 1000
+
+  recomb_map <- recomb_map * rate_per_bp
+
+  for (i in 1:length(recomb_map)) {
+    cat(recomb_map[i], " ")
+  }
+  cat("\n")
+
+  return(recomb_map)
+}

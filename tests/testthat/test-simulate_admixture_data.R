@@ -150,3 +150,54 @@ test_that("simulate_admixture_data_mutation", {
     testthat::expect_equal(bases[i], highest_base)
   }
 })
+
+test_that("simulate_admixture_data_ recombination map", {
+  num_markers <- 2
+  num_indiv <- 100
+  chosen_markers <- c(1000, 2000)
+  recom_rate <- 5
+
+  fake_input_data1 <- create_artificial_genomeadmixr_data(
+    number_of_individuals = num_indiv,
+    marker_locations = chosen_markers,
+    used_nucleotides = 1
+  )
+
+  fake_input_data2 <- create_artificial_genomeadmixr_data(
+    number_of_individuals = num_indiv,
+    marker_locations = chosen_markers,
+    used_nucleotides = 2
+  )
+
+  combined_data <- combine_input_data(input_data_list = list(fake_input_data1,
+                                                             fake_input_data2),
+                                      frequencies = c(0.5, 0.5),
+                                      pop_size = 1000)
+  pop_size <- 10000
+  simul_pop <- simulate_admixture_data(input_data = combined_data,
+                                       pop_size = pop_size,
+                                       total_runtime = 2,
+                                       markers = chosen_markers,
+                                       recombination_rate = recom_rate,
+                                       verbose = TRUE)
+
+  found_junctions <- c()
+  for (i in 1:length(simul_pop$population)) {
+    a <- simul_pop$population[[i]]$chromosome1[, 2]
+    b <- simul_pop$population[[i]]$chromosome2[, 2]
+    a <- sum(abs(diff(a)))
+    b <- sum(abs(diff(b)))
+    found_junctions <- c(found_junctions, a, b)
+  }
+
+  all_j <- sum(found_junctions)
+
+
+  # expected number recombinations is:
+  # 0.5: only half the population is admixing
+  # 2  : 2 chromosomes
+  # recom_rate / 100 : recom_rate is in cM, and we want in Morgan.
+  expected_num_j <- pop_size * 2 * (recom_rate / 100) * 0.5
+
+  testthat::expect_equal(all_j, expected_num_j, tolerance = 0.2)
+})

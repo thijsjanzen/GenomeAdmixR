@@ -193,20 +193,21 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 }
 
 // [[Rcpp::export]]
-List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
-                      Rcpp::NumericVector marker_positions_R,
-                      Rcpp::NumericMatrix select,
+List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
+                      const Rcpp::NumericVector& marker_positions_R,
+                      const Rcpp::NumericMatrix& select,
                       size_t pop_size,
                       size_t total_runtime,
                       double morgan,
                       bool verbose,
                       bool track_frequency,
-                      Rcpp::NumericVector track_markers_R,
+                      const Rcpp::NumericVector& track_markers_R,
                       bool multiplicative_selection,
                       int seed,
                       double mutation_rate,
                       NumericMatrix sub_matrix,
-                      int num_threads) {
+                      int num_threads,
+                      const Rcpp::NumericVector& recombination_map) {
 
   rnd_t rndgen(seed);
 
@@ -219,6 +220,23 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
 
  // if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
   emp_genome emp_gen(marker_positions);
+  if (recombination_map.size() == marker_positions.size()) {
+  //  if (verbose) {Rcout << "loading recombination map\n"; force_output();}
+    std::vector<double> recom_map(recombination_map.begin(),
+                                  recombination_map.end());
+
+ //   for (int i = 0; i < recom_map.size(); ++i) {
+  //    Rcout << recom_map[i] << " "; force_output();
+  //  }
+  //  Rcout << "\n";
+
+    emp_gen = emp_genome(recom_map);
+    morgan = std::accumulate(recom_map.begin(),
+                             recom_map.end(),
+                             0.0);
+
+   // if (verbose) {Rcout << "recombination map loaded: " << morgan << "\n"; force_output();}
+  }
 
   std::vector< Fish_emp > Pop;
 

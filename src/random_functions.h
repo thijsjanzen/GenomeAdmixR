@@ -17,6 +17,7 @@
 #include <iostream>
 #include <cmath>
 
+
 struct rnd_t {
   std::mt19937 rndgen_;
   std::uniform_real_distribution<> unif_dist = std::uniform_real_distribution<>(0, 1.0);
@@ -68,16 +69,20 @@ struct emp_genome {
 
   }
 
-  emp_genome(const std::vector<int>& positions) {
+  template <typename T>
+  emp_genome(const std::vector<T>& positions) {
     total_sum = std::accumulate(positions.begin(),
                                 positions.end(), 0.0);
+  //  std::cerr << total_sum << "\n";
     double s = 0.0;
     double mult = 1.0 / total_sum;
     cdf_.resize(positions.size());
-    for (int i = 0; i < positions.size(); ++i) {
-      s += positions[i] * mult;
+    for (size_t i = 0; i < positions.size(); ++i) {
       cdf_[i] = s;
+      s += positions[i] * mult;
+ //     std::cerr << cdf_[i] << " ";
     }
+ //   std::cerr << "\n";
     return;
   }
 

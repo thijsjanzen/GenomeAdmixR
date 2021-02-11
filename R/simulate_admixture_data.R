@@ -10,6 +10,9 @@
 #' @param total_runtime  Number of generations
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
+#' @param recombination_rate rate in cM / kb, used to map recombination to the
+#' markers. If the recombination_rate is not set, the value for morgan is used,
+#' assuming that the markers included span an entire chromosome.
 #' @param seed Seed of the pseudo-random number generator
 #' @param num_threads number of threads. Default is 1. Set to -1 to use all
 #' available threads
@@ -45,6 +48,7 @@ simulate_admixture_data <- function(input_data = NA,
                                     pop_size = NA,
                                     total_runtime = 100,
                                     morgan = 1,
+                                    recombination_rate = NA,
                                     seed = NULL,
                                     num_threads = 1,
                                     select_matrix = NA,
@@ -121,6 +125,12 @@ simulate_admixture_data <- function(input_data = NA,
     substitution_matrix <- verify_substitution_matrix(substitution_matrix)
   }
 
+  recombination_map <- c(-1, 0)
+  if (!is.na(recombination_rate)) {
+    recombination_map <- create_recombination_map(input_data$markers,
+                                                  recombination_rate)
+  }
+
   selected_pop <- simulate_emp_cpp(input_data$genomes,
                                    input_data$markers,
                                    select_matrix,
@@ -134,7 +144,8 @@ simulate_admixture_data <- function(input_data = NA,
                                    seed,
                                    mutation_rate,
                                    substitution_matrix,
-                                   num_threads)
+                                   num_threads,
+                                   recombination_map)
 
   selected_popstruct <- create_pop_class(selected_pop$population)
 
