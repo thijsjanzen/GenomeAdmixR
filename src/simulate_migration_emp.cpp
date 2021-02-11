@@ -321,7 +321,8 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 int seed,
                                 double mutation_rate,
                                 const NumericMatrix& substitution_matrix,
-                                int num_threads) {
+                                int num_threads,
+                                const NumericVector& recombination_map) {
 
   rnd_t rndgen(seed);
 
@@ -343,6 +344,15 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
   if (verbose) Rcout << number_of_markers << "\n";
 
   emp_genome emp_gen(marker_positions);
+  if (recombination_map.size() == marker_positions.size()) {
+    std::vector<double> recom_map(recombination_map.begin(),
+                                  recombination_map.end());
+
+    emp_gen = emp_genome(recom_map);
+    morgan = std::accumulate(recom_map.begin(),
+                             recom_map.end(),
+                             0.0);
+  }
 
   if (input_population_1[0] > -1e4) {
     if (verbose) { Rcout << "Found input populations\n";  force_output(); }

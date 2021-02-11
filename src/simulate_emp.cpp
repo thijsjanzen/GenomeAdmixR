@@ -221,22 +221,14 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
  // if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
   emp_genome emp_gen(marker_positions);
   if (recombination_map.size() == marker_positions.size()) {
-  //  if (verbose) {Rcout << "loading recombination map\n"; force_output();}
     std::vector<double> recom_map(recombination_map.begin(),
                                   recombination_map.end());
-
- //   for (int i = 0; i < recom_map.size(); ++i) {
-  //    Rcout << recom_map[i] << " "; force_output();
-  //  }
-  //  Rcout << "\n";
 
     emp_gen = emp_genome(recom_map);
     morgan = std::accumulate(recom_map.begin(),
                              recom_map.end(),
                              0.0);
-
-   // if (verbose) {Rcout << "recombination map loaded: " << morgan << "\n"; force_output();}
-  }
+   }
 
   std::vector< Fish_emp > Pop;
 

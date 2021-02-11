@@ -21,7 +21,7 @@ simulate_migration_cpp <- function(input_population_1, input_population_2, selec
     .Call(`_GenomeAdmixR_simulate_migration_cpp`, input_population_1, input_population_2, select, pop_size, starting_frequencies, total_runtime, morgan, verbose, track_frequency, track_markers, track_junctions, multiplicative_selection, migration_rate, seed, num_threads)
 }
 
-simulate_migration_emp_cpp <- function(input_population_1, input_population_2, marker_positions_R, select, pop_size, total_runtime, morgan, verbose, track_frequency, track_markers_R, multiplicative_selection, migration_rate, seed, mutation_rate, substitution_matrix, num_threads) {
-    .Call(`_GenomeAdmixR_simulate_migration_emp_cpp`, input_population_1, input_population_2, marker_positions_R, select, pop_size, total_runtime, morgan, verbose, track_frequency, track_markers_R, multiplicative_selection, migration_rate, seed, mutation_rate, substitution_matrix, num_threads)
+simulate_migration_emp_cpp <- function(input_population_1, input_population_2, marker_positions_R, select, pop_size, total_runtime, morgan, verbose, track_frequency, track_markers_R, multiplicative_selection, migration_rate, seed, mutation_rate, substitution_matrix, num_threads, recombination_map) {
+    .Call(`_GenomeAdmixR_simulate_migration_emp_cpp`, input_population_1, input_population_2, marker_positions_R, select, pop_size, total_runtime, morgan, verbose, track_frequency, track_markers_R, multiplicative_selection, migration_rate, seed, mutation_rate, substitution_matrix, num_threads, recombination_map)
 }
 
