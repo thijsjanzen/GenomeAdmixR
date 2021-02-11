@@ -495,6 +495,8 @@ arma::mat calculate_heterozygosity_cpp(Rcpp::NumericVector input_population,
 
   Pop = convert_NumericVector_to_fishVector(input_population);
 
+
+
   arma::mat heterozygosities = update_heterozygosities_tibble(Pop,
                                                               markers,
                                                               progress_bar);

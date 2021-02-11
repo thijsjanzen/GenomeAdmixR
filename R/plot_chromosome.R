@@ -29,7 +29,11 @@ plot_chromosome <- function(chrom, xmin = 0, xmax = 1) {
   alleles <- unique(chrom[, 2])
   num_colors <- 1 + max(alleles)
   if (num_colors > 20) num_colors <- 20
-  color_palette <- grDevices::rainbow(num_colors)
+  color_palette <- grDevices::rainbow(num_colors, alpha = 1)
+
+  if (max(chrom[, 1]) > 1 && xmax == 1) {
+    xmax = max(chrom[, 1])
+  }
 
   graphics::plot(NA,
        xlim = c(xmin, xmax),

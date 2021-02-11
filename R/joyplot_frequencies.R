@@ -72,9 +72,17 @@ plot_joyplot_frequencies <- function(frequencies,
                                            height = .data[["frequency"]])) +
       ggridges::geom_ridgeline(scale = 1.3)
   }
+
+  if (max(vz$location) < 10) {
+    p1 <- p1 +
+      ggplot2::xlab("Location (Morgan)")
+  } else {
+    p1 <- p1 +
+      ggplot2::xlab("Location (bp)")
+  }
+
   p1 <- p1 +
     ggplot2::labs(fill = "Ancestor")  +
-    ggplot2::ylab("Time") +
-    ggplot2::xlab("Location (Morgan)")
+    ggplot2::ylab("Time")
   return(p1)
 }

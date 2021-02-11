@@ -217,7 +217,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
   std::vector<int> track_markers(track_markers_R.begin(),
                                  track_markers_R.end());
 
-  if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
+ // if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
   emp_genome emp_gen(marker_positions);
 
   std::vector< Fish_emp > Pop;
@@ -256,7 +256,7 @@ List simulate_emp_cpp(Rcpp::NumericMatrix input_population,
                                                                 0,
                                                                 morgan);
 
-  if (verbose) {Rcout << "simulate\n"; force_output();}
+//  if (verbose) {Rcout << "simulate\n"; force_output();}
   std::vector<Fish_emp> output_pop = simulate_population_emp(Pop,
                                                              select,
                                                              marker_positions,

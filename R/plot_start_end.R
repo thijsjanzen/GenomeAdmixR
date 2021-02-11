@@ -70,8 +70,15 @@ plot_start_end <- function(results,
       ggplot2::geom_step(ggplot2::aes(lty = .data[["timepoint"]]))
   }
 
+  if (max(to_plot$location) < 10) {
+    p1 <- p1 +
+      ggplot2::xlab("Location (Morgan)")
+  } else {
+    p1 <- p1 +
+      ggplot2::xlab("Location (bp)")
+  }
+
   p1 <- p1 +
-    ggplot2::xlab("Location (Morgan)") +
     ggplot2::ylab("Frequency") +
     ggplot2::labs(col = "Ancestor",
                   lty = "Time Point")

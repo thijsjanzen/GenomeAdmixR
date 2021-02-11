@@ -623,3 +623,24 @@ get_marker_range <- function(pop1, pop2) {
   max_pos <- max(max_positions1, max_positions2)
   return(c(min_pos, max_pos))
 }
+
+#' @keywords internal
+check_for_bases <- function(pop) {
+
+  unique_bases <- c()
+  for (i in 1:10) {
+    if (i < length(pop)) {
+      b_c1 <- unique(pop[[i]]$chromosome1[, 2])
+      b_c2 <- unique(pop[[i]]$chromosome2[, 2])
+      unique_bases <- c(unique_bases, b_c1, b_c2)
+    }
+  }
+  unique_bases <- sort(unique(unique_bases))
+  using_sequencing_data <- FALSE
+  # sum has to be at least 4, 0 represents missing data, but
+  # might not be in the data
+  if (sum(unique_bases == c(0, 1, 2, 3, 4)) >= 4) {
+    using_sequencing_data <- TRUE
+  }
+  return(using_sequencing_data)
+}

@@ -29,6 +29,8 @@ calculate_marker_frequency <- function(pop, location) {
 
   pop <- check_input_pop(pop)
 
+
+
   per_loc <- function(loc) {
     fun_chrom <- function(indiv) {
       return(c(findtype(indiv$chromosome1, loc),
@@ -50,6 +52,15 @@ calculate_marker_frequency <- function(pop, location) {
     output <- rbind(output, all_types[[i]])
   }
   output <- output[, c("location", "ancestor", "frequency")]
+
+  using_sequencing_data <- check_for_bases(pop)
+  if (using_sequencing_data) {
+    output$ancestor[output$ancestor == 0] <- 0
+    output$ancestor[output$ancestor == 1] <- "a"
+    output$ancestor[output$ancestor == 2] <- "c"
+    output$ancestor[output$ancestor == 3] <- "t"
+    output$ancestor[output$ancestor == 4] <- "g"
+  }
 
   return(output)
 }

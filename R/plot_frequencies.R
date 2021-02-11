@@ -31,8 +31,16 @@ plot_frequencies <- function(result,
                                      colour = as.factor(.data[["ancestor"]]))) +
     ggplot2::geom_step()
 
+  if (max(to_plot$location) < 10) {
+    p1 <- p1 +
+      ggplot2::xlab("Location (Morgan)")
+  } else {
+    p1 <- p1 +
+      ggplot2::xlab("Location (bp)")
+  }
+
+
   p1 <- p1 +
-    ggplot2::xlab("Location (Morgan)") +
     ggplot2::ylab("Frequency") +
     ggplot2::labs(col = "Ancestor")
 

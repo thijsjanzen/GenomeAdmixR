@@ -7,7 +7,7 @@
 calculate_allele_frequencies(
   source_pop,
   locations = seq(0, 1, length.out = 100),
-  progress_bar = TRUE
+  progress_bar = FALSE
 )
 }
 \arguments{
