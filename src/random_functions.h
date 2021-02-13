@@ -73,16 +73,13 @@ struct emp_genome {
   emp_genome(const std::vector<T>& positions) {
     total_sum = std::accumulate(positions.begin(),
                                 positions.end(), 0.0);
-  //  std::cerr << total_sum << "\n";
     double s = 0.0;
     double mult = 1.0 / total_sum;
     cdf_.resize(positions.size());
     for (size_t i = 0; i < positions.size(); ++i) {
       cdf_[i] = s;
       s += positions[i] * mult;
- //     std::cerr << cdf_[i] << " ";
     }
- //   std::cerr << "\n";
     return;
   }
 

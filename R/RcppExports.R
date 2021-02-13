@@ -9,6 +9,10 @@ simulation_data_to_genomeadmixr_data_cpp <- function(input_population, markers) 
     .Call(`_GenomeAdmixR_simulation_data_to_genomeadmixr_data_cpp`, input_population, markers)
 }
 
+simulation_data_to_plink_cpp <- function(input_population, markers) {
+    .Call(`_GenomeAdmixR_simulation_data_to_plink_cpp`, input_population, markers)
+}
+
 calculate_heterozygosity_cpp <- function(input_population, markers, progress_bar) {
     .Call(`_GenomeAdmixR_calculate_heterozygosity_cpp`, input_population, markers, progress_bar)
 }

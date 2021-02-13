@@ -15,8 +15,8 @@
 #include <thread>
 
 void force_output() {
-  std::this_thread::sleep_for(std::chrono::nanoseconds(10));
-//  std::this_thread::sleep_for(std::chrono::milliseconds(3));
+//  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
+  std::this_thread::sleep_for(std::chrono::milliseconds(3));
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
@@ -445,10 +445,8 @@ NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input
                                                        Rcpp::NumericVector markers) {
 
   std::vector< Fish > Pop;
-
   Pop = convert_NumericVector_to_fishVector(input_population);
 
- // Rcout << "Pop converted " << Pop.size() << "\n"; force_output();
   NumericMatrix output(Pop.size() * 2, markers.size());
   for(size_t i = 0; i < Pop.size(); ++i) {
     int index_c1 = i * 2;
@@ -462,6 +460,50 @@ NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input
   }
   return(output);
 }
+
+std::string int_to_base(int a) {
+  std::string  b1 = "0";
+  if (a == 1) b1 = "a";
+  if (a == 2) b1 = "c";
+  if (a == 3) b1 = "t";
+  if (a == 4) b1 = "g";
+  return b1;
+}
+
+std::vector<std::string> combine_alleles(int a1, int a2) {
+
+  std::vector<std::string> output = {"0", "0"};
+  if (a1 != 0 && a2 != 0) {
+    output[0] = int_to_base(a1);
+    output[1] = int_to_base(a2);
+  }
+  return output;
+}
+
+// [[Rcpp::export]]
+StringMatrix simulation_data_to_plink_cpp(Rcpp::NumericVector input_population,
+                                                       Rcpp::NumericVector markers) {
+
+  std::vector< Fish > Pop;
+  Pop = convert_NumericVector_to_fishVector(input_population);
+
+  StringMatrix output(Pop.size(), markers.size() * 2);
+  for(size_t i = 0; i < Pop.size(); ++i) {
+    for (size_t j = 0; j < markers.size(); ++j) {
+      //   Rcout << i << " " << j << "\n"; force_output();
+      auto allele_1 = get_ancestry(Pop[i].chromosome1, markers[j]);
+      auto allele_2 = get_ancestry(Pop[i].chromosome2, markers[j]);
+      std::vector<std::string> entry = combine_alleles(allele_1, allele_2);
+
+      int marker_start = j * 2;
+      int second_marker = marker_start + 1;
+      output(i, marker_start) = entry[0];
+      output(i, second_marker) = entry[1];
+    }
+  }
+  return(output);
+}
+
 
 
 float calc_het(const Fish& indiv, float marker) {

@@ -98,6 +98,8 @@ combine_input_data <- function(input_data_list,
 
 #' @keywords internal
 convert_dna_to_numeric <- function(dna_matrix) {
+
+  dna_matrix <- as.matrix(dna_matrix)
   dna_matrix[dna_matrix == "a"] <- 1
   dna_matrix[dna_matrix == "A"] <- 1
   dna_matrix[dna_matrix == "c"] <- 2
@@ -112,7 +114,10 @@ convert_dna_to_numeric <- function(dna_matrix) {
   dna_matrix[dna_matrix == "?"] <- 0
   dna_matrix[dna_matrix == "N"] <- 0
 
-  odd_entries <- which(!(dna_matrix %in% c("0", "1", "2", "3", "4")))
+ # odd_entries <- which(!(dna_matrix %in% c("0", "1", "2", "3", "4")))
+
+  odd_entries <- which(!(dna_matrix %in% c(0, 1, 2, 3, 4)))
+
   if (length(odd_entries) > 0) {
     message(paste0("found ", length(odd_entries), " non-biallelic entries"))
     message(paste0("these were set to missing data"))
@@ -132,8 +137,8 @@ convert_dna_to_numeric <- function(dna_matrix) {
 simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
                                                  markers = NULL,
                                                  verbose = FALSE) {
-  output <- list()
 
+  output <- list()
   if (is.null(markers)) {
     output$markers <- sort(unique(simulation_data$frequencies$location))
     if (is.null(output$markers)) {
@@ -152,7 +157,16 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
     output$markers <- output$markers * rescale_val
   }
 
-  pop_for_cpp <- population_to_vector(simulation_data$population)
+  if (!methods::is(simulation_data, "population")) {
+    if (is.list(simulation_data)) {
+      if (methods::is(simulation_data$population, "population")) {
+        simulation_data <- simulation_data$population
+      }
+    }
+  }
+
+
+  pop_for_cpp <- population_to_vector(simulation_data)
   gen_mat <- simulation_data_to_genomeadmixr_data_cpp(pop_for_cpp,
                                                       output$markers)
 
@@ -226,8 +240,6 @@ ped_map_table_to_genomeadmixr_data <- function(ped_data,  # nolint
   class(output) <- "genomeadmixr_data"
   return(output)
 }
-
-
 
 #' @keywords internal
 read_ped <- function(ped_name, map_name, chosen_chromosome) {
@@ -352,8 +364,8 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
 
   numeric_matrix_for_cpp <- convert_to_numeric_matrix(genome_data)
   genome_matrix <- vcf_to_matrix_cpp(numeric_matrix_for_cpp,
-                                  map_data[, 1],
-                                  map_data[, 2])
+                                     map_data[, 1],
+                                     map_data[, 2])
 
   message("done")
   output <- list()
@@ -393,7 +405,7 @@ create_artificial_genomeadmixr_data <- function(number_of_individuals, # nolint
   if (is.na(nucleotide_frequencies)) {
     nucleotide_frequencies <- rep(1, length(used_nucleotides))
     nucleotide_frequencies <-
-        nucleotide_frequencies / sum(nucleotide_frequencies)
+      nucleotide_frequencies / sum(nucleotide_frequencies)
   }
   num_markers <- length(marker_locations)
   fake_data <- list()
@@ -406,12 +418,76 @@ create_artificial_genomeadmixr_data <- function(number_of_individuals, # nolint
   } else {
     fake_data$genomes <- matrix(data = sample(x = used_nucleotides,
                                               size = number_of_individuals * 2 *
-                                                     num_markers,
+                                                num_markers,
                                               replace = T),
-                                      nrow = number_of_individuals * 2,
-                                      ncol = num_markers)
+                                nrow = number_of_individuals * 2,
+                                ncol = num_markers)
   }
 
   class(fake_data) <- "genomeadmixr_data"
   return(fake_data)
 }
+
+#' function to write simulation output as PLINK style data
+#' @param input_pop input population, either of class "population" or of class
+#' "genomeadmixr_data"
+#' @param marker_locations location of markers, in bp
+#' @param file_name_prefix prefix of the ped/map files.
+#' @param chromosome chromosome indication for map file
+#' @param recombination_rate recombination rate in cM / kb
+#' @return this function doesn't return anything.
+#' @export
+write_as_plink <- function(input_pop,
+                           marker_locations,
+                           file_name_prefix,
+                           chromosome = 1,
+                           recombination_rate = 1) {
+
+
+  if (is.list(input_pop)) {
+    if (methods::is(input_pop$population, "population")) {
+      input_pop <- input_pop$population
+    }
+  }
+
+  if (methods::is(input_pop, "population")) {
+    pop_for_cpp <- population_to_vector(input_pop)
+    input_pop$genomes <- simulation_data_to_plink_cpp(pop_for_cpp,
+                                                      marker_locations)
+  } else {
+    stop("input pop has to be of class population")
+  }
+
+
+  family_id <- "SIM"
+  indiv_id <- paste0("indiv_", 1:length(input_pop$genomes[, 1]))
+  paternal_id <- 0
+  maternal_id <- 0
+  sex  <- 0
+  phenotype <- -9
+
+  ped_table <- cbind(family_id,
+                     indiv_id,
+                     paternal_id,
+                     maternal_id,
+                     sex,
+                     phenotype,
+                     input_pop$genomes)
+
+  write.table(ped_table, file = paste0(file_name_prefix, ".ped"),
+              quote = FALSE, row.names = FALSE, col.names = FALSE)
+  message("ped info written to: ", paste0(file_name_prefix, ".ped"))
+
+  bp_pos <- marker_locations
+  identifier <- paste0("rs", 1:length(marker_locations))
+  recom_pos <- create_recombination_map(marker_locations, recombination_rate)
+  recom_pos <- cumsum(recom_pos)
+
+  output_matrix <- cbind(chromosome, identifier, recom_pos, marker_locations)
+  write.table(output_matrix, file = paste0(file_name_prefix, ".map"),
+              quote = FALSE, row.names = FALSE, col.names = FALSE)
+  message("map info written to: ", paste0(file_name_prefix, ".map"))
+}
+
+
+

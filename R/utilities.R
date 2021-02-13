@@ -657,19 +657,14 @@ create_recombination_map <- function(markers,
 
   recomb_map <- recomb_map * rate_per_bp
 
-  for (i in 1:length(recomb_map)) {
-    cat(recomb_map[i], " ")
-  }
-  cat("\n")
-
   return(recomb_map)
 }
 
 #' @keywords internal
 verify_genomeadmixr_data <- function(input_data) {
-  if (class(input_data) != "genomeadmixr_data") {
+  if (!methods::is(input_data, "genomeadmixr_data")) {
     input_data2 <- check_input_pop(input_data)
-    if (class(input_data2) == "population") {
+    if (methods::is(input_data2, "genomeadmixr_data")) {
       message("found simulation output, converting to genomeadmixr_data")
       message("this may take a while")
       input_data <-
@@ -699,5 +694,3 @@ convert_to_numeric_matrix <- function(genome_data) {
 
   return(genome_numeric)
 }
-
-
