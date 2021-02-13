@@ -58,20 +58,7 @@ simulate_admixture_data <- function(input_data = NA,
                                     mutation_rate = 0,
                                     substitution_matrix = matrix(1 / 4, 4, 4)) {
 
-  if (class(input_data) != "genomeadmixr_data") {
-    input_data2 <- check_input_pop(input_data)
-    if (class(input_data2) == "population") {
-      message("found simulation output, converting to genomeadmixr_data")
-       input_data <-
-         simulation_data_to_genomeadmixr_data(simulation_data = input_data)
-      message("done converting, continuing as normal")
-    } else {
-      stop("input_data should be of class genomeadmixr_data\n
-            you can create such data with the functions\n
-            create_input_data or vcfR_to_genomeadmixr_data")
-    }
-  }
-
+  input_data <- verify_genomeadmixr_data(input_data)
 
   if (is.na(pop_size)) {
     if (length(input_data) == 2) {

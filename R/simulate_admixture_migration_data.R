@@ -91,6 +91,9 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                          substitution_matrix =
                                              matrix(1 / 4, 4, 4)) {
 
+  input_data_population_1 <- verify_genomeadmixr_data(input_data_population_1)
+  input_data_population_2 <- verify_genomeadmixr_data(input_data_population_2)
+
   if (!is.na(critical_fst)) {
     stop_at_critical_fst <- TRUE
   }
