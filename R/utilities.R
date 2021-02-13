@@ -671,6 +671,7 @@ verify_genomeadmixr_data <- function(input_data) {
     input_data2 <- check_input_pop(input_data)
     if (class(input_data2) == "population") {
       message("found simulation output, converting to genomeadmixr_data")
+      message("this may take a while")
       input_data <-
         simulation_data_to_genomeadmixr_data(simulation_data = input_data)
       message("done converting, continuing as normal")
