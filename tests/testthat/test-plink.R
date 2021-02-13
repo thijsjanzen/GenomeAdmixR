@@ -39,4 +39,9 @@ test_that("plink data", {
 
   testthat::expect_true(all.equal(genomeadmixr_data$genomes,
                         read_result$genomes))
+
+  testthat::expect_true(file.remove("plink_test.ped"))
+  testthat::expect_true(file.remove("plink_test.map"))
+  testthat::expect_false(file.exists("plink_test.ped"))
+  testthat::expect_false(file.exists("plink_test.map"))
 })
