@@ -665,6 +665,7 @@ create_recombination_map <- function(markers,
   return(recomb_map)
 }
 
+#' @keywords internal
 verify_genomeadmixr_data <- function(input_data) {
   if (class(input_data) != "genomeadmixr_data") {
     input_data2 <- check_input_pop(input_data)
@@ -680,6 +681,22 @@ verify_genomeadmixr_data <- function(input_data) {
     }
   }
   return(input_data)
+}
+
+#' @keywords internal
+convert_to_numeric_matrix <- function(genome_data) {
+
+  genome_numeric <- genome_data
+  genome_numeric[genome_numeric == "0/0"] <- 1
+  genome_numeric[genome_numeric == "0/1"] <- 2
+  genome_numeric[genome_numeric == "1/0"] <- 2
+  genome_numeric[genome_numeric == "1/1"] <- 3
+  genome_numeric[is.na(genome_numeric)]   <- 0
+
+  genome_numeric <- t(genome_numeric)
+  genome_numeric <- apply(genome_numeric, 2, as.numeric)
+
+  return(genome_numeric)
 }
 
 

@@ -932,3 +932,55 @@ void mutate(Fish_emp& indiv,
 
   return;
 }
+
+std::vector<int> get_alleles(int focal_genotype,
+                             int allele_1,
+                             int allele_2,
+                             rnd_t& rndgen) {
+
+  if (focal_genotype == 1) {
+    return {allele_1, allele_1};
+  }
+  if (focal_genotype == 2) {
+   // if (rndgen.random_number(2) == 0) {
+      return {allele_1, allele_2};
+  //  } else {
+    //  return {allele_2, allele_1};
+  //  }
+  }
+  if (focal_genotype == 3) {
+    return {allele_2, allele_2};
+  }
+
+  return {0, 0};
+}
+
+// [[Rcpp::export]]
+NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
+                            const NumericVector& allele_1,
+                            const NumericVector& allele_2) {
+
+  int num_indiv = input_mat.nrow();
+  int num_markers = allele_1.size();
+
+  NumericMatrix output(2 * num_indiv, num_markers);
+
+  rnd_t rndgen;
+
+  for (int i = 0; i < num_indiv; ++i) {
+    int index_c1 = i * 2;
+    int index_c2 = i + 1;
+
+    for (int j = 0; j < num_markers; ++j) {
+      std::vector< int > alleles = get_alleles(input_mat(i, j),
+                                               allele_1[j],
+                                               allele_2[j],
+                                               rndgen);
+      output(index_c1, j) = alleles[0];
+      output(index_c2, j) = alleles[1];
+    }
+  }
+
+  return output;
+}
+

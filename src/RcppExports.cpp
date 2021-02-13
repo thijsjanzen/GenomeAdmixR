@@ -49,6 +49,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// vcf_to_matrix_cpp
+NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat, const NumericVector& allele_1, const NumericVector& allele_2);
+RcppExport SEXP _GenomeAdmixR_vcf_to_matrix_cpp(SEXP input_matSEXP, SEXP allele_1SEXP, SEXP allele_2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericMatrix >::type input_mat(input_matSEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type allele_1(allele_1SEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type allele_2(allele_2SEXP);
+    rcpp_result_gen = Rcpp::wrap(vcf_to_matrix_cpp(input_mat, allele_1, allele_2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // simulate_cpp
 List simulate_cpp(Rcpp::NumericVector input_population, NumericMatrix select, size_t pop_size, size_t number_of_founders, Rcpp::NumericVector starting_proportions, size_t total_runtime, double morgan, bool verbose, bool track_frequency, NumericVector track_markers, bool track_junctions, bool multiplicative_selection, int seed, int num_threads);
 RcppExport SEXP _GenomeAdmixR_simulate_cpp(SEXP input_populationSEXP, SEXP selectSEXP, SEXP pop_sizeSEXP, SEXP number_of_foundersSEXP, SEXP starting_proportionsSEXP, SEXP total_runtimeSEXP, SEXP morganSEXP, SEXP verboseSEXP, SEXP track_frequencySEXP, SEXP track_markersSEXP, SEXP track_junctionsSEXP, SEXP multiplicative_selectionSEXP, SEXP seedSEXP, SEXP num_threadsSEXP) {
@@ -155,6 +168,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_GenomeAdmixR_calculate_allele_spectrum_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_allele_spectrum_cpp, 3},
     {"_GenomeAdmixR_simulation_data_to_genomeadmixr_data_cpp", (DL_FUNC) &_GenomeAdmixR_simulation_data_to_genomeadmixr_data_cpp, 2},
     {"_GenomeAdmixR_calculate_heterozygosity_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_heterozygosity_cpp, 3},
+    {"_GenomeAdmixR_vcf_to_matrix_cpp", (DL_FUNC) &_GenomeAdmixR_vcf_to_matrix_cpp, 3},
     {"_GenomeAdmixR_simulate_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_cpp, 14},
     {"_GenomeAdmixR_simulate_emp_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_emp_cpp, 15},
     {"_GenomeAdmixR_simulate_migration_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_migration_cpp, 15},

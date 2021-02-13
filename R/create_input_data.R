@@ -348,27 +348,12 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
     num_markers <- length(marker_data)
   }
 
-  message("extracting genotypes, this may take a while")
-  genome_matrix <- matrix(NA, nrow = num_indiv * 2, ncol = num_markers)
-  pb <- c()
-  if (verbose) pb <- utils::txtProgressBar(min = 0, max = num_indiv, style = 3)
-  for (i in seq_along(genome_data[1, ])) {
-    indiv_seq <- genome_data[, i]
-    to_convert <- cbind(indiv_seq, map_data[, 1], map_data[, 2])
-    sequences <- apply(to_convert, 1, convert_vcf_to_alleles)
-    indiv_index <- 1 + (i - 1) * 2
-    genome_matrix[indiv_index, ] <- sequences[1, ]
-    genome_matrix[indiv_index + 1, ] <- sequences[2, ]
-    if (verbose) utils::setTxtProgressBar(pb, i)
-  }
+  message("extracting genotypes")
 
-  message("converting atcg/ATCG entries to 1/2/3/4")
-  genome_matrix <- convert_dna_to_numeric(genome_matrix)
-  genome_matrix <- as.matrix(genome_matrix,
-                             nrow = length(genome_matrix[, 1]),
-                             ncol = length(genome_matrix[1, ]))
-
-  genome_matrix <- apply(genome_matrix, 2, as.numeric)
+  numeric_matrix_for_cpp <- convert_to_numeric_matrix(genome_data)
+  genome_matrix <- vcf_to_matrix_cpp(numeric_matrix_for_cpp,
+                                  map_data[, 1],
+                                  map_data[, 2])
 
   message("done")
   output <- list()
