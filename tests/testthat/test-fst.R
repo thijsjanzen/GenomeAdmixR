@@ -29,11 +29,9 @@ testthat::test_that("fst", {
                       sampled_individuals,
                       number_of_markers, random_markers = TRUE)
 
-  testthat::expect_warning(
   v2 <- calculate_fst(pop1, pop2,
                       sampled_individuals,
                       number_of_markers, random_markers = FALSE)
-  )
   testthat::expect_equal(v1, v2, tolerance = 0.1)
 
   pop_size <- 100
