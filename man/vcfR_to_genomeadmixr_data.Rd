@@ -7,7 +7,7 @@
 vcfR_to_genomeadmixr_data(
   vcfr_object,
   chosen_chromosome,
-  number_of_snps = NULL,
+  number_of_snps = NA,
   random_snps = TRUE,
   verbose = FALSE
 )

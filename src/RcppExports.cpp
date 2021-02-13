@@ -24,6 +24,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// simulation_data_to_genomeadmixr_data_cpp
+NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input_population, Rcpp::NumericVector markers);
+RcppExport SEXP _GenomeAdmixR_simulation_data_to_genomeadmixr_data_cpp(SEXP input_populationSEXP, SEXP markersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type input_population(input_populationSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type markers(markersSEXP);
+    rcpp_result_gen = Rcpp::wrap(simulation_data_to_genomeadmixr_data_cpp(input_population, markers));
+    return rcpp_result_gen;
+END_RCPP
+}
 // calculate_heterozygosity_cpp
 arma::mat calculate_heterozygosity_cpp(Rcpp::NumericVector input_population, Rcpp::NumericVector markers, bool progress_bar);
 RcppExport SEXP _GenomeAdmixR_calculate_heterozygosity_cpp(SEXP input_populationSEXP, SEXP markersSEXP, SEXP progress_barSEXP) {
@@ -141,6 +153,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_GenomeAdmixR_calculate_allele_spectrum_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_allele_spectrum_cpp, 3},
+    {"_GenomeAdmixR_simulation_data_to_genomeadmixr_data_cpp", (DL_FUNC) &_GenomeAdmixR_simulation_data_to_genomeadmixr_data_cpp, 2},
     {"_GenomeAdmixR_calculate_heterozygosity_cpp", (DL_FUNC) &_GenomeAdmixR_calculate_heterozygosity_cpp, 3},
     {"_GenomeAdmixR_simulate_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_cpp, 14},
     {"_GenomeAdmixR_simulate_emp_cpp", (DL_FUNC) &_GenomeAdmixR_simulate_emp_cpp, 15},

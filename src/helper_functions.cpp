@@ -15,7 +15,8 @@
 #include <thread>
 
 void force_output() {
-  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
+  std::this_thread::sleep_for(std::chrono::nanoseconds(10));
+//  std::this_thread::sleep_for(std::chrono::milliseconds(3));
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
@@ -439,6 +440,29 @@ int get_ancestry(const std::vector< junction >& chrom,
   return chrom[chrom.size() - 1].right;
 }
 
+// [[Rcpp::export]]
+NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input_population,
+                                                       Rcpp::NumericVector markers) {
+
+  std::vector< Fish > Pop;
+
+  Pop = convert_NumericVector_to_fishVector(input_population);
+
+ // Rcout << "Pop converted " << Pop.size() << "\n"; force_output();
+  NumericMatrix output(Pop.size() * 2, markers.size());
+  for(int i = 0; i < Pop.size(); ++i) {
+    int index_c1 = i * 2;
+    int index_c2 = index_c1 + 1;
+
+    for (int j = 0; j < markers.size(); ++j) {
+   //   Rcout << i << " " << j << "\n"; force_output();
+      output(index_c1, j) = get_ancestry(Pop[i].chromosome1, markers[j]);
+      output(index_c2, j) = get_ancestry(Pop[i].chromosome2, markers[j]);
+    }
+  }
+  return(output);
+}
+
 
 float calc_het(const Fish& indiv, float marker) {
   int allele1 = get_ancestry(indiv.chromosome1, marker);
@@ -572,7 +596,7 @@ void update_founder_labels(const std::vector<int>& chrom,
 
 double calculate_fitness(const Fish_emp& focal,
                          const NumericMatrix& select,
-                         const std::vector<int>& locations,
+                         const std::vector<double>& locations,
                          bool multiplicative_selection) {
 
   int number_of_markers = select.nrow();
@@ -603,7 +627,7 @@ double calculate_fitness(const Fish_emp& focal,
 }
 
 List convert_to_list(const std::vector<Fish_emp>& v,
-                     const std::vector<int>& locations) {
+                     const std::vector<double>& locations) {
   int list_size = (int)v.size();
   List output(list_size);
 
@@ -633,30 +657,37 @@ List convert_to_list(const std::vector<Fish_emp>& v,
 }
 
 std::vector< std::vector<double > > update_frequency_tibble(const std::vector< Fish_emp >& pop,
-                                  int marker_index,
-                                  double pos,
-                                  int t) {
+                                                            int marker_index,
+                                                            double pos,
+                                                            int t) {
 
   int num_alleles = 5;
-  std::vector<double> temp(4, 0);
-  std::vector< std::vector< double >> allele_matrix(num_alleles, temp);
+  std::vector< std::vector< double >> allele_matrix(num_alleles,
+                                                    std::vector<double>(4, 0));
 
 //  Rcout << "start update_frequency_tibble\n"; force_output();
   // initialize results
-  for(int i = 0; i < num_alleles; ++i) {
+  for (int i = 0; i < num_alleles; ++i) {
     allele_matrix[i][0] = t;
     allele_matrix[i][1] = pos;
     allele_matrix[i][2] = i;
     allele_matrix[i][3] = 0;
   }
 
-  for(size_t i = 0; i < pop.size(); ++i) {
+  for (size_t i = 0; i < pop.size(); ++i) {
+    if (marker_index >= pop[i].chromosome1.size()) {
+      Rcpp::stop("marker index out of bounds");
+    }
+    if (marker_index >= pop[i].chromosome2.size()) {
+      Rcpp::stop("marker index out of bounds");
+    }
     size_t local_anc1 = pop[i].chromosome1[marker_index];
     allele_matrix[local_anc1][3]++;
     size_t local_anc2 = pop[i].chromosome2[marker_index];
     allele_matrix[local_anc2][3]++;
   }
 
+ // Rcout << "starting normalization\n"; force_output();
   for (size_t i = 0; i < allele_matrix.size(); ++i) {
     allele_matrix[i][3] *= 1.0 / (2 * pop.size());
   }
@@ -665,20 +696,33 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
 
 
 
-int find_location(const std::vector<int>& markers,
-                  int pos) {
+int find_location(const std::vector<double>& markers,
+                  double pos) {
 
-  auto loc = std::find(markers.begin(), markers.end(), pos);
-  if (loc == markers.end()) {
-    return -1;
+ // Rcout << "this is find location with: " << pos << "\n"; force_output();
+
+  //auto loc = std::find(markers.begin(), markers.end(), pos);
+  auto loc = std::lower_bound(markers.begin(), markers.end(), pos);
+
+  if (loc != markers.end()) {
+    if (*loc == pos) {
+      return std::distance(markers.begin(), loc);
+    }
   }
 
-  return std::distance(markers.begin(), loc);
+  /*for (int i = 0; i < markers.size(); ++i) {
+    if (markers[i] == pos) {
+      return i;
+    }
+  }*/
+  return - 1;
+
+//  return 0;
 }
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
-                                        const std::vector<int>& markers,
-                                        const std::vector<int>& locations,
+                                        const std::vector<double>& markers,
+                                        const std::vector<double>& locations,
                                         int t,
                                         double morgan) {
 
@@ -686,16 +730,28 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
   arma::mat output(markers.size() * number_of_alleles, 4);
 
   for (size_t i = 0; i < markers.size(); ++i) {
-    if (markers[i] < 0) continue;
 
-    int index = find_location(locations, markers[i]);
+ //   Rcout << i << " "; force_output();
+ //   if (markers[i] < 0) continue; // these markers are not for tracking
+ //   Rcout << "starting find location\n"; force_output();
+    auto index = find_location(locations, markers[i]);
+ //   Rcout << i << " " << markers[i] << " " << index << " " << markers.size() << "\n"; force_output();
 
+    if (index < 0) {
+      Rcout << "ERROR ERROR\n"; force_output();
+      Rcout << i << " " << index << "\n"; force_output();
+      ::sleep(1);
+      Rcout << "ERROR ERROR\n"; force_output();
+    }
+
+//    Rcout << "starting update_frequency_tibble\n"; force_output();
     std::vector<std::vector<double >> local_mat = update_frequency_tibble(pop,
                                                   index,
                                                   markers[i],
                                                   t);
     // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
     // and we have to put that in the right place in the output matrix
+ //   Rcout << "starting add to output\n"; force_output();
     int start = i * number_of_alleles;
     int end = start + number_of_alleles;
     for(int j = start; j < end; ++j) {
@@ -703,7 +759,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
         output(j, k) = local_mat[j - start][k];
       }
     }
-//    Rcout << "done with local_mat to output\n"; force_output();
+  //  Rcout << "done with local_mat to output\n"; force_output();
   }
 //  Rcout << "done with update_all_frequencies_tibble\n"; force_output();
   return(output);
@@ -772,8 +828,8 @@ double number_of_junctions(const std::vector< Fish_emp>& pop) {
 }
 
 arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
-                                 const std::vector<int>& markers,
-                                 const std::vector<int>& locations,
+                                 const std::vector<double>& markers,
+                                 const std::vector<double>& locations,
                                  int t,
                                  int pop_indicator,
                                  double morgan) {
@@ -808,8 +864,8 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
 
 arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& pop_1,
                                                  const std::vector< Fish_emp >& pop_2,
-                                                 const std::vector<int>& markers,
-                                                 const std::vector<int>& locations,
+                                                 const std::vector<double>& markers,
+                                                 const std::vector<double>& locations,
                                                  int t,
                                                  double morgan) {
   arma::mat output_1 = record_frequencies_pop(pop_1, markers, locations, t, 1, morgan);

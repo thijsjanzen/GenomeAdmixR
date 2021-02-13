@@ -152,39 +152,14 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
     output$markers <- output$markers * rescale_val
   }
 
-  find_allele <- function(pos, chrom) {
-    return(findtype(chrom, pos))
+  pop_for_cpp <- population_to_vector(simulation_data$population)
+  gen_mat <- simulation_data_to_genomeadmixr_data_cpp(pop_for_cpp,
+                                                      output$markers)
+
+  output$genomes <- gen_mat
+  if (sum(is.na(output$genomes)) > 0) {
+    stop("NA values remain in genome matrix")
   }
-
-  get_alleles <- function(indiv, markers) {
-    c1 <- sapply(markers, find_allele, indiv$chromosome1)
-    c2 <- sapply(markers, find_allele, indiv$chromosome2)
-    return(rbind(c1, c2))
-  }
-
-  gen_mat <- c()
-  if (verbose) {
-    gen_mat <- pbapply::pblapply(simulation_data$population,
-                                 get_alleles,
-                                 output$markers)
-  } else {
-    gen_mat <- lapply(simulation_data$population,
-                      get_alleles,
-                      output$markers)
-  }
-
-  output_matrix <- matrix(NA,
-                          nrow = 2 * length(simulation_data$population),
-                          ncol = length(output$markers))
-
-  for (i in seq_along(gen_mat)) {
-    index_c1 <- 1 + (i - 1) * 2
-    index_c2 <- index_c1 + 1
-    output_matrix[index_c1, ] <- gen_mat[[i]][1, ]
-    output_matrix[index_c2, ] <- gen_mat[[i]][2, ]
-  }
-
-  output$genomes <- output_matrix
 
   class(output) <- "genomeadmixr_data"
   return(output)
@@ -328,7 +303,7 @@ convert_map_data_to_numeric <- function(map_data) {
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
 vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
-                                      number_of_snps = NULL,
+                                      number_of_snps = NA,
                                       random_snps = TRUE,
                                       verbose = FALSE) {
 
@@ -357,7 +332,7 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
   v2 <- as.numeric(map_data[, 2])
   map_data <- cbind(v1, v2)  # this is an ugly solution... but it works?
 
-  if (!is.null(number_of_snps)) {
+  if (!is.na(number_of_snps)) {
     # subsample snps
     snp_indices <- seq_along(map_data[, 1])
     if (random_snps) {
