@@ -450,11 +450,11 @@ NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input
 
  // Rcout << "Pop converted " << Pop.size() << "\n"; force_output();
   NumericMatrix output(Pop.size() * 2, markers.size());
-  for(int i = 0; i < Pop.size(); ++i) {
+  for(size_t i = 0; i < Pop.size(); ++i) {
     int index_c1 = i * 2;
     int index_c2 = index_c1 + 1;
 
-    for (int j = 0; j < markers.size(); ++j) {
+    for (size_t j = 0; j < markers.size(); ++j) {
    //   Rcout << i << " " << j << "\n"; force_output();
       output(index_c1, j) = get_ancestry(Pop[i].chromosome1, markers[j]);
       output(index_c2, j) = get_ancestry(Pop[i].chromosome2, markers[j]);
@@ -738,10 +738,11 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
  //   Rcout << i << " " << markers[i] << " " << index << " " << markers.size() << "\n"; force_output();
 
     if (index < 0) {
-      Rcout << "ERROR ERROR\n"; force_output();
+      //Rcout << "ERROR ERROR\n"; force_output();
       Rcout << i << " " << index << "\n"; force_output();
-      ::sleep(1);
-      Rcout << "ERROR ERROR\n"; force_output();
+    //  ::sleep(1);
+    //  Rcout << "ERROR ERROR\n"; force_output();
+      Rcpp::stop("out of bounds in update_all_frequencies_tibble\n");
     }
 
 //    Rcout << "starting update_frequency_tibble\n"; force_output();
@@ -840,7 +841,7 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
     return(output);
   }
 
-  for(int i = 0; i < markers.size(); ++i) {
+  for(size_t i = 0; i < markers.size(); ++i) {
    if (markers[i] < 0) continue;
 
    int index = find_location(locations, markers[i]);

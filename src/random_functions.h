@@ -46,7 +46,7 @@ struct rnd_t {
     return std::uniform_int_distribution<> (0, n-1)(rndgen_);
   }
 
-  int poisson(double lambda) {
+  size_t poisson(double lambda) {
     return std::poisson_distribution<int>(lambda)(rndgen_);
   }
 
@@ -88,7 +88,7 @@ struct emp_genome {
 
   std::vector< size_t > recompos(double morgan,
                                  rnd_t& rndgen) const {
-    int num_break_points = rndgen.poisson(morgan);
+    size_t num_break_points = rndgen.poisson(morgan);
     std::vector< size_t > indices;
     for(size_t i = 0; i < num_break_points; ++i) {
       auto found_index = index_from_cdf(rndgen.uniform());
