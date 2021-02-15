@@ -101,10 +101,10 @@ test_that("calculate_allele_frequencies", {
     dplyr::group_by(as.factor(ancestor)) %>%
     dplyr::summarise("mean_freq" = mean(frequency))
 
-  testthat::expect_equal(sum(b$mean_freq), 1, tolerance = 0.05)
+  testthat::expect_equal(sum(b$mean_freq), 1, tolerance = 0.1)
   testthat::expect_equal(mean(b$mean_freq),
                          1 / number_of_founders,
-                         tolerance = 0.01)
+                         tolerance = 0.1)
 
   number_founders <- 20
   sourcepop <- simulate_admixture(pop_size = 1000,
