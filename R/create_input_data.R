@@ -474,7 +474,7 @@ write_as_plink <- function(input_pop,
                      phenotype,
                      input_pop$genomes)
 
-  write.table(ped_table, file = paste0(file_name_prefix, ".ped"),
+  utils::write.table(ped_table, file = paste0(file_name_prefix, ".ped"),
               quote = FALSE, row.names = FALSE, col.names = FALSE)
   message("ped info written to: ", paste0(file_name_prefix, ".ped"))
 
@@ -484,7 +484,7 @@ write_as_plink <- function(input_pop,
   recom_pos <- cumsum(recom_pos)
 
   output_matrix <- cbind(chromosome, identifier, recom_pos, marker_locations)
-  write.table(output_matrix, file = paste0(file_name_prefix, ".map"),
+  utils::write.table(output_matrix, file = paste0(file_name_prefix, ".map"),
               quote = FALSE, row.names = FALSE, col.names = FALSE)
   message("map info written to: ", paste0(file_name_prefix, ".map"))
 }

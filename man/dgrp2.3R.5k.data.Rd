@@ -8,7 +8,7 @@
 genomeadmixr_data object
 }
 \usage{
-dgrp2.3R.5k.data
+data("dgrp2.3R.5k.data")
 }
 \description{
 This data set contains sequences from the 3R chromosome.
