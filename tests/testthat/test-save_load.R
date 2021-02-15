@@ -28,3 +28,12 @@ test_that("save_population", {
   }
   testthat::expect_true(file.remove("test.pop"))
 })
+
+test_that("data", {
+  data("dgrp2.3R.5k.data")
+  testthat::expect_equal(length(dgrp2.3R.5k.data$markers),
+                         4603)
+
+  testthat::expect_equal(length(dgrp2.3R.5k.data$genomes[, 1]),
+                         410)
+})
