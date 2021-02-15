@@ -664,7 +664,7 @@ create_recombination_map <- function(markers,
 verify_genomeadmixr_data <- function(input_data) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
     input_data2 <- check_input_pop(input_data)
-    if (methods::is(input_data2, "genomeadmixr_data")) {
+    if (methods::is(input_data2, "population")) {
       message("found simulation output, converting to genomeadmixr_data")
       message("this may take a while")
       input_data <-
