@@ -37,7 +37,7 @@ create_iso_female_data <- function(input_data = NA,
 
   input_data <- verify_genomeadmixr_data(input_data)
 
-  indivs <- 1:(length(input_data$genomes[,1]) /  2)
+  indivs <- 1:(length(input_data$genomes[, 1]) /  2)
 
   # first we select the individuals that will be the parents of the isofemales
   indices <- sample(indivs,
@@ -50,8 +50,6 @@ create_iso_female_data <- function(input_data = NA,
 
   output_females <- list()
   for (i in 1:n) {
-    # parents <- list(iso_females[[i]], iso_females[[i + n]])
-    # class(parents) <- "population"
     parents <- list()
 
     index_indiv_1 <- 1 + (indices[i] - 1) * 2

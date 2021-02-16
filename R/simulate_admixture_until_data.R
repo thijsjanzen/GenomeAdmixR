@@ -18,7 +18,7 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                                           random_markers = TRUE,
                                           mutation_rate = 0,
                                           substitution_matrix =
-                                            matrix(1/4, nrow = 4, ncol = 4)) {
+                                            matrix(1 / 4, nrow = 4, ncol = 4)) {
 
   pops <- simulate_admixture_migration_data(
     input_data_population_1 = input_data_population_1,

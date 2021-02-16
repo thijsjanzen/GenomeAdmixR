@@ -18,27 +18,28 @@ test_that("plink data", {
   simulation_result <- simulate_admixture_data(input_data = fake_input_data1,
                                                pop_size = 1000,
                                                total_runtime = 10,
-                                               recombination_rate = recombination_rate)
+                                       recombination_rate = recombination_rate)
 
   write_as_plink(input_pop = simulation_result$population,
                  marker_locations = chosen_markers,
                  file_name_prefix = "plink_test",
                  recombination_rate = recombination_rate)
 
-  read_result <- GenomeAdmixR::create_input_data(file_names = c("plink_test.ped",
-                                                                "plink_test.map"),
-                                                 chosen_chromosome = 1,
-                                                 type = "ped",
-                                                 verbose = TRUE)
+  read_result <- create_input_data(file_names = c("plink_test.ped",
+                                                  "plink_test.map"),
+                                   chosen_chromosome = 1,
+                                   type = "ped",
+                                   verbose = TRUE)
 
-  genomeadmixr_data <- simulation_data_to_genomeadmixr_data(simulation_result$population,
-                                                            markers = chosen_markers)
+  genomeadmixr_data <-
+    simulation_data_to_genomeadmixr_data(simulation_result$population,
+                                         markers = chosen_markers)
 
   testthat::expect_true(all.equal(genomeadmixr_data$markers,
                                   read_result$markers))
 
   testthat::expect_true(all.equal(genomeadmixr_data$genomes,
-                        read_result$genomes))
+                                  read_result$genomes))
 
   testthat::expect_true(file.remove("plink_test.ped"))
   testthat::expect_true(file.remove("plink_test.map"))

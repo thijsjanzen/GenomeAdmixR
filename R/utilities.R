@@ -99,6 +99,26 @@ check_select_matrix <- function(select_matrix) {
       select_matrix <- matrix(-1, nrow = 2, ncol = 2)
     }
   }
+
+  if (dim(select_matrix)[2] == 5) {
+    select_matrix[, 5] <- convert_dna_to_numeric(select_matrix[, 5])
+
+    # this is super ugly code, but at least it works.
+    other_matrix <- matrix(NA, nrow = length(select_matrix[, 1]),
+                           ncol = 5)
+    for (i in seq_along(select_matrix[, 1])) {
+      for (j in 1:5) {
+        other_matrix[i, j] <- as.numeric(select_matrix[i, j])
+      }
+    }
+    select_matrix <- other_matrix
+
+    sites_under_selection <- select_matrix[, 1]
+
+    if (!(sites_under_selection %in% markers)) {
+      stop("location of sites under selection have to exist in original data")
+    }
+  }
   return(select_matrix)
 }
 
@@ -538,6 +558,17 @@ convert_to_genomeadmixr_data <- function(input_population,
 }
 
 #' @keywords internal
+print_substitution_matrix <- function(substitution_matrix) {
+  for (i in 1:4) {
+    print_str <- ""
+    for (j in 1:4) {
+      print_str <- paste(print_str, substitution_matrix[i, j])
+    }
+    message(print_str)
+  }
+}
+
+#' @keywords internal
 verify_substitution_matrix <- function(substitution_matrix) {
   if (length(substitution_matrix == 1)) {
     if (is.na(substitution_matrix[[1]])) {
@@ -566,20 +597,11 @@ verify_substitution_matrix <- function(substitution_matrix) {
   rs <- rowSums(substitution_matrix)
   if (sum(rs != 1) > 0) {
     warning("normalized rows to ensure they sum to 1")
-    for (i in 1:4) {
-      substitution_matrix[i, ] <- substitution_matrix[i, ] / rs[i]
-    }
+    substitution_matrix[1:4, ] <- substitution_matrix[1:4, ] / rs[1:4]
   }
 
   message("using mutation with the following substitution matrix: ")
-  for (i in 1:4) {
-    print_str <- ""
-    for (j in 1:4) {
-      print_str <- paste(print_str, substitution_matrix[i, j])
-    }
-
-    message(print_str)
-  }
+  print_substitution_matrix(substitution_matrix)
 
   return(substitution_matrix)
 }

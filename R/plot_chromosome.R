@@ -32,7 +32,7 @@ plot_chromosome <- function(chrom, xmin = 0, xmax = 1) {
   color_palette <- grDevices::rainbow(num_colors, alpha = 1)
 
   if (max(chrom[, 1]) > 1 && xmax == 1) {
-    xmax = max(chrom[, 1])
+    xmax <- max(chrom[, 1])
   }
 
   graphics::plot(NA,

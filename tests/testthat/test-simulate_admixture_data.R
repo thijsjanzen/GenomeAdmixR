@@ -178,7 +178,7 @@ test_that("simulate_admixture_data_ recombination map", {
 
 
   found_junctions <- c()
-  for (i in 1:length(simul_pop$population)) {
+  for (i in seq_along(simul_pop$population)) {
     a <- simul_pop$population[[i]]$chromosome1[, 2]
     b <- simul_pop$population[[i]]$chromosome2[, 2]
     a <- sum(abs(diff(a)))

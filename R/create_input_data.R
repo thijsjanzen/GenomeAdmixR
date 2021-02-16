@@ -121,8 +121,6 @@ convert_dna_to_numeric <- function(dna_matrix) {
   dna_matrix[dna_matrix == "?"] <- 0
   dna_matrix[dna_matrix == "N"] <- 0
 
- # odd_entries <- which(!(dna_matrix %in% c("0", "1", "2", "3", "4")))
-
   odd_entries <- which(!(dna_matrix %in% c(0, 1, 2, 3, 4)))
 
   if (length(odd_entries) > 0) {
@@ -343,9 +341,6 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
   marker_data <- vcfr_object@fix[indices, 2]
   marker_data <- marker_data[-to_remove]
 
-  num_indiv <- ncol(genome_data)
-  num_markers <- length(marker_data)
-
   map_data <- map_data[-to_remove, ]
   v1 <- as.numeric(map_data[, 1])
   v2 <- as.numeric(map_data[, 2])
@@ -362,9 +357,6 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
     map_data <- map_data[snp_indices, ]
     genome_data <- genome_data[snp_indices, ]
     marker_data <- marker_data[snp_indices]
-
-    num_indiv <- ncol(genome_data)
-    num_markers <- length(marker_data)
   }
 
   message("extracting genotypes")
@@ -467,7 +459,7 @@ write_as_plink <- function(input_pop,
 
 
   family_id <- "SIM"
-  indiv_id <- paste0("indiv_", 1:length(input_pop$genomes[, 1]))
+  indiv_id <- paste0("indiv_", seq_along(input_pop$genomes[, 1]))
   paternal_id <- 0
   maternal_id <- 0
   sex  <- 0
@@ -485,8 +477,7 @@ write_as_plink <- function(input_pop,
               quote = FALSE, row.names = FALSE, col.names = FALSE)
   message("ped info written to: ", paste0(file_name_prefix, ".ped"))
 
-  bp_pos <- marker_locations
-  identifier <- paste0("rs", 1:length(marker_locations))
+  identifier <- paste0("rs", seq_along(marker_locations))
   recom_pos <- create_recombination_map(marker_locations, recombination_rate)
   recom_pos <- cumsum(recom_pos)
 
@@ -495,6 +486,3 @@ write_as_plink <- function(input_pop,
               quote = FALSE, row.names = FALSE, col.names = FALSE)
   message("map info written to: ", paste0(file_name_prefix, ".map"))
 }
-
-
-
