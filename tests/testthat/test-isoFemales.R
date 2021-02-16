@@ -123,3 +123,18 @@ test_that("cpp classes", {
   testthat::expect_warning(v <- verify_individual(indiv),
                           "Memory error recorded in chromosome")
 })
+
+test_that("create_isofemale_data", {
+  testthat::skip_on_os("solaris")
+  message("testing create_isofemale")
+
+ data("dgrp2.3R.5k.data")
+
+ females <- create_iso_female_data(input_data = dgrp2.3R.5k.data,
+                                     n = 2,
+                                     inbreeding_pop_size = 100,
+                                     run_time = 100,
+                                     morgan = 1)
+
+ testthat::expect_equal(length(females), 2)
+})

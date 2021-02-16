@@ -505,7 +505,7 @@ findtype <- function(chrom, pos) {
 print.genomeadmixr_data <- function(x, ...) {
   print("Data to use as input for GenomeAdmixR")
   v1 <- paste("Number of individuals:",
-              length(x$genomes[, 1]))
+              length(x$genomes[, 1]) / 2)
   v2 <- paste("Number of markers:",
               length(x$genomes[1, ]))
   print(v1)
@@ -651,9 +651,9 @@ create_recombination_map <- function(markers,
   distances <- diff(markers)
   recomb_map <- c(0, distances)
 
-  # recombination rate is in cM per kb
+  # recombination rate is in cM per Mbp
   rate_in_morgan <- recombination_rate / 100
-  rate_per_bp <- rate_in_morgan / 1000
+  rate_per_bp <- rate_in_morgan / 1000000
 
   recomb_map <- recomb_map * rate_per_bp
 
@@ -663,6 +663,15 @@ create_recombination_map <- function(markers,
 #' @keywords internal
 verify_genomeadmixr_data <- function(input_data) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
+    if (is.list(input_data)) {
+      for (i in seq_along(input_data)) {
+        verify_genomeadmixr_data(input_data[[i]])
+      }
+      return(input_data);
+    }
+  }
+
+  if (!methods::is(input_data, "genomeadmixr_data")) {
     input_data2 <- check_input_pop(input_data)
     if (methods::is(input_data2, "population")) {
       message("found simulation output, converting to genomeadmixr_data")
@@ -671,8 +680,8 @@ verify_genomeadmixr_data <- function(input_data) {
         simulation_data_to_genomeadmixr_data(simulation_data = input_data)
       message("done converting, continuing as normal")
     } else {
-      stop("input_data should be of class genomeadmixr_data\n
-              you can create such data with the functions\n
+      stop("input_data should be of class genomeadmixr_data
+              you can create such data with the functions
               create_input_data or vcfR_to_genomeadmixr_data")
     }
   }

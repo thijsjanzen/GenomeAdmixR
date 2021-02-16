@@ -2,18 +2,21 @@
 #' @description Individual based simulation of the breakdown of contiguous
 #' ancestry blocks, with or without selection. Simulations can be started from
 #' scratch, or from a predefined input population.
-#' @param input_data Genomic data used as input, should be created by the
-#' function \code{create_input_data} or by the function
-#' \code{combine_input_data}
+#' @param input_data Genomic data used as input, should be of type
+#' genomeadmixr_data. Either a single dataset is provided, or a list of
+#' multiple genomeadmixr_data objects.
 #' @param pop_size Vector containing the number of individuals in both
 #' populations.
+#' @param initial_frequencies A vector describing the initial contribution of
+#' each provided input data set to the starting hybrid swarm. By default, equal
+#' frequencies are assumed. If a vector not summing to 1 is provided, the vector
+#' is normalized.
 #' @param total_runtime  Number of generations
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
-#' @param recombination_rate rate in cM / kb, used to map recombination to the
-#' markers. If the recombination_rate is not set, the value for morgan is used,
+#' @param recombination_rate rate in cM / Mbp, used to map recombination to the
+#' markers. If the recombination_rate is not set, the value for Morgan is used,
 #' assuming that the markers included span an entire chromosome.
-#' @param seed Seed of the pseudo-random number generator
 #' @param num_threads number of threads. Default is 1. Set to -1 to use all
 #' available threads
 #' @param select_matrix Selection matrix indicating the markers which are under
@@ -46,10 +49,10 @@
 #' @export
 simulate_admixture_data <- function(input_data = NA,
                                     pop_size = NA,
+                                    initial_frequencies = NA,
                                     total_runtime = 100,
                                     morgan = 1,
                                     recombination_rate = NA,
-                                    seed = NULL,
                                     num_threads = 1,
                                     select_matrix = NA,
                                     markers = NA,
@@ -59,6 +62,15 @@ simulate_admixture_data <- function(input_data = NA,
                                     substitution_matrix = matrix(1 / 4, 4, 4)) {
 
   input_data <- verify_genomeadmixr_data(input_data)
+
+  if (!methods::is(input_data, "genomeadmixr_data")) {
+    if (length(input_data) > 1) {
+      message("found multiple input populations")
+      input_data <- combine_input_data(input_data,
+                                       frequencies = initial_frequencies,
+                                       pop_size = pop_size)
+    }
+  }
 
   if (is.na(pop_size)) {
     if (length(input_data) == 2) {
@@ -100,10 +112,6 @@ simulate_admixture_data <- function(input_data = NA,
     track_frequency <- TRUE
   }
 
-  if (is.null(seed)) {
-    seed <- round(as.numeric(Sys.time()))
-  }
-
   if (track_frequency) {
     markers <- check_markers(markers, input_data$markers)
   }
@@ -128,7 +136,6 @@ simulate_admixture_data <- function(input_data = NA,
                                    track_frequency,
                                    markers,
                                    multiplicative_selection,
-                                   seed,
                                    mutation_rate,
                                    substitution_matrix,
                                    num_threads,

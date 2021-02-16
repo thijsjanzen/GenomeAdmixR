@@ -363,9 +363,8 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             bool track_junctions,
                             bool multiplicative_selection,
                             double migration_rate,
-                            int seed,
                             int num_threads) {
-  rnd_t rndgen(seed);
+  rnd_t rndgen;
 
   std::vector< Fish > Pop_1;
   std::vector< Fish > Pop_2;

@@ -15,10 +15,9 @@
 #' @param total_runtime  Number of generations
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
-#' @param recombination_rate rate in cM / kb, used to map recombination to the
+#' @param recombination_rate rate in cM / Mbp, used to map recombination to the
 #' markers. If the recombination_rate is not set, the value for morgan is used,
 #' assuming that the markers included span an entire chromosome.
-#' @param seed Seed of the pseudo-random number generator
 #' @param num_threads number of threads. Default is 1. Set to -1 to use all
 #' available threads
 #' @param select_matrix Selection matrix indicating the markers which are under
@@ -74,7 +73,6 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                          total_runtime = 100,
                                          morgan = 1,
                                          recombination_rate = NA,
-                                         seed = NULL,
                                          num_threads = 1,
                                          select_matrix = NA,
                                          markers = NA,
@@ -106,7 +104,6 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                     pop_size = pop_size,
                                     total_runtime = total_runtime,
                                     morgan = morgan,
-                                    seed = seed,
                                     select_matrix = select_matrix,
                                     markers = markers,
                                     verbose = verbose,
@@ -173,10 +170,6 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
     markers <- check_markers(markers, input_data_population_1$markers)
   }
 
-  if (is.null(seed)) {
-    seed <- round(as.numeric(Sys.time()))
-  }
-
   if (verbose) {
     cat("markers: ", length(markers), "\n")
   }
@@ -203,7 +196,6 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
                                              markers,
                                              multiplicative_selection,
                                              migration_rate,
-                                             seed,
                                              mutation_rate,
                                              substitution_matrix,
                                              num_threads,

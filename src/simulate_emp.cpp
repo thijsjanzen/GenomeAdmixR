@@ -203,13 +203,12 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                       bool track_frequency,
                       const Rcpp::NumericVector& track_markers_R,
                       bool multiplicative_selection,
-                      int seed,
                       double mutation_rate,
                       NumericMatrix sub_matrix,
                       int num_threads,
                       const Rcpp::NumericVector& recombination_map) {
 
-  rnd_t rndgen(seed);
+  rnd_t rndgen;
 
   std::vector<double> marker_positions(marker_positions_R.begin(),
                                     marker_positions_R.end());

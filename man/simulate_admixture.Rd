@@ -11,7 +11,6 @@ simulate_admixture(
   initial_frequencies = NA,
   total_runtime = 100,
   morgan = 1,
-  seed = NULL,
   num_threads = 1,
   select_matrix = NA,
   markers = NA,
@@ -40,8 +39,6 @@ to 1 is provided, the vector is normalized.}
 
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
-
-\item{seed}{Seed of the pseudo-random number generator}
 
 \item{num_threads}{number of threads. Default is 1. Set to -1 to use all
 available threads}

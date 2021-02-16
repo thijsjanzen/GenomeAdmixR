@@ -54,8 +54,6 @@ test_that("input data", {
                                       frequencies = c(0.5, 0.5),
                                       pop_size = 100)
 
-  class(combined_data) <- "genomeadmixr_data"
-
   simulation_result <- simulate_admixture_data(input_data = combined_data,
                                                pop_size = 1000,
                                                total_runtime = 10,

@@ -12,7 +12,6 @@ simulate_admixture_migration_data(
   total_runtime = 100,
   morgan = 1,
   recombination_rate = NA,
-  seed = NULL,
   num_threads = 1,
   select_matrix = NA,
   markers = NA,
@@ -46,11 +45,9 @@ populations.}
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
 
-\item{recombination_rate}{rate in cM / kb, used to map recombination to the
+\item{recombination_rate}{rate in cM / Mbp, used to map recombination to the
 markers. If the recombination_rate is not set, the value for morgan is used,
 assuming that the markers included span an entire chromosome.}
-
-\item{seed}{Seed of the pseudo-random number generator}
 
 \item{num_threads}{number of threads. Default is 1. Set to -1 to use all
 available threads}

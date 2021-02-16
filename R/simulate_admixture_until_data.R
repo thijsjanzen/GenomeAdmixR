@@ -5,7 +5,6 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                                           total_runtime = 100,
                                           morgan = 1,
                                           recombination_rate = NA,
-                                          seed = NULL,
                                           num_threads = 1,
                                           select_matrix = NA,
                                           markers = NA,
@@ -21,16 +20,11 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                                           substitution_matrix =
                                             matrix(1/4, nrow = 4, ncol = 4)) {
 
-  if (is.null(seed)) {
-    seed <- round(as.numeric(Sys.time()))
-  }
-
   pops <- simulate_admixture_migration_data(
     input_data_population_1 = input_data_population_1,
     input_data_population_2 = input_data_population_2,
     pop_size = pop_size,
     total_runtime = generations_between_update,
-    seed = seed,
     num_threads = num_threads,
     morgan = morgan,
     recombination_rate = recombination_rate,
@@ -47,7 +41,6 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                        number_of_markers = number_of_markers,
                        random_markers = random_markers)
 
-  cnt <- 3
   message("Number of Generations\tFST\n")
   message(generations_between_update, "\t", fst, "\n")
 
@@ -68,7 +61,6 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
       total_runtime = generations_between_update,
       morgan = morgan,
       recombination_rate = recombination_rate,
-      seed = seed + cnt,
       num_threads = num_threads,
       select_matrix = select_matrix,
       markers = markers,
@@ -78,7 +70,6 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
       mutation_rate = mutation_rate,
       substitution_matrix = substitution_matrix)
 
-    cnt <- cnt + 2
     fst <- calculate_fst(pops$population_1, pops$population_2,
                          sampled_individuals = sampled_individuals,
                          number_of_markers = number_of_markers,

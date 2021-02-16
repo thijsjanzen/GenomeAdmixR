@@ -20,7 +20,6 @@
 #' @param total_runtime  Number of generations
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
-#' @param seed Seed of the pseudo-random number generator
 #' @param num_threads number of threads. Default is 1. Set to -1 to use all
 #' available threads
 #' @param select_matrix Selection matrix indicating the markers which are under
@@ -74,7 +73,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                                                     c(0, 1.0)),
                                          total_runtime = 100,
                                          morgan = 1,
-                                         seed = NULL,
                                          num_threads = 1,
                                          select_matrix = NA,
                                          markers = NA,
@@ -96,7 +94,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                     initial_frequencies = initial_frequencies,
                                     total_runtime = total_runtime,
                                     morgan = morgan,
-                                    seed = seed,
                                     num_threads = num_threads,
                                     select_matrix = select_matrix,
                                     markers = markers,
@@ -151,10 +148,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
     }
   }
 
-  if (is.null(seed)) {
-    seed <- round(as.numeric(Sys.time()))
-  }
-
   input_population_1 <- population_to_vector(input_population_1)
   input_population_2 <- population_to_vector(input_population_2)
 
@@ -172,7 +165,6 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          track_junctions,
                                          multiplicative_selection,
                                          migration_rate,
-                                         seed,
                                          num_threads)
 
   selected_popstruct_1 <- create_pop_class(selected_pop$population_1)

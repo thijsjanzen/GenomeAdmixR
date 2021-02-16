@@ -56,7 +56,14 @@ combine_input_data <- function(input_data_list,
                                frequencies = NA,
                                pop_size) {
 
+  if (length(frequencies) == 1) {
+    if (is.na(frequencies)) {
+      frequencies <- rep(1 / length(input_data_list),
+                         length(input_data_list))
+    }
+  }
 
+  testit::assert(is.list(input_data_list))
 
   testit::assert(length(frequencies) == length(input_data_list))
   for (i in seq_along(input_data_list))  {

@@ -7,10 +7,10 @@
 simulate_admixture_data(
   input_data = NA,
   pop_size = NA,
+  initial_frequencies = NA,
   total_runtime = 100,
   morgan = 1,
   recombination_rate = NA,
-  seed = NULL,
   num_threads = 1,
   select_matrix = NA,
   markers = NA,
@@ -21,23 +21,26 @@ simulate_admixture_data(
 )
 }
 \arguments{
-\item{input_data}{Genomic data used as input, should be created by the
-function \code{create_input_data} or by the function
-\code{combine_input_data}}
+\item{input_data}{Genomic data used as input, should be of type
+genomeadmixr_data. Either a single dataset is provided, or a list of
+multiple genomeadmixr_data objects.}
 
 \item{pop_size}{Vector containing the number of individuals in both
 populations.}
+
+\item{initial_frequencies}{A vector describing the initial contribution of
+each provided input data set to the starting hybrid swarm. By default, equal
+frequencies are assumed. If a vector not summing to 1 is provided, the vector
+is normalized.}
 
 \item{total_runtime}{Number of generations}
 
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
 
-\item{recombination_rate}{rate in cM / kb, used to map recombination to the
-markers. If the recombination_rate is not set, the value for morgan is used,
+\item{recombination_rate}{rate in cM / Mbp, used to map recombination to the
+markers. If the recombination_rate is not set, the value for Morgan is used,
 assuming that the markers included span an entire chromosome.}
-
-\item{seed}{Seed of the pseudo-random number generator}
 
 \item{num_threads}{number of threads. Default is 1. Set to -1 to use all
 available threads}

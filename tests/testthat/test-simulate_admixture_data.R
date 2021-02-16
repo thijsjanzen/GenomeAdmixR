@@ -20,12 +20,9 @@ test_that("simulate_admixture_data", {
     used_nucleotides = 3:4
   )
 
-  combined_data <- combine_input_data(input_data_list = list(fake_input_data1,
-                                                             fake_input_data2),
-                                      frequencies = c(0.5, 0.5),
-                                      pop_size = 1000)
-
-  simul_pop <- simulate_admixture_data(input_data = combined_data,
+  simul_pop <- simulate_admixture_data(input_data = list(fake_input_data1,
+                                                         fake_input_data2),
+                                       initial_frequencies = c(0.5, 0.5),
                                        pop_size = 100,
                                        total_runtime = 100,
                                        markers = chosen_markers,
@@ -154,7 +151,7 @@ test_that("simulate_admixture_data_mutation", {
 test_that("simulate_admixture_data_ recombination map", {
   num_markers <- 2
   num_indiv <- 100
-  chosen_markers <- c(1000, 2000)
+  chosen_markers <- c(1000000, 2000000)
   recom_rate <- 5
 
   fake_input_data1 <- create_artificial_genomeadmixr_data(
@@ -169,17 +166,16 @@ test_that("simulate_admixture_data_ recombination map", {
     used_nucleotides = 2
   )
 
-  combined_data <- combine_input_data(input_data_list = list(fake_input_data1,
-                                                             fake_input_data2),
-                                      frequencies = c(0.5, 0.5),
-                                      pop_size = 1000)
   pop_size <- 10000
-  simul_pop <- simulate_admixture_data(input_data = combined_data,
+  simul_pop <- simulate_admixture_data(input_data = list(fake_input_data1,
+                                                         fake_input_data2),
+                                       initial_frequencies = c(0.5, 0.5),
                                        pop_size = pop_size,
                                        total_runtime = 2,
                                        markers = chosen_markers,
                                        recombination_rate = recom_rate,
                                        verbose = TRUE)
+
 
   found_junctions <- c()
   for (i in 1:length(simul_pop$population)) {

@@ -206,10 +206,9 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericVector track_markers,
                   bool track_junctions,
                   bool multiplicative_selection,
-                  int seed,
                   int num_threads) {
 
-  rnd_t rndgen(seed);
+  rnd_t rndgen;
 
   std::vector< Fish > Pop;
   int number_of_alleles = number_of_founders;

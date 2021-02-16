@@ -7,7 +7,8 @@
 #' @param run_time Maximum runtime used for inbreeding
 #' @param morgan Size of the chromosome in Morgan (e.g. the number of crossovers
 #' during meiosis)
-#' @param seed Random number generator seed
+#' @param num_threads number of threads. Default is 1. Set to -1 to use all
+#' available threads
 #' @param verbose Displays verbose output if TRUE. Default value is FALSE
 #' @details To create an isofemale, two individuals are randomly picked from
 #' the source population. Using these two individuals, a new population is
@@ -29,13 +30,13 @@
 #'                                morgan = 1)
 #' }
 #' @export
-create_iso_female <- function(source_pop,
-                             n = 1,
-                             inbreeding_pop_size = 100,
-                             run_time = 2000,
-                             morgan = 1,
-                             seed = 42,
-                             verbose = FALSE) {
+create_iso_female <- function(source_pop = NA,
+                              n = 1,
+                              inbreeding_pop_size = 100,
+                              run_time = 2000,
+                              morgan = 1,
+                              num_threads = 1,
+                              verbose = FALSE) {
 
   source_pop <- check_input_pop(source_pop)
 
@@ -56,7 +57,8 @@ create_iso_female <- function(source_pop,
                                             pop_size = inbreeding_pop_size,
                                             total_runtime = run_time,
                                             morgan = morgan,
-                                            verbose = verbose)
+                                            verbose = verbose,
+                                            num_threads = num_threads)
     output_females[[i]] <-
           inbred_population$population[[
               sample(seq_along(inbred_population$population), 1)

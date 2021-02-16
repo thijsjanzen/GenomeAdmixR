@@ -318,13 +318,12 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericVector& track_markers_R,
                                 bool multiplicative_selection,
                                 double migration_rate,
-                                int seed,
                                 double mutation_rate,
                                 const NumericMatrix& substitution_matrix,
                                 int num_threads,
                                 const NumericVector& recombination_map) {
 
-  rnd_t rndgen(seed);
+  rnd_t rndgen;
 
   std::vector< Fish_emp > Pop_1;
   std::vector< Fish_emp > Pop_2;
