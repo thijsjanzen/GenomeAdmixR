@@ -83,7 +83,6 @@ plot_difference_frequencies <- function(results,
       ggplot2::xlab("Location (bp)")
   }
 
-
   p1 <- p1 +
     ggplot2::ylab("Change in Frequency") +
     ggplot2::labs(col = "Ancestor")
