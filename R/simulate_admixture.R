@@ -81,7 +81,8 @@ simulate_admixture <- function(input_population = NA,
     if (verbose) message("starting frequencies were normalized to 1\n")
   }
 
-  select_matrix <- check_select_matrix(select_matrix)
+  select_matrix <- check_select_matrix(select_matrix,
+                                       markers)
 
   if (length(markers) == 1) {
     if (is.na(markers))  {

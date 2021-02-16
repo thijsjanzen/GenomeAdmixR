@@ -22,6 +22,8 @@ simulate_admixture_data(input_data = dgrp2.3R.5k.data,
                         total_runtime = 10)
 }
 \references{
-Mackay, T., Richards, S., Stone, E. et al. The Drosophila melanogaster Genetic Reference Panel. Nature 482, 173–178 (2012). <https://doi.org/10.1038/nature10811>
+Mackay, T., Richards, S., Stone, E. et al. The Drosophila
+melanogaster Genetic Reference Panel. Nature 482, 173–178 (2012).
+<https://doi.org/10.1038/nature10811>
 }
 \keyword{datasets}

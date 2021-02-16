@@ -82,7 +82,8 @@ check_initial_frequencies <- function(initial_frequencies) {
 }
 
 #' @keywords internal
-check_select_matrix <- function(select_matrix) {
+check_select_matrix <- function(select_matrix,
+                                markers) {
   if (is.matrix(select_matrix)) {
     message(
       "Found a selection matrix, performing simulation including selection")
