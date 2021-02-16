@@ -81,7 +81,8 @@ simulate_admixture_data <- function(input_data = NA,
   }
 
   select_matrix <- check_select_matrix(select_matrix,
-                                       markers)
+                                       markers,
+                                       use_data = TRUE)
 
   if (length(markers) == 1) {
     if (is.na(markers))  {

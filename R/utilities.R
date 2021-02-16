@@ -83,7 +83,8 @@ check_initial_frequencies <- function(initial_frequencies) {
 
 #' @keywords internal
 check_select_matrix <- function(select_matrix,
-                                markers) {
+                                markers,
+                                use_data = FALSE) {
   if (is.matrix(select_matrix)) {
     message(
       "Found a selection matrix, performing simulation including selection")
@@ -101,7 +102,7 @@ check_select_matrix <- function(select_matrix,
     }
   }
 
-  if (dim(select_matrix)[2] == 5) {
+  if (dim(select_matrix)[2] == 5 && use_data == TRUE) {
     select_matrix[, 5] <- convert_dna_to_numeric(select_matrix[, 5])
 
     # this is super ugly code, but at least it works.
