@@ -184,13 +184,13 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
   return(output)
 }
 
-#' function to convert ped/map data to genome_admixr_data
+#' function to convert plink style (ped/map) data to genome_admixr_data
 #' @param ped_data result of read.table(ped_file, header = F)
 #' @param map_data result of read.table(map_file, header = F)
 #' @param chosen_chromosome chromosome of choice
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
-ped_map_table_to_genomeadmixr_data <- function(ped_data,  # nolint
+plink_to_genomeadmixr_data <- function(ped_data,  # nolint
                                                map_data,
                                                chosen_chromosome) {
   # Base R
