@@ -253,9 +253,9 @@ read_ped <- function(ped_name, map_name, chosen_chromosome) {
   message(paste("reading map file:", map_name))
   map_data <- utils::read.table(map_name, header = F)
 
-  return(ped_map_table_to_genomeadmixr_data(ped_data,
-                                            map_data,
-                                            chosen_chromosome))
+  return(plink_to_genomeadmixr_data(ped_data,
+                                    map_data,
+                                    chosen_chromosome))
 }
 
 convert_vcf_to_alleles <- function(v) {
