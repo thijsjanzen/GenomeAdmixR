@@ -64,7 +64,8 @@ test_that("simulate_migration", {
   }
   a2 <- subset(found, found[, 1] == 0.5)
 
-  testthat::expect_equal(a2[2], 1)
+  testthat::expect_equal(a2[1], 0.5)
+  testthat::expect_gt(a2[2], 0.5)
 
   plot_difference_frequencies(vy)
   plot_start_end(vy)
