@@ -207,7 +207,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                   bool track_junctions,
                   bool multiplicative_selection,
                   int num_threads) {
-
+try {
   rnd_t rndgen;
 
   std::vector< Fish > Pop;
@@ -298,4 +298,10 @@ List simulate_cpp(Rcpp::NumericVector input_population,
                        Named("initial_frequencies") = initial_frequencies,
                        Named("final_frequencies") = final_frequencies,
                        Named("junctions") = junctions);
+} catch(std::exception &ex) {
+  forward_exception_to_r(ex);
+} catch(...) {
+  ::Rf_error("c++ exception (unknown reason)");
+}
+return NA_REAL;
 }

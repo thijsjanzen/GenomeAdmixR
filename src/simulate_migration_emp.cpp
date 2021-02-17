@@ -322,7 +322,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericMatrix& substitution_matrix,
                                 int num_threads,
                                 const NumericVector& recombination_map) {
-
+try {
   rnd_t rndgen;
 
   std::vector< Fish_emp > Pop_1;
@@ -452,4 +452,10 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                    Named("initial_frequencies") = initial_frequencies,
                                    Named("final_frequencies") = final_frequencies,
                                    Named("junctions") = junctions);
+} catch(std::exception &ex) {
+  forward_exception_to_r(ex);
+} catch(...) {
+  ::Rf_error("c++ exception (unknown reason)");
+}
+return NA_REAL;
 }

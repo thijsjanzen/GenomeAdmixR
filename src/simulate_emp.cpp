@@ -207,7 +207,7 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                       NumericMatrix sub_matrix,
                       int num_threads,
                       const Rcpp::NumericVector& recombination_map) {
-
+try {
   rnd_t rndgen;
 
   std::vector<double> marker_positions(marker_positions_R.begin(),
@@ -300,4 +300,10 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                              Named("frequencies") = frequencies_table,
                              Named("initial_frequencies") = initial_frequencies,
                              Named("final_frequencies") = final_frequencies);
+} catch(std::exception &ex) {
+  forward_exception_to_r(ex);
+} catch(...) {
+  ::Rf_error("c++ exception (unknown reason)");
+}
+return NA_REAL;
 }

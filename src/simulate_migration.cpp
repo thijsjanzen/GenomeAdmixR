@@ -364,6 +364,7 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             bool multiplicative_selection,
                             double migration_rate,
                             int num_threads) {
+try {
   rnd_t rndgen;
 
   std::vector< Fish > Pop_1;
@@ -484,4 +485,10 @@ List simulate_migration_cpp(NumericVector input_population_1,
                        Named("initial_frequencies") = initial_frequencies,
                        Named("final_frequencies") = final_frequencies,
                        Named("junctions") = junctions);
+} catch(std::exception &ex) {
+  forward_exception_to_r(ex);
+} catch(...) {
+  ::Rf_error("c++ exception (unknown reason)");
+}
+return NA_REAL;
 }
