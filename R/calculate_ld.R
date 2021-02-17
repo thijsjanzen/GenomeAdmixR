@@ -22,7 +22,7 @@
 #'                               morgan = 1)
 #'
 #' ld_results <- calculate_ld(pop = wildpop,
-#'                            number_of_markers = 10)
+#'                            markers = 10)
 #'
 #' plot(ld_results$ld_matrix~ld_results$dist_matrix,
 #'      pch = 16,
