@@ -5,6 +5,10 @@ calculate_allele_spectrum_cpp <- function(input_population, markers, progress_ba
     .Call(`_GenomeAdmixR_calculate_allele_spectrum_cpp`, input_population, markers, progress_bar)
 }
 
+#' function to convert data
+#' @param input_population input population
+#' @param markers markers
+#' @export
 simulation_data_to_genomeadmixr_data_cpp <- function(input_population, markers) {
     .Call(`_GenomeAdmixR_simulation_data_to_genomeadmixr_data_cpp`, input_population, markers)
 }

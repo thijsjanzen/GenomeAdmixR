@@ -17,12 +17,12 @@
 #' etc. \code{markers} corresponds to the locations of the markers (in bp) on
 #' the chosen chromosome.
 #' @export
-create_input_data <- function(file_names,
-                              type,
-                              chosen_chromosome,
-                              number_of_snps = NA,
-                              random_snps = TRUE,
-                              verbose = FALSE) {
+read_input_data <- function(file_names,
+                            type,
+                            chosen_chromosome,
+                            number_of_snps = NA,
+                            random_snps = TRUE,
+                            verbose = FALSE) {
   input_data <- c()
   if (type == "ped") {
     message("reading plink style data: ped/map pair")

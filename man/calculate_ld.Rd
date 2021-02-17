@@ -7,12 +7,7 @@ This function calculates two matrices, once containing all pairwise
 linkage disequilibrium (ld) values, and one matrix containing all pairwise r
 statistics}
 \usage{
-calculate_ld(
-  pop,
-  sampled_individuals = 10,
-  number_of_markers = 100,
-  random_markers = TRUE
-)
+calculate_ld(pop, sampled_individuals = 10, markers = NA, verbose = FALSE)
 }
 \arguments{
 \item{pop}{focal population}
@@ -20,10 +15,10 @@ calculate_ld(
 \item{sampled_individuals}{Number of individuals randomly sampled to
 calculate the LD matrices}
 
-\item{number_of_markers}{Number of markers used to calculate the ld matrices}
+\item{markers}{vector of markers. If a single number is used, that number of
+markers is randomly placed along the genome.}
 
-\item{random_markers}{If TRUE, markers are randomly spaced along the
-chromosome, if FALSE, markers are equidistantly spaced along the chromosome.}
+\item{verbose}{display verbose output, default is FALSE.}
 }
 \value{
 An object containing two items:
@@ -47,8 +42,7 @@ wildpop <- simulate_admixture(pop_size = 100,
                               morgan = 1)
 
 ld_results <- calculate_ld(pop = wildpop,
-                           number_of_markers = 10,
-                           random_markers = TRUE)
+                           number_of_markers = 10)
 
 plot(ld_results$ld_matrix~ld_results$dist_matrix,
      pch = 16,

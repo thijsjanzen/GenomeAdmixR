@@ -25,7 +25,7 @@ test_that("plink data", {
                  file_name_prefix = "plink_test",
                  recombination_rate = recombination_rate)
 
-  read_result <- create_input_data(file_names = c("plink_test.ped",
+  read_result <- read_input_data(file_names = c("plink_test.ped",
                                                   "plink_test.map"),
                                    chosen_chromosome = 1,
                                    type = "ped",

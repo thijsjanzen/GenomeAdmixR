@@ -247,7 +247,7 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
   int indic_chrom = 1;
   bool add_indiv = false;
 
-  junction prev_j(0, 0);
+  junction prev_j(-1, 0);
 
   int num_indiv = 0;
 
@@ -258,7 +258,7 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
 
   //  Rcout << temp_j.pos << " " << temp_j.right << "\n"; force_output();
 
-    if(temp_j.pos < prev_j.pos) {
+    if(temp_j.pos <= prev_j.pos) {
       if(indic_chrom == 1) {
         indic_chrom = 2;
       } else {
@@ -431,15 +431,30 @@ arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
 int get_ancestry(const std::vector< junction >& chrom,
                  float marker) {
 
+  if (marker < chrom.front().pos) {
+    return(-1);
+  }
+
+  if (marker > chrom.back().pos) {
+    return(chrom.back().right);
+  }
+
   for(auto i = chrom.begin(); i != chrom.end(); ++i) {
+    if ((*i).pos == marker) {
+      return (*i).right;
+    }
+
     if ((*i).pos > marker) {
-      i--;
-      return((*i).right);
+      return((i-1)->right);
     }
   }
-  return chrom[chrom.size() - 1].right;
+  return chrom.back().right;
 }
 
+//' function to convert data
+//' @param input_population input population
+//' @param markers markers
+//' @export
 // [[Rcpp::export]]
 NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input_population,
                                                        Rcpp::NumericVector markers) {
@@ -448,12 +463,12 @@ NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input
   Pop = convert_NumericVector_to_fishVector(input_population);
 
   NumericMatrix output(Pop.size() * 2, markers.size());
+
   for(size_t i = 0; i < Pop.size(); ++i) {
     int index_c1 = i * 2;
     int index_c2 = index_c1 + 1;
 
     for (size_t j = 0; j < markers.size(); ++j) {
-   //   Rcout << i << " " << j << "\n"; force_output();
       output(index_c1, j) = get_ancestry(Pop[i].chromosome1, markers[j]);
       output(index_c2, j) = get_ancestry(Pop[i].chromosome2, markers[j]);
     }
@@ -1025,4 +1040,3 @@ NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
 
   return output;
 }
-

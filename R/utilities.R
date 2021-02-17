@@ -534,30 +534,6 @@ print.genomeadmixr_data <- function(x, ...) {
   print(v2)
 }
 
-#' @keywords internal
-convert_to_genomeadmixr_data <- function(input_population,
-                             markers) {
-
-  genomes <- matrix(NA, nrow = 2 * length(input_population),
-                        ncol = length(markers))
-
-  for (i in seq_along(input_population)) {
-    indiv <- input_population[[i]]
-    chrom_1  <- indiv$chromosome1[, 2]
-    chrom_2  <- indiv$chromosome2[, 2]
-
-    index_chrom1 <- 1 + (i - 1) * 2
-    index_chrom2 <- index_chrom1 + 1
-    genomes[index_chrom1, ] <- chrom_1
-    genomes[index_chrom2, ] <- chrom_2
-  }
-
-  output <- list()
-  output$genomes <- genomes
-  output$markers <- markers
-  class(output) <- "genomeadmixr_data"
-  return(output)
-}
 
 #' @keywords internal
 print_substitution_matrix <- function(substitution_matrix) {
@@ -688,8 +664,18 @@ create_recombination_map <- function(markers,
 verify_genomeadmixr_data <- function(input_data) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
     if (is.list(input_data)) {
-      for (i in seq_along(input_data)) {
-        verify_genomeadmixr_data(input_data[[i]])
+      if (methods::is(input_data$population, "population")) {
+        message("found simulation output, converting to genomeadmixr_data")
+        message("this may take a while")
+        input_data <-
+          simulation_data_to_genomeadmixr_data(simulation_data =
+                                                 input_data$population)
+        message("done converting, continuing as normal")
+        return(input_data)
+      } else {
+        for (i in seq_along(input_data)) {
+          verify_genomeadmixr_data(input_data[[i]])
+        }
       }
       return(input_data);
     }

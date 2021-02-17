@@ -29,8 +29,6 @@ calculate_marker_frequency <- function(pop, location) {
 
   pop <- check_input_pop(pop)
 
-
-
   per_loc <- function(loc) {
     fun_chrom <- function(indiv) {
       return(c(findtype(indiv$chromosome1, loc),

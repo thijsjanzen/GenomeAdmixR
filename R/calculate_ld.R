@@ -5,9 +5,9 @@
 #' @param pop focal population
 #' @param sampled_individuals Number of individuals randomly sampled to
 #' calculate the LD matrices
-#' @param number_of_markers Number of markers used to calculate the ld matrices
-#' @param random_markers If TRUE, markers are randomly spaced along the
-#' chromosome, if FALSE, markers are equidistantly spaced along the chromosome.
+#' @param markers vector of markers. If a single number is used, that number of
+#' markers is randomly placed along the genome.
+#' @param verbose display verbose output, default is FALSE.
 #' @return An object containing two items:
 #' \item{ld_matrix}{
 #'   Pairwise ld statistics for all markers
@@ -22,8 +22,7 @@
 #'                               morgan = 1)
 #'
 #' ld_results <- calculate_ld(pop = wildpop,
-#'                            number_of_markers = 10,
-#'                            random_markers = TRUE)
+#'                            number_of_markers = 10)
 #'
 #' plot(ld_results$ld_matrix~ld_results$dist_matrix,
 #'      pch = 16,
@@ -32,42 +31,42 @@
 #' @export
 calculate_ld <- function(pop,
                          sampled_individuals = 10,
-                         number_of_markers = 100,
-                         random_markers = TRUE) {
+                         markers = NA,
+                         verbose = FALSE) {
 
   pop <- check_input_pop(pop)
 
-  all_loci <- matrix(nrow = length(pop), ncol = 2 * number_of_markers, 0)
-
-  markers <- seq(1e-9, 1 - (1e-9), length.out = number_of_markers)
-  if (random_markers) {
-    markers <- create_random_markers(number_of_markers)
-  }
-
-  for (x in seq_along(markers)) {
-    focal_marker <- markers[x]
-    for (i in seq_along(pop)) {
-      allele_1 <- 1 + findtype(pop[[i]]$chromosome1, focal_marker)
-      allele_2 <- 1 + findtype(pop[[i]]$chromosome2, focal_marker)
-
-      index <- (x - 1) * 2 + 1
-
-      all_loci[i, index]     <- as.numeric(allele_1)
-      all_loci[i, index + 1] <- as.numeric(allele_2)
+  if (length(markers) == 1) {
+    if (is.na(markers)) {
+      if (class(pop) == "genomeadmixr_data") {
+        markers = pop$markers
+      }
+    } else {
+      markers <- create_random_markers(markers[1])
     }
   }
+
+  popx <- pop[1:sampled_individuals]
+  class(popx) <- "population"
+  pop_for_cpp <- population_to_vector(popx)
+  if (verbose) message("starting creation of allele matrix")
+  all_loci <- simulation_data_to_genomeadmixr_data_cpp(pop_for_cpp,
+                                                        markers)
+
+  all_loci[all_loci < 0] <- NA
 
   ld_matrix   <- matrix(nrow = length(markers), ncol = length(markers), NA)
   rsq_matrix  <- matrix(nrow = length(markers), ncol = length(markers), NA)
   dist_matrix <- matrix(nrow = length(markers), ncol = length(markers), NA)
 
+  if (verbose) message("done creation of allele matrix")
+
+  if (verbose) pb <- txtProgressBar(min = 0, max = length(markers), style = 3)
   for (x in seq_along(markers)) {
     for (y in seq_len(x)) {
       if (x != y) {
-        index1 <- c((x - 1) * 2 + 1, (x - 1) * 2 + 2)
-        index2 <- c((y - 1) * 2 + 1, (y - 1) * 2 + 2)
-        g1 <- all_loci[, index1]
-        g2 <- all_loci[, index2]
+        g1 <- all_loci[, x]
+        g2 <- all_loci[, y]
 
         ld <- calculate_average_ld(g1, g2)
         ld_matrix[x, y] <- ld$LD
@@ -76,6 +75,7 @@ calculate_ld <- function(pop,
         dist_matrix[x, y] <- gen_dist
       }
     }
+    if (verbose) setTxtProgressBar(pb, x)
   }
 
   return(list("ld_matrix" = ld_matrix,
@@ -84,13 +84,9 @@ calculate_ld <- function(pop,
 }
 
 count_ab <- function(alleles_pos_1, alleles_pos_2, a, b) {
-  total_count <- 0
-  for (i in 1:2) {
-    v1 <- alleles_pos_1[, i] == a
-    v2 <- alleles_pos_2[, i] == b
-    total_count <- total_count + sum((v1 == v2) & v1 == TRUE)
-  }
-
+  v1 <- alleles_pos_1 == a
+  v2 <- alleles_pos_2 == b
+  total_count <- sum((v1 == v2) & v1 == TRUE)
   return(total_count)
 }
 
@@ -103,6 +99,7 @@ count_ab <- function(alleles_pos_1, alleles_pos_2, a, b) {
 #' @export
 calculate_average_ld <- function(alleles_pos_1, alleles_pos_2) {
   all_alleles <- c(as.vector(alleles_pos_1), as.vector(alleles_pos_2))
+
   if (sum(is.na(all_alleles)) > 0) {
     return(list("LD" = NA,
                 "r_sq" = NA))
@@ -119,8 +116,7 @@ calculate_average_ld <- function(alleles_pos_1, alleles_pos_2) {
 
       countab <- count_ab(alleles_pos_1, alleles_pos_2, i, j)
 
-      p_a_i_b_j <- countab / (length(alleles_pos_1[, 1]) +
-                              length(alleles_pos_1[, 2]))
+      p_a_i_b_j <- countab / (length(alleles_pos_1))
 
       if (is.nan(p_a_i_b_j)) p_a_i_b_j <- 0
 
