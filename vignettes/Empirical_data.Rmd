@@ -13,12 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.width = 6)
 print_mat <- function(mat) {
   n <- nrow(mat)
-  c('\\begin{bmatrix}',
+  c("\\begin{bmatrix}",
     paste0(sapply(seq_len(n - 1),
-                  function(i) paste0(mat[i, ], collapse = ' & ')),
-           ' \\\\'),
-    paste0(mat[n, ], collapse = ' & '),
-    '\\end{bmatrix}')
+                  function(i) paste0(mat[i, ], collapse = " & ")),
+           " \\\\"),
+    paste0(mat[n, ], collapse = " & "),
+    "\\end{bmatrix}")
 } 
 ```
 
@@ -142,9 +142,9 @@ molecular markers as used in the simulation, or by superimposing markers on
 new locations.
 
 ```{r from_simulation}
-simulated_pop <- simulate_admixture(pop_size = 100, 
+simulated_pop <- simulate_admixture(pop_size = 100,
                                     total_runtime = 100)
-prepared_pop  <- 
+prepared_pop  <-
   simulation_data_to_genomeadmixr_data(simulation_data = simulated_pop,
                                        markers = seq(0, 1, length.out = 100))
 
@@ -170,12 +170,13 @@ For instance, for the K80 model with parameter kappa, we would get the following
 substitution matrix, with kappa = 0.2:
 ```{r, results = 'asis'}
 kappa <- 0.2
-diag_entry <- 1 - (1/4 + 1/4 + 0.2 / 4)
+diag_entry <- 1 - (1 / 4 + 1 / 4 + 0.2 / 4)
 
-writeLines(print_mat(matrix(c(diag_entry, kappa, 1/4, 1/4,
-                              kappa, diag_entry, 1/4, 1/4,
-                              1/4, 1/4, diag_entry, kappa,
-                              1/4, 1/4, kappa, diag_entry), nrow = 4, ncol = 4)))
+writeLines(print_mat(matrix(c(diag_entry, kappa, 1 / 4, 1 / 4,
+                              kappa, diag_entry, 1 / 4, 1 / 4,
+                              1 / 4, 1 / 4, diag_entry, kappa,
+                              1 / 4, 1 / 4, kappa, diag_entry), 
+                              nrow = 4, ncol = 4)))
 ```
 We understand that it might be tricky to make these calculations a priori, 
 therefore we automatically translate the substitution matrix to the probability 
