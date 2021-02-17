@@ -7,7 +7,7 @@
 calculate_fst(
   pop1,
   pop2,
-  sampled_individuals,
+  sampled_individuals = 10,
   number_of_markers = 100,
   random_markers = FALSE
 )

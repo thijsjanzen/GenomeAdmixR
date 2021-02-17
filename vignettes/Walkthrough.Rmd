@@ -171,8 +171,7 @@ have to simulate artificial markers along the chromosome.
 
 ```{r}
   ld_results <- calculate_ld(wildpop,
-                             number_of_markers = 10,
-                             random_markers = TRUE)
+                             markers = 10)
 
   plot(ld_results$ld_matrix~ld_results$dist_matrix,
        xlab = "Genetic Distance (Morgan)",
@@ -221,8 +220,7 @@ strong_ld_pop <- simulate_admixture(pop_size = 1000,
 
 ld_results <- calculate_ld(strong_ld_pop,
                            sampled_individuals = 10,
-                           number_of_markers = 10,
-                           random_markers = TRUE)
+                           markers = 10)
 
 plot(ld_results$ld_matrix~ld_results$dist_matrix,
      pch = 16,

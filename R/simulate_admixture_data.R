@@ -61,7 +61,8 @@ simulate_admixture_data <- function(input_data = NA,
                                     mutation_rate = 0,
                                     substitution_matrix = matrix(1 / 4, 4, 4)) {
 
-  input_data <- verify_genomeadmixr_data(input_data)
+  input_data <- verify_genomeadmixr_data(input_data,
+                                         markers)
 
   if (!methods::is(input_data, "genomeadmixr_data")) {
     if (length(input_data) > 1) {

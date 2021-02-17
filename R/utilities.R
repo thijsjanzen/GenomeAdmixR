@@ -661,7 +661,7 @@ create_recombination_map <- function(markers,
 }
 
 #' @keywords internal
-verify_genomeadmixr_data <- function(input_data) {
+verify_genomeadmixr_data <- function(input_data, markers = NA) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
     if (is.list(input_data)) {
       if (methods::is(input_data$population, "population")) {
@@ -669,7 +669,8 @@ verify_genomeadmixr_data <- function(input_data) {
         message("this may take a while")
         input_data <-
           simulation_data_to_genomeadmixr_data(simulation_data =
-                                                 input_data$population)
+                                                 input_data$population,
+                                               markers = markers)
         message("done converting, continuing as normal")
         return(input_data)
       } else {
@@ -687,7 +688,8 @@ verify_genomeadmixr_data <- function(input_data) {
       message("found simulation output, converting to genomeadmixr_data")
       message("this may take a while")
       input_data <-
-        simulation_data_to_genomeadmixr_data(simulation_data = input_data)
+        simulation_data_to_genomeadmixr_data(simulation_data = input_data,
+                                             markers = markers)
       message("done converting, continuing as normal")
     } else {
       stop("input_data should be of class genomeadmixr_data
