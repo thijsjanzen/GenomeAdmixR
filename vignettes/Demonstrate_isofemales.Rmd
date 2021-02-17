@@ -53,13 +53,11 @@ or zero.
 ```{r calculate LD}
 mean(calculate_ld(pop = pop_1,
                   sampled_individuals = 10,
-                  number_of_markers = 30,
-                  random_markers = TRUE)$ld_matrix,
+                  markers = 30)$ld_matrix,
      na.rm = TRUE)
 mean(calculate_ld(pop = pop_2,
                   sampled_individuals = 10,
-                  number_of_markers = 30,
-                  random_markers = TRUE)$ld_matrix,
+                  markers = 30)$ld_matrix,
      na.rm = TRUE)
 ```
 Now we can start to generate isofemale lines from both populations, using \code{create_iso_female}.
