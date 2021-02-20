@@ -64,6 +64,10 @@ combine_input_data <- function(input_data_list,
   }
 
   testit::assert(is.list(input_data_list))
+  for (i in seq_along(input_data_list)) {
+    testit::assert(methods::is(input_data_list[[i]], "genomeadmixr_data"))
+  }
+
 
   testit::assert(length(frequencies) == length(input_data_list))
   for (i in seq_along(input_data_list))  {
@@ -151,7 +155,7 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
            the simulation used to generate the data included markers")
     }
   } else {
-    output$markers <- markers
+    output$markers <- sort(unique(markers))
   }
 
   if (max(output$markers) <= 1.0) {

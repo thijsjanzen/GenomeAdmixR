@@ -231,15 +231,17 @@ generate_output_list_one_pop <- function(selected_popstruct,
 
 #' @keywords internal
 population_to_vector <- function(source_pop) {
-  if (is.vector(source_pop)) return(source_pop)
-  pop_for_cpp <- c()
-  for (i in seq_along(source_pop)) {
-    x <- source_pop[[i]]$chromosome1
-    chrom1 <- as.vector(t(x))
-    x <- source_pop[[i]]$chromosome2
-    chrom2 <- as.vector(t(x))
-    pop_for_cpp <- c(pop_for_cpp, chrom1, chrom2)
+
+  get_chroms <- function(indiv) {
+    a <- as.vector(t(indiv$chromosome1))
+    b <- as.vector(t(indiv$chromosome2))
+    return( c(a, b))
   }
+
+  if (is.vector(source_pop)) return(source_pop)
+  chroms <- lapply(source_pop, get_chroms)
+  pop_for_cpp <- unlist(chroms)
+
   return(pop_for_cpp)
 }
 
@@ -677,7 +679,7 @@ verify_genomeadmixr_data <- function(input_data, markers = NA) {
     } else {
       if (is.list(input_data)) {
         for (i in seq_along(input_data)) {
-          verify_genomeadmixr_data(input_data[[i]], markers)
+          input_data[[i]] <- verify_genomeadmixr_data(input_data[[i]], markers)
         }
         return(input_data)
       }

@@ -65,11 +65,13 @@ simulate_admixture_data <- function(input_data = NA,
                                          markers)
 
   if (!methods::is(input_data, "genomeadmixr_data")) {
-    if (length(input_data) > 1) {
-      message("found multiple input populations")
-      input_data <- combine_input_data(input_data,
-                                       frequencies = initial_frequencies,
-                                       pop_size = pop_size)
+    if (is.list(input_data)) {
+      if (length(input_data) > 1) {
+        message("found multiple input populations")
+        input_data <- combine_input_data(input_data,
+                                         frequencies = initial_frequencies,
+                                         pop_size = pop_size)
+      }
     }
   }
 

@@ -12,7 +12,7 @@ test_that("general usage", {
   testthat::expect_silent(
     simulated_pop <- simulate_admixture_data(input_data = dgrp2.3R.5k.data,
                                            pop_size = 1000,
-                                           total_runtime = 100,
+                                           total_runtime = 10,
                                            morgan = 1,
                                            num_threads = -1,
                                            markers = mks)
@@ -24,7 +24,7 @@ test_that("general usage", {
                                                list(dgrp2.3R.5k.data,
                                                     dgrp2.3R.5k.data),
                                              pop_size = 1000,
-                                             total_runtime = 100,
+                                             total_runtime = 10,
                                              morgan = 1,
                                              markers = mks),
      "found multiple input populations"
@@ -35,7 +35,9 @@ test_that("general usage", {
                                                list(simulated_pop,
                                                     simulated_pop),
                                              pop_size = 1000,
-                                             total_runtime = 100,
+                                             total_runtime = 10,
+                                             verbose = TRUE,
+                                             num_threads = -1,
                                              morgan = 1,
                                              markers = mks)
   )
@@ -79,7 +81,7 @@ test_that("general usage", {
                                                input_data_population_2 =
                                                  simulated_pop,
                                                pop_size = 100,
-                                               total_runtime = 100,
+                                               total_runtime = 10,
                                                morgan = 1,
                                                migration_rate = 0,
                                                markers = mks ,
