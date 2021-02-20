@@ -135,5 +135,7 @@ simulate_admixture <- function(input_population = NA,
                                          track_frequency,
                                          track_junctions)
 
+  class(output) <- "genomadmixr_simulation"
+
   return(output)
 }

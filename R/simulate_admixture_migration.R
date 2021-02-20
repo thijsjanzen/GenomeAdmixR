@@ -194,5 +194,7 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          final_freq_tibble,
                                          track_frequency,
                                          track_junctions)
+
+  class(output) <- "genomadmixr_simulation"
   return(output)
 }

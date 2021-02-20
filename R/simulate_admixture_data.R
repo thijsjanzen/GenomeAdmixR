@@ -149,6 +149,8 @@ simulate_admixture_data <- function(input_data = NA,
   output$initial_frequency <- convert_to_dna(output$initial_frequency)
   output$final_frequency <- convert_to_dna(output$final_frequency)
 
+  class(output) <- "genomadmixr_simulation"
+
   return(output)
 }
 
