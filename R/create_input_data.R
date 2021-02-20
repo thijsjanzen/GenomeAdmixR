@@ -144,11 +144,11 @@ convert_dna_to_numeric <- function(dna_matrix) {
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
 simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
-                                                 markers = NULL,
+                                                 markers = NA,
                                                  verbose = FALSE) {
 
   output <- list()
-  if (is.null(markers)) {
+  if (sum(is.na(markers)) > 0) {
     output$markers <- sort(unique(simulation_data$frequencies$location))
     if (is.null(output$markers)) {
       stop("no markers found, either provide them as argument, or make sure
@@ -158,12 +158,14 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
     output$markers <- sort(unique(markers))
   }
 
-  if (max(output$markers) <= 1.0) {
-    # we have to rescale the markers to bp
-    mark <- output$markers[output$markers > 0]
-    min_mark <- min(mark)
-    rescale_val <- 1 / min_mark
-    output$markers <- output$markers * rescale_val
+  if (length(markers) > 1) {
+    if (max(output$markers) <= 1.0) {
+      # we have to rescale the markers to bp
+      mark <- output$markers[output$markers > 0]
+      min_mark <- min(mark)
+      rescale_val <- 1 / min_mark
+      output$markers <- output$markers * rescale_val
+    }
   }
 
   if (!methods::is(simulation_data, "population")) {

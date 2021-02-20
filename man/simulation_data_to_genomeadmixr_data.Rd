@@ -6,7 +6,7 @@
 \usage{
 simulation_data_to_genomeadmixr_data(
   simulation_data,
-  markers = NULL,
+  markers = NA,
   verbose = FALSE
 )
 }

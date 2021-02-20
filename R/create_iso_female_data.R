@@ -32,7 +32,7 @@ create_iso_female_data <- function(input_data = NA,
                                    inbreeding_pop_size = 100,
                                    run_time = 2000,
                                    morgan = 1,
-                                  num_threads = 1,
+                                   num_threads = 1,
                                    verbose = FALSE) {
 
   input_data <- verify_genomeadmixr_data(input_data)

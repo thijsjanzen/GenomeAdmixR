@@ -666,16 +666,14 @@ create_recombination_map <- function(markers,
 verify_genomeadmixr_data <- function(input_data, markers = NA) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
     if (methods::is(input_data, "genomadmixr_simulation")) {
-      if (methods::is(input_data$population, "population")) {
-        message("found simulation output, converting to genomeadmixr_data")
-        message("this may take a while")
-        input_data <-
-          simulation_data_to_genomeadmixr_data(simulation_data =
-                                                 input_data$population,
-                                               markers = markers)
-        message("done converting, continuing as normal")
-        return(input_data)
-      }
+      message("found simulation output, converting to genomeadmixr_data")
+      message("this may take a while")
+      input_data <-
+        simulation_data_to_genomeadmixr_data(simulation_data =
+                                               input_data,
+                                             markers = markers)
+      message("done converting, continuing as normal")
+      return(input_data)
     } else {
       if (is.list(input_data)) {
         for (i in seq_along(input_data)) {
