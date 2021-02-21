@@ -235,7 +235,7 @@ population_to_vector <- function(source_pop) {
   get_chroms <- function(indiv) {
     a <- as.vector(t(indiv$chromosome1))
     b <- as.vector(t(indiv$chromosome2))
-    return( c(a, b))
+    return(c(a, b))
   }
 
   if (is.vector(source_pop)) return(source_pop)

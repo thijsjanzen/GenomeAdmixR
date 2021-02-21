@@ -38,6 +38,30 @@ read_input_data <- function(file_names,
   return(input_data)
 }
 
+sample_output_matrix <- function(input_data_list,
+                                 frequencies,
+                                 pop_size) {
+
+  num_markers <- length(input_data_list[[1]]$markers)
+
+  output_matrix <- matrix(NA,
+                          nrow = pop_size * 2,
+                          ncol = num_markers)
+
+  for (indiv in 1:pop_size) {
+    chosen_pop <- sample(seq_along(input_data_list), size = 1,
+                         prob = frequencies)
+
+    focal_pop <- input_data_list[[chosen_pop]]$genomes
+    indivs <- seq(from = 1, to = length(focal_pop[, 1]), by = 2)
+    sampled_indiv <- sample(indivs, size = 1)
+    indiv_index <- 1 + (indiv - 1) * 2
+    output_matrix[indiv_index, ] <- focal_pop[sampled_indiv, ]
+    output_matrix[indiv_index + 1, ] <- focal_pop[sampled_indiv + 1, ]
+  }
+  return(output_matrix)
+}
+
 #' combine sequence data that was previously read from file into a population
 #' @description Create data in a format that can be used by GenomeAdmixR,
 #' entries are sampled randomly from each input data set, with replacement.
@@ -70,6 +94,7 @@ combine_input_data <- function(input_data_list,
 
 
   testit::assert(length(frequencies) == length(input_data_list))
+
   for (i in seq_along(input_data_list))  {
     for (j in seq_along(input_data_list)) {
       if (!all.equal(input_data_list[[i]]$markers,
@@ -84,24 +109,10 @@ combine_input_data <- function(input_data_list,
     frequencies <- frequencies / sum(frequencies)
   }
 
-  num_markers <- length(input_data_list[[1]]$markers)
-
-  output_matrix <- matrix(NA, nrow = pop_size * 2,
-                          ncol = num_markers)
-
-  for (indiv in 1:pop_size) {
-    chosen_pop <- sample(seq_along(input_data_list), size = 1,
-                         prob = frequencies)
-
-    focal_pop <- input_data_list[[chosen_pop]]$genomes
-    indivs <- seq(from = 1, to = length(focal_pop[, 1]), by = 2)
-    sampled_indiv <- sample(indivs, size = 1)
-    indiv_index <- 1 + (indiv - 1) * 2
-    output_matrix[indiv_index, ] <- focal_pop[sampled_indiv, ]
-    output_matrix[indiv_index + 1, ] <- focal_pop[sampled_indiv + 1, ]
-  }
   output <- list()
-  output$genomes <- output_matrix
+  output$genomes <- sample_output_matrix(input_data_list,
+                                         frequencies,
+                                         pop_size)
   output$markers <- input_data_list[[1]]$markers
   class(output) <- "genomeadmixr_data"
   return(output)

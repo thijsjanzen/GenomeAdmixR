@@ -39,7 +39,7 @@ calculate_ld <- function(pop,
   if (length(markers) == 1) {
     if (is.na(markers)) {
       if (class(pop) == "genomeadmixr_data") {
-        markers = pop$markers
+        markers <- pop$markers
       }
     } else {
       markers <- create_random_markers(markers[1])
@@ -61,7 +61,9 @@ calculate_ld <- function(pop,
 
   if (verbose) message("done creation of allele matrix")
 
-  if (verbose) pb <- utils::txtProgressBar(min = 0, max = length(markers), style = 3)
+  if (verbose) pb <- utils::txtProgressBar(min = 0,
+                                           max = length(markers),
+                                           style = 3)
   for (x in seq_along(markers)) {
     for (y in seq_len(x)) {
       if (x != y) {

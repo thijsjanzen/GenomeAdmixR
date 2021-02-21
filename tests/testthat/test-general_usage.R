@@ -5,7 +5,7 @@ test_that("general usage", {
 
   data("dgrp2.3R.5k.data")
 
-  mks = sample(dgrp2.3R.5k.data$markers, size = 100,
+  mks <- sample(dgrp2.3R.5k.data$markers, size = 100,
                replace = FALSE, prob = NULL)
 
 
@@ -46,11 +46,11 @@ test_that("general usage", {
   subset(simulated_pop$frequencies, time == 10 & location == mks[50])
 
   selection_matrix <- matrix(nrow = 1, ncol = 5)
-  selection_matrix[1,] = c(mks[50], 0.4, 0.7, 1.0, "t")
+  selection_matrix[1, ] <- c(mks[50], 0.4, 0.7, 1.0, "t")
 
 
   testthat::expect_silent(
-      iso.100 <- create_iso_female_data(input_data = dgrp2.3R.5k.data,
+      iso_100 <- create_iso_female_data(input_data = dgrp2.3R.5k.data,
                                    inbreeding_pop_size = 100,
                                    n = 20,
                                    morgan = 1,
@@ -58,7 +58,7 @@ test_that("general usage", {
   )
 
   testthat::expect_message(
-    iso.100 <- create_iso_female_data(input_data = simulated_pop,
+    iso_100 <- create_iso_female_data(input_data = simulated_pop,
                                    inbreeding_pop_size = 100,
                                    n = 20,
                                    morgan = 1,
@@ -84,11 +84,10 @@ test_that("general usage", {
                                                total_runtime = 10,
                                                morgan = 1,
                                                migration_rate = 0,
-                                               markers = mks ,
+                                               markers = mks,
                                                stop_at_critical_fst = TRUE,
                                                critical_fst = 0.05,
                                                generations_between_update = 100,
                                                num_threads = 4)
   )
-
 })
