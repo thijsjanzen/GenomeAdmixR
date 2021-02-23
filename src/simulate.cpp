@@ -42,15 +42,18 @@ void update_pop(const std::vector<Fish>& Pop,
     stop("new_generation wrong size");
   }
 
-  rnd_t rndgen;
+
   int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
   if (num_threads == -1) {
     num_seeds = 20;
   }
   std::vector< int > seed_values(num_seeds);
 
-  for (int i = 0; i < num_seeds; ++i) {
-    seed_values[i] = rndgen.random_number(INT_MAX); // large value
+  {
+    rnd_t rndgen;
+    for (int i = 0; i < num_seeds; ++i) {
+      seed_values[i] = rndgen.random_number(INT_MAX); // large value
+    }
   }
 
   int seed_index = 0;
@@ -68,7 +71,7 @@ void update_pop(const std::vector<Fish>& Pop,
           seed_index++;
           if (seed_index > num_seeds) { // just in case.
             for (int i = 0; i < num_seeds; ++i) {
-              seed_values[i] = rndgen.random_number(INT_MAX);
+              seed_values[i] = rndgen2.random_number(INT_MAX);
             }
             seed_index = 0;
           }
@@ -87,7 +90,9 @@ void update_pop(const std::vector<Fish>& Pop,
             while(index2 == index1) index2 = rndgen2.random_number( pop_size );
           }
 
-          new_generation[i] = mate(Pop[index1], Pop[index2], morgan, rndgen2);
+          new_generation[i] = mate(Pop[index1],
+                                   Pop[index2],
+                                      morgan, rndgen2);
         }
     });
   return;

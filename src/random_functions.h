@@ -61,26 +61,42 @@ struct rnd_t {
 };
 
 struct emp_genome {
-
   std::vector< double > cdf_;
-  int total_sum;
 
   emp_genome() {
+  }
 
+  emp_genome(const emp_genome& other) {
+    cdf_ = other.cdf_;
+  }
+
+  emp_genome& operator=(const emp_genome& other) {
+    if (this != &other) {
+      cdf_ = other.cdf_;
+    }
+    return *this;
   }
 
   template <typename T>
   emp_genome(const std::vector<T>& positions) {
-    total_sum = std::accumulate(positions.begin(),
+    double total_sum = std::accumulate(positions.begin(),
                                 positions.end(), 0.0);
     double s = 0.0;
     double mult = 1.0 / total_sum;
     cdf_.resize(positions.size());
     for (size_t i = 0; i < positions.size(); ++i) {
-      cdf_[i] = s;
       s += positions[i] * mult;
+      cdf_[i] = s;
     }
     return;
+  }
+
+  size_t index_from_cdf(double p) const {
+    // find index belonging to p
+    return static_cast<size_t>(std::distance(cdf_.begin(),
+                                             std::lower_bound(cdf_.begin(),
+                                                              cdf_.end(),
+                                                              p)));
   }
 
   std::vector< size_t > recompos(double morgan,
@@ -89,21 +105,13 @@ struct emp_genome {
     std::vector< size_t > indices;
     for(size_t i = 0; i < num_break_points; ++i) {
       auto found_index = index_from_cdf(rndgen.uniform());
-      if (found_index > 0)
+      if (found_index > 0) {
         indices.push_back(found_index);
+      }
     }
     std::sort(indices.begin(), indices.end());
     indices.push_back(cdf_.size());
     return indices;
-  }
-
-
-  size_t index_from_cdf(double p) const {
-    // find index belonging to p
-    return static_cast<size_t>(std::distance(cdf_.begin(),
-                                             std::lower_bound(cdf_.begin(),
-                                                              cdf_.end(),
-                                                              p)));
   }
 };
 

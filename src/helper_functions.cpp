@@ -932,7 +932,7 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& 
 
 
 int draw_mutated_base(int source_base,
-                      const NumericMatrix& sub_matrix,
+                      const std::vector< std::vector< double >>& sub_matrix,
                       rnd_t& rndgen) {
   if (source_base == 0) // no data
     return 0;
@@ -941,7 +941,7 @@ int draw_mutated_base(int source_base,
 
   double r = rndgen.uniform();
   for (int i = 0; i < 4; ++i) {
-    r -= sub_matrix(source_base - 1, i);
+    r -= sub_matrix[source_base - 1][i];
     if (r <= 0.0) {
       return( alleles[i] );
     }
@@ -958,7 +958,7 @@ int num_mutations(int num_markers,
 }
 
 void mutate_chrom(std::vector<int>& chrom,
-                  const NumericMatrix& sub_matrix,
+                  const std::vector<std::vector<double>>& sub_matrix,
                   const double& mutation_rate,
                   rnd_t& rndgen) {
 
@@ -977,7 +977,7 @@ void mutate_chrom(std::vector<int>& chrom,
 }
 
 void mutate(Fish_emp& indiv,
-            const NumericMatrix& sub_matrix,
+            const std::vector<std::vector<double>>& sub_matrix,
             const double& mutation_rate,
             rnd_t& rndgen) {
 

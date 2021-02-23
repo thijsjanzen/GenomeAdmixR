@@ -129,7 +129,7 @@ int find_location(const std::vector<double>& markers,
 double number_of_junctions(const std::vector< Fish_emp>& pop);
 
 void mutate(Fish_emp& indiv,
-            const NumericMatrix& sub_matrix,
+            const std::vector<std::vector<double>>& sub_matrix,
             const double& mutation_rate,
             rnd_t& rndgen);
 

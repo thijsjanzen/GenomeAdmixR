@@ -72,8 +72,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       double migration_rate,
                                       double size_in_morgan,
                                       double mutation_rate,
-                                      const NumericMatrix& substitution_matrix,
-                                      rnd_t& rndgen,
+                                      const std::vector<std::vector<double>>& substitution_matrix,
                                       const emp_genome& emp_gen,
                                       int num_threads) {
 
@@ -87,8 +86,11 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
   }
   std::vector< int > seed_values(num_seeds);
 
-  for (int i = 0; i < num_seeds; ++i) {
-    seed_values[i] = rndgen.random_number(INT_MAX); // large value
+  {
+    rnd_t rndgen;
+    for (int i = 0; i < num_seeds; ++i) {
+      seed_values[i] = rndgen.random_number(INT_MAX); // large value
+    }
   }
 
   tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
@@ -103,7 +105,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
         seed_index++;
         if (seed_index > num_seeds) { // just in case.
           for (int i = 0; i < num_seeds; ++i) {
-            seed_values[i] = rndgen.random_number(INT_MAX);
+            seed_values[i] = rndgen2.random_number(INT_MAX);
           }
           seed_index = 0;
         }
@@ -118,27 +120,27 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                        fitness_source, fitness_migr,
                                        max_fitness_source, max_fitness_migr,
                                        index1,
-                                       rndgen);
+                                       rndgen2);
         Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
                                        use_selection,
                                        fitness_source, fitness_migr,
                                        max_fitness_source, max_fitness_migr,
                                        index2,
-                                       rndgen);
+                                       rndgen2);
         while (index1 == index2) {
           parent2 = draw_parent(pop_1, pop_2, migration_rate,
                                 use_selection,
                                 fitness_source, fitness_migr,
                                 max_fitness_source, max_fitness_migr,
                                 index2,
-                                rndgen);
+                                rndgen2);
         }
 
-        new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen, emp_gen),
-                                     parent2.gamete(size_in_morgan, rndgen, emp_gen));
+        new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen2, emp_gen),
+                                     parent2.gamete(size_in_morgan, rndgen2, emp_gen));
 
         if (mutation_rate > 0)
-          mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen);
+          mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
       }
     });
   return new_generation;
@@ -161,7 +163,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     const std::vector<int>& founder_labels,
     double migration_rate,
     double mutation_rate,
-    const NumericMatrix& substitution_matrix,
+    const std::vector<std::vector<double>>& substitution_matrix,
     rnd_t& rndgen,
     const emp_genome& emp_gen,
     int num_threads) {
@@ -243,7 +245,6 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                        morgan,
                                                                        mutation_rate,
                                                                        substitution_matrix,
-                                                                       rndgen,
                                                                        emp_gen,
                                                                        num_threads);
 
@@ -262,7 +263,6 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                        morgan,
                                                                        mutation_rate,
                                                                        substitution_matrix,
-                                                                       rndgen,
                                                                        emp_gen,
                                                                        num_threads);
     pop_1 = new_generation_pop_1;
@@ -319,7 +319,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 bool multiplicative_selection,
                                 double migration_rate,
                                 double mutation_rate,
-                                const NumericMatrix& substitution_matrix,
+                                const NumericMatrix& substitution_matrix_R,
                                 int num_threads,
                                 const NumericVector& recombination_map) {
 try {
@@ -348,6 +348,16 @@ try {
     morgan = std::accumulate(recom_map.begin(),
                              recom_map.end(),
                              0.0);
+  }
+
+  std::vector< std::vector< double >> substitution_matrix(4,
+                                                          std::vector<double>(4));
+  if (mutation_rate > 0) {
+    for (int i = 0; i < 4; ++i) {
+      for (int j = 0; j < 4; ++j) {
+        substitution_matrix[i][j] = substitution_matrix_R(i, j);
+      }
+    }
   }
 
   if (input_population_1[0] > -1e4) {

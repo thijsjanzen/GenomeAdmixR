@@ -45,7 +45,7 @@ struct Fish_emp {
 
   std::vector< int > gamete(double morgan,
                             rnd_t& rndgen,
-                            const emp_genome& emp_gen) {
+                            const emp_genome& emp_gen) const {
 
     std::vector<size_t> recom_pos = emp_gen.recompos(morgan,
                                                      rndgen);
