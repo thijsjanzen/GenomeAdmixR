@@ -91,3 +91,32 @@ test_that("general usage", {
                                                num_threads = 4)
   )
 })
+
+test_that("isofemale usage", {
+  data("dgrp2.3R.5k.data")
+
+  mks = sample(dgrp2.3R.5k.data$markers, size = 300, replace = FALSE, prob = NULL)
+
+  testthat::expect_silent(
+  simulated_pop <- simulate_admixture_data(input_data = dgrp2.3R.5k.data,
+                                           pop_size = 1000,
+                                           total_runtime = 10,
+                                           morgan = 1,
+                                           markers = mks)
+  )
+
+  testthat::expect_message(
+  isos <- create_iso_female_data(input_data = simulated_pop,
+                                 n = 20,
+                                 inbreeding_pop_size = 100,
+                                 run_time = 50)
+  )
+
+  testthat::expect_message(
+    simulated_pop <- simulate_admixture_data(input_data = isos[1],
+                                           pop_size = 1000,
+                                           total_runtime = 10,
+                                           morgan = 1,
+                                           markers = mks)
+  )
+})
