@@ -665,7 +665,8 @@ create_recombination_map <- function(markers,
 #' @keywords internal
 verify_genomeadmixr_data <- function(input_data, markers = NA) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
-    if (methods::is(input_data, "genomadmixr_simulation")) {
+    if (methods::is(input_data, "genomadmixr_simulation") ||
+        methods::is(input_data, "individual")) {
       message("found simulation output, converting to genomeadmixr_data")
       message("this may take a while")
       input_data <-
@@ -679,6 +680,11 @@ verify_genomeadmixr_data <- function(input_data, markers = NA) {
         for (i in seq_along(input_data)) {
           input_data[[i]] <- verify_genomeadmixr_data(input_data[[i]], markers)
         }
+
+        if (length(input_data) == 1) {
+          input_data <- input_data[[1]]
+        }
+
         return(input_data)
       }
     }

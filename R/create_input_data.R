@@ -181,8 +181,15 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
 
   if (!methods::is(simulation_data, "population")) {
     if (is.list(simulation_data)) {
-      if (methods::is(simulation_data$population, "population")) {
-        simulation_data <- simulation_data$population
+      if (methods::is(simulation_data, "individual")) {
+         indiv <- simulation_data
+         simulation_data <- list()
+         simulation_data[[1]] <- indiv
+         class(simulation_data) <- "population"
+      } else {
+        if (methods::is(simulation_data$population, "population")) {
+          simulation_data <- simulation_data$population
+        }
       }
     }
   }
