@@ -31,10 +31,10 @@ Markers are equidistantly spaced, with a distance of
 }
 \examples{
 number_founders = 20
-wildpop =  simulate_admixture(pop_size = 1000,
-                              number_of_founders = number_founders,
-                              total_runtime = 10,
-                              morgan = 1)
+wildpop =  simulate_admixture(
+   module = ancestry_module(number_of_founders = 20, morgan = 1),
+   pop_size = 1000,
+   total_runtime = 10)
 
 freq_output <- calculate_allele_frequencies(wildpop,
                                             progress_bar = TRUE)

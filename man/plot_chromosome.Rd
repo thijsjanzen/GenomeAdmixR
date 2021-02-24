@@ -23,10 +23,10 @@ This function plots a chromosome in the range [xmin, xmax].
 Colors indicate different ancestry.
 }
 \examples{
-wildpop <- simulate_admixture(pop_size = 100,
-                              number_of_founders = 10,
-                              total_runtime = 5,
-                              morgan = 1)
+wildpop =  simulate_admixture(
+   module = ancestry_module(number_of_founders = 10, morgan = 1),
+   pop_size = 1000,
+   total_runtime = 10)
 
 isofemale <- create_iso_female(source_pop = wildpop,
                                n = 1,

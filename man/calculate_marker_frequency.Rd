@@ -23,11 +23,10 @@ Calculate the relative frequency of each ancestor in the
 population at a specific marker location
 }
 \examples{
-number_founders = 20
-wildpop =  simulate_admixture(pop_size = 1000,
-                              number_of_founders = number_founders,
-                              total_runtime = 10,
-                              morgan = 1)
+wildpop =  simulate_admixture(
+   module = ancestry_module(number_of_founders = 20, morgan = 1),
+   pop_size = 1000,
+   total_runtime = 10)
 
 avg_frequencies <- calculate_marker_frequency(pop = wildpop,
                                               location = 0.5)

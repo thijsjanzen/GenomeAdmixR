@@ -79,9 +79,3 @@ Individual based simulation of the breakdown of contiguous
 ancestry blocks, with or without selection. Simulations can be started from
 scratch, or from a predefined input population.
 }
-\examples{
-wildpop =  simulate_admixture(pop_size = 1000,
-                              number_of_founders = 2,
-                              total_runtime = 10,
-                              morgan = 1)
-}

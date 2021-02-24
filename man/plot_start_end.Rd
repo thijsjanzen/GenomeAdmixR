@@ -30,11 +30,12 @@ the final frequencies in one plot
 \examples{
 markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 
-pop <- simulate_admixture(pop_size = 1000,
-                          number_of_founders = 3,
-                          total_runtime = 11,
-                          morgan = 1,
-                          markers = markers)
+pop <- simulate_admixture(
+            module = ancestry_module(number_of_founders = 3,
+                                     morgan = 1,
+                                     markers = markers),
+           pop_size = 1000,
+           total_runtime = 11)
 require(ggplot2)
 plot_start_end(pop,
                picked_ancestor = "ALL")

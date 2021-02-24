@@ -19,12 +19,13 @@
 #'
 #' markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 #'
-#' selected_pop <- simulate_admixture(pop_size = 1000,
-#'                                    number_of_founders = 10,
-#'                                    total_runtime = 11,
-#'                                    morgan = 1,
-#'                                    select_matrix = select_matrix,
-#'                                    markers = markers)
+#' selected_pop <- simulate_admixture(
+#'                     module = ancestry_module(number_of_founders = 10,
+#'                                              morgan = 1,
+#'                                              markers = markers),
+#'                     pop_size = 1000,
+#'                     total_runtime = 11,
+#'                     select_matrix = select_matrix)
 #' require(ggplot2)
 #' plot_difference_frequencies(results = selected_pop,
 #'                             picked_ancestor = "ALL")

@@ -42,11 +42,6 @@
 #' number of generations, the location along the chromosome of the marker, the
 #' ancestral allele at that location in that generation, and finally, the
 #' frequency of that allele.
-#' @examples
-#' wildpop =  simulate_admixture(pop_size = 1000,
-#'                               number_of_founders = 2,
-#'                               total_runtime = 10,
-#'                               morgan = 1)
 simulate_ancestry <- function(input_population = NA,
                                pop_size = NA,
                                number_of_founders = 2,

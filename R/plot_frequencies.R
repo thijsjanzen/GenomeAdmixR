@@ -10,10 +10,10 @@
 #' @param progress_bar Displays a progress_bar if TRUE. Default value is FALSE
 #' @return a ggplot2 object
 #' @examples
-#' pop <- simulate_admixture(pop_size = 1000,
-#'                           number_of_founders = 4,
-#'                           total_runtime = 11,
-#'                           morgan = 1)
+#' pop <- simulate_admixture(
+#'              module = ancestry_module(number_of_founders = 4),
+#'              pop_size = 1000,
+#'              total_runtime = 11)
 #' require(ggplot2)
 #' plot_frequencies(result = pop)
 #' @export

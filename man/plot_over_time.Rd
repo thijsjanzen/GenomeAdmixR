@@ -23,11 +23,11 @@ This function plots the frequency of all ancestors over time at
 a specific location on the chromosome, after performing a simulation.
 }
 \examples{
-pop <- simulate_admixture(pop_size = 1000,
-                          number_of_founders = 10,
-                          total_runtime = 11,
-                          morgan = 1,
-                          markers = 0.5)
+pop <- simulate_admixture(
+           module = ancestry_module(number_of_founders = 10,
+                                    markers = 0.5),
+           pop_size = 1000,
+           total_runtime = 11)
 require(ggplot2)
 plot_over_time(frequencies = pop$frequencies,
                focal_location = 0.5)
