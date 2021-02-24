@@ -6,8 +6,7 @@ test_that("simulate_migration base", {
   vx <- simulate_admixture(module =
                              ancestry_module(migration =
                                                migration_settings(migration_rate = 0.1)),
-                           total_runtime = 100,
-                           verbose = TRUE)
+                           total_runtime = 100)
 })
 
 test_that("simulate_migration", {

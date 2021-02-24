@@ -23,11 +23,13 @@ results.
 ```{r simulate}
 select_matrix <- matrix(nrow = 1, ncol = 5)
 select_matrix[1, ] <- c(0.5, 1, 1 + 0.05, 1 + 0.1, 0)
-population <- simulate_admixture(pop_size = 1000,
-                                 number_of_founders = 2,
+population <- simulate_admixture(
+                      module = ancestry_module(markers = 
+                                                c(0.5, 
+                                                 seq(0, 1, length.out = 100))),
+                                pop_size = 1000,
                                  total_runtime = 200,
-                                 select_matrix = select_matrix,
-                                 markers = c(0.5, seq(0, 1, length.out = 100)))
+                                 select_matrix = select_matrix)
 ```
 Now, we can first view whether selection on our marker has yielded an increase 
 in frequency:

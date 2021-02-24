@@ -34,12 +34,15 @@ populations do not share founder labels.
 
 ```{r create populations}
 pops <-
-  simulate_admixture_migration(pop_size = c(100, 100),
-                               initial_frequencies =
+  simulate_admixture(
+        module = ancestry_module(
+          migration = migration_settings(migration_rate = 0,
+                                         population_size = c(100, 100),
+                                         initial_frequencies =
                                  list(c(1, 1, 1, 1, 0, 0, 0, 0),
-                                      c(0, 0, 0, 0, 1, 1, 1, 1)),
-                               total_runtime = 1000,
-                               migration_rate = 0)
+                                      c(0, 0, 0, 0, 1, 1, 1, 1)))
+        ),
+     total_runtime = 1000)
 
 pop_1 <- pops$population_1
 pop_2 <- pops$population_2
@@ -62,10 +65,12 @@ mean(calculate_ld(pop = pop_2,
 ```
 Now we can start to generate isofemale lines from both populations, using \code{create_iso_female}.
 ```{r create isofemale lines}
-iso_females_pop_1 <- create_iso_female(pop_1,
+iso_females_pop_1 <- create_iso_female(
+                          module = ancestry_module(input_population = pop_1),
                                        n = 2,
                                        inbreeding_pop_size = 100)
-iso_females_pop_2 <- create_iso_female(pop_2,
+iso_females_pop_2 <- create_iso_female(
+                          module = ancestry_module(input_population = pop_2),
                                        n = 2,
                                        inbreeding_pop_size = 100)
 ```
@@ -75,21 +80,22 @@ population, and one where we mix the two, e.g. 1x1, 1x2 and 2x2, where
 isofemales 1 and 2 indicate isofemales from source populations 1 and 2 
 respectively. 
 ```{r create from individuals}
-pop_1_1 <- simulate_admixture(iso_females_pop_1,
+pop_1_1 <- simulate_admixture(
+               module = ancestry_module(input_population = iso_females_pop_1),
                               pop_size = 1000,
-                              total_runtime = 1000,
-                              morgan = 1)
+                              total_runtime = 1000)
 
-pop_1_2 <- simulate_admixture(list(iso_females_pop_1[[1]],
-                                   iso_females_pop_2[[1]]),
+pop_1_2 <- simulate_admixture(
+                    module = ancestry_module(input_population =
+                                               list(iso_females_pop_1[[1]],
+                                                    iso_females_pop_2[[1]])),
                                pop_size = 1000,
-                               total_runtime = 1000,
-                               morgan = 1)
+                               total_runtime = 1000)
 
-pop_2_2 <- simulate_admixture(iso_females_pop_2,
+pop_2_2 <- simulate_admixture(
+                module = ancestry_module(input_population = iso_females_pop_2),
                               pop_size = 1000,
-                              total_runtime = 1000,
-                              morgan = 1)
+                              total_runtime = 1000)
 ```
 Then, using the function \code{calculate_fst} we calculate all pairwise FST 
 values. Here, we expect to find the highest FST for the 1x2 comparison. 

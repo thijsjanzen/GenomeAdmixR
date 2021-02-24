@@ -28,12 +28,13 @@ packageVersion("GenomeAdmixR")
 ## Simulating an iso-female line
 In order to create an iso-female line, we first have to create a 'wild' 
 population, from which we will draw individuals. To create such a population, we 
-make use of the function 'create_population':
+make use of the function 'simulate_admixture', using the ancestry module:
 ```{r create wildpop}
-wildpop <-  simulate_admixture(pop_size = 100,
-                               number_of_founders = 4,
-                               total_runtime = 1000,
-                               morgan = 1)
+wildpop <-  simulate_admixture(
+                    module = ancestry_module(number_of_founders = 4,
+                                             morgan = 1),
+                    pop_size = 100,
+                    total_runtime = 1000)
 
 ```
 This creates a population of 100 diploid individuals (e.g. 2N = 200), based upon 
@@ -58,11 +59,12 @@ wildpop[[1]]
 In order to create an iso-female line, two random individuals are drawn from the 
 wild population, and selected for inbreeding. We can simulate this process with:
 ```{r create isofemale}
-isofemale <- create_iso_female(source_pop = wildpop,
-                               n = 1,
-                               inbreeding_pop_size = 1000,
-                               run_time = 200,
-                               morgan = 1)
+isofemale <- create_iso_female(
+                  module = ancestry_module(input_population = wildpop,
+                                           morgan = 1),
+                  n = 1,
+                  inbreeding_pop_size = 1000,
+                   run_time = 200)
 ```
 
 Here, n indicates the number of isofemales to be created from the same source 
@@ -80,16 +82,18 @@ plot(isofemale[[1]])
 Because we have chosen 4 ancestors, these plots are not terribly informative, 
 let's try a toy example:
 ```{r toyexample}
-wildpop <-  simulate_admixture(pop_size = 100,
-                               number_of_founders = 4,
-                               total_runtime = 100,
-                               morgan = 1)
+wildpop <-  simulate_admixture(
+                  module = ancestry_module(number_of_founders = 4,
+                                           morgan = 1),
+                  pop_size = 100,
+                  total_runtime = 100)
 
-isofemale <- create_iso_female(source_pop = wildpop,
-                               n = 1,
-                               inbreeding_pop_size = 100,
-                               run_time = 10000,
-                               morgan = 1)
+isofemale <- create_iso_female(
+                  module = ancestry_module(input_population = wildpop,
+                                           morgan = 1),
+                  n = 1,
+                  inbreeding_pop_size = 100,
+                  run_time = 10000)
 plot(wildpop$population[[1]])
 plot(isofemale[[1]])
 ```
@@ -106,12 +110,16 @@ them, and cross these.
 First, we have to create two populations. 
 ```{r create two populations}
 both_populations <-
-  simulate_admixture_migration(pop_size = c(100, 100),
-                               initial_frequencies =
+  simulate_admixture(
+    module = ancestry_module(morgan = 1,
+                      migration = migration_settings(
+                        population_size = c(100, 100),
+                        migration_rate = 0.0,
+                        initial_frequencies =
                                  list(c(rep(1, 20), rep(0, 20)),
-                                      c(rep(0, 20), rep(1, 20))),
-                               morgan = 1,
-                               total_runtime = 1000)
+                                      c(rep(0, 20), rep(1, 20)))
+                      )),
+    total_runtime = 1000)
 
 population_1 <- both_populations$population_1
 
@@ -123,11 +131,12 @@ function 'increase_ancestor'.
 Now that we have two populations, we can generate two different iso-females 
 from them:
 ```{r draw two isofemales}
-isofemales <- create_iso_female(source_pop = population_1,
-                               n = 2,
-                               inbreeding_pop_size = 100,
-                               run_time = 10000,
-                               morgan = 1)
+isofemales <- create_iso_female(
+                  module = ancestry_module(input_population = population_1,
+                                           morgan = 1),
+                  n = 2,
+                  inbreeding_pop_size = 100,
+                  run_time = 10000)
 
 plot_chromosome(isofemales[[1]]$chromosome1, 0, 1)
 plot_chromosome(isofemales[[2]]$chromosome1, 0, 1)
@@ -136,10 +145,12 @@ plot_chromosome(isofemales[[2]]$chromosome1, 0, 1)
 We can now use these two isofemales to seed a new inbreeding population:
 ```{r seed mixed population}
 mixed_population <-
-  simulate_admixture(input_population = list(isofemales[[1]],
-                          isofemales[[2]]),
-                     pop_size = 100, total_runtime = 100,
-                     morgan = 1)
+  simulate_admixture(
+        module = ancestry_module(input_population = list(isofemales[[1]],
+                                                         isofemales[[2]]),
+                                 morgan = 1),
+        pop_size = 100, 
+        total_runtime = 100)
 ```
 And plot some individuals from our new population:
 ```{r plot mixed_population}
@@ -191,10 +202,11 @@ To analyze LD patterns better, it makes more sense to create a population from
 scratch. We expect for a strongly inbred population, that there is no LD:
 
 ```{r no LD}
-no_ld_pop <- simulate_admixture(pop_size = 100,
-                             number_of_founders = 4,
-                             total_runtime = 1000,
-                             morgan = 1)
+no_ld_pop <- simulate_admixture(
+                  module = ancestry_module(number_of_founders = 4,
+                                           morgan = 1),
+                  pop_size = 100,
+                  total_runtime = 1000)
 
 ld_results <- calculate_ld(no_ld_pop,
                            sampled_individuals = 10,
@@ -212,10 +224,11 @@ Alternatively, for a barely inbred population, we expect a negative relationship
 between LD and distance:
 
 ```{r strong LD}
-strong_ld_pop <- simulate_admixture(pop_size = 1000,
-                                    number_of_founders = 4,
-                                    total_runtime = 10,
-                                    morgan = 1)
+strong_ld_pop <- simulate_admixture(
+                  module = ancestry_module(number_of_founders = 4,
+                                           morgan = 1),
+                  pop_size = 100,
+                  total_runtime = 10)
 
 ld_results <- calculate_ld(strong_ld_pop,
                            sampled_individuals = 10,
@@ -251,12 +264,13 @@ selection_matrix[1, ] <- c(0.5,
 
 markers <- 0.5
 
-selected_pop <- simulate_admixture(pop_size = 1000,
-                                   number_of_founders = 2,
-                                   total_runtime = 100,
-                                   morgan = 1,
-                                   select_matrix = selection_matrix,
-                                   markers = markers)
+selected_pop <- simulate_admixture(
+                    module = ancestry_module(number_of_founders = 2,
+                                             morgan = 1,
+                                             markers = markers),
+                    pop_size = 1000,  
+                    total_runtime = 100,
+                    select_matrix = selection_matrix)
 
 plot_over_time(selected_pop$frequencies, markers)
 ```
@@ -271,12 +285,13 @@ selection_matrix[1, ] <- c(0.5,
                            1.0, 1.0, 1.0 + s,
                            0)
 
-selected_pop <- simulate_admixture(pop_size = 1000,
-                                   number_of_founders = 10,
-                                   total_runtime = 300,
-                                   morgan = 1,
-                                   select_matrix = selection_matrix,
-                                   markers = markers)
+selected_pop <- simulate_admixture(
+                    module = ancestry_module(number_of_founders = 10,
+                                             morgan = 1,
+                                             markers = markers),
+                    pop_size = 1000,  
+                    total_runtime = 300,
+                    select_matrix = selection_matrix)
 
 plot_over_time(selected_pop$frequencies, markers)
 ```

@@ -35,12 +35,13 @@ We track frequencies of all ancestors in the range [0.2, 0.3], using 100
 markers.
 
 ```{r simulate}
-selected_pop <- simulate_admixture(pop_size = 100,
-                                   number_of_founders = 2,
-                                   total_runtime = 1001,
-                                   morgan = 1,
-                                   select_matrix = select_matrix,
-                                   markers = markers)
+selected_pop <- simulate_admixture(
+                    module = ancestry_module(number_of_founders = 2,
+                                             morgan = 1,
+                                             markers = markers),
+                    pop_size = 100,
+                    total_runtime = 1001,
+                    select_matrix = select_matrix)
 ```
 We can now plot all the ancestors over time, we choose here to plot them only for a select subset of times.
 

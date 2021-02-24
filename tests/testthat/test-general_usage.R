@@ -39,8 +39,7 @@ test_that("general usage", {
                                                    morgan = 1,
                                                    markers = mks),
                           pop_size = 1000,
-                          total_runtime = 10,
-                          verbose = TRUE)
+                          total_runtime = 10)
   )
 
   # TODO  CHECK
