@@ -13,11 +13,12 @@
 #'    pop_size = 1000,
 #'    total_runtime = 10)
 #'
-#' isofemale <- create_iso_female(source_pop = wildpop,
-#'                                n = 1,
-#'                                inbreeding_pop_size = 100,
-#'                                run_time = 10,
-#'                                morgan = 1)
+#' isofemale <- create_iso_female(
+#'                  module = ancestry_module(input_population = wildpop,
+#'                                           morgan = 1),
+#'                  n = 1,
+#'                  inbreeding_pop_size = 100,
+#'                  run_time = 10)
 #'
 #' plot_chromosome(chrom = isofemale[[1]]$chromosome1)
 #' # and a detail of the chromosome:
