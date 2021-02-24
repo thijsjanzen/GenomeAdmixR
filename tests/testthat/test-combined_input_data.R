@@ -54,10 +54,11 @@ test_that("input data", {
                                       frequencies = c(0.5, 0.5),
                                       pop_size = 100)
 
-  simulation_result <- simulate_admixture_data(input_data = combined_data,
+  simulation_result <- simulate_admixture(module = sequence_module(molecular_data =
+                                                                     combined_data,
+                                                                   morgan = 1),
                                                pop_size = 1000,
-                                               total_runtime = 10,
-                                               morgan = 1)
+                                               total_runtime = 10)
 
   num_j <- c()
   for (i in seq_along(simulation_result$population)) {
@@ -77,7 +78,7 @@ test_that("input data simulation", {
   message("test input data simulation")
 
   vx <- simulate_admixture(pop_size = 100,
-                             total_runtime = 100)
+                           total_runtime = 100)
 
   vy <- simulation_data_to_genomeadmixr_data(vx,
                                               markers = seq(0, 1,

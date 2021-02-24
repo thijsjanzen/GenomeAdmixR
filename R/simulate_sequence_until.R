@@ -1,5 +1,5 @@
 #' @keywords internal
-simulate_admixture_until_data <- function(input_data_population_1 = NA,
+simulate_sequence_until <- function(input_data_population_1 = NA,
                                           input_data_population_2 = NA,
                                           pop_size = c(100, 100),
                                           total_runtime = 100,
@@ -20,7 +20,7 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
                                           substitution_matrix =
                                             matrix(1 / 4, nrow = 4, ncol = 4)) {
 
-  pops <- simulate_admixture_migration_data(
+  pops <- simulate_sequence_migration(
     input_data_population_1 = input_data_population_1,
     input_data_population_2 = input_data_population_2,
     pop_size = pop_size,
@@ -54,7 +54,7 @@ simulate_admixture_until_data <- function(input_data_population_1 = NA,
       simulation_data_to_genomeadmixr_data(pops$population_2,
                                    input_data_population_1$markers)
 
-    pops <- simulate_admixture_migration_data(
+    pops <- simulate_sequence_migration(
       input_data_population_1 = pop1_for_data_cpp,
       input_data_population_2 = pop2_for_data_cpp,
       pop_size = pop_size,

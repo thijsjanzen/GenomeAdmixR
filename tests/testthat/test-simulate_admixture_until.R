@@ -3,15 +3,19 @@ context("simulate_admixture_until")
 test_that("simulate_admixture_until", {
   testthat::skip_on_os("solaris")
   message("test simulate_admixture_until")
-  vx <- simulate_admixture_migration(total_runtime = 1000,
-                                     pop_size = c(100, 100),
-                                     initial_frequencies = list(c(0.5, 0.5),
+  vx <- simulate_admixture(total_runtime = 1000,
+                           module = ancestry_module(
+                             morgan = 1,
+                             migration = migration_settings(
+                               population_size = c(100, 100),
+                               initial_frequencies = list(c(0.5, 0.5),
                                                                 c(0.5, 0.5)),
-                                     morgan = 1,
-                                     stop_at_critical_fst = TRUE,
-                                     generations_between_update = 10,
-                                     critical_fst = 0.2,
-                                     migration_rate = 0.001)
+                               stop_at_critical_fst = TRUE,
+                               generations_between_update = 10,
+                               critical_fst = 0.2,
+                               migration_rate = 0.001)
+                           )
+                          )
 
   fst_2 <- calculate_fst(vx$population_1,
                          vx$population_2,
@@ -49,17 +53,20 @@ test_that("simulate_admixture_until_data", {
                                         used_nucleotides = 2)
 
 
-  vx <- simulate_admixture_migration_data(
-    input_data_population_1 = fake_input_data1,
-    input_data_population_2 = fake_input_data2,
-    pop_size = c(100, 100),
-    total_runtime = 100,
-    markers = chosen_markers,
-    morgan = 1,
-    migration_rate = 0.001,
-    critical_fst = 0.2,
-    generations_between_update = 10,
-    verbose = FALSE)
+  vx <- simulate_admixture(
+    module = sequence_module(molecular_data =
+                               list(fake_input_data1,
+                                    fake_input_data2),
+                             migration = migration_settings(
+                               population_size = c(100, 100),
+                               migration_rate = 0.001,
+                               critical_fst = 0.2,
+                               generations_between_update = 10),
+                             markers = chosen_markers,
+                             morgan = 1),
+    total_runtime = 100)
+
+
 
   fst_2 <- calculate_fst(vx$population_1,
                          vx$population_2,

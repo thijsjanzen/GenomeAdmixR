@@ -8,10 +8,11 @@ test_that("save_population", {
   run_time <- 10
   morgan <- 1
 
-  vx <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)
+  vx <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                      number_of_founders,
+                                                    morgan = morgan),
+                           pop_size = pop_size,
+                           total_runtime = run_time)
 
   testthat::expect_true(verify_population(vx))
 

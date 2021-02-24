@@ -15,10 +15,13 @@ test_that("plink data", {
 
   recombination_rate <- 2
 
-  simulation_result <- simulate_admixture_data(input_data = fake_input_data1,
+  simulation_result <- simulate_admixture(module =
+                                            sequence_module(molecular_data =
+                                                              fake_input_data1,
+                                                            recombination_rate =
+                                                              recombination_rate),
                                                pop_size = 1000,
-                                               total_runtime = 10,
-                                       recombination_rate = recombination_rate)
+                                               total_runtime = 10)
 
   write_as_plink(input_pop = simulation_result$population,
                  marker_locations = chosen_markers,

@@ -1,5 +1,5 @@
 #' @keywords internal
-simulate_admixture_until <- function(input_population_1 = NA,
+simulate_ancestry_until <- function(input_population_1 = NA,
                                      input_population_2 = NA,
                                      pop_size = c(100, 100),
                                      initial_frequencies = list(c(1.0, 0),
@@ -19,7 +19,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
                                      number_of_markers = 100,
                                      random_markers = TRUE) {
 
-  pops <- simulate_admixture_migration(
+  pops <- simulate_ancestry_migration(
     input_population_1 = input_population_1,
     input_population_2 = input_population_2,
     pop_size = pop_size,
@@ -46,7 +46,7 @@ simulate_admixture_until <- function(input_population_1 = NA,
   total_generations <- generations_between_update
   while (fst < critical_fst && total_generations < total_runtime) {
 
-    pops <- simulate_admixture_migration(
+    pops <- simulate_ancestry_migration(
       input_population_1 = pops$population_1,
       input_population_2 = pops$population_2,
       pop_size = pop_size,

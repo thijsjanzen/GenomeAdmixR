@@ -3,16 +3,16 @@ context("utilities")
 test_that("utilities", {
   testthat::skip_on_os("solaris")
  message("test utilities")
-  vx <- simulate_admixture(pop_size = 100,
-                           total_runtime = 5, number_of_founders = 50)
+  vx <- simulate_admixture(module = ancestry_module(number_of_founders = 50),
+                           pop_size = 100,
+                           total_runtime = 5)
   testthat::expect_silent(
     plot_chromosome(vx$population[[1]]$chromosome1)
   )
 
-  vx <- simulate_admixture(total_runtime = 100,
-                           pop_size = 100,
-                           number_of_founders = 2,
-                           markers = seq(0, 1, by = 0.01))
+  vx <- simulate_admixture(module = ancestry_module(markers = seq(0, 1, by = 0.01)),
+                           total_runtime = 100,
+                           pop_size = 100)
   testthat::expect_silent(
     plot_over_time(vx$frequencies, focal_location = 0.5)
   )

@@ -67,7 +67,7 @@
 #' terminate the simulation, and object \code{FST} with the final FST estimate
 #' is returned as well.
 #' @export
-simulate_admixture_migration_data <- function(input_data_population_1 = NA, # nolint
+simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                               input_data_population_2 = NA,
                                               pop_size = c(100, 100),
                                               total_runtime = 100,
@@ -97,7 +97,7 @@ simulate_admixture_migration_data <- function(input_data_population_1 = NA, # no
   }
 
   if (stop_at_critical_fst) {
-    return(simulate_admixture_until_data(input_data_population_1 =
+    return(simulate_sequence_until(input_data_population_1 =
                                            input_data_population_1,
                                          input_data_population_2 =
                                            input_data_population_2,

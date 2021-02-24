@@ -27,8 +27,7 @@
 #' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
 #' represents the mutant allele A}
 #' @param verbose Verbose output if TRUE. Default value is FALSE
-#' @param markers A vector of locations of markers (relative locations in
-#' [0, 1]). If a vector is provided, ancestry at these marker positions is
+#' @param markers A vector of locations of markers, these markers are
 #' tracked for every generation.
 #' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated
 #' for multiple markers by multiplying fitness values for each marker. If FALSE,
@@ -46,20 +45,19 @@
 #' number of generations, the location along the chromosome of the marker, the
 #' ancestral allele at that location in that generation, and finally, the
 #' frequency of that allele.
-#' @export
-simulate_admixture_data <- function(input_data = NA,
-                                    pop_size = NA,
-                                    initial_frequencies = NA,
-                                    total_runtime = 100,
-                                    morgan = 1,
-                                    recombination_rate = NA,
-                                    num_threads = 1,
-                                    select_matrix = NA,
-                                    markers = NA,
-                                    verbose = FALSE,
-                                    multiplicative_selection = TRUE,
-                                    mutation_rate = 0,
-                                    substitution_matrix = matrix(1 / 4, 4, 4)) {
+simulate_sequence <- function(input_data = NA,
+                              pop_size = NA,
+                              initial_frequencies = NA,
+                              total_runtime = 100,
+                              morgan = 1,
+                              recombination_rate = NA,
+                              num_threads = 1,
+                              select_matrix = NA,
+                              markers = NA,
+                              verbose = FALSE,
+                              multiplicative_selection = TRUE,
+                              mutation_rate = 0,
+                              substitution_matrix = matrix(1 / 4, 4, 4)) {
 
   input_data <- verify_genomeadmixr_data(input_data,
                                          markers)

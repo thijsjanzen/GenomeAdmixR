@@ -66,8 +66,8 @@
 #' terminate the simulation, and object \code{FST} with the final FST estimate
 #' is returned as well.
 #' @export
-simulate_admixture_migration <- function(input_population_1 = NA,
-                                         input_population_2 = NA,
+simulate_ancestry_migration <- function(input_population_1 = NA,
+                                        input_population_2 = NA,
                                          pop_size = c(100, 100),
                                          initial_frequencies = list(c(1.0, 0),
                                                                     c(0, 1.0)),
@@ -88,7 +88,8 @@ simulate_admixture_migration <- function(input_population_1 = NA,
                                          random_markers = TRUE) {
 
   if (stop_at_critical_fst) {
-    return(simulate_admixture_until(input_population_1 = input_population_1,
+    message("stopping when FST is: ", critical_fst)
+    return(simulate_ancestry_until(input_population_1 = input_population_1,
                                     input_population_2 = input_population_2,
                                     pop_size = pop_size,
                                     initial_frequencies = initial_frequencies,

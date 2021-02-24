@@ -8,15 +8,17 @@ testthat::test_that("fst", {
   run_time <- 1
   morgan <- 1
 
-  pop1 <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)
+  pop1 <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                        number_of_founders,
+                                                      morgan = morgan),
+                             pop_size = pop_size,
+                             total_runtime = run_time)
 
-  pop2 <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)
+  pop2 <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                        number_of_founders,
+                                                      morgan = morgan),
+                             pop_size = pop_size,
+                             total_runtime = run_time)
 
   pop2 <- increase_ancestor(pop2, number_of_founders)
 
@@ -40,15 +42,17 @@ testthat::test_that("fst", {
   morgan <- 1
   overlap <- 0.0
 
-  pop1 <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)
+  pop1 <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                        number_of_founders,
+                                                      morgan = morgan),
+                             pop_size = pop_size,
+                             total_runtime = run_time)
 
-  pop2 <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)
+  pop2 <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                        number_of_founders,
+                                                      morgan = morgan),
+                             pop_size = pop_size,
+                             total_runtime = run_time)
   pop2 <- increase_ancestor(pop2, number_of_founders)
 
   testthat::expect_true(verify_population(pop1))

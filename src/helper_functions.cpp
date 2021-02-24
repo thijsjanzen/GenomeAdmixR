@@ -602,6 +602,8 @@ NumericVector scale_markers(const Rcpp::NumericVector& markers,
 
   Rcpp::NumericVector outputmarkers(markers.size());
 
+ // double max = *std::max_element(markers.begin(), markers.end());
+
   for(int i = 0; i < markers.size(); ++i) {
     outputmarkers[i] = markers[i] * 1.0 / morgan;
   }
@@ -615,6 +617,8 @@ std::vector<double> scale_markers(const std::vector<double>& markers,
   }
 
   std::vector<double> outputmarkers(markers.size());
+
+ // double max = *std::max_element(markers.begin(), markers.end());
 
   for (size_t i = 0; i < markers.size(); ++i) {
     outputmarkers[i] = markers[i] * 1.0 / morgan;

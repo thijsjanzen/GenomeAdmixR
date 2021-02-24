@@ -8,10 +8,11 @@ test_that("calculate_average_LD", {
   run_time <- 1000
   morgan <- 1
 
-  pop1 <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)$population
+  pop1 <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                        number_of_founders,
+                                                      morgan = morgan),
+                             pop_size = pop_size,
+                             total_runtime = run_time)$population
 
   markers <- c(0.01, 0.99)
 
@@ -26,10 +27,11 @@ test_that("calculate_average_LD", {
   run_time <- 1
   morgan <- 1
 
-  pop1 <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)$population
+  pop1 <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                        number_of_founders,
+                                                      morgan = morgan),
+                             pop_size = pop_size,
+                             total_runtime = run_time)$population
 
   markers <- c(0.5, 0.5 + 1e-4)
 
@@ -49,10 +51,11 @@ test_that("calculate_LD_matrix", {
   morgan <- 1
   write_to_file <- FALSE
 
-  pop1 <- simulate_admixture(pop_size = pop_size,
-                             number_of_founders = number_of_founders,
-                             total_runtime = run_time,
-                             morgan = morgan)
+  pop1 <- simulate_admixture(module = ancestry_module(number_of_founders =
+                                                        number_of_founders,
+                                                      morgan = morgan),
+                             pop_size = pop_size,
+                             total_runtime = run_time)
 
   testthat::expect_true(verify_population(pop1))
 
