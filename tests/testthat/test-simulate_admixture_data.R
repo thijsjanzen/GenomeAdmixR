@@ -20,14 +20,14 @@ test_that("simulate_admixture_data", {
     used_nucleotides = 3:4
   )
 
-  simul_pop <- simulate_admixture_data(input_data = list(fake_input_data1,
-                                                         fake_input_data2),
-                                       initial_frequencies = c(0.5, 0.5),
-                                       pop_size = 100,
-                                       total_runtime = 100,
-                                       markers = chosen_markers,
-                                       morgan = 1,
-                                       verbose = FALSE)
+  simul_pop <- simulate_admixture(module = sequence_module(
+                                    molecular_data = list(fake_input_data1,
+                                                          fake_input_data2),
+                                    initial_frequencies = c(0.5, 0.5),
+                                    markers = chosen_markers,
+                                    morgan = 1),
+                                  pop_size = 100,
+                                  total_runtime = 100)
 
   testthat::expect_silent(
     plot_chromosome(simul_pop$population[[1]]$chromosome1)
@@ -98,14 +98,13 @@ test_that("simulate_admixture_data_mutation", {
   sub_matrix <- matrix(0.25, nrow = 4, ncol = 4)
 
   testthat::expect_message(
-    simul_pop <- simulate_admixture_data(input_data = combined_data,
-                                       pop_size = 100,
-                                       total_runtime = 100,
-                                       markers = chosen_markers,
-                                       morgan = 1,
-                                       verbose = FALSE,
-                                       mutation_rate = 0.1,
-                                       substitution_matrix = sub_matrix)
+    simul_pop <- simulate_admixture(module = sequence_module(
+                                                molecular_data = combined_data,
+                                                mutation_rate = 0.1,
+                                                substitution_matrix = sub_matrix,
+                                                markers = chosen_markers),
+                                    pop_size = 100,
+                                    total_runtime = 100)
   )
 
   a1 <- simul_pop$initial_frequency
@@ -128,14 +127,13 @@ test_that("simulate_admixture_data_mutation", {
 
     testthat::expect_message(
       testthat::expect_warning(
-      simul_pop <- simulate_admixture_data(input_data = combined_data,
-                                           pop_size = 100,
-                                           total_runtime = 100,
-                                           markers = chosen_markers,
-                                           morgan = 1,
-                                           verbose = FALSE,
-                                           mutation_rate = 1.0,
-                                           substitution_matrix = sub_matrix)
+        simul_pop <- simulate_admixture(module = sequence_module(
+                                                    molecular_data = combined_data,
+                                                    mutation_rate = 0.1,
+                                                    substitution_matrix = sub_matrix,
+                                                    markers = chosen_markers),
+                                        pop_size = 100,
+                                        total_runtime = 100)
       )
     )
 
@@ -167,14 +165,15 @@ test_that("simulate_admixture_data_ recombination map", {
   )
 
   pop_size <- 10000
-  simul_pop <- simulate_admixture_data(input_data = list(fake_input_data1,
-                                                         fake_input_data2),
-                                       initial_frequencies = c(0.5, 0.5),
-                                       pop_size = pop_size,
-                                       total_runtime = 2,
-                                       markers = chosen_markers,
-                                       recombination_rate = recom_rate,
-                                       verbose = TRUE)
+  simul_pop <- simulate_admixture(module = sequence_module(
+                                              molecular_data = list(fake_input_data1,
+                                                                    fake_input_data2),
+                                              initial_frequencies = c(0.5, 0.5),
+                                              markers = chosen_markers,
+                                              recombination_rate = recom_rate),
+                                  pop_size = pop_size,
+                                  total_runtime = 2,
+                                  verbose = TRUE)
 
 
   found_junctions <- c()

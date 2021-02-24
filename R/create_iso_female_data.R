@@ -7,6 +7,9 @@
 #' @param run_time Maximum runtime used for inbreeding
 #' @param morgan Size of the chromosome in Morgan (e.g. the number of crossovers
 #' during meiosis)
+#' @param recombination_rate rate in cM / Mbp, used to map recombination to the
+#' markers. If the recombination_rate is not set, the value for Morgan is used,
+#' assuming that the markers included span an entire chromosome.
 #' @param num_threads number of threads. Default is 1. Set to -1 to use all
 #' available threads
 #' @param verbose Displays verbose output if TRUE. Default value is FALSE
@@ -17,23 +20,15 @@
 #' are homozygous and genetically identical, whatever happens first.
 #' @return A list of length \code{n}, where each entry is a fully homozygous
 #' isofemale.
-#' @examples \donttest{
-#' data("dgrp2.3R.5k.data")
-#'
-#' isofemale <- create_iso_female_data(input_data = dgrp2.3R.5k.data,
-#'                                     n = 1,
-#'                                     inbreeding_pop_size = 100,
-#'                                     run_time = 100,
-#'                                     morgan = 1)
-#' }
 #' @export
-create_iso_female_data <- function(input_data = NA,
-                                   n = 1,
-                                   inbreeding_pop_size = 100,
-                                   run_time = 2000,
-                                   morgan = 1,
-                                   num_threads = 1,
-                                   verbose = FALSE) {
+iso_female_sequence <- function(input_data = NA,
+                                n = 1,
+                                inbreeding_pop_size = 100,
+                                run_time = 2000,
+                                morgan = 1,
+                                recombination_rate = NA,
+                                num_threads = 1,
+                                verbose = FALSE) {
 
   input_data <- verify_genomeadmixr_data(input_data)
 
@@ -63,11 +58,12 @@ create_iso_female_data <- function(input_data = NA,
                              input_data$genomes[index_indiv_2 + 1, ])
     class(parents) <- "genomeadmixr_data"
 
-    inbred_population <- simulate_admixture_data(input_data = parents,
-                                                 pop_size = inbreeding_pop_size,
-                                                 total_runtime = run_time,
-                                                 morgan = morgan,
-                                                 verbose = verbose)
+    inbred_population <- simulate_admixture(module = sequence_module(molecular_data = parents,
+                                                                     morgan = morgan,
+                                                                     recombination_rate = recombination_rate),
+                                            pop_size = inbreeding_pop_size,
+                                            total_runtime = run_time,
+                                            verbose = verbose)
     output_females[[i]] <-
       inbred_population$population[[
         sample(seq_along(inbred_population$population), 1)

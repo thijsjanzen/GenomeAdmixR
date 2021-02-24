@@ -1,24 +1,24 @@
 #' @keywords internal
 simulate_sequence_until <- function(input_data_population_1 = NA,
-                                          input_data_population_2 = NA,
-                                          pop_size = c(100, 100),
-                                          total_runtime = 100,
-                                          morgan = 1,
-                                          recombination_rate = NA,
-                                          num_threads = 1,
-                                          select_matrix = NA,
-                                          markers = NA,
-                                          verbose = FALSE,
-                                          multiplicative_selection = TRUE,
-                                          migration_rate = 0.0,
-                                          generations_between_update = 100,
-                                          critical_fst = 0.1,
-                                          sampled_individuals = 10,
-                                          number_of_markers = 100,
-                                          random_markers = TRUE,
-                                          mutation_rate = 0,
-                                          substitution_matrix =
-                                            matrix(1 / 4, nrow = 4, ncol = 4)) {
+                                    input_data_population_2 = NA,
+                                    pop_size = c(100, 100),
+                                    total_runtime = 100,
+                                    morgan = 1,
+                                    recombination_rate = NA,
+                                    num_threads = 1,
+                                    select_matrix = NA,
+                                    markers = NA,
+                                    verbose = FALSE,
+                                    multiplicative_selection = TRUE,
+                                    migration_rate = 0.0,
+                                    generations_between_update = 100,
+                                    critical_fst = 0.1,
+                                    sampled_individuals = 10,
+                                    number_of_markers = 100,
+                                    random_markers = TRUE,
+                                    mutation_rate = 0,
+                                    substitution_matrix =
+                                      matrix(1 / 4, nrow = 4, ncol = 4)) {
 
   pops <- simulate_sequence_migration(
     input_data_population_1 = input_data_population_1,
@@ -49,10 +49,10 @@ simulate_sequence_until <- function(input_data_population_1 = NA,
 
     pop1_for_data_cpp <-
       simulation_data_to_genomeadmixr_data(pops$population_1,
-                                   input_data_population_1$markers)
+                                           input_data_population_1$markers)
     pop2_for_data_cpp <-
       simulation_data_to_genomeadmixr_data(pops$population_2,
-                                   input_data_population_1$markers)
+                                           input_data_population_1$markers)
 
     pops <- simulate_sequence_migration(
       input_data_population_1 = pop1_for_data_cpp,

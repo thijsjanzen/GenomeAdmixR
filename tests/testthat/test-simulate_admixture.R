@@ -147,7 +147,7 @@ test_that("simulate admixture use, markers", {
   GenomeAdmixR::plot_difference_frequencies(pop)
 
   pop <- simulate_admixture(module = ancestry_module(markers =
-                                                       seq(0, 1,
+                                                       seq(0, 5,
                                                            length.out = 1000),
                                                      morgan = 5),
               pop_size = 1000,

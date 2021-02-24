@@ -325,6 +325,8 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
 try {
   rnd_t rndgen;
 
+  if (verbose) { Rcout << "entered cpp\n"; force_output();}
+
   std::vector< Fish_emp > Pop_1;
   std::vector< Fish_emp > Pop_2;
   std::vector<int> founder_labels = {0, 1, 2, 3, 4};
@@ -337,7 +339,7 @@ try {
                                     track_markers_R.end());
 
   int number_of_markers = track_markers.size();
-  if (verbose) Rcout << number_of_markers << "\n";
+  if (verbose) Rcout << "number_of_markers: " << number_of_markers << "\n";
 
   emp_genome emp_gen(marker_positions);
   if (recombination_map.size() == marker_positions.size()) {

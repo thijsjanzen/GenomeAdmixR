@@ -21,7 +21,7 @@ test_that("simulate_migration", {
   testthat::expect_true(verify_population(vx$population_1))
   testthat::expect_true(verify_population(vx$population_2))
 
-  testthat::expect_message(
+  testthat::expect_silent(
     vz <- simulate_admixture(module = ancestry_module(input_population =
                                                         list(vx$population_1[[1]],
                                                              vx$population_2[[2]]),
@@ -84,7 +84,7 @@ test_that("simulate_migration", {
 
   markers <- seq(from = 0.0, to = 1, by = 0.1)
 
-  testthat::expect_message(
+  testthat::expect_silent(
   vy <- simulate_admixture(module = ancestry_module(
                 migration = migration_settings(migration_rate = 0.0,
                                                initial_frequencies =
@@ -119,7 +119,7 @@ test_that("simulate_migration", {
   testthat::expect_equal(bv[1], 0)
   testthat::expect_equal(bv[2], 0)
 
-  testthat::expect_message(
+  testthat::expect_silent(
   vy <- simulate_admixture(module = ancestry_module(
     migration = migration_settings(migration_rate = 0.0,
                                    initial_frequencies =

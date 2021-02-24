@@ -77,7 +77,8 @@ simulate_admixture <- function(module = ancestry_module(),
       return(result)
     }
   } else {
-    message("found positive migration rate, assuming two connected populations")
+    if (verbose)
+      message("found positive migration rate, assuming two connected populations")
     if (module$type == "ancestry") {
       result <- simulate_ancestry_migration(input_population_1 =
                                               module$input_data$population_1,
@@ -115,12 +116,14 @@ simulate_admixture <- function(module = ancestry_module(),
       return(result)
     }
     if (module$type == "sequence") {
+      if (verbose)
+        message("found positive migration rate, assuming two connected populations")
       result <- simulate_sequence_migration(input_data_population_1 =
                                               module$input_data$population_1,
                                             input_data_population_2 =
                                               module$input_data$population_2,
                                             pop_size =
-                                              module$migration$pop_size,
+                                              module$migration$population_size,
                                             total_runtime = total_runtime,
                                             morgan = module$morgan,
                                             recombination_rate =

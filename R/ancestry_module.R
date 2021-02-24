@@ -25,7 +25,7 @@ ancestry_module <- function(input_population = NA,
                             markers = NA,
                             track_junctions = FALSE) {
 
-  if (migration$migration_rate > 0) {
+  if (!is.na(migration$migration_rate)) {
     if (!methods::is(input_population, "genomadmixr_simulation")) {
       if (is.list(input_population)) {
         input_population2 <- list()

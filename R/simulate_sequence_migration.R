@@ -68,26 +68,26 @@
 #' is returned as well.
 #' @export
 simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
-                                              input_data_population_2 = NA,
-                                              pop_size = c(100, 100),
-                                              total_runtime = 100,
-                                              morgan = 1,
-                                              recombination_rate = NA,
-                                              num_threads = 1,
-                                              select_matrix = NA,
-                                              markers = NA,
-                                              verbose = FALSE,
-                                              multiplicative_selection = TRUE,
-                                              migration_rate = 0.0,
-                                              stop_at_critical_fst = FALSE,
-                                              critical_fst = NA,
-                                              generations_between_update = 100,
-                                              sampled_individuals = 10,
-                                              number_of_markers = 100,
-                                              random_markers = TRUE,
-                                              mutation_rate = 0.0,
-                                              substitution_matrix =
-                                                matrix(1 / 4, 4, 4)) {
+                                        input_data_population_2 = NA,
+                                        pop_size = c(100, 100),
+                                        total_runtime = 100,
+                                        morgan = 1,
+                                        recombination_rate = NA,
+                                        num_threads = 1,
+                                        select_matrix = NA,
+                                        markers = NA,
+                                        verbose = FALSE,
+                                        multiplicative_selection = TRUE,
+                                        migration_rate = 0.0,
+                                        stop_at_critical_fst = FALSE,
+                                        critical_fst = NA,
+                                        generations_between_update = 100,
+                                        sampled_individuals = 10,
+                                        number_of_markers = 100,
+                                        random_markers = TRUE,
+                                        mutation_rate = 0.0,
+                                        substitution_matrix =
+                                          matrix(1 / 4, 4, 4)) {
 
   input_data_population_1 <- verify_genomeadmixr_data(input_data_population_1)
   input_data_population_2 <- verify_genomeadmixr_data(input_data_population_2)
@@ -97,29 +97,30 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
   }
 
   if (stop_at_critical_fst) {
+    message("stopping at FST of: ", critical_fst)
     return(simulate_sequence_until(input_data_population_1 =
-                                           input_data_population_1,
-                                         input_data_population_2 =
-                                           input_data_population_2,
-                                         pop_size = pop_size,
-                                         total_runtime = total_runtime,
-                                         morgan = morgan,
-                                         select_matrix = select_matrix,
-                                         markers = markers,
-                                         verbose = verbose,
-                                         multiplicative_selection =
-                                           multiplicative_selection,
-                                         migration_rate = migration_rate,
-                                         critical_fst = critical_fst,
-                                         generations_between_update =
-                                           generations_between_update,
-                                      sampled_individuals = sampled_individuals,
-                                         number_of_markers = number_of_markers,
-                                         random_markers = random_markers,
-                                         mutation_rate = mutation_rate,
-                                      substitution_matrix = substitution_matrix,
-                                         num_threads = num_threads,
-                                       recombination_rate = recombination_rate))
+                                     input_data_population_1,
+                                   input_data_population_2 =
+                                     input_data_population_2,
+                                   pop_size = pop_size,
+                                   total_runtime = total_runtime,
+                                   morgan = morgan,
+                                   select_matrix = select_matrix,
+                                   markers = markers,
+                                   verbose = verbose,
+                                   multiplicative_selection =
+                                     multiplicative_selection,
+                                   migration_rate = migration_rate,
+                                   critical_fst = critical_fst,
+                                   generations_between_update =
+                                     generations_between_update,
+                                   sampled_individuals = sampled_individuals,
+                                   number_of_markers = number_of_markers,
+                                   random_markers = random_markers,
+                                   mutation_rate = mutation_rate,
+                                   substitution_matrix = substitution_matrix,
+                                   num_threads = num_threads,
+                                   recombination_rate = recombination_rate))
   }
 
   if (class(input_data_population_1) != "genomeadmixr_data" ||
@@ -134,6 +135,9 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                        use_data = TRUE)
 
   if (length(pop_size) == 1) {
+    if (is.na(pop_size) ) {
+      stop("need to provide population size")
+    }
     pop_size <- c(pop_size, pop_size)
   }
 

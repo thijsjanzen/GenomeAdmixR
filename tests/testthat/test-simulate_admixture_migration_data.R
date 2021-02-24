@@ -25,15 +25,16 @@ test_that("simulate_admixture_data", {
   class(fake_input_data1) <- "genomeadmixr_data"
   class(fake_input_data2) <- "genomeadmixr_data"
 
-  simul_two_pop <- simulate_admixture_migration_data(
-    input_data_population_1 = fake_input_data1,
-    input_data_population_2 = fake_input_data2,
-                                       pop_size = c(100, 100),
-                                       total_runtime = 100,
-                                       markers = chosen_markers,
-                                       morgan = 1,
-    migration_rate = 0.0,
-                                       verbose = FALSE)
+  simul_two_pop <- simulate_admixture(
+    module = sequence_module(molecular_data = list(fake_input_data1,
+                                                   fake_input_data2),
+                             migration = migration_settings(
+                               population_size = c(100, 100),
+                               migration_rate = 0.0),
+                             markers = chosen_markers
+                            ),
+    total_runtime = 100,
+)
 
   a <- simul_two_pop$initial_frequency
   a1 <- a %>%
@@ -55,15 +56,16 @@ test_that("simulate_admixture_data", {
   testthat::expect_equal(b2$mean_freq, 1)
 
 
-  simul_two_pop <- simulate_admixture_migration_data(
-    input_data_population_1 = fake_input_data1,
-    input_data_population_2 = fake_input_data2,
-    pop_size = c(100, 100),
+  simul_two_pop <- simulate_admixture(
+    module = sequence_module(molecular_data = list(fake_input_data1,
+                                                   fake_input_data2),
+                             migration = migration_settings(
+                               population_size = c(100, 100),
+                               migration_rate = 0.5),
+                             markers = chosen_markers
+    ),
     total_runtime = 100,
-    markers = chosen_markers,
-    morgan = 1,
-    migration_rate = 0.5,
-    verbose = FALSE)
+  )
 
   a <- simul_two_pop$initial_frequency
   a1 <- a %>%
