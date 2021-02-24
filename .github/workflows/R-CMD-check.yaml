@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-      - threading
+      - modules
   pull_request:
     branches:
       - main
