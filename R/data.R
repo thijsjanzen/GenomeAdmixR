@@ -8,8 +8,9 @@
 #' @format genomeadmixr_data object
 #' @examples
 #' data("dgrp2.3R.5k.data")
-#' simulate_admixture_data(input_data = dgrp2.3R.5k.data,
-#'                         pop_size = 100,
-#'                         total_runtime = 10)
+#' simulate_admixture(
+#'        module = sequence_module(molecular_data = dgrp2.3R.5k.data),
+#'        pop_size = 100,
+#'        total_runtime = 10)
 #' @usage data("dgrp2.3R.5k.data")
 "dgrp2.3R.5k.data"

@@ -17,9 +17,10 @@ downloaded from <http://dgrp2.gnets.ncsu.edu/data.html>.
 }
 \examples{
 data("dgrp2.3R.5k.data")
-simulate_admixture_data(input_data = dgrp2.3R.5k.data,
-                        pop_size = 100,
-                        total_runtime = 10)
+simulate_admixture(
+       module = sequence_module(molecular_data = dgrp2.3R.5k.data),
+       pop_size = 100,
+       total_runtime = 10)
 }
 \references{
 Mackay, T., Richards, S., Stone, E. et al. The Drosophila
