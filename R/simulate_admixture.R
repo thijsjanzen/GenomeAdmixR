@@ -3,8 +3,8 @@
 #' ancestry blocks, with or without selection. Simulations can be started from
 #' scratch, or from a predefined input population.
 #' @param module Chosen module to simulate, either created with
-#' \code{\link{GenomeAdmixr::module_ancestry}} or
-#' \code{\link{GenomeAdmixr::module_sequence}}.
+#' \code{module_ancestry} or
+#' \code{module_sequence}.
 #' @param pop_size The number of individuals in the population. If the number is
 #' larger than the number of individuals in the input population (if provided),
 #' additional individuals are sampled randomly from the input population to

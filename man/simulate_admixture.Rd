@@ -16,8 +16,8 @@ simulate_admixture(
 }
 \arguments{
 \item{module}{Chosen module to simulate, either created with
-\code{\link{GenomeAdmixr::module_ancestry}} or
-\code{\link{GenomeAdmixr::module_sequence}}.}
+\code{module_ancestry} or
+\code{module_sequence}.}
 
 \item{pop_size}{The number of individuals in the population. If the number is
 larger than the number of individuals in the input population (if provided),
