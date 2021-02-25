@@ -3,18 +3,14 @@ context("simulate_migration")
 test_that("simulate_migration base", {
   testthat::skip_on_os("solaris")
   message("test simulate_migration")
-  vx <- simulate_admixture(module =
-                             ancestry_module(migration =
-                                               migration_settings(migration_rate = 0.1)),
-                           total_runtime = 100)
+  vx <- simulate_admixture(migration = migration_settings(migration_rate = 0.1),
+                           total_runtime = 5)
 })
 
 test_that("simulate_migration", {
   testthat::skip_on_os("solaris")
   message("test simulate_migration")
-  vx <- simulate_admixture(module =
-                             ancestry_module(migration =
-                                               migration_settings(migration_rate = 0.1)),
+  vx <- simulate_admixture(migration = migration_settings(migration_rate = 0.1),
                            total_runtime = 10)
 
   testthat::expect_true(verify_population(vx$population_1))
@@ -23,19 +19,18 @@ test_that("simulate_migration", {
   testthat::expect_silent(
     vz <- simulate_admixture(module = ancestry_module(input_population =
                                                         list(vx$population_1[[1]],
-                                                             vx$population_2[[2]]),
-                                                      migration = migration_settings(migration_rate = 0.01)),
+                                                             vx$population_2[[2]])),
+                            migration = migration_settings(migration_rate = 0.01),
                              total_runtime = 10)
   )
 
   markers <- seq(from = 0.4, to = 0.6, length.out = 100)
-  vy <- simulate_admixture(module =
-                            ancestry_module(migration =
-                                            migration_settings(migration_rate = 0.01,
-                                                               initial_frequencies =
-                                                                      list(c(0.5, 0.5, 0, 0),
-                                                                           c(0, 0, 0.5, 0.5))),
-                                            markers = markers),
+  vy <- simulate_admixture(module = ancestry_module(markers = markers),
+                           migration =
+                             migration_settings(migration_rate = 0.01,
+                                                initial_frequencies =
+                                                  list(c(0.5, 0.5, 0, 0),
+                                                       c(0, 0, 0.5, 0.5))),
                            total_runtime = 100)
 
   testthat::expect_true(verify_population(vy$population_1))
@@ -53,13 +48,12 @@ test_that("simulate_migration", {
   markers <- seq(from = 0.4, to = 0.60, by = 0.01)
 
   testthat::expect_message(
-    vy <- simulate_admixture(module = ancestry_module(
+    vy <- simulate_admixture(module = ancestry_module(markers = markers),
                              migration = migration_settings(migration_rate = 0.01,
                                                             initial_frequencies = list(c(1, 0),
                                                                                        c(0, 1))),
-                             markers = markers),
-                                       select_matrix = select_matrix,
-                                       total_runtime = 100)
+                             select_matrix = select_matrix,
+                             total_runtime = 100)
   )
 
   found <- c()
@@ -84,12 +78,11 @@ test_that("simulate_migration", {
   markers <- seq(from = 0.0, to = 1, by = 0.1)
 
   testthat::expect_silent(
-  vy <- simulate_admixture(module = ancestry_module(
+  vy <- simulate_admixture(module = ancestry_module(markers = markers),
                 migration = migration_settings(migration_rate = 0.0,
                                                initial_frequencies =
                                                  list(c(0.5, 0.5, 0, 0),
                                                       c(0, 0, 0.5, 0.5))),
-                markers = markers),
                 total_runtime = 100)
   )
 
@@ -119,13 +112,12 @@ test_that("simulate_migration", {
   testthat::expect_equal(bv[2], 0)
 
   testthat::expect_silent(
-  vy <- simulate_admixture(module = ancestry_module(
+  vy <- simulate_admixture(module = ancestry_module(markers = 0.5,
+                                                    track_junctions = TRUE),
     migration = migration_settings(migration_rate = 0.0,
                                    initial_frequencies =
                                      list(c(0.5, 0.5, 0, 0),
                                           c(0, 0, 0.5, 0.5))),
-    markers = 0.5,
-    track_junctions = TRUE),
     total_runtime = 100)
   )
 })

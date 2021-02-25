@@ -8,6 +8,7 @@ simulate_admixture(
   module = ancestry_module(),
   pop_size = 100,
   total_runtime = 100,
+  migration = migration_settings(),
   select_matrix = NA,
   multiplicative_selection = TRUE,
   verbose = FALSE,
@@ -25,6 +26,9 @@ additional individuals are sampled randomly from the input population to
 reach the intended size.}
 
 \item{total_runtime}{Number of generations}
+
+\item{migration}{settings associated with migration, should be created with
+\code{\link{migration_settings}}}
 
 \item{select_matrix}{Selection matrix indicating the markers which are under
 selection. If not provided by the user, the simulation proceeds neutrally. If

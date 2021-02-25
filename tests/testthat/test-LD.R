@@ -49,7 +49,6 @@ test_that("calculate_LD_matrix", {
   sampled_individuals <- pop_size
   run_time <- 1
   morgan <- 1
-  write_to_file <- FALSE
 
   pop1 <- simulate_admixture(module = ancestry_module(number_of_founders =
                                                         number_of_founders,

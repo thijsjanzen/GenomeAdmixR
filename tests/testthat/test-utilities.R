@@ -17,17 +17,13 @@ test_that("utilities", {
     plot_over_time(vx$frequencies, focal_location = 0.5)
   )
 
-  vy <- simulate_admixture(
-            module = ancestry_module(
-                        migration = migration_settings(migration_rate = 0.01)
-            ))
+  vy <- simulate_admixture(migration =
+                             migration_settings(migration_rate = 0.01))
   testthat::expect_error(plot_over_time(vy$frequencies, focal_location = 0.5))
 
   vy <- simulate_admixture(
-    module = ancestry_module(
-      migration = migration_settings(migration_rate = 0.01),
-      markers = 0.5
-    ))
+    module = ancestry_module(markers = 0.5),
+      migration = migration_settings(migration_rate = 0.01))
 
   testthat::expect_silent(
     plot_over_time(vy$frequencies, focal_location = 0.5)
@@ -39,39 +35,36 @@ test_that("initial_frequencies", {
   message("test initial_frequencies")
   testthat::expect_error(
     simulate_admixture(
-      module = ancestry_module(
           migration = migration_settings(migration_rate = 0.1,
-                                         initial_frequencies = c(0.5, 0.5))),
-      total_runtime = 100,
-      pop_size = c(1000, 1000))
+                                         initial_frequencies = c(0.5, 0.5),
+                                         pop_size = c(1000, 1000)),
+          total_runtime = 100
+      )
   )
   testthat::expect_message(
   testthat::expect_warning(
       vx <- simulate_admixture(total_runtime = 5,
-              module = ancestry_module(
                 migration = migration_settings(
                   migration = 0.0,
-                  initial_frequencies = c(1, 1, 0, 0, 0, 0, 1, 1))))
+                  initial_frequencies = c(1, 1, 0, 0, 0, 0, 1, 1)))
   ))
 
   # warning that frequencies don't add up to 1.
 testthat::expect_warning(
   vx <- simulate_admixture(total_runtime = 5,
-                           module = ancestry_module(
                              migration = migration_settings(
                                migration = 0.0,
                                initial_frequencies = list(c(1, 1, 0, 0),
                                                           c(0, 0, 1, 1)))
                            )
-  ))
+  )
 
   testthat::expect_error(
     simulate_admixture(total_runtime = 5,
-                       module = ancestry_module(
                          migration = migration_settings(
                            migration = 0.0,
                            initial_frequencies = c(1, 1, 0, 0,
-                                                   0, 0, 1, 1, 1)))
+                                                   0, 0, 1, 1, 1))
                        )
   )
 })

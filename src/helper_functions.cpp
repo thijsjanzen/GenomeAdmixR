@@ -16,7 +16,7 @@
 
 void force_output() {
 //  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
-  std::this_thread::sleep_for(std::chrono::milliseconds(3));
+  std::this_thread::sleep_for(std::chrono::milliseconds(300));
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();

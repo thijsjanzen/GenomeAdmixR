@@ -10,6 +10,8 @@
 #' additional individuals are sampled randomly from the input population to
 #' reach the intended size.
 #' @param total_runtime  Number of generations
+#' @param migration settings associated with migration, should be created with
+#' \code{\link{migration_settings}}
 #' @param select_matrix Selection matrix indicating the markers which are under
 #' selection. If not provided by the user, the simulation proceeds neutrally. If
 #' provided, each row in the matrix should contain five entries:
@@ -35,12 +37,13 @@
 simulate_admixture <- function(module = ancestry_module(),
                                pop_size = 100,
                                total_runtime = 100,
+                               migration = migration_settings(),
                                select_matrix = NA,
                                multiplicative_selection = TRUE,
                                verbose = FALSE,
                                num_threads = 1) {
 
-  if (is.na(module$migration$migration_rate)) {
+  if (is.na(migration$migration_rate)) {
     if (module$type == "ancestry") {
       result <- simulate_ancestry(input_population = module$input_data,
                                   pop_size = pop_size,
@@ -81,15 +84,38 @@ simulate_admixture <- function(module = ancestry_module(),
   } else {
     if (verbose)
       message("found positive migration rate, assuming two connected populations")
+
     if (module$type == "ancestry") {
+
+      if (!methods::is(module$input_population, "genomadmixr_simulation")) {
+        if (is.list(module$input_population)) {
+          input_population2 <- list()
+          input_population2$population_1 <- module$input_population[[1]]
+          input_population2$population_2 <- module$input_population[[2]]
+          module$input_population <- input_population2
+        } else {
+          if (length(module$input_population) == 1) {
+            if (is.na(module$input_population)) {
+              module$input_population <- list(population_1 = c(-1e6, -1e6),
+                                              population_2 = c(-1e6, -1e6))
+            }
+          }
+        }
+      }
+
+      if (verbose) {
+        message("starting simulate_ancestry_migration")
+        Sys.sleep(1)
+      }
+
       result <- simulate_ancestry_migration(input_population_1 =
-                                              module$input_data$population_1,
+                                              module$input_population$population_1,
                                             input_population_2 =
-                                              module$input_data$population_2,
+                                              module$input_population$population_2,
                                             pop_size =
-                                              module$migration$population_size,
+                                              migration$population_size,
                                             initial_frequencies =
-                                              module$migration$initial_frequencies,
+                                              migration$initial_frequencies,
                                             total_runtime = total_runtime,
                                             morgan = module$morgan,
                                             num_threads = num_threads,
@@ -101,31 +127,46 @@ simulate_admixture <- function(module = ancestry_module(),
                                             multiplicative_selection =
                                               multiplicative_selection,
                                             migration_rate =
-                                              module$migration$migration_rate,
+                                              migration$migration_rate,
                                             stop_at_critical_fst =
-                                              module$migration$stop_at_critical_fst,
+                                              migration$stop_at_critical_fst,
                                             critical_fst =
-                                              module$migration$critical_fst,
+                                              migration$critical_fst,
                                             generations_between_update =
-                                              module$migration$generations_between_update,
+                                              migration$generations_between_update,
                                             sampled_individuals =
-                                              module$migration$sampled_individuals,
+                                              migration$sampled_individuals,
                                             number_of_markers =
-                                              module$migration$number_of_markers,
+                                              migration$number_of_markers,
                                             random_markers =
-                                              module$migration$random_markers)
+                                              migration$random_markers)
 
       return(result)
     }
     if (module$type == "sequence") {
-      if (verbose)
-        message("found positive migration rate, assuming two connected populations")
+
+      if (!methods::is(module$input_data, "genomadmixr_simulation")) {
+        if (is.list(module$input_data)) {
+          input_population2 <- list()
+          input_population2$population_1 <- module$input_data[[1]]
+          input_population2$population_2 <- module$input_data[[2]]
+          module$input_data <- input_population2
+        } else {
+          if (length(module$input_data) == 1) {
+            if (is.na(module$input_data)) {
+              module$input_data <- list(population_1 = NA,
+                                        population_2 = NA)
+            }
+          }
+        }
+      }
+
       result <- simulate_sequence_migration(input_data_population_1 =
                                               module$input_data$population_1,
                                             input_data_population_2 =
                                               module$input_data$population_2,
                                             pop_size =
-                                              module$migration$population_size,
+                                              migration$population_size,
                                             total_runtime = total_runtime,
                                             morgan = module$morgan,
                                             recombination_rate =
@@ -137,18 +178,19 @@ simulate_admixture <- function(module = ancestry_module(),
                                             multiplicative_selection =
                                               multiplicative_selection,
                                             migration_rate =
-                                              module$migration$migration_rate,
+                                              migration$migration_rate,
                                             stop_at_critical_fst =
-                                              module$migration$stop_at_critical_fst,
-                                            critical_fst = module$migration$critical_fst,
+                                              migration$stop_at_critical_fst,
+                                            critical_fst =
+                                              migration$critical_fst,
                                             generations_between_update =
-                                              module$migration$generations_between_update,
+                                              migration$generations_between_update,
                                             sampled_individuals =
-                                              module$migration$sampled_individuals,
+                                              migration$sampled_individuals,
                                             number_of_markers =
-                                              module$migration$number_of_markers,
+                                              migration$number_of_markers,
                                             random_markers =
-                                              module$migration$random_markers,
+                                              migration$random_markers,
                                             mutation_rate =
                                               module$mutation_rate,
                                             substitution_matrix =

@@ -35,13 +35,12 @@ populations do not share founder labels.
 ```{r create populations}
 pops <-
   simulate_admixture(
-        module = ancestry_module(
-          migration = migration_settings(migration_rate = 0,
+        module = ancestry_module(),
+        migration = migration_settings(migration_rate = 0,
                                          population_size = c(100, 100),
                                          initial_frequencies =
                                  list(c(1, 1, 1, 1, 0, 0, 0, 0),
-                                      c(0, 0, 0, 0, 1, 1, 1, 1)))
-        ),
+                                      c(0, 0, 0, 0, 1, 1, 1, 1))),
      total_runtime = 1000)
 
 pop_1 <- pops$population_1

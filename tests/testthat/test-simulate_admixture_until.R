@@ -4,17 +4,15 @@ test_that("simulate_admixture_until", {
   testthat::skip_on_os("solaris")
   message("test simulate_admixture_until")
   vx <- simulate_admixture(total_runtime = 1000,
-                           module = ancestry_module(
-                             morgan = 1,
-                             migration = migration_settings(
+                            migration = migration_settings(
                                population_size = c(100, 100),
                                initial_frequencies = list(c(0.5, 0.5),
                                                                 c(0.5, 0.5)),
                                stop_at_critical_fst = TRUE,
                                generations_between_update = 10,
                                critical_fst = 0.2,
-                               migration_rate = 0.001)
-                           )
+                               migration_rate = 0.001),
+                           num_threads = -1
                           )
 
   fst_2 <- calculate_fst(vx$population_1,
@@ -57,13 +55,13 @@ test_that("simulate_admixture_until_data", {
     module = sequence_module(molecular_data =
                                list(fake_input_data1,
                                     fake_input_data2),
-                             migration = migration_settings(
-                               population_size = c(100, 100),
-                               migration_rate = 0.001,
-                               critical_fst = 0.2,
-                               generations_between_update = 10),
                              markers = chosen_markers,
                              morgan = 1),
+    migration = migration_settings(
+      population_size = c(100, 100),
+      migration_rate = 0.001,
+      critical_fst = 0.2,
+      generations_between_update = 10),
     total_runtime = 100)
 
 

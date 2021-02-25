@@ -154,7 +154,6 @@ simulate_ancestry_migration <- function(input_population_1 = NA,
   input_population_1 <- population_to_vector(input_population_1)
   input_population_2 <- population_to_vector(input_population_2)
 
-
   selected_pop <- simulate_migration_cpp(input_population_1,
                                          input_population_2,
                                          select_matrix,

@@ -13,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <chrono>
+
 #include "Fish.h"
 #include "random_functions.h"
 #include "helper_functions.h"
@@ -418,6 +420,10 @@ try {
     }
     if (verbose) Rcout << "drawn pop 2\n"; force_output();
   } else {
+    if (verbose) {
+      Rcout << "generating from scratch\n"; force_output();
+    }
+
     for (int j = 0; j < 2; ++j) {
       for (int i = 0; i < pop_size[j]; ++i) {
         NumericVector focal_freqs = starting_frequencies(j, _);
@@ -428,9 +434,12 @@ try {
         Fish p1 = Fish( founder_1 );
         Fish p2 = Fish( founder_2 );
 
-        if(j == 0) Pop_1.push_back(mate(p1,p2, morgan, rndgen));
-        if(j == 1) Pop_2.push_back(mate(p1,p2, morgan, rndgen));
+        if(j == 0) Pop_1.push_back(mate(p1, p2, morgan, rndgen));
+        if(j == 1) Pop_2.push_back(mate(p1, p2, morgan, rndgen));
       }
+    }
+    if (verbose) {
+      Rcout << "collecting all founder labels\n"; force_output();
     }
     for (int i = 0; i < starting_frequencies.ncol(); ++i) {
       founder_labels.push_back(i);

@@ -7,7 +7,6 @@
 sequence_module(
   molecular_data = NA,
   initial_frequencies = NA,
-  migration = migration_settings(),
   morgan = 1,
   recombination_rate = NA,
   markers = NA,
@@ -24,9 +23,6 @@ multiple genomeadmixr_data objects.}
 each provided input data set to the starting hybrid swarm. By default, equal
 frequencies are assumed. If a vector not summing to 1 is provided, the vector
 is normalized.}
-
-\item{migration}{settings associated with migration, should be created with
-\code{\link{migration_settings}}}
 
 \item{morgan}{Length of the molecular sequence in Morgan (e.g. the number of
 crossovers during meiosis), alternatively, the recombination rate can be

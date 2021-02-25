@@ -28,13 +28,12 @@ test_that("simulate_admixture_data", {
   simul_two_pop <- simulate_admixture(
     module = sequence_module(molecular_data = list(fake_input_data1,
                                                    fake_input_data2),
-                             migration = migration_settings(
-                               population_size = c(100, 100),
-                               migration_rate = 0.0),
-                             markers = chosen_markers
-                            ),
-    total_runtime = 100,
-)
+                             markers = chosen_markers),
+    migration = migration_settings(
+      population_size = c(100, 100),
+      migration_rate = 0.0),
+
+    total_runtime = 100)
 
   a <- simul_two_pop$initial_frequency
   a1 <- a %>%
@@ -49,7 +48,7 @@ test_that("simulate_admixture_data", {
   testthat::expect_true(all.equal(a1, b1))
 
   a2 <- subset(a1, a1$population == 1 &
-                   a1$ancestor == 1)
+                 a1$ancestor == 1)
   testthat::expect_equal(a2$mean_freq, 1)
   b2 <- subset(b1, b1$population == 1 &
                  b1$ancestor == 1)
@@ -59,13 +58,10 @@ test_that("simulate_admixture_data", {
   simul_two_pop <- simulate_admixture(
     module = sequence_module(molecular_data = list(fake_input_data1,
                                                    fake_input_data2),
-                             migration = migration_settings(
-                               population_size = c(100, 100),
-                               migration_rate = 0.5),
-                             markers = chosen_markers
-    ),
-    total_runtime = 100,
-  )
+                             markers = chosen_markers),
+    migration = migration_settings(population_size = c(100, 100),
+                                   migration_rate = 0.5),
+    total_runtime = 100)
 
   a <- simul_two_pop$initial_frequency
   a1 <- a %>%

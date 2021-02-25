@@ -10,6 +10,7 @@
 patterns in ancestry along the genome change after admixture. The simulation
 assumes Wright-Fisher dynamics, e.g. random mating and non-overlapping generations. In the simulation, instead of specific alleles, local ancestry is tracked, thus assuming that local molecular data can always be uniquely traced back to one of the founding individuals (populations). The package provides functionality to perform such simulations, but also to perform post-hoc statistical analyses and to visualize the obtained results.
 
+   Version 2.0.1 - Moved migration outside the modules \cr
    Version 2.0  - Added ancestry_module and sequence_module to distinguish between
                   implementations of the model \cr
    Version 1.2  - Added example sequencing data \cr

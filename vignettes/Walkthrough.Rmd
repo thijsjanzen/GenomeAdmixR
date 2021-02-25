@@ -111,14 +111,13 @@ First, we have to create two populations.
 ```{r create two populations}
 both_populations <-
   simulate_admixture(
-    module = ancestry_module(morgan = 1,
-                      migration = migration_settings(
-                        population_size = c(100, 100),
+    module = ancestry_module(morgan = 1),
+    migration = migration_settings(population_size = c(100, 100),
                         migration_rate = 0.0,
                         initial_frequencies =
                                  list(c(rep(1, 20), rep(0, 20)),
                                       c(rep(0, 20), rep(1, 20)))
-                      )),
+                      ),
     total_runtime = 1000)
 
 population_1 <- both_populations$population_1

@@ -8,7 +8,6 @@ ancestry_module(
   input_population = NA,
   number_of_founders = 2,
   initial_frequencies = NA,
-  migration = migration_settings(),
   morgan = 1,
   markers = NA,
   track_junctions = FALSE
@@ -25,9 +24,6 @@ tracked in the simulation}
 \item{initial_frequencies}{A vector describing the initial frequency of each
 ancestor / ancestry. By default, equal frequencies are assumed. If a vector
 not summing to 1 is provided, the vector is normalized.}
-
-\item{migration}{settings associated with migration, should be created with
-\code{\link{migration_settings}}}
 
 \item{morgan}{Length of the genomic stretch simulated, expressed in Morgan
 (e.g. the number of crossovers during meiosis)}

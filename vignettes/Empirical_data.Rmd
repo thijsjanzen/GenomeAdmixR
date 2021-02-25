@@ -124,18 +124,15 @@ plot_over_time(selected_pop$frequencies, focal_location = 50)
 
 # Migration
 Sequence data can also be used to seed a simulation where two populations 
-exchange migrants, by specifying parameters for the migration argument given in
-the sequence module using the migration_settings function:
+exchange migrants, by specifying parameters for the migration argument, using the migration_settings function:
 ```{r migration}
 
 migr_pop <-
   simulate_admixture(
         module = sequence_module(molecular_data = list(fake_input_data1,
-                                                       fake_input_data2),
-                                 migration = migration_settings(
-                                                migration_rate = 0.01,
-                                                population_size = c(100, 100)
-                                 )),
+                                                       fake_input_data2)),
+        migration = migration_settings(migration_rate = 0.01,
+                                       population_size = c(100, 100)),
         total_runtime = 100)
 ```
 
