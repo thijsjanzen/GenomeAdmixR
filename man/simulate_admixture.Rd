@@ -62,3 +62,23 @@ Individual based simulation of the breakdown of contiguous
 ancestry blocks, with or without selection. Simulations can be started from
 scratch, or from a predefined input population.
 }
+\examples{
+# local ancestry simulation
+two_populations <- simulate_admixture(
+                         module = ancestry_module(number_of_founders = 3,
+                                                  morgan = 0.8),
+                         migration = migration_settings(
+                                         migration_rate = 0.01,
+                                         population_size = c(100, 100)),
+                         total_runtime = 10)
+ # sequence simulation
+ data(dgrp2.3R.5k.data)
+
+sequence_population <-
+      simulate_admixture(
+                  module = sequence_module(molecular_data = dgrp2.3R.5k.data,
+                           recombination_rate = 0.2,
+                           mutation_rate = 1e-5),
+                  pop_size = 1000,
+                  total_runtime = 10)
+}

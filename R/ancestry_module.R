@@ -38,5 +38,6 @@ ancestry_module <- function(input_population = NA,
                        markers = markers,
                        track_junctions = track_junctions,
                        type = "ancestry")
+
   return(local_module)
 }
