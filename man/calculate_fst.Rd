@@ -43,11 +43,9 @@ F statistic.
 }
 \examples{
 two_populations <- simulate_admixture(
-                        module = ancestry_module(morgan = 1,
-                              migration = migration_settings(
-                                           migration_rate = 0.01,
-                                           population_size = c(100, 100))))
-
+                        module = ancestry_module(),
+                       migration = migration_settings(migration_rate = 0.01,
+                                           population_size = c(100, 100)))
 
 FST <- calculate_fst(pop1 = two_populations$population_1,
                      pop2 = two_populations$population_2,
