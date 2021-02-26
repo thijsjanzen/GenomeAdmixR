@@ -12,8 +12,9 @@ data("dgrp2.3R.5k.data")
 }
 \description{
 This data set contains sequences from the 3R chromosome.
-Included are 4603 SNPs, sequenced across 410 isofemale lines. Sequences were
-downloaded from <http://dgrp2.gnets.ncsu.edu/data.html>.
+Included are 4603 SNPs with at least 0.05 minor allele frequency,  sequenced
+across 410 isofemale lines. Sequences were downloaded from
+<http://dgrp2.gnets.ncsu.edu/data.html>.
 }
 \examples{
 data("dgrp2.3R.5k.data")
