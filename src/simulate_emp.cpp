@@ -45,69 +45,98 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
     stop("new_generation wrong size");
   }
 
-
-  int seed_index = 0;
-  std::mutex mutex;
-  int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
-  if (num_threads == -1) {
-    num_seeds = 20;
-  }
-
-  std::vector< int > seed_values(num_seeds);
-
-  { // ensure that rndgen only does this, and doesn't live outside scope.
-    rnd_t rndgen;
-    for (int i = 0; i < num_seeds; ++i) {
-      seed_values[i] = rndgen.random_number(INT_MAX); // large value
-    }
-  }
-
-  tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
-
-  tbb::parallel_for(
-    tbb::blocked_range<unsigned>(0, pop_size),
-    [&](const tbb::blocked_range<unsigned>& r) {
-
-      emp_genome local_emp_genome;
-      rnd_t rndgen2(seed_values[seed_index]);
-      {
-        std::lock_guard<std::mutex> m(mutex);
-        local_emp_genome = emp_gen_input;
-        seed_index++;
-        if (seed_index >= num_seeds) { // just in case.
-          for (int i = 0; i < num_seeds; ++i) {
-            seed_values[i] = rndgen2.random_number(INT_MAX);
-          }
-          seed_index = 0;
-        }
-      }
-
-      for (unsigned i = r.begin(); i < r.end(); ++i) {
-        int index1 = 0;
-        int index2 = 0;
-        if (use_selection) {
-          index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+  if (num_threads == 1) {
+    rnd_t rndgen2;
+    emp_genome local_emp_genome = emp_gen_input;
+    for (size_t i = 0; i < pop_size; ++i) {
+      int index1 = 0;
+      int index2 = 0;
+      if (use_selection) {
+        index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+        index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+        while(index1 == index2) {
           index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          while(index1 == index2) {
-            index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          }
-        } else {
-          index1 = rndgen2.random_number( pop_size );
+        }
+      } else {
+        index1 = rndgen2.random_number( pop_size );
+        index2 = rndgen2.random_number( pop_size );
+        while(index1 == index2) {
           index2 = rndgen2.random_number( pop_size );
-          while(index1 == index2) {
-            index2 = rndgen2.random_number( pop_size );
+        }
+      }
+
+      new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
+                                                      rndgen2,
+                                                      local_emp_genome),
+                                                      Pop[index2].gamete(morgan,
+                                                                         rndgen2,
+                                                                         local_emp_genome));
+    }
+  } else {
+
+    int seed_index = 0;
+    std::mutex mutex;
+    int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+    if (num_threads == -1) {
+      num_seeds = 20;
+    }
+
+    std::vector< int > seed_values(num_seeds);
+
+    { // ensure that rndgen only does this, and doesn't live outside scope.
+      rnd_t rndgen;
+      for (int i = 0; i < num_seeds; ++i) {
+        seed_values[i] = rndgen.random_number(INT_MAX); // large value
+      }
+    }
+
+    tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+      [&](const tbb::blocked_range<unsigned>& r) {
+
+        emp_genome local_emp_genome;
+        rnd_t rndgen2(seed_values[seed_index]);
+        {
+          std::lock_guard<std::mutex> m(mutex);
+          local_emp_genome = emp_gen_input;
+          seed_index++;
+          if (seed_index >= num_seeds) { // just in case.
+            for (int i = 0; i < num_seeds; ++i) {
+              seed_values[i] = rndgen2.random_number(INT_MAX);
+            }
+            seed_index = 0;
           }
         }
 
-        new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
-                                                        rndgen2,
-                                                        local_emp_genome),
-                                     Pop[index2].gamete(morgan,
-                                                        rndgen2,
-                                                        local_emp_genome));
+        for (unsigned i = r.begin(); i < r.end(); ++i) {
+          int index1 = 0;
+          int index2 = 0;
+          if (use_selection) {
+            index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            while(index1 == index2) {
+              index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            }
+          } else {
+            index1 = rndgen2.random_number( pop_size );
+            index2 = rndgen2.random_number( pop_size );
+            while(index1 == index2) {
+              index2 = rndgen2.random_number( pop_size );
+            }
+          }
+
+          new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
+                                                          rndgen2,
+                                                          local_emp_genome),
+                                                          Pop[index2].gamete(morgan,
+                                                                             rndgen2,
+                                                                             local_emp_genome));
+        }
       }
-    }
-  );
+    );
+  }
 
   return;
 }

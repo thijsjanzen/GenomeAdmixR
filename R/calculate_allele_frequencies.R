@@ -13,7 +13,8 @@
 #' wildpop =  simulate_admixture(
 #'    module = ancestry_module(number_of_founders = 20, morgan = 1),
 #'    pop_size = 1000,
-#'    total_runtime = 10)
+#'    total_runtime = 10,
+#'    num_threads = 1)
 #'
 #' freq_output <- calculate_allele_frequencies(wildpop,
 #'                                             progress_bar = TRUE)

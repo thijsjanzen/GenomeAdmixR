@@ -68,21 +68,13 @@ test_that("calculate_allele_frequencies", {
 
   freq_output <- calculate_allele_frequencies(sourcepop$population)
 
-  b <- freq_output %>%
-    dplyr::group_by(as.factor(ancestor)) %>%
-    dplyr::summarise("mean_freq" = mean(frequency))
+  b <- subset(freq_output, freq_output$location == 0)
 
-  testthat::expect_equal(mean(b$mean_freq),
+  testthat::expect_equal(mean(b$frequency),
                          1 / number_of_founders,
                          tolerance = 1 / number_of_founders)
-  testthat::expect_equal(sum(b$mean_freq), 1,
+  testthat::expect_equal(sum(b$frequency), 1,
                          tolerance = 1 / number_of_founders)
-
-  b <- freq_output %>%
-    dplyr::group_by(as.factor(location)) %>%
-    dplyr::summarise("mean_freq" = mean(frequency))
-
-  plot(b)
 
   number_of_founders <- 5
   sourcepop <- simulate_admixture(module = ancestry_module(number_of_founders =
@@ -98,12 +90,10 @@ test_that("calculate_allele_frequencies", {
   testthat::expect_equal(length(unique(freq_output$ancestor)),
                          number_of_founders)
 
-  b <- freq_output %>%
-    dplyr::group_by(as.factor(ancestor)) %>%
-    dplyr::summarise("mean_freq" = mean(frequency))
+  b <- subset(freq_output, freq_output$location == 0)
 
-  testthat::expect_equal(sum(b$mean_freq), 1, tolerance = 0.1)
-  testthat::expect_equal(mean(b$mean_freq),
+  testthat::expect_equal(sum(b$frequency), 1, tolerance = 0.1)
+  testthat::expect_equal(mean(b$frequency),
                          1 / number_of_founders,
                          tolerance = 0.1)
 

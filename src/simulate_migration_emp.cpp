@@ -78,71 +78,108 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
 
   std::vector<Fish_emp> new_generation(pop_size);
 
-  int seed_index = 0;
-  std::mutex mutex;
-  int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
-  if (num_threads == -1) {
-    num_seeds = 20;
-  }
-  std::vector< int > seed_values(num_seeds);
+  if (num_threads == 1) {
+    rnd_t rndgen2;
 
-  {
-    rnd_t rndgen;
-    for (int i = 0; i < num_seeds; ++i) {
-      seed_values[i] = rndgen.random_number(INT_MAX); // large value
+    for (size_t i = 0; i < pop_size; ++i) {
+
+
+      int index1, index2;
+      Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
+                                     use_selection,
+                                     fitness_source, fitness_migr,
+                                     max_fitness_source, max_fitness_migr,
+                                     index1,
+                                     rndgen2);
+      Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                     use_selection,
+                                     fitness_source, fitness_migr,
+                                     max_fitness_source, max_fitness_migr,
+                                     index2,
+                                     rndgen2);
+      while (index1 == index2) {
+        parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                              use_selection,
+                              fitness_source, fitness_migr,
+                              max_fitness_source, max_fitness_migr,
+                              index2,
+                              rndgen2);
+      }
+
+      new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen2, emp_gen),
+                                   parent2.gamete(size_in_morgan, rndgen2, emp_gen));
+
+      if (mutation_rate > 0)
+        mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
     }
-  }
+  } else {
 
-  tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+    int seed_index = 0;
+    std::mutex mutex;
+    int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+    if (num_threads == -1) {
+      num_seeds = 20;
+    }
+    std::vector< int > seed_values(num_seeds);
 
-  tbb::parallel_for(
-    tbb::blocked_range<unsigned>(0, pop_size),
-    [&](const tbb::blocked_range<unsigned>& r) {
+    {
+      rnd_t rndgen;
+      for (int i = 0; i < num_seeds; ++i) {
+        seed_values[i] = rndgen.random_number(INT_MAX); // large value
+      }
+    }
 
-      rnd_t rndgen2(seed_values[seed_index]);
-      {
-        std::lock_guard<std::mutex> _(mutex);
-        seed_index++;
-        if (seed_index > num_seeds) { // just in case.
-          for (int i = 0; i < num_seeds; ++i) {
-            seed_values[i] = rndgen2.random_number(INT_MAX);
+    tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+      [&](const tbb::blocked_range<unsigned>& r) {
+
+        rnd_t rndgen2(seed_values[seed_index]);
+        {
+          std::lock_guard<std::mutex> _(mutex);
+          seed_index++;
+          if (seed_index > num_seeds) { // just in case.
+            for (int i = 0; i < num_seeds; ++i) {
+              seed_values[i] = rndgen2.random_number(INT_MAX);
+            }
+            seed_index = 0;
           }
-          seed_index = 0;
-        }
-      }
-
-      for (unsigned i = r.begin(); i < r.end(); ++i) {
-
-
-        int index1, index2;
-        Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
-                                       use_selection,
-                                       fitness_source, fitness_migr,
-                                       max_fitness_source, max_fitness_migr,
-                                       index1,
-                                       rndgen2);
-        Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                                       use_selection,
-                                       fitness_source, fitness_migr,
-                                       max_fitness_source, max_fitness_migr,
-                                       index2,
-                                       rndgen2);
-        while (index1 == index2) {
-          parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                                use_selection,
-                                fitness_source, fitness_migr,
-                                max_fitness_source, max_fitness_migr,
-                                index2,
-                                rndgen2);
         }
 
-        new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen2, emp_gen),
-                                     parent2.gamete(size_in_morgan, rndgen2, emp_gen));
+        for (unsigned i = r.begin(); i < r.end(); ++i) {
 
-        if (mutation_rate > 0)
-          mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
-      }
-    });
+
+          int index1, index2;
+          Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
+                                         use_selection,
+                                         fitness_source, fitness_migr,
+                                         max_fitness_source, max_fitness_migr,
+                                         index1,
+                                         rndgen2);
+          Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                         use_selection,
+                                         fitness_source, fitness_migr,
+                                         max_fitness_source, max_fitness_migr,
+                                         index2,
+                                         rndgen2);
+          while (index1 == index2) {
+            parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                  use_selection,
+                                  fitness_source, fitness_migr,
+                                  max_fitness_source, max_fitness_migr,
+                                  index2,
+                                  rndgen2);
+          }
+
+          new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen2, emp_gen),
+                                       parent2.gamete(size_in_morgan, rndgen2, emp_gen));
+
+          if (mutation_rate > 0)
+            mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
+        }
+      });
+  }
   return new_generation;
 }
 

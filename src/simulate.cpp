@@ -56,45 +56,68 @@ void update_pop(const std::vector<Fish>& Pop,
     }
   }
 
-  int seed_index = 0;
-  std::mutex mutex;
+  if (num_threads == 1) {
+    rnd_t rndgen2;
+    for (unsigned i = 0; i < pop_size; ++i) {
+      int index1 = 0;
+      int index2 = 0;
+      if (use_selection) {
+        index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+        index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+        while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+      } else {
+        index1 = rndgen2.random_number( pop_size );
+        index2 = rndgen2.random_number( pop_size );
+        while(index2 == index1) index2 = rndgen2.random_number( pop_size );
+      }
 
-    tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+      new_generation[i] = mate(Pop[index1],
+                               Pop[index2],
+                                  morgan, rndgen2);
+    }
+  } else {
 
-    tbb::parallel_for(
-      tbb::blocked_range<unsigned>(0, pop_size),
-      [&](const tbb::blocked_range<unsigned>& r) {
 
-        rnd_t rndgen2(seed_values[seed_index]);
-        {
-          std::lock_guard<std::mutex> _(mutex);
-          seed_index++;
-          if (seed_index > num_seeds) { // just in case.
-            for (int i = 0; i < num_seeds; ++i) {
-              seed_values[i] = rndgen2.random_number(INT_MAX);
+    int seed_index = 0;
+    std::mutex mutex;
+
+      tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+
+      tbb::parallel_for(
+        tbb::blocked_range<unsigned>(0, pop_size),
+        [&](const tbb::blocked_range<unsigned>& r) {
+
+          rnd_t rndgen2(seed_values[seed_index]);
+          {
+            std::lock_guard<std::mutex> _(mutex);
+            seed_index++;
+            if (seed_index > num_seeds) { // just in case.
+              for (int i = 0; i < num_seeds; ++i) {
+                seed_values[i] = rndgen2.random_number(INT_MAX);
+              }
+              seed_index = 0;
             }
-            seed_index = 0;
-          }
-        }
-
-        for (unsigned i = r.begin(); i < r.end(); ++i) {
-          int index1 = 0;
-          int index2 = 0;
-          if (use_selection) {
-            index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-            index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-            while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          } else {
-            index1 = rndgen2.random_number( pop_size );
-            index2 = rndgen2.random_number( pop_size );
-            while(index2 == index1) index2 = rndgen2.random_number( pop_size );
           }
 
-          new_generation[i] = mate(Pop[index1],
-                                   Pop[index2],
-                                      morgan, rndgen2);
-        }
-    });
+          for (unsigned i = r.begin(); i < r.end(); ++i) {
+            int index1 = 0;
+            int index2 = 0;
+            if (use_selection) {
+              index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+              index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+              while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            } else {
+              index1 = rndgen2.random_number( pop_size );
+              index2 = rndgen2.random_number( pop_size );
+              while(index2 == index1) index2 = rndgen2.random_number( pop_size );
+            }
+
+            new_generation[i] = mate(Pop[index1],
+                                     Pop[index2],
+                                        morgan, rndgen2);
+          }
+      });
+  }
   return;
 }
 

@@ -145,19 +145,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                            double migration_rate,
                                            double size_in_morgan,
                                            int num_threads) {
-  return next_pop_migr_threaded(pop_1,
-                                pop_2,
-                                pop_size,
-                                fitness_source,
-                                fitness_migr,
-                                max_fitness_source,
-                                max_fitness_migr,
-                                use_selection,
-                                migration_rate,
-                                size_in_morgan,
-                                num_threads);
 
-/*
   if (num_threads > 1) {
     return next_pop_migr_threaded(pop_1,
                                   pop_2,
@@ -200,7 +188,7 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
 
     new_generation[i] = mate(parent1, parent2, size_in_morgan, rndgen2);
   }
-  return new_generation;*/
+  return new_generation;
 }
 
 std::vector< std::vector< Fish > > simulate_two_populations(

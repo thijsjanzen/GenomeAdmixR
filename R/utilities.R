@@ -641,7 +641,8 @@ check_for_bases <- function(pop) {
   using_sequencing_data <- FALSE
   # sum has to be at least 4, 0 represents missing data, but
   # might not be in the data
-  if (sum(unique_bases %in% c(0, 1, 2, 3, 4)) >= 4) {
+  if (sum(unique_bases %in% c(0, 1, 2, 3, 4)) >= 4 &&
+      sum(unique_bases %in% c(0, 1, 2, 3, 4)) <= 5) {
     using_sequencing_data <- TRUE
   }
   return(using_sequencing_data)
