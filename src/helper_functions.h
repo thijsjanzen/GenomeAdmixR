@@ -97,7 +97,7 @@ double calculate_fitness(const Fish_emp& focal,
                          bool multiplicative_selection);
 
 std::vector< std::vector<double > > update_frequency_tibble(const std::vector< Fish_emp >& pop,
-                                                            int marker_index,
+                                                            size_t marker_index,
                                                             double pos,
                                                             int t);
 

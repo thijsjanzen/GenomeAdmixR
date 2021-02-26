@@ -30,7 +30,7 @@ using namespace Rcpp;
 
 void update_pop_emp(const std::vector<Fish_emp>& Pop,
                     std::vector<Fish_emp>& new_generation,
-                    int pop_size,
+                    size_t pop_size,
                     double morgan,
                     const std::vector<double>& fitness,
                     const double& maxFitness,
@@ -117,7 +117,7 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
 std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& sourcePop,
                                                 const NumericMatrix& select_matrix,
                                                 const std::vector<double>& marker_positions,
-                                                int pop_size,
+                                                size_t pop_size,
                                                 int total_runtime,
                                                 double morgan,
                                                 bool verbose,
@@ -131,7 +131,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
                                                 const emp_genome& emp_gen,
                                                 int num_threads) {
 
-  int num_alleles = 5;
+  size_t num_alleles = 5;
   bool use_selection = false;
   if(select_matrix(0, 0) >= 0) use_selection = true;
 
@@ -163,7 +163,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
     // Rcout << t << " " << Pop.size() << "\n"; force_output();
     if(track_frequency) {
       // Rcout << t << " update frequency tibble\n";
-      for(int i = 0; i < track_markers.size(); ++i) {
+      for(size_t i = 0; i < track_markers.size(); ++i) {
         if(track_markers[i] < 0) break;
 
         int index = find_location(marker_positions, track_markers[i]);
@@ -212,7 +212,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
 
     if(use_selection) {
-      for(int i = 0; i < newGeneration.size(); ++i) {
+      for(size_t i = 0; i < newGeneration.size(); ++i) {
         fitness[i] = calculate_fitness(newGeneration[i],
                                        select_matrix,
                                        marker_positions,
@@ -268,7 +268,8 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
 
     // if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
     emp_genome emp_gen(marker_positions);
-    if (recombination_map.size() == marker_positions.size()) {
+    if (static_cast<size_t>(recombination_map.size()) ==
+        static_cast<size_t>(marker_positions.size())) {
       // if (verbose) {Rcout << "reading recombination map\n"; force_output();}
       std::vector<double> recom_map(recombination_map.begin(),
                                     recombination_map.end());

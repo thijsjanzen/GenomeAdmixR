@@ -381,7 +381,7 @@ double calculate_fitness(const Fish& focal,
 int draw_random_founder(const NumericVector& v,
                         rnd_t& rndgen) {
   double r = rndgen.uniform();
-  for (size_t i = 0; i < v.size(); ++i) {
+  for (size_t i = 0; i < static_cast<size_t>(v.size()); ++i) {
     r -= v[i];
     if(r <= 0) {
       return(i);
@@ -459,7 +459,7 @@ try {
     int index_c1 = i * 2;
     int index_c2 = index_c1 + 1;
 
-    for (size_t j = 0; j < markers.size(); ++j) {
+    for (size_t j = 0; j < static_cast<size_t>(markers.size()); ++j) {
       output(index_c1, j) = get_ancestry(Pop[i].chromosome1, markers[j]);
       output(index_c2, j) = get_ancestry(Pop[i].chromosome2, markers[j]);
     }
@@ -494,15 +494,15 @@ std::vector<std::string> combine_alleles(int a1, int a2) {
 
 // [[Rcpp::export]]
 StringMatrix simulation_data_to_plink_cpp(Rcpp::NumericVector input_population,
-                                                       Rcpp::NumericVector markers) {
+                                          Rcpp::NumericVector markers) {
 
 try {
   std::vector< Fish > Pop;
   Pop = convert_NumericVector_to_fishVector(input_population);
 
   StringMatrix output(Pop.size(), markers.size() * 2);
-  for(size_t i = 0; i < Pop.size(); ++i) {
-    for (size_t j = 0; j < markers.size(); ++j) {
+  for(size_t i = 0; i < static_cast<size_t>(Pop.size()); ++i) {
+    for (size_t j = 0; j < static_cast<size_t>(markers.size()); ++j) {
       //   Rcout << i << " " << j << "\n"; force_output();
       auto allele_1 = get_ancestry(Pop[i].chromosome1, markers[j]);
       auto allele_2 = get_ancestry(Pop[i].chromosome2, markers[j]);
@@ -728,7 +728,7 @@ List convert_to_list(const std::vector<Fish_emp>& v,
 }
 
 std::vector< std::vector<double > > update_frequency_tibble(const std::vector< Fish_emp >& pop,
-                                                            int marker_index,
+                                                            size_t marker_index,
                                                             double pos,
                                                             int t) {
 
