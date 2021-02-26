@@ -6,11 +6,6 @@
 
 using namespace Rcpp;
 
-#ifdef RCPP_USE_GLOBAL_ROSTREAM
-Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
-Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
-#endif
-
 // calculate_allele_spectrum_cpp
 arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population, Rcpp::NumericVector markers, bool progress_bar);
 RcppExport SEXP _GenomeAdmixR_calculate_allele_spectrum_cpp(SEXP input_populationSEXP, SEXP markersSEXP, SEXP progress_barSEXP) {

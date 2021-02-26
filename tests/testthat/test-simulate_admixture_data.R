@@ -172,8 +172,7 @@ test_that("simulate_admixture_data_ recombination map", {
                                               markers = chosen_markers,
                                               recombination_rate = recom_rate),
                                   pop_size = pop_size,
-                                  total_runtime = 2,
-                                  verbose = TRUE)
+                                  total_runtime = 2)
 
 
   found_junctions <- c()

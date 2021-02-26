@@ -27,7 +27,7 @@ using namespace Rcpp;
 
 void update_pop(const std::vector<Fish>& Pop,
                 std::vector<Fish>& new_generation,
-                int pop_size,
+                size_t pop_size,
                 double morgan,
                 const std::vector<double>& fitness,
                 const double& maxFitness,
@@ -123,7 +123,7 @@ void update_pop(const std::vector<Fish>& Pop,
 
 std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         const NumericMatrix& select,
-                                        int pop_size,
+                                        size_t pop_size,
                                         int total_runtime,
                                         double morgan,
                                         bool verbose,
@@ -211,7 +211,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
     Rcpp::checkUserInterrupt();
     Pop.swap(new_generation);
     if (use_selection) {
-      for (int i = 0; i < pop_size; ++i) {
+      for (size_t i = 0; i < pop_size; ++i) {
         fitness[i] = calculate_fitness(Pop[i], select, multiplicative_selection);
       }
       maxFitness = *std::max_element(fitness.begin(), fitness.end());

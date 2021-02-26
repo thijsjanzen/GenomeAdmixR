@@ -306,11 +306,11 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     pop_2 = new_generation_pop_2;
 
     if (use_selection) {
-      for (int i = 0; i < pop_1.size(); ++i) {
+      for (size_t i = 0; i < pop_1.size(); ++i) {
         fitness_pop_1[i] = calculate_fitness(pop_1[i], select,
                                              marker_positions, multiplicative_selection);
       }
-      for (int i = 0; i < pop_2.size(); ++i) {
+      for (size_t i = 0; i < pop_2.size(); ++i) {
         fitness_pop_2[i] = calculate_fitness(pop_2[i], select,
                                              marker_positions, multiplicative_selection);
       }
@@ -379,7 +379,8 @@ try {
   if (verbose) Rcout << "number_of_markers: " << number_of_markers << "\n";
 
   emp_genome emp_gen(marker_positions);
-  if (recombination_map.size() == marker_positions.size()) {
+  if (static_cast<size_t>(recombination_map.size()) ==
+      static_cast<size_t>(marker_positions.size())) {
     std::vector<double> recom_map(recombination_map.begin(),
                                   recombination_map.end());
 

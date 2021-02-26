@@ -304,10 +304,10 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     pop_2 = new_generation_pop_2;
 
     if (use_selection) {
-      for (int i = 0; i < pop_1.size(); ++i) {
+      for (size_t i = 0; i < pop_1.size(); ++i) {
         fitness_pop_1[i] = calculate_fitness(pop_1[i], select, multiplicative_selection);
       }
-      for (int i = 0; i < pop_2.size(); ++i) {
+      for (size_t i = 0; i < pop_2.size(); ++i) {
         fitness_pop_2[i] = calculate_fitness(pop_2[i], select, multiplicative_selection);
       }
     }
@@ -363,12 +363,12 @@ try {
   std::vector<int> founder_labels;
 
   if (input_population_1[0] > -1e4) {
-    if (verbose) Rcout << "Found input populations\n";  force_output();
+    if (verbose) { Rcout << "Found input populations\n";  force_output(); }
 
     Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
     Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
 
-    if (verbose)  Rcout << "done converting\n"; force_output();
+    if (verbose) { Rcout << "done converting\n"; force_output(); }
 
     for (auto it = Pop_1.begin(); it != Pop_1.end(); ++it) {
       update_founder_labels((*it).chromosome1, founder_labels);
@@ -380,11 +380,11 @@ try {
       update_founder_labels((*it).chromosome2, founder_labels);
     }
 
-    if (verbose) Rcout << "updated founder labels\n"; force_output();
+    if (verbose) { Rcout << "updated founder labels\n"; force_output(); }
     number_of_alleles = founder_labels.size();
 
     if (Pop_1.size() != pop_size[0]) {
-      if (verbose)   Rcout << "drawing pop 1: " << pop_size[0] << " from: " << Pop_1.size() << "\n"; force_output();
+      if (verbose)  { Rcout << "drawing pop 1: " << pop_size[0] << " from: " << Pop_1.size() << "\n"; force_output(); }
       // the populations have to be populated from the parents!
       std::vector< Fish > Pop_1_new;
       for(int j = 0; j < pop_size[0]; ++j) {
@@ -394,11 +394,13 @@ try {
       Pop_1 = Pop_1_new;
       Pop_1_new.clear(); // free up memory
     }
-    if (verbose)   Rcout << "drawn pop 1\n"; force_output();
+    if (verbose) { Rcout << "drawn pop 1\n"; force_output(); }
 
     if (Pop_2.size() != pop_size[1]) {
       std::vector< Fish > Pop_2_new;
-      if (verbose)  Rcout << "drawing pop 2: " << pop_size[1] << "\n"; force_output();
+      if (verbose) { Rcout << "drawing pop 2: " << pop_size[1] << "\n";
+                     force_output();
+      }
       for (int j = 0; j < pop_size[1]; ++j) {
         int index = rndgen.random_number(Pop_2.size());
         Pop_2_new.push_back(Pop_2[index]);
@@ -406,7 +408,7 @@ try {
       Pop_2 = Pop_2_new;
       Pop_2_new.clear(); // free up memory
     }
-    if (verbose) Rcout << "drawn pop 2\n"; force_output();
+    if (verbose) {Rcout << "drawn pop 2\n"; force_output();}
   } else {
     if (verbose) {
       Rcout << "generating from scratch\n"; force_output();
@@ -435,7 +437,7 @@ try {
     number_of_alleles = founder_labels.size();
   }
 
-  if (verbose) Rcout << "initial frequencies\n"; force_output();
+  if (verbose) { Rcout << "initial frequencies\n"; force_output();}
   int number_of_markers = track_markers.size();
   // 5 columns: time, loc, anc, type, population
   arma::mat frequencies_table(number_of_markers * number_of_alleles * total_runtime * 2, 5);
@@ -448,7 +450,7 @@ try {
 
   std::vector<double> junctions;
   std::vector< std::vector< Fish> > output_populations;
-  if (verbose) Rcout << "starting simulation\n"; force_output();
+  if (verbose) {Rcout << "starting simulation\n"; force_output();}
   output_populations = simulate_two_populations(Pop_1,
                                                 Pop_2,
                                                 select,
@@ -468,7 +470,7 @@ try {
                                                 num_threads,
                                                 rndgen);
 
-  if (verbose) Rcout << "done simulating\n"; force_output();
+  if (verbose) {Rcout << "done simulating\n"; force_output();}
 
   arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
                                                                        output_populations[1],
