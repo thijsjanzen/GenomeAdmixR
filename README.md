@@ -19,6 +19,13 @@ Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) 
 More information can be found in the accompanying paper, currently available as pre-print here : https://doi.org/10.1101/2020.10.19.343491
 
 # Version history
+Version 2.0.1 - Moved migration outside the modules <br />
+Version 2.0  - Added ancestry_module and sequence_module to distinguish between implementations of the model <br />
+Version 1.2  - Added example sequencing data <br />
+Version 1.2  - Added the option to load sequence data for admixing <br />
+Version 1.1  - Fixed a minor bug with plot_joyplot_frequencies <br />
+Version 1.1  - Improved tests <br />
+Version 1.1  - Improved recombination code (again) <br />
 Version 1.00 - Release associated with bioRxiv submission, to be found here: https://doi.org/10.1101/2020.10.19.343491 <br />
 Version 0.66 - Improved recombination code, about twice as fast <br />
 Version 0.65 - Added testing and added logo <br />
