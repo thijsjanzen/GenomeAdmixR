@@ -147,19 +147,6 @@ test_that("select population two_alleles regions", {
   testthat::expect_equal(length(selected_pop$population), 100)
   testthat::expect_true(verify_population(selected_pop$population))
 
-  plot_joyplot_frequencies(selected_pop$frequencies,
-                      time_points = seq(from = 0,
-                                        to = 100,
-                                        by = 10)
-                      )
-
-  plot_joyplot_frequencies(selected_pop$frequencies,
-                      time_points = seq(from = 0,
-                                        to = 100,
-                                        by = 10),
-                      picked_ancestor = 1
-                     )
-
   plot_start_end(selected_pop)
   plot_start_end(selected_pop,
                  picked_ancestor = 0)
@@ -167,7 +154,6 @@ test_that("select population two_alleles regions", {
   plot_difference_frequencies(selected_pop)
   plot_difference_frequencies(selected_pop,
                               picked_ancestor = 0)
-
 })
 
 test_that("selection abuse", {
