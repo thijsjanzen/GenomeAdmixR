@@ -42,8 +42,8 @@ test_that("simulate_migration", {
 
   select_matrix <- matrix(NA, nrow = 1, ncol = 5)
 
-  s <- 0.5
-  select_matrix[1, ] <- c(0.5, 0.5, 0.5 + 0.5 * s, 0.5 + s, 0)
+  s <- 5
+  select_matrix[1, ] <- c(0.5, 1.0, 1.0 + 0.25 * s, 1.0 + s, 0)
 
   markers <- seq(from = 0.4, to = 0.60, by = 0.01)
 
@@ -56,60 +56,12 @@ test_that("simulate_migration", {
                              total_runtime = 100)
   )
 
-  found <- c()
-  for (loc in unique(vy$final_frequency$location)) {
-    a <- subset(vy$final_frequency, vy$final_frequency$location == loc &
-                  vy$final_frequency$ancestor == 0)
-    b <- mean(a$frequency)
-    found <- rbind(found, c(loc, b))
-  }
-  a2 <- subset(found, found[, 1] == 0.5)
-
-  testthat::expect_equal(a2[1], 0.5)
-  testthat::expect_gt(a2[2], 0.5)
-
   plot_difference_frequencies(vy)
   plot_start_end(vy)
 
   plot_frequencies(vy$population_1, locations = c(0.3, 0.5, 0.8))
   plot_frequencies(vy$population_2, locations = c(0.3, 0.5, 0.8))
   vv <- plot_joyplot_frequencies(vy$frequencies, time_points = c(0, 10, 50))
-
-  markers <- seq(from = 0.0, to = 1, by = 0.1)
-
-  testthat::expect_silent(
-  vy <- simulate_admixture(module = ancestry_module(markers = markers),
-                migration = migration_settings(migration_rate = 0.0,
-                                               initial_frequencies =
-                                                 list(c(0.5, 0.5, 0, 0),
-                                                      c(0, 0, 0.5, 0.5))),
-                total_runtime = 100)
-  )
-
-  a1 <- subset(vy$final_frequency, vy$final_frequency$population == 1)
-  # this population should only have ancestors 0 and 1
-
-  bv <- c()
-  cnt <- 1
-  for (i in unique(a1$ancestor)) {
-    b1 <- subset(a1, a1$ancestor == i)
-    bv[cnt] <- mean(b1$frequency)
-    cnt <- cnt + 1
-  }
-
-  testthat::expect_equal(bv[3], 0)
-  testthat::expect_equal(bv[4], 0)
-
-  a2 <- subset(vy$final_frequency, vy$final_frequency$population == 2)
-  bv <- c()
-  cnt <- 1
-  for (i in unique(a2$ancestor)) {
-    b1 <- subset(a2, a2$ancestor == i)
-    bv[cnt] <- mean(b1$frequency)
-    cnt <- cnt + 1
-  }
-  testthat::expect_equal(bv[1], 0)
-  testthat::expect_equal(bv[2], 0)
 
   testthat::expect_silent(
   vy <- simulate_admixture(module = ancestry_module(markers = 0.5,

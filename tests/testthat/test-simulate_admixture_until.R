@@ -3,7 +3,7 @@ context("simulate_admixture_until")
 test_that("simulate_admixture_until", {
   testthat::skip_on_os("solaris")
   message("test simulate_admixture_until")
-  vx <- simulate_admixture(total_runtime = 1000,
+  vx <- simulate_admixture(total_runtime = 100,
                             migration = migration_settings(
                                population_size = c(100, 100),
                                initial_frequencies = list(c(0.5, 0.5),
@@ -11,8 +11,7 @@ test_that("simulate_admixture_until", {
                                stop_at_critical_fst = TRUE,
                                generations_between_update = 10,
                                critical_fst = 0.2,
-                               migration_rate = 0.001),
-                           num_threads = -1
+                               migration_rate = 0.001)
                           )
 
   fst_2 <- calculate_fst(vx$population_1,

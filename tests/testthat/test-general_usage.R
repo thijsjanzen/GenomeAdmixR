@@ -96,8 +96,7 @@ test_that("general usage", {
                                      stop_at_critical_fst = TRUE,
                                      critical_fst = 0.05,
                                      generations_between_update = 100),
-    total_runtime = 10,
-    num_threads = 4)
+    total_runtime = 10)
 )
 })
 
