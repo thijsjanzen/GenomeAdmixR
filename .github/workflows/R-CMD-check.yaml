@@ -23,8 +23,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-2019}
+          - {os: windows-latest}
           - {os: macOS-latest, r: 'release'}
+          - {os: macos-11.0}
           - {os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
 
     env:
