@@ -40,7 +40,6 @@ testthat::test_that("fst", {
   number_of_founders <- 10
   run_time <- 1000
   morgan <- 1
-  overlap <- 0.0
 
   pop1 <- simulate_admixture(module = ancestry_module(number_of_founders =
                                                         number_of_founders,

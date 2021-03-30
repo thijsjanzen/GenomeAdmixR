@@ -19,6 +19,7 @@ test_that("utilities", {
 
   vy <- simulate_admixture(migration =
                              migration_settings(migration_rate = 0.01))
+
   testthat::expect_error(plot_over_time(vy$frequencies, focal_location = 0.5))
 
   vy <- simulate_admixture(
