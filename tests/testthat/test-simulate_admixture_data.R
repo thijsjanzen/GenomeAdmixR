@@ -146,7 +146,7 @@ test_that("simulate_admixture_data_mutation", {
   }
 })
 
-test_that("simulate_admixture_data_ recombination map", {
+test_that("simulate_admixture_data_recombination_map", {
   num_markers <- 2
   num_indiv <- 100
   chosen_markers <- c(1000000, 2000000)
