@@ -245,7 +245,7 @@ try {
   track_markers = scale_markers(track_markers, morgan);
 
   if (input_population[0] > -1e4) {
-  //  Rcout << "found input population, converting\n"; force_output();
+   if (verbose) { Rcout << "found input population, converting\n"; force_output(); }
 
     Pop = convert_NumericVector_to_fishVector(input_population);
 
@@ -254,6 +254,7 @@ try {
       update_founder_labels((*it).chromosome1, founder_labels);
       update_founder_labels((*it).chromosome2, founder_labels);
     }
+
     number_of_alleles = founder_labels.size();
 
     if (Pop.size() != pop_size) {
@@ -266,6 +267,7 @@ try {
       Pop = Pop_new;
     }
   } else {
+    if (verbose) { Rcout << "starting generating random starting population\n"; force_output(); }
     for (size_t i = 0; i < pop_size; ++i) {
       int founder_1 = draw_random_founder(starting_proportions, rndgen);
       int founder_2 = draw_random_founder(starting_proportions, rndgen);
@@ -312,9 +314,9 @@ try {
                                                     rndgen,
                                                     num_threads);
 
- // if (verbose) {
-//    Rcout << "done simulating\n";
-//  }
+  if (verbose) {
+    Rcout << "done simulating\n";
+  }
   arma::mat final_frequencies = update_all_frequencies_tibble(outputPop,
                                                               track_markers,
                                                               founder_labels,

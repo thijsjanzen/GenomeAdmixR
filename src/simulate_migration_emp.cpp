@@ -188,7 +188,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     const std::vector< Fish_emp>& source_pop_2,
     const std::vector<double>& marker_positions,
     const NumericMatrix& select,
-    const NumericVector& pop_size,
+    const std::vector<size_t>& pop_size,
     int total_runtime,
     double morgan,
     bool verbose,
@@ -347,7 +347,7 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericMatrix& input_population_2,
                                 const NumericVector& marker_positions_R,
                                 NumericMatrix select,
-                                NumericVector pop_size,
+                                const NumericVector& pop_sizes,
                                 int total_runtime,
                                 double morgan,
                                 bool verbose,
@@ -374,6 +374,10 @@ try {
 
   std::vector<double> track_markers(track_markers_R.begin(),
                                     track_markers_R.end());
+
+  std::vector<size_t> pop_size(2);
+  pop_size[0] = static_cast<size_t>(pop_sizes[0]);
+  pop_size[1] = static_cast<size_t>(pop_sizes[1]);
 
   int number_of_markers = track_markers.size();
   if (verbose) Rcout << "number_of_markers: " << number_of_markers << "\n";

@@ -148,9 +148,9 @@ test_that("simulate_admixture_data_mutation", {
 
 test_that("simulate_admixture_data_recombination_map", {
   num_markers <- 2
-  num_indiv <- 100
+  num_indiv <- 10
   chosen_markers <- c(1000000, 2000000)
-  recom_rate <- 5
+  recom_rate <- 1
 
   fake_input_data1 <- create_artificial_genomeadmixr_data(
     number_of_individuals = num_indiv,
@@ -191,7 +191,12 @@ test_that("simulate_admixture_data_recombination_map", {
   # 0.5: only half the population is admixing
   # 2  : 2 chromosomes
   # recom_rate / 100 : recom_rate is in cM, and we want in Morgan.
-  expected_num_j <- pop_size * 2 * (recom_rate / 100) * 0.5
+  # recom_rate per bp -> div by 1e6
+  # then, num indivs (pop size) * 0.5 * recom_prob = expected junctions
 
-  testthat::expect_equal(all_j, expected_num_j, tolerance = 0.2)
+  recom_prob <-  (recom_rate / 100) * diff(chosen_markers) / 1e6
+
+  expected_num_j <- 2 * pop_size * recom_prob * 0.5
+
+  testthat::expect_equal(all_j, expected_num_j, tolerance = 0.3)
 })

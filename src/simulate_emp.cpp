@@ -295,11 +295,11 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
     std::vector<int> track_markers(track_markers_R.begin(),
                                    track_markers_R.end());
 
-    // if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
+    if (verbose) {Rcout << "reading emp_gen\n"; force_output();}
     emp_genome emp_gen(marker_positions);
     if (static_cast<size_t>(recombination_map.size()) ==
         static_cast<size_t>(marker_positions.size())) {
-      // if (verbose) {Rcout << "reading recombination map\n"; force_output();}
+      if (verbose) {Rcout << "reading recombination map\n"; force_output();}
       std::vector<double> recom_map(recombination_map.begin(),
                                     recombination_map.end());
 
@@ -317,10 +317,11 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
     //  track_markers = scale_markers(track_markers, morgan);
 
     if (input_population(0, 0) > -1e4) {
-      // Rcout << "converting\n"; force_output();
+      if (verbose) {Rcout << "converting\n"; force_output();}
       Pop = convert_numeric_matrix_to_fish_vector(input_population);
 
-      //  Rcout << "drawing from pop\n"; force_output();
+      if (verbose) { Rcout << "drawing from pop\n";
+                     Rcout << Pop.size() << "\n"; force_output(); }
       // the new population has to be seeded from the input!
       std::vector< Fish_emp > Pop_new;
       for (size_t j = 0; j < pop_size; ++j) {
@@ -328,7 +329,7 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
         Pop_new.push_back(Pop[index]);
       }
       Pop = Pop_new;
-      //   Rcout << "new pop drawn\n";
+      if (verbose) { Rcout << "new pop drawn\n"; }
     } else {
       Rcpp::stop("can not run without input data");
     }
@@ -353,7 +354,7 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
       frequencies_table = x;
     }
 
-    // if (verbose) {Rcout << "initial_frequencies\n"; force_output();}
+    if (verbose) {Rcout << "initial_frequencies\n"; force_output();}
     arma::mat initial_frequencies = update_all_frequencies_tibble(Pop,
                                                                   marker_positions,
                                                                   marker_positions,
@@ -361,7 +362,7 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                                                                   morgan);
 
 
-    //  if (verbose) {Rcout << "simulate\n"; force_output();}
+    if (verbose) {Rcout << "simulate\n"; force_output();}
     std::vector<Fish_emp> output_pop = simulate_population_emp(Pop,
                                                                select,
                                                                marker_positions,
@@ -379,14 +380,14 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                                                                emp_gen,
                                                                num_threads);
 
-    // Rcout << "final frequencies\n"; force_output();
+    if (verbose) { Rcout << "final frequencies\n"; force_output(); }
     arma::mat final_frequencies = update_all_frequencies_tibble(output_pop,
                                                                 marker_positions,
                                                                 marker_positions,
                                                                 total_runtime,
                                                                 morgan);
 
-    //  Rcout << "convert to list\n"; force_output();
+    if (verbose) { Rcout << "convert to list\n"; force_output(); }
     return List::create( Named("population") = convert_to_list(output_pop,
                                marker_positions),
                                Named("frequencies") = frequencies_table,

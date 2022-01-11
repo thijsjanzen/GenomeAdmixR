@@ -649,13 +649,14 @@ std::vector< Fish_emp > convert_numeric_matrix_to_fish_vector(
   const Rcpp::NumericMatrix& input_population) {
 
   std::vector< Fish_emp > output;
-  for(int i = 0; i < (input_population.nrow() - 1); i+= 2) {
-
+  for(int i = 0; i < (input_population.nrow() - 1); i += 2) {
+   // Rcpp::Rcout << i << " " << input_population.nrow() << "\n";
     Rcpp::NumericVector cc1 = input_population(i, _);
     Rcpp::NumericVector cc2 = input_population(i + 1 , _);
     std::vector<int> c1(cc1.begin(), cc1.end());
     std::vector<int> c2(cc2.begin(), cc2.end());
-    output.emplace_back( Fish_emp(c1, c2));
+
+    output.push_back( Fish_emp(c1, c2) );
   }
   return(output);
 }
