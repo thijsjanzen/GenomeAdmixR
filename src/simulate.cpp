@@ -13,8 +13,6 @@
 #include <vector>
 #include <algorithm>
 
-#include <iostream>
-
 #include "Fish.h"
 #include "random_functions.h"
 #include "helper_functions.h"
