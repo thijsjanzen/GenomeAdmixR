@@ -38,7 +38,7 @@ test_that("initial_frequencies", {
     simulate_admixture(
           migration = migration_settings(migration_rate = 0.1,
                                          initial_frequencies = c(0.5, 0.5),
-                                         pop_size = c(1000, 1000)),
+                                         population_size = c(1000, 1000)),
           total_runtime = 100
       )
   )
@@ -46,7 +46,7 @@ test_that("initial_frequencies", {
   testthat::expect_warning(
       vx <- simulate_admixture(total_runtime = 5,
                 migration = migration_settings(
-                  migration = 0.0,
+                  migration_rate = 0.0,
                   initial_frequencies = c(1, 1, 0, 0, 0, 0, 1, 1)))
   ))
 
@@ -54,7 +54,7 @@ test_that("initial_frequencies", {
 testthat::expect_warning(
   vx <- simulate_admixture(total_runtime = 5,
                              migration = migration_settings(
-                               migration = 0.0,
+                               migration_rate = 0.0,
                                initial_frequencies = list(c(1, 1, 0, 0),
                                                           c(0, 0, 1, 1)))
                            )
@@ -63,7 +63,7 @@ testthat::expect_warning(
   testthat::expect_error(
     simulate_admixture(total_runtime = 5,
                          migration = migration_settings(
-                           migration = 0.0,
+                           migration_rate = 0.0,
                            initial_frequencies = c(1, 1, 0, 0,
                                                    0, 0, 1, 1, 1))
                        )
@@ -77,3 +77,15 @@ testthat::test_that("random markers", {
   vy <- create_random_markers(1e6)
   testthat::expect_true(length(vy) > length(vx))
 })
+
+testthat::test_that("verify datatypes", {
+
+  vx <- simulate_admixture(total_runtime = 2,
+                           pop_size = 100,
+                           migration = migration_settings(migration_rate = 0.001))
+
+testthat::expect_warning(
+  check_input_pop(vx)
+)
+})
+

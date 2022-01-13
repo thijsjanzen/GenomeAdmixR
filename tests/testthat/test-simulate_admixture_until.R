@@ -9,7 +9,7 @@ test_that("simulate_admixture_until", {
                                initial_frequencies = list(c(0.5, 0.5),
                                                                 c(0.5, 0.5)),
                                stop_at_critical_fst = TRUE,
-                               generations_between_update = 10,
+                               generations_between_update = 2,
                                critical_fst = 0.2,
                                migration_rate = 0.001)
                           )

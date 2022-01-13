@@ -19,6 +19,12 @@ test_that("calculate_average_LD", {
   outcome <- calculate_ld(pop1,
                           markers = markers)
 
+  testthat::expect_message(
+    calculate_ld(pop1,
+                 markers = markers,
+                 verbose = TRUE)
+  )
+
   testthat::expect_equal(mean(outcome$ld_matrix, na.rm = T), 0.0)
 
 
