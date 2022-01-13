@@ -16,7 +16,7 @@ A package to perfrom individual-based simulations of genome evolution with ances
 Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) at the R User Group at the University of Groningen, Groningen, The Netherlands. You can watch his presentation [here](https://p2gonew.serverspace.rug.nl/p2g/player/player.aspx?id=cxbKvM)  (audio starts after 1 min)
 
 # More information
-More information can be found in the accompanying paper, currently available as pre-print here : https://doi.org/10.1101/2020.10.19.343491
+More information can be found in the accompanying paper :  https://doi.org/10.1111/2041-210X.13612
 
 # Version history
 Version 2.0.1 - Moved migration outside the modules <br />
