@@ -10,7 +10,8 @@
 patterns in ancestry along the genome change after admixture. The simulation
 assumes Wright-Fisher dynamics, e.g. random mating and non-overlapping generations. In the simulation, instead of specific alleles, local ancestry is tracked, thus assuming that local molecular data can always be uniquely traced back to one of the founding individuals (populations). The package provides functionality to perform such simulations, but also to perform post-hoc statistical analyses and to visualize the obtained results.
 
-   Versopm 2.1.2  - Improved testing \cr
+   Version 2.1.3  - Changed DOI link in description \cr
+   Version 2.1.2  - Improved testing \cr
    Version 2.1.1  - Removed GNU make dependency \cr
    Version 2.1    - Removed error in calculate_allele_frequency \cr
    Version 2.0.1  - Moved migration outside the modules \cr

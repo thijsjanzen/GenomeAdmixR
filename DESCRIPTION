@@ -1,7 +1,7 @@
 Type: Package
 Package: GenomeAdmixR
 Title: Simulate Admixture of Genomes
-Version: 2.1.2
+Version: 2.1.3
 Authors@R: 
     c(person(given = "Thijs",
              family = "Janzen",
@@ -16,8 +16,8 @@ Authors@R:
              role = "ctb"))
 Description: Individual-based simulations forward in time,
     simulating how patterns in ancestry along the genome change after
-    admixture. Full description can be found in Janzen (2020)
-    <doi:10.1101/2020.10.19.343491>.
+    admixture. Full description can be found in Janzen (2021)
+    <doi:10.1111/2041-210X.13612>.
 License: GPL (>= 2)
 URL: https://github.com/thijsjanzen/GenomeAdmixR
 BugReports: https://github.com/thijsjanzen/GenomeAdmixR/issues
@@ -33,7 +33,6 @@ Imports:
     tibble,
     vcfR
 Suggests: 
-    covr,
     dplyr,
     junctions,
     knitr,
@@ -51,5 +50,3 @@ VignetteBuilder:
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 SystemRequirements: C++14
-Depends: 
-    R (>= 2.10)

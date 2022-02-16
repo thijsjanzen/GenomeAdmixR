@@ -19,6 +19,10 @@ Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) 
 More information can be found in the accompanying paper :  https://doi.org/10.1111/2041-210X.13612
 
 # Version history
+Version 2.1.3  - Changed DOI link in description <br />
+Version 2.1.2  - Improved testing <br />
+Version 2.1.1  - Removed GNU make dependency <br />
+Version 2.1    - Removed error in calculate_allele_frequency <br />
 Version 2.0.1 - Moved migration outside the modules <br />
 Version 2.0  - Added ancestry_module and sequence_module to distinguish between implementations of the model <br />
 Version 1.2  - Added example sequencing data <br />
