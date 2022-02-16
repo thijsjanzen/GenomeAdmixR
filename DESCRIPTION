@@ -50,3 +50,5 @@ VignetteBuilder:
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 SystemRequirements: C++14
+Depends: 
+    R (>= 2.10)
