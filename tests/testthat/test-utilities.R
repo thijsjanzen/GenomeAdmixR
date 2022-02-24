@@ -2,7 +2,6 @@ context("utilities")
 
 test_that("utilities", {
   testthat::skip_on_os("solaris")
- message("test utilities")
   vx <- simulate_admixture(module = ancestry_module(number_of_founders = 50),
                            pop_size = 100,
                            total_runtime = 5)
@@ -33,7 +32,6 @@ test_that("utilities", {
 
 test_that("initial_frequencies", {
   testthat::skip_on_os("solaris")
-  message("test initial_frequencies")
   testthat::expect_error(
     simulate_admixture(
           migration = migration_settings(migration_rate = 0.1,

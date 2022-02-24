@@ -2,7 +2,6 @@ context("test input data")
 
 test_that("input data", {
   testthat::skip_on_os("solaris")
-  message("test input data")
 
   chosen_markers <- 1:100
 
@@ -75,7 +74,6 @@ test_that("input data", {
 
 test_that("input data simulation", {
   testthat::skip_on_os("solaris")
-  message("test input data simulation")
 
   vx <- simulate_admixture(pop_size = 100,
                            total_runtime = 100)

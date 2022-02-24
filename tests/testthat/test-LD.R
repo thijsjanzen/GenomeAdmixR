@@ -2,7 +2,6 @@ context("LD stats")
 
 test_that("calculate_average_LD", {
   testthat::skip_on_os("solaris")
-  message("test calculate_average_LD")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 1000
@@ -49,7 +48,6 @@ test_that("calculate_average_LD", {
 
 test_that("calculate_LD_matrix", {
   testthat::skip_on_os("solaris")
-  message("test calculate_LD_matrix")
   pop_size <- 100
   number_of_founders <- 2
   sampled_individuals <- pop_size

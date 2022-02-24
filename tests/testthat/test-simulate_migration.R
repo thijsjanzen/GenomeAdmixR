@@ -2,7 +2,6 @@ context("simulate_migration")
 
 test_that("simulate_migration base", {
   testthat::skip_on_os("solaris")
-  message("test simulate_migration")
   testthat::expect_silent(
     vx <- simulate_admixture(migration = migration_settings(migration_rate = 0.1),
                            total_runtime = 5)
@@ -11,7 +10,6 @@ test_that("simulate_migration base", {
 
 test_that("simulate_migration", {
   testthat::skip_on_os("solaris")
-  message("test simulate_migration")
   vx <- simulate_admixture(migration = migration_settings(migration_rate = 0.1),
                            total_runtime = 10)
 

@@ -1,6 +1,5 @@
 test_that("joyplot", {
   testthat::skip_on_os("solaris")
-  message("test joyplot")
   markers <- seq(from = 0.2, to = 0.3, length.out = 100)
 
   selected_pop <- simulate_admixture(module = ancestry_module(number_of_founders = 3,

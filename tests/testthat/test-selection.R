@@ -2,7 +2,6 @@ context("selection two alleles")
 
 test_that("select population two_alleles", {
   testthat::skip_on_os("solaris")
-  message("test selection_two_alleles")
   select_matrix <- matrix(ncol = 5, nrow = 1)
   s <- 0.1
   select_matrix[1, ] <- c(0.05, 1.0, 1 + 0.5 * s, 1 + s, 0)
@@ -36,7 +35,6 @@ test_that("select population two_alleles", {
 
 test_that("select on population", {
   testthat::skip_on_os("solaris")
-  message("test selection on population")
   sourcepop <- simulate_admixture(module = ancestry_module(number_of_founders =
                                                              10,
                                                            morgan = 1),
@@ -73,7 +71,6 @@ test_that("select on population", {
 
 test_that("select population two_alleles multiple markers", {
   testthat::skip_on_os("solaris")
-  message("test selection multiple markers")
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.1
   select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
@@ -115,7 +112,6 @@ test_that("select population two_alleles multiple markers", {
 
 test_that("select population two_alleles regions", {
   testthat::skip_on_os("solaris")
-  message("test population two regions")
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.1
   select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
@@ -158,7 +154,6 @@ test_that("select population two_alleles regions", {
 
 test_that("selection abuse", {
   testthat::skip_on_os("solaris")
-  message("test selection abuse")
   sourcepop <- simulate_admixture(pop_size = 100,
                                   total_runtime = 100)
 
