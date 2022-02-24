@@ -580,8 +580,8 @@ verify_substitution_matrix <- function(substitution_matrix) {
     substitution_matrix[1:4, ] <- substitution_matrix[1:4, ] / rs[1:4]
   }
 
-  message("using mutation with the following substitution matrix: ")
-  print_substitution_matrix(substitution_matrix)
+#  message("using mutation with the following substitution matrix: ")
+#  print_substitution_matrix(substitution_matrix)
 
   return(substitution_matrix)
 }
@@ -669,17 +669,20 @@ create_recombination_map <- function(markers,
 }
 
 #' @keywords internal
-verify_genomeadmixr_data <- function(input_data, markers = NA) {
+verify_genomeadmixr_data <- function(input_data, markers = NA,
+                                     verbose = FALSE) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
     if (methods::is(input_data, "genomadmixr_simulation") ||
         methods::is(input_data, "individual")) {
-      message("found simulation output, converting to genomeadmixr_data")
-      message("this may take a while")
+      if (verbose) {
+        message("found simulation output, converting to genomeadmixr_data")
+        message("this may take a while")
+      }
       input_data <-
         simulation_data_to_genomeadmixr_data(simulation_data =
                                                input_data,
                                              markers = markers)
-      message("done converting, continuing as normal")
+      if (verbose) message("done converting, continuing as normal")
       return(input_data)
     } else {
       if (is.list(input_data)) {
@@ -699,12 +702,14 @@ verify_genomeadmixr_data <- function(input_data, markers = NA) {
   if (!methods::is(input_data, "genomeadmixr_data")) {
     input_data2 <- check_input_pop(input_data)
     if (methods::is(input_data2, "population")) {
-      message("found simulation output, converting to genomeadmixr_data")
-      message("this may take a while")
+      if (verbose) {
+        message("found simulation output, converting to genomeadmixr_data")
+        message("this may take a while")
+      }
       input_data <-
         simulation_data_to_genomeadmixr_data(simulation_data = input_data,
                                              markers = markers)
-      message("done converting, continuing as normal")
+      if (verbose) message("done converting, continuing as normal")
     } else {
       stop("input_data should be of class genomeadmixr_data
               you can create such data with the functions

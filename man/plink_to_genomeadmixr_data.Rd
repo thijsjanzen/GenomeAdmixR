@@ -4,7 +4,12 @@
 \alias{plink_to_genomeadmixr_data}
 \title{function to convert plink style (ped/map) data to genome_admixr_data}
 \usage{
-plink_to_genomeadmixr_data(ped_data, map_data, chosen_chromosome)
+plink_to_genomeadmixr_data(
+  ped_data,
+  map_data,
+  chosen_chromosome,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{ped_data}{result of read.table(ped_file, header = F)}
@@ -12,6 +17,8 @@ plink_to_genomeadmixr_data(ped_data, map_data, chosen_chromosome)
 \item{map_data}{result of read.table(map_file, header = F)}
 
 \item{chosen_chromosome}{chromosome of choice}
+
+\item{verbose}{verbose output}
 }
 \value{
 genomeadmixr_data object ready for simulate_admixture_data

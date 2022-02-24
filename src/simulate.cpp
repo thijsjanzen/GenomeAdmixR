@@ -156,7 +156,6 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
   if(updateFreq < 1) updateFreq = 1;
 
   if(verbose) {
-  //  Rcout << "running until: " << total_runtime << "\n";
     Rcout << "0--------25--------50--------75--------100\n";
     Rcout << "*";
   }

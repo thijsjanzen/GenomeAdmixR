@@ -89,15 +89,17 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                         substitution_matrix =
                                           matrix(1 / 4, 4, 4)) {
 
-  input_data_population_1 <- verify_genomeadmixr_data(input_data_population_1)
-  input_data_population_2 <- verify_genomeadmixr_data(input_data_population_2)
+  input_data_population_1 <- verify_genomeadmixr_data(input_data_population_1,
+                                                      verbose = verbose)
+  input_data_population_2 <- verify_genomeadmixr_data(input_data_population_2,
+                                                      verbose = verbose)
 
   if (!is.na(critical_fst)) {
     stop_at_critical_fst <- TRUE
   }
 
   if (stop_at_critical_fst) {
-    message("stopping at FST of: ", critical_fst)
+    if (verbose) message("stopping at FST of: ", critical_fst)
     return(simulate_sequence_until(input_data_population_1 =
                                      input_data_population_1,
                                    input_data_population_2 =
@@ -159,7 +161,7 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
   }
 
   if (verbose) {
-    cat("markers: ", length(markers), "\n")
+    message("markers: ", length(markers), "\n")
   }
 
   if (mutation_rate > 0) {

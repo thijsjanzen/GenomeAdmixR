@@ -1,7 +1,7 @@
 Type: Package
 Package: GenomeAdmixR
 Title: Simulate Admixture of Genomes
-Version: 2.1.4
+Version: 2.1.5
 Authors@R: 
     c(person(given = "Thijs",
              family = "Janzen",

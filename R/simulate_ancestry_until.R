@@ -40,8 +40,8 @@ simulate_ancestry_until <- function(input_population_1 = NA,
                        number_of_markers = number_of_markers,
                        random_markers = random_markers)
 
-  message("Number of Generations\tFST")
-  message(generations_between_update, "\t", fst)
+  if (verbose) message("Number of Generations\tFST")
+  if (verbose) message(generations_between_update, "\t", fst)
 
   total_generations <- generations_between_update
   while (fst < critical_fst && total_generations < total_runtime) {

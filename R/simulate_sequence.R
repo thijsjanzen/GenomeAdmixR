@@ -60,12 +60,12 @@ simulate_sequence <- function(input_data = NA,
                               substitution_matrix = matrix(1 / 4, 4, 4)) {
 
   input_data <- verify_genomeadmixr_data(input_data,
-                                         markers)
+                                         markers, verbose = verbose)
 
   if (!methods::is(input_data, "genomeadmixr_data")) {
     if (is.list(input_data)) {
       if (length(input_data) > 1) {
-        message("found multiple input populations")
+        if (verbose) message("found multiple input populations")
         input_data <- combine_input_data(input_data,
                                          frequencies = initial_frequencies,
                                          pop_size = pop_size)

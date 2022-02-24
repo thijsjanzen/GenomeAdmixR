@@ -299,7 +299,6 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
 
 
 List convert_to_list(const std::vector<Fish>& v) {
-//  Rcout << "converting to list\n"; force_output();
   int list_size = (int)v.size();
   List output(list_size);
 
@@ -514,7 +513,6 @@ try {
   StringMatrix output(Pop.size(), markers.size() * 2);
   for(size_t i = 0; i < static_cast<size_t>(Pop.size()); ++i) {
     for (size_t j = 0; j < static_cast<size_t>(markers.size()); ++j) {
-      //   Rcout << i << " " << j << "\n"; force_output();
       auto allele_1 = get_ancestry(Pop[i].chromosome1, markers[j]);
       auto allele_2 = get_ancestry(Pop[i].chromosome2, markers[j]);
       std::vector<std::string> entry = combine_alleles(allele_1, allele_2);
@@ -650,7 +648,6 @@ std::vector< Fish_emp > convert_numeric_matrix_to_fish_vector(
 
   std::vector< Fish_emp > output;
   for(int i = 0; i < (input_population.nrow() - 1); i += 2) {
-   // Rcpp::Rcout << i << " " << input_population.nrow() << "\n";
     Rcpp::NumericVector cc1 = input_population(i, _);
     Rcpp::NumericVector cc2 = input_population(i + 1 , _);
     std::vector<int> c1(cc1.begin(), cc1.end());
@@ -748,7 +745,6 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
   std::vector< std::vector< double >> allele_matrix(num_alleles,
                                                     std::vector<double>(4, 0));
 
-//  Rcout << "start update_frequency_tibble\n"; force_output();
   // initialize results
   for (int i = 0; i < num_alleles; ++i) {
     allele_matrix[i][0] = t;
@@ -770,7 +766,6 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
     allele_matrix[local_anc2][3]++;
   }
 
- // Rcout << "starting normalization\n"; force_output();
   for (size_t i = 0; i < allele_matrix.size(); ++i) {
     allele_matrix[i][3] *= 1.0 / (2 * pop.size());
   }
@@ -782,9 +777,6 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
 int find_location(const std::vector<double>& markers,
                   double pos) {
 
- // Rcout << "this is find location with: " << pos << "\n"; force_output();
-
-  //auto loc = std::find(markers.begin(), markers.end(), pos);
   auto loc = std::lower_bound(markers.begin(), markers.end(), pos);
 
   if (loc != markers.end()) {

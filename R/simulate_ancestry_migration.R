@@ -88,7 +88,7 @@ simulate_ancestry_migration <- function(input_population_1 = NA,
                                          random_markers = TRUE) {
 
   if (stop_at_critical_fst) {
-    message("stopping when FST is: ", critical_fst)
+    if (verbose) message("stopping when FST is: ", critical_fst)
     return(simulate_ancestry_until(input_population_1 = input_population_1,
                                     input_population_2 = input_population_2,
                                     pop_size = pop_size,

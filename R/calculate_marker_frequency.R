@@ -24,7 +24,8 @@
 #' ggplot(frequencies, aes(x = location, y = frequency, col = ancestor)) +
 #'   geom_step()
 #' @export
-calculate_marker_frequency <- function(pop, location) {
+calculate_marker_frequency <- function(pop,
+                                       location) {
 
   pop <- check_input_pop(pop)
 

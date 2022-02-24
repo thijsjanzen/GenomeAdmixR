@@ -212,11 +212,13 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
 #' @param ped_data result of read.table(ped_file, header = F)
 #' @param map_data result of read.table(map_file, header = F)
 #' @param chosen_chromosome chromosome of choice
+#' @param verbose verbose output
 #' @return genomeadmixr_data object ready for simulate_admixture_data
 #' @export
 plink_to_genomeadmixr_data <- function(ped_data,  # nolint
-                                               map_data,
-                                               chosen_chromosome) {
+                                       map_data,
+                                       chosen_chromosome,
+                                       verbose = FALSE) {
   # Base R
   map_data_duplicated <- map_data[rep(seq_len(nrow(map_data)), each = 2), ]
 
@@ -228,10 +230,10 @@ plink_to_genomeadmixr_data <- function(ped_data,  # nolint
 
   # we have to first convert all letters to numbers,
   # then undouble
-  message("converting atcg/ATCG entries to 1/2/3/4")
+  if (verbose) message("converting atcg/ATCG entries to 1/2/3/4")
   ped_data <- convert_dna_to_numeric(ped_data)
 
-  message("converting to numeric")
+  if (verbose) message("converting to numeric")
   ped_data <- as.matrix(ped_data,
                         nrow = length(ped_data[, 1]),
                         ncol = length(ped_data[1, ]))
@@ -242,7 +244,7 @@ plink_to_genomeadmixr_data <- function(ped_data,  # nolint
   ped_data <- apply(ped_data, 2, to_numeric)
 
 
-  message("splitting markers into one row per chromosome")
+  if (verbose) message("splitting markers into one row per chromosome")
   num_indiv <- length(ped_data[, 1])
   num_markers <- length(ped_data[1, ]) / 2
 
@@ -261,7 +263,7 @@ plink_to_genomeadmixr_data <- function(ped_data,  # nolint
     output_matrix[index2, ] <- chrom2
   }
 
-  message("done")
+  if (verbose) message("done")
   output <- list()
   output$genomes <- output_matrix
   output$markers <- map_data[, 4]
@@ -383,14 +385,14 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
     marker_data <- marker_data[snp_indices]
   }
 
-  message("extracting genotypes")
+  if (verbose) message("extracting genotypes")
 
   numeric_matrix_for_cpp <- convert_to_numeric_matrix(genome_data)
   genome_matrix <- vcf_to_matrix_cpp(numeric_matrix_for_cpp,
                                      map_data[, 1],
                                      map_data[, 2])
 
-  message("done")
+  if (verbose) message("done")
   output <- list()
   output$genomes <- genome_matrix
   output$markers <- as.numeric(marker_data)
@@ -403,7 +405,7 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
 read_vcf <- function(vcf_name, chosen_chromosome,
                      number_of_snps,
                      random_snps, verbose = FALSE) {
-  message("reading vcf file")
+  if (verbose) message("reading vcf file")
   vcf_data <- vcfR::read.vcfR(vcf_name)
 
   return(vcfR_to_genomeadmixr_data(vcf_data, chosen_chromosome,

@@ -97,14 +97,15 @@ test_that("simulate_admixture_data_mutation", {
 
   sub_matrix <- matrix(0.25, nrow = 4, ncol = 4)
 
-  testthat::expect_message(
+  testthat::expect_output(
     simul_pop <- simulate_admixture(module = sequence_module(
                                                 molecular_data = combined_data,
                                                 mutation_rate = 0.1,
                                                 substitution_matrix = sub_matrix,
                                                 markers = chosen_markers),
                                     pop_size = 100,
-                                    total_runtime = 100)
+                                    total_runtime = 100,
+                                    verbose = TRUE)
   )
 
   a1 <- simul_pop$initial_frequency
@@ -125,7 +126,7 @@ test_that("simulate_admixture_data_mutation", {
     sub_matrix <- matrix(0, nrow = 4, ncol = 4)
     sub_matrix[, i] <- 1
 
-    testthat::expect_message(
+    testthat::expect_output(
       testthat::expect_warning(
         simul_pop <- simulate_admixture(module = sequence_module(
                                                     molecular_data = combined_data,
@@ -133,7 +134,8 @@ test_that("simulate_admixture_data_mutation", {
                                                     substitution_matrix = sub_matrix,
                                                     markers = chosen_markers),
                                         pop_size = 100,
-                                        total_runtime = 100)
+                                        total_runtime = 100,
+                                        verbose = TRUE)
       )
     )
 
@@ -172,7 +174,8 @@ test_that("simulate_admixture_data_recombination_map", {
                                               markers = chosen_markers,
                                               recombination_rate = recom_rate),
                                   pop_size = pop_size,
-                                  total_runtime = 2)
+                                  total_runtime = 2,
+                                  verbose = FALSE)
 
 
   found_junctions <- c()
@@ -198,5 +201,5 @@ test_that("simulate_admixture_data_recombination_map", {
 
   expected_num_j <- 2 * pop_size * recom_prob * 0.5
 
-  testthat::expect_equal(all_j, expected_num_j, tolerance = 0.3)
+  testthat::expect_equal(all_j, expected_num_j, tolerance = 0.4)
 })

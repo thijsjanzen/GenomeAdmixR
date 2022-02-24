@@ -19,27 +19,33 @@ test_that("general usage", {
   )
 
   ### The list option is working now with genomeadmixr_data type:
-  testthat::expect_message(
-    simulated_pop_2 <- simulate_admixture(
-      module = sequence_module(molecular_data =
-                                 list(dgrp2.3R.5k.data,
-                                      dgrp2.3R.5k.data),
-                               markers = mks,
-                               morgan = 1),
-      pop_size = 1000,
-      total_runtime = 10),
-    "found multiple input populations"
+  testthat::expect_output(
+    testthat::expect_message(
+      simulated_pop_2 <- simulate_admixture(
+        module = sequence_module(molecular_data =
+                                   list(dgrp2.3R.5k.data,
+                                        dgrp2.3R.5k.data),
+                                 markers = mks,
+                                 morgan = 1),
+        pop_size = 100,
+        total_runtime = 10,
+        verbose = TRUE),
+      "found multiple input populations"
+    )
   )
 
   testthat::expect_message(
-    simulated_pop_2 <- simulate_admixture(
-      module = sequence_module(molecular_data =
-                                 list(simulated_pop,
-                                      simulated_pop),
-                               morgan = 1,
-                               markers = mks),
-      pop_size = 1000,
-      total_runtime = 10)
+    testthat::expect_output(
+      simulated_pop_2 <- simulate_admixture(
+        module = sequence_module(molecular_data =
+                                   list(simulated_pop,
+                                        simulated_pop),
+                                 morgan = 1,
+                                 markers = mks),
+        pop_size = 100,
+        total_runtime = 10,
+        verbose = TRUE)
+    )
   )
 
   a1 <- calculate_marker_frequency(simulated_pop, location = mks[50])
@@ -66,7 +72,7 @@ test_that("general usage", {
       run_time = 20)
   )
 
-  testthat::expect_message(
+  testthat::expect_silent(
     iso_100 <- create_iso_female(
       module = sequence_module(molecular_data = simulated_pop,
                                morgan = 1),
@@ -80,24 +86,27 @@ test_that("general usage", {
       module = sequence_module(molecular_data = simulated_pop,
                                morgan = 1,
                                markers = mks),
-      pop_size = 1000,
-      total_runtime = 16,
+      pop_size = 100,
+      total_runtime = 11,
       select_matrix = selection_matrix)
   )
 
-  testthat::expect_message(
-    two_pops <- simulate_admixture(
-      module = sequence_module(molecular_data = list(
-        simulated_pop, simulated_pop),
-        markers = mks,
-        morgan = 1),
-      migration = migration_settings(migration_rate = 0,
-                                     population_size = c(100, 100),
-                                     stop_at_critical_fst = TRUE,
-                                     critical_fst = 0.05,
-                                     generations_between_update = 100),
-    total_runtime = 10)
-)
+  testthat::expect_output(
+    testthat::expect_message(
+      two_pops <- simulate_admixture(
+        module = sequence_module(molecular_data = list(
+          simulated_pop, simulated_pop),
+          markers = mks,
+          morgan = 1),
+        verbose = TRUE,
+        migration = migration_settings(migration_rate = 0,
+                                       population_size = c(100, 100),
+                                       stop_at_critical_fst = TRUE,
+                                       critical_fst = 0.05,
+                                       generations_between_update = 100),
+        total_runtime = 10)
+    )
+  )
 })
 
 test_that("isofemale usage", {
@@ -110,25 +119,27 @@ test_that("isofemale usage", {
       module = sequence_module(molecular_data = dgrp2.3R.5k.data,
                                morgan = 1,
                                markers = mks),
-      pop_size = 1000,
+      pop_size = 100,
       total_runtime = 10)
   )
 
-  testthat::expect_message(
+  testthat::expect_output(
     isos <- create_iso_female(
       module = sequence_module(molecular_data = simulated_pop),
       n = 20,
       inbreeding_pop_size = 100,
-      run_time = 50)
+      run_time = 50,
+      verbose = TRUE)
   )
 
-  testthat::expect_message(
+  testthat::expect_output(
     simulated_pop <- simulate_admixture(
       module = sequence_module(molecular_data = isos[1],
                                morgan = 1,
                                markers = mks),
 
-      pop_size = 1000,
-      total_runtime = 10)
+      pop_size = 100,
+      total_runtime = 10,
+      verbose = TRUE)
   )
 })

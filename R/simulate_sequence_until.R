@@ -41,8 +41,8 @@ simulate_sequence_until <- function(input_data_population_1 = NA,
                        number_of_markers = number_of_markers,
                        random_markers = random_markers)
 
-  message("Number of Generations\tFST\n")
-  message(generations_between_update, "\t", fst, "\n")
+  if (verbose) message("Number of Generations\tFST\n")
+  if (verbose) message(generations_between_update, "\t", fst, "\n")
 
   total_generations <- generations_between_update
   while (fst < critical_fst && total_generations < total_runtime) {
