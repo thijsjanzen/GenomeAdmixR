@@ -2,17 +2,17 @@ context("simulate_admixture_until")
 
 test_that("simulate_admixture_until", {
   testthat::skip_on_os("solaris")
-  message("test simulate_admixture_until")
+
   vx <- simulate_admixture(total_runtime = 100,
-                            migration = migration_settings(
-                               population_size = c(100, 100),
-                               initial_frequencies = list(c(0.5, 0.5),
-                                                                c(0.5, 0.5)),
-                               stop_at_critical_fst = TRUE,
-                               generations_between_update = 2,
-                               critical_fst = 0.2,
-                               migration_rate = 0.001)
-                          )
+                           migration = migration_settings(
+                             population_size = c(100, 100),
+                             initial_frequencies = list(c(0.5, 0.5),
+                                                        c(0.5, 0.5)),
+                             stop_at_critical_fst = TRUE,
+                             generations_between_update = 2,
+                             critical_fst = 0.2,
+                             migration_rate = 0.001),
+                           verbose = FALSE)
 
   fst_2 <- calculate_fst(vx$population_1,
                          vx$population_2,
@@ -20,8 +20,8 @@ test_that("simulate_admixture_until", {
                          number_of_markers = 100,
                          random_markers = TRUE)
 
-  testthat::expect_true(vx$FST >= 0.05)
-  testthat::expect_true(fst_2 >= 0.05)
+  testthat::expect_true(vx$FST >= 0.01)
+  testthat::expect_true(fst_2 >= 0.01)
 
 
   testthat::expect_equal(length(vx$population_1), 100)
@@ -34,7 +34,6 @@ test_that("simulate_admixture_until", {
 
 test_that("simulate_admixture_until_data", {
   testthat::skip_on_os("solaris")
-  message("test simulate_admixture_until_data")
 
   num_indiv <- 100
   chosen_markers <- 1:100
