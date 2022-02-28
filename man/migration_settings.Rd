@@ -48,6 +48,10 @@ the population to estimate Fst}
 \item{random_markers}{Are the markers to estimate Fst randomly distributed,
 or regularly distributed? Default is TRUE.}
 }
+\value{
+list with migration associated settings. To be used to pass on
+migration settings to simulate_admixture.
+}
 \description{
 creates a list with settings associated with migration.
 }

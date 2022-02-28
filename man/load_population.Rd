@@ -11,8 +11,6 @@ load_population(file_name)
 }
 \value{
 A population object
-
-an R object
 }
 \description{
 Loads a population that has previously been written to file.

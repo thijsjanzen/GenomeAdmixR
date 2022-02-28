@@ -34,6 +34,9 @@ Ancestry at these marker positions is tracked for every generation.}
 \item{track_junctions}{Tracks the average number of junctions over time if
 TRUE}
 }
+\value{
+list with type = "Ancestry". Can be used in simulate_admixture.
+}
 \description{
 Module to perform simulations based on local ancestry
 }

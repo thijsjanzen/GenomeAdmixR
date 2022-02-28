@@ -25,7 +25,7 @@ write_as_plink(
 \item{recombination_rate}{recombination rate in cM / kb}
 }
 \value{
-this function doesn't return anything.
+No return value
 }
 \description{
 function to write simulation output as PLINK style data

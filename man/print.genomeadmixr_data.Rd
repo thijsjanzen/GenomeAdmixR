@@ -11,6 +11,9 @@
 
 \item{...}{other arguments}
 }
+\value{
+No return value
+}
 \description{
 prints an object of class genomeadmixr_data to the console
 }
