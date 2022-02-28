@@ -60,7 +60,7 @@ simulate_ancestry <- function(input_population = NA,
   input_population <- check_input_pop(input_population)
 
   if (is.na(pop_size)) {
-    if (class(input_population) == "population") {
+    if (inherits(input_population, "population")) {
       pop_size <- length(input_population)
     } else {
       stop("pop_size is undefined, need an input population")
@@ -82,7 +82,7 @@ simulate_ancestry <- function(input_population = NA,
     track_frequency <- TRUE
   }
 
-  if (methods::is(input_population, "population")) {
+  if (inherits(input_population, "population")) {
     input_population <- population_to_vector(input_population)
   }
 

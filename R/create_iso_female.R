@@ -18,11 +18,11 @@
 #' isofemale.
 #' @export
 create_iso_female <- function(module = ancestry_module(),
-                             n = 1,
-                             inbreeding_pop_size = 100,
-                             run_time = 2000,
-                             num_threads = 1,
-                             verbose = FALSE) {
+                              n = 1,
+                              inbreeding_pop_size = 100,
+                              run_time = 2000,
+                              num_threads = 1,
+                              verbose = FALSE) {
   if (module$type == "ancestry") {
     result <- iso_female_ancestry(source_pop = module$input_population,
                                   n = n,
@@ -70,12 +70,12 @@ create_iso_female <- function(module = ancestry_module(),
 #' isofemale.
 #' @export
 iso_female_ancestry <- function(source_pop = NA,
-                              n = 1,
-                              inbreeding_pop_size = 100,
-                              run_time = 2000,
-                              morgan = 1,
-                              num_threads = 1,
-                              verbose = FALSE) {
+                                n = 1,
+                                inbreeding_pop_size = 100,
+                                run_time = 2000,
+                                morgan = 1,
+                                num_threads = 1,
+                                verbose = FALSE) {
 
   source_pop <- check_input_pop(source_pop)
 
@@ -93,17 +93,17 @@ iso_female_ancestry <- function(source_pop = NA,
     class(parents) <- "population"
 
     inbred_population <- simulate_admixture(module = ancestry_module(
-                                                      input_population = parents,
-                                                      morgan = morgan
-                                                    ),
-                                            pop_size = inbreeding_pop_size,
-                                            total_runtime = run_time,
-                                            verbose = verbose,
-                                            num_threads = num_threads)
+      input_population = parents,
+      morgan = morgan
+    ),
+    pop_size = inbreeding_pop_size,
+    total_runtime = run_time,
+    verbose = verbose,
+    num_threads = num_threads)
     output_females[[i]] <-
-          inbred_population$population[[
-              sample(seq_along(inbred_population$population), 1)
-                                      ]]
+      inbred_population$population[[
+        sample(seq_along(inbred_population$population), 1)
+      ]]
 
     class(output_females[[i]]) <- "individual"
   }

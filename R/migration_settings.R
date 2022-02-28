@@ -22,6 +22,8 @@
 #' @param number_of_markers Number of markers to be used to estimate Fst
 #' @param random_markers Are the markers to estimate Fst randomly distributed,
 #' or regularly distributed? Default is TRUE.
+#' @return list with migration associated settings. To be used to pass on
+#' migration settings to simulate_admixture.
 #' @export
 migration_settings <- function(migration_rate = NA,
                                stop_at_critical_fst = FALSE,

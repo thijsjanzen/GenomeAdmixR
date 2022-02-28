@@ -62,7 +62,7 @@ simulate_sequence <- function(input_data = NA,
   input_data <- verify_genomeadmixr_data(input_data,
                                          markers, verbose = verbose)
 
-  if (!methods::is(input_data, "genomeadmixr_data")) {
+  if (!inherits(input_data, "genomeadmixr_data")) {
     if (is.list(input_data)) {
       if (length(input_data) > 1) {
         if (verbose) message("found multiple input populations")

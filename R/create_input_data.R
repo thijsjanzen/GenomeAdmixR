@@ -89,7 +89,7 @@ combine_input_data <- function(input_data_list,
 
   testit::assert(is.list(input_data_list))
   for (i in seq_along(input_data_list)) {
-    testit::assert(methods::is(input_data_list[[i]], "genomeadmixr_data"))
+    testit::assert(inherits(input_data_list[[i]], "genomeadmixr_data"))
   }
 
 
@@ -179,15 +179,15 @@ simulation_data_to_genomeadmixr_data <- function(simulation_data, # nolint
     }
   }
 
-  if (!methods::is(simulation_data, "population")) {
+  if (!inherits(simulation_data, "population")) {
     if (is.list(simulation_data)) {
-      if (methods::is(simulation_data, "individual")) {
+      if (inherits(simulation_data, "individual")) {
          indiv <- simulation_data
          simulation_data <- list()
          simulation_data[[1]] <- indiv
          class(simulation_data) <- "population"
       } else {
-        if (methods::is(simulation_data$population, "population")) {
+        if (inherits(simulation_data$population, "population")) {
           simulation_data <- simulation_data$population
         }
       }
@@ -460,7 +460,7 @@ create_artificial_genomeadmixr_data <- function(number_of_individuals, # nolint
 #' @param file_name_prefix prefix of the ped/map files.
 #' @param chromosome chromosome indication for map file
 #' @param recombination_rate recombination rate in cM / kb
-#' @return this function doesn't return anything.
+#' @return No return value
 #' @export
 write_as_plink <- function(input_pop,
                            marker_locations,
@@ -470,12 +470,12 @@ write_as_plink <- function(input_pop,
 
 
   if (is.list(input_pop)) {
-    if (methods::is(input_pop$population, "population")) {
+    if (inherits(input_pop$population, "population")) {
       input_pop <- input_pop$population
     }
   }
 
-  if (methods::is(input_pop, "population")) {
+  if (inherits(input_pop, "population")) {
     pop_for_cpp <- population_to_vector(input_pop)
     input_pop$genomes <- simulation_data_to_plink_cpp(pop_for_cpp,
                                                       marker_locations)

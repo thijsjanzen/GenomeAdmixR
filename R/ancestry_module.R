@@ -14,6 +14,7 @@
 #' Ancestry at these marker positions is tracked for every generation.
 #' @param track_junctions Tracks the average number of junctions over time if
 #' TRUE
+#' @return list with type = "Ancestry". Can be used in simulate_admixture.
 #' @export
 ancestry_module <- function(input_population = NA,
                             number_of_founders = 2,

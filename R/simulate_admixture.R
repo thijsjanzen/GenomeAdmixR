@@ -106,7 +106,7 @@ simulate_admixture <- function(module = ancestry_module(),
 
     if (module$type == "ancestry") {
 
-      if (!methods::is(module$input_population, "genomadmixr_simulation")) {
+      if (!inherits(module$input_population, "genomadmixr_simulation")) {
         if (is.list(module$input_population)) {
           input_population2 <- list()
           input_population2$population_1 <- module$input_population[[1]]
@@ -164,7 +164,7 @@ simulate_admixture <- function(module = ancestry_module(),
     }
     if (module$type == "sequence") {
 
-      if (!methods::is(module$input_data, "genomadmixr_simulation")) {
+      if (!inherits(module$input_data, "genomadmixr_simulation")) {
         if (is.list(module$input_data)) {
           input_population2 <- list()
           input_population2$population_1 <- module$input_data[[1]]

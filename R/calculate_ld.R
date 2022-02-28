@@ -38,7 +38,7 @@ calculate_ld <- function(pop,
 
   if (length(markers) == 1) {
     if (is.na(markers)) {
-      if (class(pop) == "genomeadmixr_data") {
+      if (inherits(pop, "genomadmixr_data")) {
         markers <- pop$markers
       }
     } else {
