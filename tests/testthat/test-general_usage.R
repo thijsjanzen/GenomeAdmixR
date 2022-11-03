@@ -13,7 +13,7 @@ test_that("general usage", {
       module = sequence_module(molecular_data = dgrp2.3R.5k.data,
                                morgan = 1,
                                markers = mks),
-      pop_size = 100,
+      pop_size = 1000,
       total_runtime = 11)
   )
 
