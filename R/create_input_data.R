@@ -350,7 +350,7 @@ vcfR_to_genomeadmixr_data <- function(vcfr_object, chosen_chromosome,  # nolint
                                       random_snps = TRUE,
                                       verbose = FALSE) {
 
-  if (class(vcfr_object) != "vcfR") {
+  if (!inherits(vcfr_object, "vcfR")) {
     stop("input has to be of class vcfR")
   }
 

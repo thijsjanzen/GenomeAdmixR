@@ -125,8 +125,8 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                    recombination_rate = recombination_rate))
   }
 
-  if (class(input_data_population_1) != "genomeadmixr_data" ||
-      class(input_data_population_2) != "genomeadmixr_data") {
+  if (!inherits(input_data_population_1, "genomeadmixr_data") ||
+      !inherits(input_data_population_2, "genomeadmixr_data")) {
     stop("input_data should be of class genomeadmixr_data\n
           you can create such data with the functions\n
           create_input_data or vcfR_to_genomeadmixr_data")
