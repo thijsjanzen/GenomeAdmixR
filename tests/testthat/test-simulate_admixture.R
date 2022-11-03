@@ -16,6 +16,16 @@ test_that("simulate_admixture", {
                              select_matrix = select_matrix,
                              multiplicative_selection = FALSE)
   )
+
+  testthat::expect_message(
+    vx <- simulate_admixture(pop_size = 100,
+                             module = ancestry_module(number_of_founders = 2,
+                                                      morgan = 1),
+                             total_runtime = 1000,
+                             select_matrix = select_matrix,
+                             num_threads = 2,
+                             multiplicative_selection = FALSE)
+  )
 })
 
 

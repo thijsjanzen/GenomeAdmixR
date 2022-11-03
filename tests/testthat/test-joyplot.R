@@ -18,4 +18,13 @@ test_that("joyplot", {
   testthat::expect_identical(px$labels$x, "Location (Morgan)")
   testthat::expect_identical(px$labels$y, "Time")
   testthat::expect_identical(px$labels$fill, "Ancestor")
+
+  px <- plot_joyplot_frequencies(selected_pop$frequencies,
+                                 time_points = c(0, 50, 100), picked_ancestor = 1)
+  testthat::expect_identical(px$labels$x, "Location (Morgan)")
+  testthat::expect_identical(px$labels$y, "Time")
+  testthat::expect_identical(px$labels$fill, "Ancestor")
+  ax <- as.numeric(unique(px$data$ancestor)[[1]])
+  testthat::expect_identical(ax, 2)
+  # 2 because 1 is the second in levels [0, 1, 2]
 })

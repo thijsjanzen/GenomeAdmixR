@@ -6,6 +6,12 @@ test_that("simulate_migration base", {
     vx <- simulate_admixture(migration = migration_settings(migration_rate = 0.1),
                            total_runtime = 5)
   )
+
+  testthat::expect_silent(
+    vx <- simulate_admixture(migration = migration_settings(migration_rate = 0.1),
+                             total_runtime = 5,
+                             num_threads = 2)
+  )
 })
 
 test_that("simulate_migration", {
