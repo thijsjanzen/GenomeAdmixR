@@ -29,11 +29,6 @@ struct rnd_t {
     rndgen_ = std::mt19937(seed);
   }
 
-  rnd_t(unsigned int seed) {
-    auto local_seed = get_seed() + seed;
-    rndgen_ = std::mt19937(local_seed);
-  }
-
   void set_seed(unsigned int s) {
     rndgen_ = std::mt19937(s);
   }

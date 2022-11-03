@@ -154,10 +154,6 @@ bool junction::operator ==(const junction& other) const {
   return true;
 }
 
-bool junction::operator <(const junction& other) const {
-  return(pos < other.pos);
-}
-
 bool junction::operator !=(const junction& other) const {
   return( !( (*this) == other) );
 }

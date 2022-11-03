@@ -21,7 +21,6 @@ struct junction {
     junction(long double loc, int B) ;
     junction(const junction& other);
     bool operator ==(const junction& other) const;
-    bool operator <(const junction& other) const;
     bool operator !=(const junction& other) const;
 };
 
