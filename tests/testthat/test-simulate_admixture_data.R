@@ -10,13 +10,13 @@ test_that("simulate_admixture_data", {
   fake_input_data1 <- create_artificial_genomeadmixr_data(
     number_of_individuals = num_indiv,
     marker_locations = chosen_markers,
-    used_nucleotides = 1:2
+    used_nucleotides = 1:4
   )
 
   fake_input_data2 <- create_artificial_genomeadmixr_data(
     number_of_individuals = num_indiv,
     marker_locations = chosen_markers,
-    used_nucleotides = 3:4
+    used_nucleotides = 1:4
   )
 
   simul_pop <- simulate_admixture(module = sequence_module(

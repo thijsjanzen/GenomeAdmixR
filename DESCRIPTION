@@ -1,7 +1,7 @@
 Type: Package
 Package: GenomeAdmixR
 Title: Simulate Admixture of Genomes
-Version: 2.1.7
+Version: 2.1.8
 Authors@R: 
     c(person(given = "Thijs",
              family = "Janzen",
@@ -25,7 +25,6 @@ Imports:
     ggplot2,
     ggridges,
     hierfstat,
-    methods,
     Rcpp,
     RcppParallel,
     rlang,
@@ -48,7 +47,7 @@ LinkingTo:
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 SystemRequirements: C++14
 Depends: 
     R (>= 2.10)
