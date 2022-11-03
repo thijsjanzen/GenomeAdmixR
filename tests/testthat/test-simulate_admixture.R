@@ -12,7 +12,7 @@ test_that("simulate_admixture", {
     vx <- simulate_admixture(pop_size = 100,
                              module = ancestry_module(number_of_founders = 2,
                                                       morgan = 1),
-                             total_runtime = 1000,
+                             total_runtime = 100,
                              select_matrix = select_matrix,
                              multiplicative_selection = FALSE)
   )
@@ -21,7 +21,7 @@ test_that("simulate_admixture", {
     vx <- simulate_admixture(pop_size = 100,
                              module = ancestry_module(number_of_founders = 2,
                                                       morgan = 1),
-                             total_runtime = 1000,
+                             total_runtime = 100,
                              select_matrix = select_matrix,
                              num_threads = 2,
                              multiplicative_selection = FALSE)
@@ -50,10 +50,14 @@ test_that("simulate admixture use", {
                                               multiplicative_selection = TRUE))
   )
   select_matrix <- matrix(NA, nrow = 1, ncol = 3)
-  testthat::expect_error(simulate_admixture(pop_size = 100,
-                                            total_runtime = 100,
-                                            select_matrix = select_matrix,
-                                            multiplicative_selection = TRUE))
+  testthat::expect_message(
+    testthat::expect_error(
+      simulate_admixture(pop_size = 100,
+                         total_runtime = 100,
+                         select_matrix = select_matrix,
+                         multiplicative_selection = TRUE)
+    )
+  )
 
   markers <- seq(from = 0.4, to = 0.6, length.out = 100)
   testthat::expect_silent(

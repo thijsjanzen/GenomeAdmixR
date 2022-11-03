@@ -24,7 +24,7 @@ testthat::test_that("fst", {
   testthat::expect_true(verify_population(pop1))
   testthat::expect_true(verify_population(pop2))
 
-  number_of_markers <- 100
+  number_of_markers <- 10
   sampled_individuals <- 10
   v1 <- calculate_fst(pop1, pop2,
                       sampled_individuals,
@@ -57,7 +57,7 @@ testthat::test_that("fst", {
   testthat::expect_true(verify_population(pop1))
   testthat::expect_true(verify_population(pop2))
 
-  number_of_markers <- 100
+  number_of_markers <- 10
   v1 <- calculate_fst(pop1, pop2,
                       number_of_markers, random_markers = TRUE)
 

@@ -611,30 +611,11 @@ NumericVector scale_markers(const Rcpp::NumericVector& markers,
 
   Rcpp::NumericVector outputmarkers(markers.size());
 
- // double max = *std::max_element(markers.begin(), markers.end());
-
   for(int i = 0; i < markers.size(); ++i) {
     outputmarkers[i] = markers[i] * 1.0 / morgan;
   }
   return outputmarkers;
 }
-
-std::vector<double> scale_markers(const std::vector<double>& markers,
-                                  double morgan) {
-  if (markers.size() == 1) {
-    return markers;
-  }
-
-  std::vector<double> outputmarkers(markers.size());
-
- // double max = *std::max_element(markers.begin(), markers.end());
-
-  for (size_t i = 0; i < markers.size(); ++i) {
-    outputmarkers[i] = markers[i] * 1.0 / morgan;
-  }
-  return outputmarkers;
-}
-
 
 
 //// EMP helper functions ///
@@ -657,22 +638,6 @@ std::vector< Fish_emp > convert_numeric_matrix_to_fish_vector(
   }
   return(output);
 }
-
-void update_founder_labels(const std::vector<int>& chrom,
-                           std::vector<int>& founder_labels) {
-  for(auto i = chrom.begin(); i != chrom.end(); ++i) {
-    if(founder_labels.empty()) {
-       founder_labels.push_back((*i));
-    } else {
-      if(find_index(founder_labels, (*i)) == -1) {
-        founder_labels.push_back((*i));
-      }
-    }
-  }
-  return;
-}
-
-
 
 double calculate_fitness(const Fish_emp& focal,
                          const NumericMatrix& select,
@@ -784,15 +749,7 @@ int find_location(const std::vector<double>& markers,
       return std::distance(markers.begin(), loc);
     }
   }
-
-  /*for (int i = 0; i < markers.size(); ++i) {
-    if (markers[i] == pos) {
-      return i;
-    }
-  }*/
-  return - 1;
-
-//  return 0;
+  return -1;
 }
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
@@ -869,25 +826,6 @@ bool matching_chromosomes(const std::vector< int >& v1,
     }
   }
   return true;
-}
-
-int count_num_j(const std::vector< int >& chrom) {
-  int num_j = 0;
-  for (size_t i = 1; i < chrom.size(); ++i) {
-    if (chrom[i] != chrom[i - 1]) num_j++;
-  }
-  return(num_j);
-}
-
-
-double number_of_junctions(const std::vector< Fish_emp>& pop) {
-  double num_j = 0.0;
-  for(const auto& i : pop) {
-    num_j += count_num_j(i.chromosome1);
-    num_j += count_num_j(i.chromosome2);
-  }
-  num_j *= 1.0 / (2 * pop.size());
-  return(num_j);
 }
 
 arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
@@ -997,18 +935,13 @@ void mutate(Fish_emp& indiv,
 
 std::vector<int> get_alleles(int focal_genotype,
                              int allele_1,
-                             int allele_2,
-                             rnd_t& rndgen) {
+                             int allele_2) {
 
   if (focal_genotype == 1) {
     return {allele_1, allele_1};
   }
   if (focal_genotype == 2) {
-   // if (rndgen.random_number(2) == 0) {
       return {allele_1, allele_2};
-  //  } else {
-    //  return {allele_2, allele_1};
-  //  }
   }
   if (focal_genotype == 3) {
     return {allele_2, allele_2};
@@ -1021,13 +954,10 @@ std::vector<int> get_alleles(int focal_genotype,
 NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
                             const NumericVector& allele_1,
                             const NumericVector& allele_2) {
-try {
   int num_indiv = input_mat.nrow();
   int num_markers = allele_1.size();
 
   NumericMatrix output(2 * num_indiv, num_markers);
-
-  rnd_t rndgen;
 
   for (int i = 0; i < num_indiv; ++i) {
     int index_c1 = i * 2;
@@ -1036,18 +966,11 @@ try {
     for (int j = 0; j < num_markers; ++j) {
       std::vector< int > alleles = get_alleles(input_mat(i, j),
                                                allele_1[j],
-                                               allele_2[j],
-                                               rndgen);
+                                               allele_2[j]);
       output(index_c1, j) = alleles[0];
       output(index_c2, j) = alleles[1];
     }
   }
 
   return output;
-} catch(std::exception &ex) {
-  forward_exception_to_r(ex);
-} catch(...) {
-  ::Rf_error("c++ exception (unknown reason)");
-}
-return NA_REAL;
 }

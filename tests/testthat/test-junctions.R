@@ -4,7 +4,6 @@ test_that("expected_number_junctions", {
 
   if (requireNamespace("junctions")) {
 
-
     test_expected_junction_number <- function(pop_size,
                                               run_time,
                                               morgan,
@@ -28,16 +27,22 @@ test_that("expected_number_junctions", {
       testthat::expect_equal(mean(found), expected, tolerance = 1)
     }
 
-    test_expected_junction_number(pop_size = 1000, run_time = 20,
+    used_pop_size <- 1000
+    # reduce pop size on CRAN
+    if ( !identical(Sys.getenv("NOT_CRAN"), "true") ) {
+      used_pop_size <- 100
+    }
+
+    test_expected_junction_number(pop_size = used_pop_size, run_time = 20,
                                   morgan = 1, replicates = 100)
 
-    test_expected_junction_number(pop_size = 1000, run_time = 20,
+    test_expected_junction_number(pop_size = used_pop_size, run_time = 20,
                                   morgan = 0.5, replicates = 100)
 
-    test_expected_junction_number(pop_size = 1000, run_time = 20,
+    test_expected_junction_number(pop_size = used_pop_size, run_time = 20,
                                   morgan = 3, replicates = 100)
 
-    vx <- simulate_admixture(pop_size = 100,
+    vx <- simulate_admixture(pop_size = used_pop_size,
                              total_runtime = 5)
 
     plot_dist_junctions(vx$population)

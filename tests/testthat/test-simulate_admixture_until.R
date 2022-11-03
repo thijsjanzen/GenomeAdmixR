@@ -5,7 +5,7 @@ test_that("simulate_admixture_until", {
 
   vx <- simulate_admixture(total_runtime = 100,
                            migration = migration_settings(
-                             population_size = c(100, 100),
+                             population_size = c(50, 50),
                              initial_frequencies = list(c(0.5, 0.5),
                                                         c(0.5, 0.5)),
                              stop_at_critical_fst = TRUE,
@@ -24,8 +24,8 @@ test_that("simulate_admixture_until", {
   testthat::expect_true(fst_2 >= 0.01)
 
 
-  testthat::expect_equal(length(vx$population_1), 100)
-  testthat::expect_equal(length(vx$population_2), 100)
+  testthat::expect_equal(length(vx$population_1), 50)
+  testthat::expect_equal(length(vx$population_2), 50)
   testthat::expect_true(verify_population(vx$population_1))
   testthat::expect_true(verify_population(vx$population_2))
   testthat::expect_true(length(all.equal(vx$population_1,

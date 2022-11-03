@@ -4,7 +4,6 @@ context("general usage")
 test_that("general usage", {
 
   data("dgrp2.3R.5k.data")
-
   mks <- sample(dgrp2.3R.5k.data$markers, size = 100,
                 replace = FALSE, prob = NULL)
 
@@ -14,7 +13,7 @@ test_that("general usage", {
       module = sequence_module(molecular_data = dgrp2.3R.5k.data,
                                morgan = 1,
                                markers = mks),
-      pop_size = 1000,
+      pop_size = 100,
       total_runtime = 11)
   )
 
@@ -100,7 +99,7 @@ test_that("general usage", {
           morgan = 1),
         verbose = TRUE,
         migration = migration_settings(migration_rate = 0,
-                                       population_size = c(100, 100),
+                                       population_size = c(30, 30),
                                        stop_at_critical_fst = TRUE,
                                        critical_fst = 0.05,
                                        generations_between_update = 100),
