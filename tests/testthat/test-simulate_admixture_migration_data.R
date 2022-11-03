@@ -39,6 +39,7 @@ test_that("simulate_admixture_data", {
     dplyr::group_by(population, ancestor) %>%
     dplyr::summarise("mean_freq" = mean(frequency))
 
+
   b <- simul_two_pop$final_frequency
   b1 <- b %>%
     dplyr::group_by(population, ancestor) %>%
@@ -101,7 +102,7 @@ test_that("simulate_migration_emp_selection", {
   class(fake_input_data2) <- "genomeadmixr_data"
 
   select_matrix <- matrix(ncol = 5, nrow = 1)
-  s <- 1.0
+  s <- 0.1
   select_matrix[1, ] <- c(50, 1.0, 1 + 0.5 * s, 1 + s, 1)
 
   simul_two_pop <- simulate_admixture(
@@ -112,8 +113,7 @@ test_that("simulate_migration_emp_selection", {
       population_size = c(100, 100),
       migration_rate = 0.01),
     select_matrix = select_matrix,
-    total_runtime = 100,
-    num_threads = 2)
+    total_runtime = 100)
 
   vv <- calculate_marker_frequency(simul_two_pop$population_2, 50)
 

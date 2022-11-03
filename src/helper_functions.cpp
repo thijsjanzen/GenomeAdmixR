@@ -377,6 +377,10 @@ double calculate_fitness(const Fish& focal,
     if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
 
     int fitness_index = 1 + num_alleles[i];
+    if (fitness_index > select.nrow()) {
+      throw "fitness_index out of select range";
+    }
+
     if (multiplicative_selection) {
       fitness *= select(i, fitness_index);
     } else {
@@ -647,28 +651,42 @@ double calculate_fitness(const Fish_emp& focal,
   int number_of_markers = select.nrow();
   std::vector<double> fitness_vec(number_of_markers);
 
+  if (select.ncol() < 4) {
+    Rcout << "select matrix too small"; force_output();
+    throw "select matrix too small";
+  }
+
   for (int i = 0; i < number_of_markers; ++i) {
     auto focal_pos = select(i, 0);
     auto focal_anc = select(i, 4);
     if (focal_anc == -1) continue; // do not take into account
     int focal_index = find_location(locations, focal_pos);
 
+    if (focal_index < 0 || focal_index > focal.chromosome1.size()) {
+      Rcout << "focal_index out of range"; force_output();
+      throw "focal_index out of range";
+    }
+
     auto a1 = focal.chromosome1[focal_index];
     auto a2 = focal.chromosome2[focal_index];
     int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
+    if (fit_index > select.ncol()) {
+      Rcout << "fit_index out of range"; force_output();
+      throw "fit_index out of range";
+    }
     fitness_vec[i] = select(i, fit_index);
  //   Rcout << a1 << " " << a2 << " " << select(i, fit_index) << "\n";
   }
 
-  if (!multiplicative_selection) {
-    return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0);
+  double output;
+  if (multiplicative_selection) {
+    output = std::accumulate(fitness_vec.begin(), fitness_vec.end(), 1.0,
+                             std::multiplies<>());
+  } else {
+    output = std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0);
   }
 
-  return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 1.0,
-                         std::multiplies<>());
-
-
-
+  return output;
 }
 
 List convert_to_list(const std::vector<Fish_emp>& v,
@@ -749,6 +767,8 @@ int find_location(const std::vector<double>& markers,
       return std::distance(markers.begin(), loc);
     }
   }
+  Rcout << "could not find location\n"; force_output();
+  throw "could not find location\n";
   return -1;
 }
 
