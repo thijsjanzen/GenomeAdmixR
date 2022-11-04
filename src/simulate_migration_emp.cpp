@@ -206,7 +206,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     int num_threads) {
 
   bool use_selection = false;
-  if (select(1, 1) >= 0) use_selection = true;
+  if (select(0, 0) >= 0) use_selection = true;
 
   std::vector<Fish_emp> pop_1 = source_pop_1;
   std::vector<Fish_emp> pop_2 = source_pop_2;

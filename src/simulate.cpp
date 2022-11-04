@@ -137,7 +137,7 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         int num_threads) {
 
   bool use_selection = false;
-  if(select(1, 1) >= 0) use_selection = true;
+  if(select(0, 0) >= 0) use_selection = true;
 
   std::vector<Fish> Pop = sourcePop;
   std::vector<double> fitness;
