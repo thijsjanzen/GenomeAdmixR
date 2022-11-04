@@ -5,6 +5,7 @@
 //  Created by Thijs Janzen on 28/02/2018.
 //
 //
+#include <array>
 #include <vector>
 #include <cstdlib>
 #include <numeric>
@@ -144,7 +145,7 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
 
 
 std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& sourcePop,
-                                                const NumericMatrix& select_matrix,
+                                                const std::vector<std::array<double, 5>>& select_matrix,
                                                 const std::vector<double>& marker_positions,
                                                 size_t pop_size,
                                                 int total_runtime,
@@ -162,7 +163,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
   size_t num_alleles = 5;
   bool use_selection = false;
-  if(select_matrix(0, 0) >= 0) use_selection = true;
+  if(select_matrix[0][0] >= 0) use_selection = true;
 
   std::vector<Fish_emp> Pop = sourcePop;
   std::vector<double> fitness;
@@ -286,6 +287,15 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
   try {
     rnd_t rndgen;
 
+    std::vector< std::array<double, 5> > select_matrix;
+    for (size_t i = 0; i < select.nrow(); ++i) {
+      std::array<double, 5> row_entry;
+      for (size_t j = 0; j < select.ncol(); ++j) {
+        row_entry[j] = select(i, j);
+      }
+      select_matrix.push_back(row_entry);
+    }
+
     std::vector<double> marker_positions(marker_positions_R.begin(),
                                          marker_positions_R.end());
 
@@ -350,7 +360,7 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                                                                   morgan);
 
     std::vector<Fish_emp> output_pop = simulate_population_emp(Pop,
-                                                               select,
+                                                               select_matrix,
                                                                marker_positions,
                                                                pop_size,
                                                                total_runtime,

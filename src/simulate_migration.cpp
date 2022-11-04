@@ -5,6 +5,7 @@
 //  Copyright Thijs Janzen 2018
 //
 //
+#include <array>
 #include <vector>
 #include <cstdlib>
 #include <numeric>
@@ -210,8 +211,18 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     double migration_rate,
     int num_threads,
     rnd_t& rndgen) {
+
+  std::vector< std::array<double, 5> > select_matrix;
+  for (size_t i = 0; i < select.nrow(); ++i) {
+    std::array<double, 5> row_entry;
+    for (size_t j = 0; j < select.ncol(); ++j) {
+       row_entry[j] = select(i, j);
+    }
+    select_matrix.push_back(row_entry);
+  }
+
   bool use_selection = false;
-  if (select(1, 1) >= 0) use_selection = true;
+  if (select_matrix[0][0] >= 0) use_selection = true;
 
   std::vector<Fish> pop_1 = source_pop_1;
   std::vector<Fish> pop_2 = source_pop_2;
@@ -220,22 +231,28 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   std::vector<double> fitness_pop_2(pop_2.size(), 0.0);
 
   if (use_selection) {
-    for (int j = 0; j < select.nrow(); ++j) {
-      if (select(j, 4) < 0) break; // these entries are only for tracking, not for selection calculations
+
+    for (auto j : select_matrix) {
+      if (j[4] < 0) break; // these entries are only for tracking, not for selection calculations
+
       double local_max_fitness = 0.0;
       for (int i = 1; i < 4; ++i) {
-        if (select(j, i) > local_max_fitness) {
-          local_max_fitness = select(j, i);
+        if (j[i] > local_max_fitness) {
+          local_max_fitness = j[i];
         }
       }
     }
 
     for (size_t i = 0; i < pop_1.size(); ++i) {
-      fitness_pop_1[i] = calculate_fitness(pop_1[i], select, multiplicative_selection);
+      fitness_pop_1[i] = calculate_fitness(pop_1[i],
+                                           select_matrix,
+                                           multiplicative_selection);
     }
 
     for (size_t i = 0; i < pop_2.size(); ++i) {
-      fitness_pop_2[i] = calculate_fitness(pop_2[i], select, multiplicative_selection);
+      fitness_pop_2[i] = calculate_fitness(pop_2[i],
+                                           select_matrix,
+                                           multiplicative_selection);
     }
   }
 

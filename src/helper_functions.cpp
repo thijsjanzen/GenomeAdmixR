@@ -7,6 +7,7 @@
 
 #include "helper_functions.h"
 #include <vector>
+#include <array>
 #include <string>
 #include <thread>
 #include <chrono>
@@ -16,7 +17,7 @@
 
 void force_output() {
 //  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
-  std::this_thread::sleep_for(std::chrono::milliseconds(300));
+  std::this_thread::sleep_for(std::chrono::milliseconds(30));
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
@@ -248,7 +249,6 @@ int draw_prop_fitness(const std::vector<double>& fitness,
   }
 }
 
-
 std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) {
   std::vector< Fish > output;
 
@@ -297,7 +297,6 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
   return(output);
 }
 
-
 List convert_to_list(const std::vector<Fish>& v) {
   int list_size = (int)v.size();
   List output(list_size);
@@ -329,15 +328,15 @@ List convert_to_list(const std::vector<Fish>& v) {
 }
 
 double calculate_fitness(const Fish& focal,
-                         const NumericMatrix& select,
+                         const std::vector< std::array<double, 5>>& select,
                          bool multiplicative_selection) {
 
-  int number_of_markers = select.nrow();
+  int number_of_markers = select.size();
   std::vector< int > num_alleles(number_of_markers, 0);
 
   int focal_marker = 0;
-  double pos = select(focal_marker, 0);
-  double anc = select(focal_marker, 4);
+  double pos = select[focal_marker][0];
+  double anc = select[focal_marker][4];
   // loc aa  Aa  AA ancestor
   //  0  1   2  3  4
 
@@ -348,15 +347,15 @@ double calculate_fitness(const Fish& focal,
       if(focal_marker >= number_of_markers) {
         break;
       }
-      pos = select(focal_marker, 0);
-      anc = select(focal_marker, 4);
+      pos = select[focal_marker][0];
+      anc = select[focal_marker][4];
     }
     if (anc < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
   }
 
   focal_marker = 0;
-  pos = select(focal_marker, 0);
-  anc = select(focal_marker, 4);
+  pos = select[focal_marker][0];
+  anc = select[focal_marker][4];
 
   for(auto it = (focal.chromosome2.begin()+1); it != focal.chromosome2.end(); ++it) {
     if ((*it).pos > pos) {
@@ -365,8 +364,8 @@ double calculate_fitness(const Fish& focal,
       if (focal_marker >= number_of_markers) {
         break;
       }
-      pos = select(focal_marker, 0);
-      anc = select(focal_marker, 4);
+      pos = select[focal_marker][0];
+      anc = select[focal_marker][4];
     }
     if(anc < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
   }
@@ -374,17 +373,17 @@ double calculate_fitness(const Fish& focal,
   double fitness = 0.0;
   if (multiplicative_selection) fitness = 1.0;
   for (size_t i = 0; i < num_alleles.size(); ++i) {
-    if(select(i, 4) < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
+    if(select[i][4] < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
 
     int fitness_index = 1 + num_alleles[i];
-    if (fitness_index > select.nrow()) {
+    if (fitness_index > select[0].size()) {
       throw "fitness_index out of select range";
     }
 
     if (multiplicative_selection) {
-      fitness *= select(i, fitness_index);
+      fitness *= select[i][fitness_index];
     } else {
-      fitness += select(i, fitness_index);
+      fitness += select[i][fitness_index];
     }
   }
 
@@ -644,21 +643,21 @@ std::vector< Fish_emp > convert_numeric_matrix_to_fish_vector(
 }
 
 double calculate_fitness(const Fish_emp& focal,
-                         const NumericMatrix& select,
+                         const std::vector<std::array<double, 5>>& select,
                          const std::vector<double>& locations,
                          bool multiplicative_selection) {
 
-  int number_of_markers = select.nrow();
+  int number_of_markers = select.size();
   std::vector<double> fitness_vec(number_of_markers);
 
-  if (select.ncol() < 4) {
+  if (select[0].size() < 5) {
     Rcout << "select matrix too small"; force_output();
     throw "select matrix too small";
   }
 
   for (int i = 0; i < number_of_markers; ++i) {
-    auto focal_pos = select(i, 0);
-    auto focal_anc = select(i, 4);
+    auto focal_pos = select[i][0];
+    auto focal_anc = select[i][4];
     if (focal_anc == -1) continue; // do not take into account
     int focal_index = find_location(locations, focal_pos);
 
@@ -670,11 +669,11 @@ double calculate_fitness(const Fish_emp& focal,
     auto a1 = focal.chromosome1[focal_index];
     auto a2 = focal.chromosome2[focal_index];
     int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
-    if (fit_index > select.ncol()) {
+    if (fit_index > select[0].size()) {
       Rcout << "fit_index out of range"; force_output();
       throw "fit_index out of range";
     }
-    fitness_vec[i] = select(i, fit_index);
+    fitness_vec[i] = select[i][fit_index];
  //   Rcout << a1 << " " << a2 << " " << select(i, fit_index) << "\n";
   }
 
