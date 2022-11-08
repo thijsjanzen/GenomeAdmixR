@@ -34,10 +34,8 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
                      int &index,
                      rnd_t& rndgen) {
 
- // std::cerr << max_fitness_source << " " << max_fitness_migr << std::endl;
   if (rndgen.uniform() < migration_rate && pop_2.size() > 0) {
     // migration
- //   std::cerr << "migration!" << std::endl;
     int local_index = use_selection ?
                       draw_prop_fitness(fitness_migr, max_fitness_migr, rndgen) :
                       rndgen.random_number( static_cast<int>(pop_2.size() ));
@@ -49,23 +47,16 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
     return(pop_2[local_index]);
   }
 
-  // else, no migration!
-
- // std::cerr << "no_migration!" << std::endl;
-
   int local_index = use_selection ?
                     draw_prop_fitness(fitness_source, max_fitness_source, rndgen) :
                     rndgen.random_number( static_cast<int>(pop_1.size() ));
 
-//  std::cerr << index << std::endl;
   if (local_index < 0 || local_index > static_cast<int>(pop_1.size())) {
     Rcpp::stop("index out of range in draw parent");
   }
   index = local_index;
   return(pop_1[local_index]);
 }
-
-
 
 std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       const std::vector< Fish_emp >& pop_2,
@@ -115,8 +106,8 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                               rndgen2);
       }
 
-      new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen2, emp_gen),
-                                   parent2.gamete(size_in_morgan, rndgen2, emp_gen));
+      new_generation[i] = Fish_emp(gamete(size_in_morgan, rndgen2, emp_gen, parent1),
+                                  gamete(size_in_morgan, rndgen2, emp_gen, parent2));
 
       if (mutation_rate > 0)
         mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
@@ -181,8 +172,8 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                   rndgen2);
           }
 
-          new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen2, emp_gen),
-                                       parent2.gamete(size_in_morgan, rndgen2, emp_gen));
+          new_generation[i] = Fish_emp(gamete(size_in_morgan, rndgen2, emp_gen, parent1),
+                                       gamete(size_in_morgan, rndgen2, emp_gen, parent2));
 
           if (mutation_rate > 0)
             mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);

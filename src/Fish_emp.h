@@ -15,73 +15,48 @@ struct Fish_emp {
       chromosome2 = std::vector<int>();
   }
 
-  Fish_emp(Fish_emp&& other) {
-    chromosome1 = std::move(other.chromosome1);
-    chromosome2 = std::move(other.chromosome2);
-  }
-
-  Fish_emp& operator=(Fish_emp&& other) {
-    if (this != &other) {
-      chromosome1 = std::move(other.chromosome1);
-      chromosome2 = std::move(other.chromosome2);
-    }
-    return *this;
-  }
-
-  Fish_emp(const Fish_emp& other) {
-    chromosome1 = other.chromosome1;
-    chromosome2 = other.chromosome2;
-  }
-
-  Fish_emp& operator=(const Fish_emp& other) {
-    if (this != &other) {
-      chromosome1 = other.chromosome1;
-      chromosome2 = other.chromosome2;
-    }
-    return *this;
-  }
-
   Fish_emp(const std::vector< int >& c1,
            const std::vector< int >& c2) :
     chromosome1(c1), chromosome2(c2) {
   }
+};
 
-  std::vector< int > gamete(double morgan,
-                            rnd_t& rndgen,
-                            const emp_genome& emp_gen) const {
+inline std::vector< int > gamete(double morgan,
+                          rnd_t& rndgen,
+                          const emp_genome& emp_gen,
+                          const Fish_emp& parent)  {
 
-    std::vector<int> recom_pos = emp_gen.recompos(morgan,
-                                                  rndgen);
+  std::vector<int> recom_pos = emp_gen.recompos(morgan,
+                                                rndgen);
 
-    std::vector< int > recombined_chromosome;
+  std::vector< int > recombined_chromosome;
 
-    if (recom_pos.size() <= 1) {
-      recombined_chromosome = rndgen.random_number(2) ? chromosome1 : chromosome2;
-      return recombined_chromosome;
-    }
-
-    int index = rndgen.random_number(2);
-    int prev_start = 0;
-
-    for(size_t i = 0; i < recom_pos.size(); ++i) {
-      auto start = prev_start;
-      auto end   = recom_pos[i];
-
-      for (int j = start; j < end; ++j) {
-        // this code can be more optimized, but first we go for something that works.
-        if (j < 0 || j > chromosome1.size()) {
-          Rcpp::stop("recombine out of range");
-        }
-        if (index == 0) recombined_chromosome.push_back(chromosome1[j]);
-        if (index == 1) recombined_chromosome.push_back(chromosome2[j]);
-      }
-
-      prev_start = end;
-      index = 1 - index;
-    }
-
+  if (recom_pos.size() <= 1) {
+    recombined_chromosome = rndgen.random_number(2) ? parent.chromosome1 : parent.chromosome2;
     return recombined_chromosome;
   }
-};
+
+  int index = rndgen.random_number(2);
+  int prev_start = 0;
+
+  for(size_t i = 0; i < recom_pos.size(); ++i) {
+    auto start = prev_start;
+    auto end   = recom_pos[i];
+
+    for (int j = start; j < end; ++j) {
+      // this code can be more optimized, but first we go for something that works.
+      if (j < 0 || j > parent.chromosome1.size()) {
+        Rcpp::stop("recombine out of range");
+      }
+      if (index == 0) recombined_chromosome.push_back(parent.chromosome1[j]);
+      if (index == 1) recombined_chromosome.push_back(parent.chromosome2[j]);
+    }
+
+    prev_start = end;
+    index = 1 - index;
+  }
+
+  return recombined_chromosome;
+}
 
 #endif

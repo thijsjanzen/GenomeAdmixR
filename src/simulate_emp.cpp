@@ -66,12 +66,14 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
         }
       }
 
-      new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
-                                                      rndgen2,
-                                                      local_emp_genome),
-                                                      Pop[index2].gamete(morgan,
-                                                                         rndgen2,
-                                                                         local_emp_genome));
+      new_generation[i] = Fish_emp(gamete(morgan,
+                                          rndgen2,
+                                          local_emp_genome,
+                                          Pop[index1]),
+                                   gamete(morgan,
+                                          rndgen2,
+                                          local_emp_genome,
+                                          Pop[index2]));
     }
   } else {
 
@@ -128,12 +130,14 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
             }
           }
 
-          new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
-                                                          rndgen2,
-                                                          local_emp_genome),
-                                                          Pop[index2].gamete(morgan,
-                                                                             rndgen2,
-                                                                             local_emp_genome));
+          new_generation[i] = Fish_emp(gamete(morgan,
+                                              rndgen2,
+                                              local_emp_genome,
+                                              Pop[index1]),
+                                       gamete(morgan,
+                                              rndgen2,
+                                              local_emp_genome,
+                                              Pop[index2]));
         }
       }
     );
