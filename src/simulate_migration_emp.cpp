@@ -32,38 +32,36 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
                      double max_fitness_migr,
                      int &index,
                      rnd_t& rndgen) {
-  Fish_emp parent;
-  std::cerr << max_fitness_source << " " << max_fitness_migr << std::endl;
+
+ // std::cerr << max_fitness_source << " " << max_fitness_migr << std::endl;
   if (rndgen.uniform() < migration_rate && pop_2.size() > 0) {
     // migration
-    std::cerr << "migration!" << std::endl;
-    if(use_selection) {
-      index = draw_prop_fitness(fitness_migr, max_fitness_migr, rndgen);
-    } else {
-      index = rndgen.random_number( static_cast<int>(pop_2.size() ));
-    }
-  //  std::cerr << index << std::endl;
-    if (index < 0 || index > static_cast<int>(pop_2.size())) {
+ //   std::cerr << "migration!" << std::endl;
+    int local_index = use_selection ?
+                      draw_prop_fitness(fitness_migr, max_fitness_migr, rndgen) :
+                      rndgen.random_number( static_cast<int>(pop_2.size() ));
+    if (local_index < 0 || local_index > static_cast<int>(pop_2.size())) {
       Rcpp::stop("index out of range in draw parent");
     }
-    parent = pop_2[index];
-    index = index + pop_1.size(); // to ensure different indices for pop_1 and pop_2
 
-  } else {
-    std::cerr << "no_migration!" << std::endl;
-    if (use_selection)  {
-      index = draw_prop_fitness(fitness_source, max_fitness_source, rndgen);
-    } else {
-      index = rndgen.random_number( static_cast<int>(pop_1.size()) );
-    }
-  //  std::cerr << index << std::endl;
-    if (index < 0 || index > static_cast<int>(pop_1.size())) {
-      Rcpp::stop("index out of range in draw parent");
-    }
-    parent = pop_1[index];
+    index = local_index + pop_1.size(); // to ensure different indices for pop_1 and pop_2
+    return(pop_2[local_index]);
   }
-  std::cerr << index << std::endl;
-  return(parent);
+
+  // else, no migration!
+
+ // std::cerr << "no_migration!" << std::endl;
+
+  int local_index = use_selection ?
+                    draw_prop_fitness(fitness_source, max_fitness_source, rndgen) :
+                    rndgen.random_number( static_cast<int>(pop_1.size() ));
+
+//  std::cerr << index << std::endl;
+  if (local_index < 0 || local_index > static_cast<int>(pop_1.size())) {
+    Rcpp::stop("index out of range in draw parent");
+  }
+  index = local_index;
+  return(pop_1[local_index]);
 }
 
 
@@ -95,13 +93,13 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
 
 
       int index1, index2;
-      Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
+      auto parent1 = draw_parent(pop_1, pop_2, migration_rate,
                                      use_selection,
                                      fitness_source, fitness_migr,
                                      max_fitness_source, max_fitness_migr,
                                      index1,
                                      rndgen2);
-      Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
+      auto parent2 = draw_parent(pop_1, pop_2, migration_rate,
                                      use_selection,
                                      fitness_source, fitness_migr,
                                      max_fitness_source, max_fitness_migr,
