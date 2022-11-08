@@ -15,7 +15,7 @@
 #include <thread>
 
 void force_output() {
-//  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
+  //  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
   std::this_thread::sleep_for(std::chrono::milliseconds(300));
   R_FlushConsole();
   R_ProcessEvents();
@@ -124,8 +124,8 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
     allele_matrix(i, 3) = 0;
   }
 
- // for (auto it = v.begin(); it != v.end(); ++it) {
- for (int i = 0; i < v.size(); ++i) {
+  // for (auto it = v.begin(); it != v.end(); ++it) {
+  for (int i = 0; i < v.size(); ++i) {
     update_anc_chrom(v[i].chromosome1, founder_labels,
                      m, allele_matrix);
     update_anc_chrom(v[i].chromosome2, founder_labels,
@@ -149,12 +149,12 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
   arma::mat output(markers.size() * number_of_alleles, 4);
 
   for (int i = 0; i < markers.size(); ++i) {
-     if (markers[i] < 0) continue;
-     arma::mat local_mat = update_frequency_tibble(pop,
-                                                   markers[i],
-                                                   founder_labels,
-                                                   t,
-                                                   morgan);
+    if (markers[i] < 0) continue;
+    arma::mat local_mat = update_frequency_tibble(pop,
+                                                  markers[i],
+                                                         founder_labels,
+                                                         t,
+                                                         morgan);
     // now we have a (markers x alleles) x 3 tibble, e.g. [loc, anc, freq]
     // and we have to put that in the right place in the output matrix
     int start = i * number_of_alleles;
@@ -236,6 +236,11 @@ int draw_prop_fitness(const std::vector<double>& fitness,
   if (maxFitness <= 0.0) {
     return rndgen.random_number(fitness.size());
   }
+
+  if (std::isnan(maxFitness)) {
+    return rndgen.random_number(fitness.size());
+  }
+
 
   size_t fitness_size = fitness.size();
   double inv_fitness = 1.0 / maxFitness;
@@ -404,32 +409,32 @@ int draw_random_founder(const NumericVector& v,
 arma::mat calculate_allele_spectrum_cpp(Rcpp::NumericVector input_population,
                                         Rcpp::NumericVector markers,
                                         bool progress_bar) {
-try {
-  std::vector< Fish > Pop;
+  try {
+    std::vector< Fish > Pop;
 
-  Pop = convert_NumericVector_to_fishVector(input_population);
-  std::vector<int> founder_labels;
-  for (auto it = Pop.begin(); it != Pop.end(); ++it) {
-    update_founder_labels((*it).chromosome1, founder_labels);
-    update_founder_labels((*it).chromosome2, founder_labels);
+    Pop = convert_NumericVector_to_fishVector(input_population);
+    std::vector<int> founder_labels;
+    for (auto it = Pop.begin(); it != Pop.end(); ++it) {
+      update_founder_labels((*it).chromosome1, founder_labels);
+      update_founder_labels((*it).chromosome2, founder_labels);
+    }
+
+    double morgan = markers[markers.size() - 1];
+    markers = scale_markers(markers, morgan); // make sure they are in [0, 1];
+
+    arma::mat frequencies = update_all_frequencies_tibble(Pop,
+                                                          markers,
+                                                          founder_labels,
+                                                          0,
+                                                          morgan);
+
+    return frequencies;
+  } catch(std::exception &ex) {
+    forward_exception_to_r(ex);
+  } catch(...) {
+    ::Rf_error("c++ exception (unknown reason)");
   }
-
-  double morgan = markers[markers.size() - 1];
-  markers = scale_markers(markers, morgan); // make sure they are in [0, 1];
-
-  arma::mat frequencies = update_all_frequencies_tibble(Pop,
-                                                        markers,
-                                                        founder_labels,
-                                                        0,
-                                                        morgan);
-
-  return frequencies;
-} catch(std::exception &ex) {
-  forward_exception_to_r(ex);
-} catch(...) {
-  ::Rf_error("c++ exception (unknown reason)");
-}
-return arma::mat();
+  return arma::mat();
 }
 
 int get_ancestry(const std::vector< junction >& chrom,
@@ -459,28 +464,28 @@ int get_ancestry(const std::vector< junction >& chrom,
 NumericMatrix simulation_data_to_genomeadmixr_data_cpp(Rcpp::NumericVector input_population,
                                                        Rcpp::NumericVector markers) {
 
-try {
-  std::vector< Fish > Pop;
-  Pop = convert_NumericVector_to_fishVector(input_population);
+  try {
+    std::vector< Fish > Pop;
+    Pop = convert_NumericVector_to_fishVector(input_population);
 
-  NumericMatrix output(Pop.size() * 2, markers.size());
+    NumericMatrix output(Pop.size() * 2, markers.size());
 
-  for(size_t i = 0; i < Pop.size(); ++i) {
-    int index_c1 = i * 2;
-    int index_c2 = index_c1 + 1;
+    for(size_t i = 0; i < Pop.size(); ++i) {
+      int index_c1 = i * 2;
+      int index_c2 = index_c1 + 1;
 
-    for (size_t j = 0; j < static_cast<size_t>(markers.size()); ++j) {
-      output(index_c1, j) = get_ancestry(Pop[i].chromosome1, markers[j]);
-      output(index_c2, j) = get_ancestry(Pop[i].chromosome2, markers[j]);
+      for (size_t j = 0; j < static_cast<size_t>(markers.size()); ++j) {
+        output(index_c1, j) = get_ancestry(Pop[i].chromosome1, markers[j]);
+        output(index_c2, j) = get_ancestry(Pop[i].chromosome2, markers[j]);
+      }
     }
+    return(output);
+  } catch(std::exception &ex) {
+    forward_exception_to_r(ex);
+  } catch(...) {
+    ::Rf_error("c++ exception (unknown reason)");
   }
-  return(output);
-} catch(std::exception &ex) {
-  forward_exception_to_r(ex);
-} catch(...) {
-  ::Rf_error("c++ exception (unknown reason)");
-}
-return NA_REAL;
+  return NA_REAL;
 }
 
 std::string int_to_base(int a) {
@@ -506,30 +511,30 @@ std::vector<std::string> combine_alleles(int a1, int a2) {
 StringMatrix simulation_data_to_plink_cpp(Rcpp::NumericVector input_population,
                                           Rcpp::NumericVector markers) {
 
-try {
-  std::vector< Fish > Pop;
-  Pop = convert_NumericVector_to_fishVector(input_population);
+  try {
+    std::vector< Fish > Pop;
+    Pop = convert_NumericVector_to_fishVector(input_population);
 
-  StringMatrix output(Pop.size(), markers.size() * 2);
-  for(size_t i = 0; i < static_cast<size_t>(Pop.size()); ++i) {
-    for (size_t j = 0; j < static_cast<size_t>(markers.size()); ++j) {
-      auto allele_1 = get_ancestry(Pop[i].chromosome1, markers[j]);
-      auto allele_2 = get_ancestry(Pop[i].chromosome2, markers[j]);
-      std::vector<std::string> entry = combine_alleles(allele_1, allele_2);
+    StringMatrix output(Pop.size(), markers.size() * 2);
+    for(size_t i = 0; i < static_cast<size_t>(Pop.size()); ++i) {
+      for (size_t j = 0; j < static_cast<size_t>(markers.size()); ++j) {
+        auto allele_1 = get_ancestry(Pop[i].chromosome1, markers[j]);
+        auto allele_2 = get_ancestry(Pop[i].chromosome2, markers[j]);
+        std::vector<std::string> entry = combine_alleles(allele_1, allele_2);
 
-      int marker_start = j * 2;
-      int second_marker = marker_start + 1;
-      output(i, marker_start) = entry[0];
-      output(i, second_marker) = entry[1];
+        int marker_start = j * 2;
+        int second_marker = marker_start + 1;
+        output(i, marker_start) = entry[0];
+        output(i, second_marker) = entry[1];
+      }
     }
+    return(output);
+  } catch(std::exception &ex) {
+    forward_exception_to_r(ex);
+  } catch(...) {
+    ::Rf_error("c++ exception (unknown reason)");
   }
-  return(output);
-} catch(std::exception &ex) {
-  forward_exception_to_r(ex);
-} catch(...) {
-  ::Rf_error("c++ exception (unknown reason)");
-}
-return NA_REAL;
+  return NA_REAL;
 }
 
 
@@ -584,23 +589,23 @@ arma::mat update_heterozygosities_tibble(const std::vector< Fish >& pop,
 arma::mat calculate_heterozygosity_cpp(Rcpp::NumericVector input_population,
                                        Rcpp::NumericVector markers,
                                        bool progress_bar) {
-try {
-  std::vector< Fish > Pop;
+  try {
+    std::vector< Fish > Pop;
 
-  Pop = convert_NumericVector_to_fishVector(input_population);
+    Pop = convert_NumericVector_to_fishVector(input_population);
 
 
 
-  arma::mat heterozygosities = update_heterozygosities_tibble(Pop,
-                                                              markers,
-                                                              progress_bar);
-  return heterozygosities;
-} catch(std::exception &ex) {
-  forward_exception_to_r(ex);
-} catch(...) {
-  ::Rf_error("c++ exception (unknown reason)");
-}
-return arma::mat();
+    arma::mat heterozygosities = update_heterozygosities_tibble(Pop,
+                                                                markers,
+                                                                progress_bar);
+    return heterozygosities;
+  } catch(std::exception &ex) {
+    forward_exception_to_r(ex);
+  } catch(...) {
+    ::Rf_error("c++ exception (unknown reason)");
+  }
+  return arma::mat();
 }
 
 NumericVector scale_markers(const Rcpp::NumericVector& markers,
@@ -625,7 +630,7 @@ NumericVector scale_markers(const Rcpp::NumericVector& markers,
 
 
 std::vector< Fish_emp > convert_numeric_matrix_to_fish_vector(
-  const Rcpp::NumericMatrix& input_population) {
+    const Rcpp::NumericMatrix& input_population) {
 
   std::vector< Fish_emp > output;
   for(int i = 0; i < (input_population.nrow() - 1); i += 2) {
@@ -651,13 +656,13 @@ double calculate_fitness(const Fish_emp& focal,
     auto focal_pos = select(i, 0);
     auto focal_anc = select(i, 4);
     if (focal_anc == -1) continue; // do not take into account
+
     int focal_index = find_location(locations, focal_pos);
 
     auto a1 = focal.chromosome1[focal_index];
     auto a2 = focal.chromosome2[focal_index];
     int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
     fitness_vec[i] = select(i, fit_index);
- //   Rcout << a1 << " " << a2 << " " << select(i, fit_index) << "\n";
   }
 
   if (!multiplicative_selection) {
@@ -666,9 +671,6 @@ double calculate_fitness(const Fish_emp& focal,
 
   return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 1.0,
                          std::multiplies<>());
-
-
-
 }
 
 List convert_to_list(const std::vector<Fish_emp>& v,
@@ -694,7 +696,7 @@ List convert_to_list(const std::vector<Fish_emp>& v,
 
     List toAdd = List::create( Named("chromosome1") = chrom1,
                                Named("chromosome2") = chrom2
-                              );
+    );
     output(i) = toAdd;
   }
 
@@ -749,6 +751,7 @@ int find_location(const std::vector<double>& markers,
       return std::distance(markers.begin(), loc);
     }
   }
+  Rcpp::stop("could not find location");
   return -1;
 }
 
@@ -771,9 +774,9 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
     }
 
     std::vector<std::vector<double >> local_mat = update_frequency_tibble(pop,
-                                                  index,
-                                                  markers[i],
-                                                  t);
+                                                                          index,
+                                                                          markers[i],
+                                                                                 t);
     int start = i * number_of_alleles;
     int end = start + number_of_alleles;
     for(int j = start; j < end; ++j) {
@@ -842,13 +845,13 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
   }
 
   for(size_t i = 0; i < markers.size(); ++i) {
-   if (markers[i] < 0) continue;
+    if (markers[i] < 0) continue;
 
-   int index = find_location(locations, markers[i]);
-   std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
-                                                                           index,
-                                                            markers[i],
-                                                            t);
+    int index = find_location(locations, markers[i]);
+    std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
+                                                                            index,
+                                                                            markers[i],
+                                                                                   t);
     // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
     // and we have to put that in the right place in the output matrix
     int start = i * number_of_alleles;
@@ -941,7 +944,7 @@ std::vector<int> get_alleles(int focal_genotype,
     return {allele_1, allele_1};
   }
   if (focal_genotype == 2) {
-      return {allele_1, allele_2};
+    return {allele_1, allele_2};
   }
   if (focal_genotype == 3) {
     return {allele_2, allele_2};
@@ -952,8 +955,8 @@ std::vector<int> get_alleles(int focal_genotype,
 
 // [[Rcpp::export]]
 NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
-                            const NumericVector& allele_1,
-                            const NumericVector& allele_2) {
+                                const NumericVector& allele_1,
+                                const NumericVector& allele_2) {
   int num_indiv = input_mat.nrow();
   int num_markers = allele_1.size();
 
@@ -966,7 +969,7 @@ NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
     for (int j = 0; j < num_markers; ++j) {
       std::vector< int > alleles = get_alleles(input_mat(i, j),
                                                allele_1[j],
-                                               allele_2[j]);
+                                                       allele_2[j]);
       output(index_c1, j) = alleles[0];
       output(index_c2, j) = alleles[1];
     }
