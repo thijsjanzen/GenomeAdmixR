@@ -40,7 +40,10 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
     if(use_selection) {
       index = draw_prop_fitness(fitness_migr, max_fitness_migr, rndgen);
     } else {
-      index = rndgen.random_number( (int)pop_2.size() );
+      index = rndgen.random_number( static_cast<int>(pop_2.size() ));
+    }
+    if (index < 0 || index > static_cast<int>(pop_2.size())) {
+      Rcpp::stop("index out of range in draw parent");
     }
     parent = pop_2[index];
     index = index + pop_1.size();
@@ -49,7 +52,10 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
     if(use_selection)  {
       index = draw_prop_fitness(fitness_source, max_fitness_source, rndgen);
     } else {
-      index = rndgen.random_number( (int)pop_1.size() );
+      index = rndgen.random_number( static_cast<int>(pop_1.size()) );
+    }
+    if (index < 0 || index > static_cast<int>(pop_1.size())) {
+      Rcpp::stop("index out of range in draw parent");
     }
     parent = pop_1[index];
   }
