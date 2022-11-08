@@ -91,18 +91,18 @@ struct emp_genome {
     return;
   }
 
-  size_t index_from_cdf(double p) const {
+  int index_from_cdf(double p) const {
     // find index belonging to p
-    return static_cast<size_t>(std::distance(cdf_.begin(),
+    return static_cast<int>(std::distance(cdf_.begin(),
                                              std::lower_bound(cdf_.begin(),
                                                               cdf_.end(),
                                                               p)));
   }
 
-  std::vector< size_t > recompos(double morgan,
+  std::vector< int > recompos(double morgan,
                                  rnd_t& rndgen) const {
     size_t num_break_points = rndgen.poisson(morgan);
-    std::vector< size_t > indices;
+    std::vector< int > indices;
     for(size_t i = 0; i < num_break_points; ++i) {
       auto found_index = index_from_cdf(rndgen.uniform());
       if (found_index > 0) {

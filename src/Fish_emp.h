@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <vector>
 #include "random_functions.h"
+#include <RcppArmadillo.h>
 
 struct Fish_emp {
   std::vector< int > chromosome1;
@@ -49,7 +50,7 @@ struct Fish_emp {
                             rnd_t& rndgen,
                             const emp_genome& emp_gen) const {
 
-    std::vector<size_t> recom_pos = emp_gen.recompos(morgan,
+    std::vector<int> recom_pos = emp_gen.recompos(morgan,
                                                      rndgen);
 
     if (recom_pos.size() <= 1) {
@@ -60,9 +61,9 @@ struct Fish_emp {
     }
 
     std::vector< int > recombined_chromosome;
+
     int index = rndgen.random_number(2);
     size_t prev_start = 0;
-  //  assert(chromosome1.size() == chromosome2.size());
 
     for(size_t i = 0; i < recom_pos.size(); ++i) {
       auto start = prev_start;
@@ -70,11 +71,17 @@ struct Fish_emp {
       prev_start = recom_pos[i];
 
       if (index == 0) {
-        for (size_t j = start; j < end; ++j) {
+        for (int j = start; j < end; ++j) {
+          if (j < 0 || j > chromosome1.size()) {
+            Rcpp::stop("recombine out of range");
+          }
           recombined_chromosome.push_back(chromosome1[j]);
         }
       } else {
-        for (size_t j = start; j < end; ++j) {
+        for (int j = start; j < end; ++j) {
+          if (j < 0 || j > chromosome2.size()) {
+            Rcpp::stop("recombine out of range");
+          }
           recombined_chromosome.push_back(chromosome2[j]);
         }
       }
