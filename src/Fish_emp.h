@@ -51,41 +51,32 @@ struct Fish_emp {
                             const emp_genome& emp_gen) const {
 
     std::vector<int> recom_pos = emp_gen.recompos(morgan,
-                                                     rndgen);
-
-    if (recom_pos.size() <= 1) {
-      if(rndgen.random_number(2)) {
-        return chromosome1;
-      }
-      return chromosome2;
-    }
+                                                  rndgen);
 
     std::vector< int > recombined_chromosome;
 
+    if (recom_pos.size() <= 1) {
+      recombined_chromosome = rndgen.random_number(2) ? chromosome1 : chromosome2;
+      return recombined_chromosome;
+    }
+
     int index = rndgen.random_number(2);
-    size_t prev_start = 0;
+    int prev_start = 0;
 
     for(size_t i = 0; i < recom_pos.size(); ++i) {
       auto start = prev_start;
       auto end   = recom_pos[i];
-      prev_start = recom_pos[i];
 
-      if (index == 0) {
-        for (int j = start; j < end; ++j) {
-          if (j < 0 || j > chromosome1.size()) {
-            Rcpp::stop("recombine out of range");
-          }
-          recombined_chromosome.push_back(chromosome1[j]);
+      for (int j = start; j < end; ++j) {
+        // this code can be more optimized, but first we go for something that works.
+        if (j < 0 || j > chromosome1.size()) {
+          Rcpp::stop("recombine out of range");
         }
-      } else {
-        for (int j = start; j < end; ++j) {
-          if (j < 0 || j > chromosome2.size()) {
-            Rcpp::stop("recombine out of range");
-          }
-          recombined_chromosome.push_back(chromosome2[j]);
-        }
+        if (index == 0) recombined_chromosome.push_back(chromosome1[j]);
+        if (index == 1) recombined_chromosome.push_back(chromosome2[j]);
       }
 
+      prev_start = end;
       index = 1 - index;
     }
 
