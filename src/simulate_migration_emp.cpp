@@ -11,6 +11,7 @@
 #include <cmath>
 
 #include <vector>
+#include <array>
 #include <algorithm>
 
 #include "Fish_emp.h"
@@ -74,7 +75,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
                                       std::vector< double > fitness_migr,
                                       double max_fitness_source,
                                       double max_fitness_migr,
-                                      const NumericMatrix& select,
+                                      const std::vector<std::array<double, 5>>& select,
                                       bool use_selection,
                                       bool multiplicative_selection,
                                       double migration_rate,
@@ -195,7 +196,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     const std::vector< Fish_emp>& source_pop_1,
     const std::vector< Fish_emp>& source_pop_2,
     const std::vector<double>& marker_positions,
-    const NumericMatrix& select,
+    const std::vector<std::array<double, 5>>& select,
     const std::vector<size_t>& pop_size,
     int total_runtime,
     double morgan,
@@ -214,7 +215,9 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     int num_threads) {
 
   bool use_selection = false;
-  if (select(0, 0) >= 0) use_selection = true;
+  if (!select.empty()) {
+    if (select[0][0] >= 0) use_selection = true;
+  }
 
   std::vector<Fish_emp> pop_1 = source_pop_1;
   std::vector<Fish_emp> pop_2 = source_pop_2;
@@ -358,7 +361,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
 List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericMatrix& input_population_2,
                                 const NumericVector& marker_positions_R,
-                                NumericMatrix select,
+                                NumericMatrix select_R,
                                 const NumericVector& pop_sizes,
                                 int total_runtime,
                                 double morgan,
@@ -373,6 +376,14 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericVector& recombination_map) {
 try {
   rnd_t rndgen;
+
+  std::vector<std::array<double, 5>> select;
+  for (int i = 0; i < select_R.nrow(); ++i) {
+    std::array<double, 5> row;
+    for (int j = 0; j < 5; ++j) row[j] = select_R(i, j);
+    select.push_back(row);
+  }
+
 
   std::vector< Fish_emp > Pop_1;
   std::vector< Fish_emp > Pop_2;

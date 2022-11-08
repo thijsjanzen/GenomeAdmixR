@@ -6,6 +6,7 @@
 //
 //
 #include <vector>
+#include <array>
 #include <cstdlib>
 #include <numeric>
 #include <cmath>
@@ -144,7 +145,7 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
 
 
 std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& sourcePop,
-                                                const NumericMatrix& select_matrix,
+                                                const std::vector<std::array<double, 5>>& select_matrix,
                                                 const std::vector<double>& marker_positions,
                                                 size_t pop_size,
                                                 int total_runtime,
@@ -162,7 +163,9 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 
   size_t num_alleles = 5;
   bool use_selection = false;
-  if(select_matrix(0, 0) >= 0) use_selection = true;
+  if (!select_matrix.empty()) {
+    if(select_matrix[0][0] >= 0) use_selection = true;
+  }
 
   std::vector<Fish_emp> Pop = sourcePop;
   std::vector<double> fitness;
@@ -271,7 +274,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
 // [[Rcpp::export]]
 List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                       const Rcpp::NumericVector& marker_positions_R,
-                      const Rcpp::NumericMatrix& select,
+                      const Rcpp::NumericMatrix& select_R,
                       size_t pop_size,
                       size_t total_runtime,
                       double morgan,
@@ -285,6 +288,14 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                       const Rcpp::NumericVector& recombination_map) {
   try {
     rnd_t rndgen;
+
+    std::vector<std::array<double, 5>> select;
+    for (int i = 0; i < select_R.nrow(); ++i) {
+      std::array<double, 5> row;
+      for (int j = 0; j < 5; ++j) row[j] = select_R(i, j);
+      select.push_back(row);
+    }
+
 
     std::vector<double> marker_positions(marker_positions_R.begin(),
                                          marker_positions_R.end());

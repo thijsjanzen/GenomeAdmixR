@@ -7,13 +7,14 @@
 
 #include "helper_functions.h"
 #include <vector>
+#include <array>
 #include <string>
 #include <thread>
 #include <chrono>
 
 void force_output() {
 //  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
-  std::this_thread::sleep_for(std::chrono::milliseconds(300));
+  std::this_thread::sleep_for(std::chrono::milliseconds(30));
   R_FlushConsole();
   R_ProcessEvents();
   R_CheckUserInterrupt();
@@ -642,16 +643,16 @@ std::vector< Fish_emp > convert_numeric_matrix_to_fish_vector(
 }
 
 double calculate_fitness(const Fish_emp& focal,
-                         const NumericMatrix& select,
+                         const std::vector<std::array<double, 5>>& select,
                          const std::vector<double>& locations,
                          bool multiplicative_selection) {
 
-  int number_of_markers = select.nrow();
+  int number_of_markers = select.size();
   std::vector<double> fitness_vec(number_of_markers);
 
   for (int i = 0; i < number_of_markers; ++i) {
-    auto focal_pos = select(i, 0);
-    auto focal_anc = select(i, 4);
+    auto focal_pos = select[i].front();
+    auto focal_anc = select[i].back();
     if (focal_anc == -1) continue; // do not take into account
 
     int focal_index = find_location(locations, focal_pos);
@@ -659,7 +660,7 @@ double calculate_fitness(const Fish_emp& focal,
     auto a1 = focal.chromosome1[focal_index];
     auto a2 = focal.chromosome2[focal_index];
     int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
-    fitness_vec[i] = select(i, fit_index);
+    fitness_vec[i] = select[i][fit_index];
   }
 
   if (!multiplicative_selection) {

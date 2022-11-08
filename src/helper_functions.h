@@ -92,7 +92,7 @@ void update_founder_labels(const std::vector<int>& chrom,
                            std::vector<int>& founder_labels);
 
 double calculate_fitness(const Fish_emp& focal,
-                         const NumericMatrix& select,
+                         const std::vector<std::array<double, 5>>& select,
                          const std::vector<double>& locations,
                          bool multiplicative_selection);
 
