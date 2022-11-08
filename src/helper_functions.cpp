@@ -237,6 +237,11 @@ int draw_prop_fitness(const std::vector<double>& fitness,
     return rndgen.random_number(fitness.size());
   }
 
+  if (std::isnan(maxFitness)) {
+    return rndgen.random_number(fitness.size());
+  }
+
+
   size_t fitness_size = fitness.size();
   double inv_fitness = 1.0 / maxFitness;
   while (true) {
@@ -651,13 +656,13 @@ double calculate_fitness(const Fish_emp& focal,
     auto focal_pos = select(i, 0);
     auto focal_anc = select(i, 4);
     if (focal_anc == -1) continue; // do not take into account
+
     int focal_index = find_location(locations, focal_pos);
 
     auto a1 = focal.chromosome1[focal_index];
     auto a2 = focal.chromosome2[focal_index];
     int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
     fitness_vec[i] = select(i, fit_index);
- //   Rcout << a1 << " " << a2 << " " << select(i, fit_index) << "\n";
   }
 
   if (!multiplicative_selection) {
@@ -666,9 +671,6 @@ double calculate_fitness(const Fish_emp& focal,
 
   return std::accumulate(fitness_vec.begin(), fitness_vec.end(), 1.0,
                          std::multiplies<>());
-
-
-
 }
 
 List convert_to_list(const std::vector<Fish_emp>& v,
@@ -749,6 +751,7 @@ int find_location(const std::vector<double>& markers,
       return std::distance(markers.begin(), loc);
     }
   }
+  Rcpp::stop("could not find location");
   return -1;
 }
 
