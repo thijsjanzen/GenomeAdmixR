@@ -62,7 +62,7 @@ struct Fish_emp {
     std::vector< int > recombined_chromosome;
     int index = rndgen.random_number(2);
     size_t prev_start = 0;
-    assert(chromosome1.size() == chromosome2.size());
+  //  assert(chromosome1.size() == chromosome2.size());
 
     for(size_t i = 0; i < recom_pos.size(); ++i) {
       auto start = prev_start;
