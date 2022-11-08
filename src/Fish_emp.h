@@ -12,6 +12,32 @@ struct Fish_emp {
   Fish_emp()
     {}
 
+  Fish_emp(Fish_emp&& other) {
+    chromosome1 = std::move(other.chromosome1);
+    chromosome2 = std::move(other.chromosome2);
+  }
+
+  Fish_emp& operator=(Fish_emp&& other) {
+    if (this != &other) {
+      chromosome1 = std::move(other.chromosome1);
+      chromosome2 = std::move(other.chromosome2);
+    }
+    return *this;
+  }
+
+  Fish_emp(const Fish_emp& other) {
+    chromosome1 = other.chromosome1;
+    chromosome2 = other.chromosome2;
+  }
+
+  Fish_emp& operator=(const Fish_emp& other) {
+    if (this != &other) {
+      chromosome1 = other.chromosome1;
+      chromosome2 = other.chromosome2;
+    }
+    return *this;
+  }
+
   Fish_emp(const std::vector< int >& c1,
            const std::vector< int >& c2) :
     chromosome1(c1), chromosome2(c2) {
