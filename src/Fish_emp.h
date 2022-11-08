@@ -52,25 +52,33 @@ struct Fish_emp {
     std::vector<size_t> recom_pos = emp_gen.recompos(morgan,
                                                      rndgen);
 
-    if (recom_pos.size() == 1) {
+    if (recom_pos.size() <= 1) {
       if(rndgen.random_number(2)) {
         return chromosome1;
       }
       return chromosome2;
     }
 
-    std::vector < std::vector<int>::const_iterator > iters = {chromosome1.begin(),
-                                                              chromosome2.begin()};
     std::vector< int > recombined_chromosome;
     int index = rndgen.random_number(2);
     size_t prev_start = 0;
+    assert(chromosome1.size() == chromosome2.size());
 
     for(size_t i = 0; i < recom_pos.size(); ++i) {
-      auto start = iters[index] + prev_start;
-      auto end   = iters[index] + recom_pos[i];
-
+      auto start = prev_start;
+      auto end   = recom_pos[i];
       prev_start = recom_pos[i];
-      recombined_chromosome.insert(recombined_chromosome.end(), start, end);
+
+      if (index == 0) {
+        for (size_t j = start; j < end; ++j) {
+          recombined_chromosome.push_back(chromosome1[j]);
+        }
+      } else {
+        for (size_t j = start; j < end; ++j) {
+          recombined_chromosome.push_back(chromosome2[j]);
+        }
+      }
+
       index = 1 - index;
     }
 
