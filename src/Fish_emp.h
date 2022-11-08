@@ -9,8 +9,10 @@ struct Fish_emp {
   std::vector< int > chromosome1;
   std::vector< int > chromosome2;
 
-  Fish_emp()
-    {}
+  Fish_emp() {
+      chromosome1 = std::vector<int>(); // empty stuff
+      chromosome2 = std::vector<int>();
+  }
 
   Fish_emp(Fish_emp&& other) {
     chromosome1 = std::move(other.chromosome1);
