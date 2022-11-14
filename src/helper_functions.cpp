@@ -239,6 +239,13 @@ int draw_prop_fitness(const std::vector<double>& fitness,
     return rndgen.random_number(fitness.size());
   }
 
+  if (std::isinf(maxFitness)) {
+    return rndgen.random_number(fitness.size());
+  }
+
+  if (fitness.empty()) {
+    Rcpp::stop("empty fitness vector");
+  }
 
   size_t fitness_size = fitness.size();
   double inv_fitness = 1.0 / maxFitness;

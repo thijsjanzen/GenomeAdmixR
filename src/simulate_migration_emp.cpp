@@ -47,6 +47,10 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
     return(pop_2[local_index]);
   }
 
+  if (pop_1.empty()) {
+    Rcpp::stop("pop 1 can't be empty");
+  }
+
   int local_index = use_selection ?
                     draw_prop_fitness(fitness_source, max_fitness_source, rndgen) :
                     rndgen.random_number( static_cast<int>(pop_1.size() ));

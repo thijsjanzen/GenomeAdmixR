@@ -11,8 +11,6 @@ struct Fish_emp {
   std::vector< int > chromosome2;
 
   Fish_emp() {
-      chromosome1 = std::vector<int>(); // empty stuff
-      chromosome2 = std::vector<int>();
   }
 
   Fish_emp(const std::vector< int >& c1,

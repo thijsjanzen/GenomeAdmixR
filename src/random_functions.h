@@ -42,8 +42,9 @@ struct rnd_t {
     return unif_dist(rndgen_);
   }
 
-  int random_number(unsigned int n) {
-    return std::uniform_int_distribution<> (0, n-1)(rndgen_);
+  int random_number(int n) {
+    if (n <= 1) return 0;
+    return std::uniform_int_distribution<> (0, n - 1)(rndgen_);
   }
 
   size_t poisson(double lambda) {
