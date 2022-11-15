@@ -6,8 +6,7 @@
 //
 //
 
-#ifndef random_functions_hpp
-#define random_functions_hpp
+#pragma once
 
 #include <random>
 #include <vector>
@@ -19,23 +18,23 @@
 
 
 struct rnd_t {
-  std::mt19937 rndgen_;
+  std::mt19937_64 rndgen_;
   std::uniform_real_distribution<> unif_dist = std::uniform_real_distribution<>(0, 1.0);
   std::uniform_int_distribution<> rand_num_dist;
 
   rnd_t() {
     auto seed = get_seed();
   //  std::cerr << "initializing rnd_t with: " << seed << "\n" << std::flush;
-    rndgen_ = std::mt19937(seed);
+    rndgen_ = std::mt19937_64(seed);
   }
 
   rnd_t(unsigned int seed) {
     auto local_seed = get_seed() + seed;
-    rndgen_ = std::mt19937(local_seed);
+    rndgen_ = std::mt19937_64(local_seed);
   }
 
   void set_seed(unsigned int s) {
-    rndgen_ = std::mt19937(s);
+    rndgen_ = std::mt19937_64(s);
   }
 
   double uniform() {
@@ -99,7 +98,7 @@ struct emp_genome {
 
   size_t index_from_cdf(double p) const {
 
-    if (total_sum == 0) return static_cast<size_t>(p * cdf_.size());
+    if (total_sum <= 0.0) return static_cast<size_t>(p * cdf_.size());
 
     // find index belonging to p
     return static_cast<size_t>(std::distance(cdf_.begin(),
@@ -114,7 +113,7 @@ struct emp_genome {
     std::vector< size_t > indices;
     for(size_t i = 0; i < num_break_points; ++i) {
       auto found_index = index_from_cdf(rndgen.uniform());
-      if (found_index > 0) {
+      if (found_index > 0) { // first position can not be recombination point
         indices.push_back(found_index);
       }
     }
@@ -124,5 +123,3 @@ struct emp_genome {
   }
   double total_sum;
 };
-
-#endif /* random_functions_hpp */
