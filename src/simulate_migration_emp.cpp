@@ -59,7 +59,7 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
     }
     parent = pop_1[index];
   }
-  return(parent);
+  return parent;
 }
 
 

@@ -42,12 +42,13 @@ struct rnd_t {
     return unif_dist(rndgen_);
   }
 
-  int random_number(unsigned int n) {
-    return std::uniform_int_distribution<> (0, n-1)(rndgen_);
+  int random_number(int n) {
+    if (n < 1) return 0;
+    return std::uniform_int_distribution<int> (0, n - 1)(rndgen_);
   }
 
   size_t poisson(double lambda) {
-    return std::poisson_distribution<int>(lambda)(rndgen_);
+    return std::poisson_distribution<size_t>(lambda)(rndgen_);
   }
 
   int get_seed() {
@@ -79,8 +80,13 @@ struct emp_genome {
 
   template <typename T>
   emp_genome(const std::vector<T>& positions) {
-    double total_sum = std::accumulate(positions.begin(),
-                                positions.end(), 0.0);
+    if (positions.empty()) {
+      throw std::runtime_error("positions is empty");
+    }
+    total_sum = std::accumulate(positions.begin(),
+                                positions.end(),
+                                0.0);
+
     double s = 0.0;
     double mult = 1.0 / total_sum;
     cdf_.resize(positions.size());
@@ -92,6 +98,9 @@ struct emp_genome {
   }
 
   size_t index_from_cdf(double p) const {
+
+    if (total_sum == 0) return static_cast<size_t>(p * cdf_.size());
+
     // find index belonging to p
     return static_cast<size_t>(std::distance(cdf_.begin(),
                                              std::lower_bound(cdf_.begin(),
@@ -113,6 +122,7 @@ struct emp_genome {
     indices.push_back(cdf_.size());
     return indices;
   }
+  double total_sum;
 };
 
 #endif /* random_functions_hpp */
