@@ -111,4 +111,17 @@ test_that("simulate_admixture_data with selection", {
       migration_rate = 0.01),
     select_matrix = select_matrix,
     total_runtime = 100)
+
+  a <- simul_two_pop$initial_frequency
+  a1 <- a %>%
+    dplyr::group_by(population, ancestor) %>%
+    dplyr::summarise("mean_freq" = mean(frequency))
+
+  b <- simul_two_pop$final_frequency
+  b1 <- b %>%
+    dplyr::group_by(population, ancestor) %>%
+    dplyr::summarise("mean_freq" = mean(frequency))
+
+  v <- all.equal(a1, b1)
+  testthat::expect_false(v == TRUE)
 })
