@@ -22,6 +22,7 @@
 // [[Rcpp::depends("RcppArmadillo")]]
 using namespace Rcpp;
 
+
 Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
                      const std::vector< Fish_emp >& pop_2,
                      double migration_rate,
@@ -32,7 +33,6 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
                      double max_fitness_migr,
                      int &index,
                      rnd_t& rndgen) {
-
   Fish_emp parent;
 
   if (rndgen.uniform() < migration_rate) {
@@ -47,7 +47,6 @@ Fish_emp draw_parent(const std::vector< Fish_emp >& pop_1,
     }
     parent = pop_2[index];
     index = index + pop_1.size(); // to ensure different indices for pop_1 and pop_2
-
   } else {
     if (use_selection)  {
       index = draw_prop_fitness(fitness_source, max_fitness_source, rndgen);
@@ -154,7 +153,6 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
         }
 
         for (unsigned i = r.begin(); i < r.end(); ++i) {
-
 
           int index1, index2;
           Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
@@ -270,7 +268,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     std::vector<Fish_emp> new_generation_pop_1 = next_pop_migr(pop_1, // resident
                                                                pop_2, // migrants
                                                                marker_positions,
-                                                               pop_size[0],
+                                                               pop_1.size(),
                                                                fitness_pop_1,
                                                                fitness_pop_2,
                                                                max_fitness_pop_1,
@@ -288,7 +286,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     std::vector<Fish_emp> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                                pop_1,  // migrants
                                                                marker_positions,
-                                                               pop_size[1],
+                                                               pop_2.size(),
                                                                fitness_pop_2,
                                                                fitness_pop_1,
                                                                max_fitness_pop_2,
@@ -313,18 +311,26 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
       throw std::runtime_error("pop_2.size != pop_size[1]");
     }
 
-    fitness_pop_1 = std::vector<double>(pop_size[0], 0.0);
-    fitness_pop_2 = std::vector<double>(pop_size[1], 0.0);
+    fitness_pop_1 = std::vector<double>(pop_1.size(), 0.0);
+    fitness_pop_2 = std::vector<double>(pop_2.size(), 0.0);
+    if (fitness_pop_1.size() != pop_1.size()) {
+      throw std::runtime_error("fitness pop 1 != pop 1");
+    }
+    if (fitness_pop_2.size() != pop_2.size()) {
+      throw std::runtime_error("fitness pop 2 != pop 2");
+    }
 
     if (use_selection) {
       for (size_t i = 0; i < pop_1.size(); ++i) {
         fitness_pop_1[i] = calculate_fitness(pop_1[i], select,
                                              marker_positions, multiplicative_selection);
       }
+
       for (size_t i = 0; i < pop_2.size(); ++i) {
         fitness_pop_2[i] = calculate_fitness(pop_2[i], select,
                                              marker_positions, multiplicative_selection);
       }
+
       max_fitness_pop_1 = *std::max_element(fitness_pop_1.begin(),
                                             fitness_pop_1.end());
       max_fitness_pop_2 = *std::max_element(fitness_pop_2.begin(),
@@ -357,7 +363,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
 List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericMatrix& input_population_2,
                                 const NumericVector& marker_positions_R,
-                                NumericMatrix select,
+                                const NumericMatrix& select,
                                 const NumericVector& pop_sizes,
                                 int total_runtime,
                                 double morgan,
@@ -421,24 +427,20 @@ List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
       Pop_1 = convert_numeric_matrix_to_fish_vector(input_population_1);
       Pop_2 = convert_numeric_matrix_to_fish_vector(input_population_2);
 
-      if (static_cast<size_t>(Pop_1.size()) !=
-          static_cast<size_t>(pop_size[0])) {
-        //   the populations have to be populated from the parents!
-        std::vector< Fish_emp > Pop_1_new(pop_size[0]);
-        for(size_t j = 0; j < pop_size[0]; ++j) {
+      if (Pop_1.empty() || Pop_2.empty()) {
+        Rcpp::stop("either one of the input populations is empty");
+      }
+
+      while (Pop_1.size() != pop_size[0]) {
           int index = rndgen.random_number(Pop_1.size());
-          Pop_1_new[j] = Pop_1[index];
-        }
+          Pop_1.push_back(Pop_1[index]);
       }
-      if (static_cast<size_t>(Pop_2.size()) !=
-          static_cast<size_t>(pop_size[1])) {
-        std::vector< Fish_emp > Pop_2_new(pop_size[1]);
-        for (int j = 0; j < pop_size[1]; ++j) {
-          int index = rndgen.random_number(Pop_2.size());
-          Pop_2_new[j] = Pop_2[index];
-        }
-        Pop_2 = Pop_2_new;
+      while (Pop_2.size() != pop_size[1]) {
+        int index = rndgen.random_number(Pop_2.size());
+        Pop_2.push_back(Pop_2[index]);
       }
+    } else {
+      Rcpp::stop("no input population found");
     }
 
     // 5 columns: time, loc, anc, type, population
