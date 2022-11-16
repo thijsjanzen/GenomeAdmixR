@@ -70,6 +70,7 @@ test_that("simulate_admixture_data", {
   )
 
   # try multithreading:
+  testthat::skip_on_os("windows")
   simul_pop <- simulate_admixture(module = sequence_module(
     molecular_data = list(fake_input_data1,
                           fake_input_data2),
