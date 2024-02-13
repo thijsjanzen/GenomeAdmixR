@@ -35,7 +35,6 @@ test_that("select population two_alleles", {
 
 test_that("select on population", {
   testthat::skip_on_os("solaris")
-  cat("test_selection_on_pop")
   sourcepop <- simulate_admixture(module = ancestry_module(number_of_founders =
                                                              10,
                                                            morgan = 1),
@@ -113,7 +112,6 @@ test_that("select population two_alleles multiple markers", {
 
 test_that("select population two_alleles multiply vs sum", {
   testthat::skip_on_os("solaris")
-  cat("test_selection_mult_vs_sum")
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.2
   select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)

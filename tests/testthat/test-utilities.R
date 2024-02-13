@@ -1,7 +1,6 @@
 context("utilities")
 
 test_that("utilities", {
-  cat("test_utilities")
   testthat::skip_on_os("solaris")
   vx <- simulate_admixture(module = ancestry_module(number_of_founders = 50),
                            pop_size = 100,
@@ -32,8 +31,6 @@ test_that("utilities", {
 })
 
 test_that("initial_frequencies", {
-
-  cat("test_initfreq")
   testthat::skip_on_os("solaris")
   testthat::expect_error(
     simulate_admixture(
@@ -73,8 +70,6 @@ testthat::expect_warning(
 
 testthat::test_that("random markers", {
   testthat::skip_on_os("solaris")
-
-  cat("test_rand_mark")
   set.seed(42)
   vx <- create_random_markers(1e3)
   vy <- create_random_markers(1e6)
@@ -82,8 +77,6 @@ testthat::test_that("random markers", {
 })
 
 testthat::test_that("verify datatypes", {
-
-  cat("test_datatypes")
   vx <- simulate_admixture(total_runtime = 2,
                            pop_size = 100,
                            migration = migration_settings(migration_rate = 0.001))

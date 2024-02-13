@@ -1,7 +1,6 @@
 context("simulate_admixture")
 
 test_that("simulate_admixture", {
-  cat("test_sim_admix\n")
   testthat::skip_on_os("solaris")
   select_matrix <- matrix(NA, nrow = 2, ncol = 5)
 
@@ -32,7 +31,6 @@ test_that("simulate_admixture", {
 
 
 test_that("simulate admixture use", {
-  cat("test_sim_admix_use\n")
   testthat::skip_on_os("solaris")
   testthat::expect_output(
     vx <- simulate_admixture(pop_size = 100,
@@ -117,7 +115,6 @@ test_that("simulate admixture use", {
 
 
 test_that("simulate admixture use, junctions", {
-  cat("test_sim_admix_junctions")
   testthat::skip_on_os("solaris")
   vx <- simulate_admixture(module = ancestry_module(track_junctions = TRUE),
                            pop_size = 1000,
@@ -129,7 +126,6 @@ test_that("simulate admixture use, junctions", {
 })
 
 test_that("simulate admixture use, markers", {
-  cat("test_sim_admix_markers")
   testthat::skip_on_os("solaris")
   pop <- simulate_admixture(module = ancestry_module(markers =
                                                        seq(0,
@@ -176,7 +172,6 @@ test_that("simulate admixture use, markers", {
 
 test_that("simulate admixture use, pop size", {
   testthat::skip_on_os("solaris")
-  cat("test_sim_admix_pop_size")
   pop <- simulate_admixture(pop_size = 100,
                             total_runtime = 3)
 
