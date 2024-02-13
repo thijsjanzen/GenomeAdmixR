@@ -2,7 +2,6 @@ context("test simulate admixture data")
 
 test_that("simulate_admixture_data", {
   testthat::skip_on_os("solaris")
-  cat("test_sim_admix")
 
   num_markers <- 100
   num_indiv <- 100
@@ -84,7 +83,6 @@ test_that("simulate_admixture_data", {
 
 test_that("simulate_admixture_data_mutation", {
   testthat::skip_on_os("solaris")
-  cat("test_sim_admix_mutation")
 
   num_markers <- 100
   num_indiv <- 100
@@ -161,7 +159,6 @@ test_that("simulate_admixture_data_mutation", {
 })
 
 test_that("simulate_admixture_data_recombination_map", {
-  cat("test_sim_admix_recom_map")
   num_markers <- 2
   num_indiv <- 10
   chosen_markers <- c(1000000, 2000000)

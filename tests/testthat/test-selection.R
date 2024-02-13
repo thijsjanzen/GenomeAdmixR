@@ -1,7 +1,6 @@
 context("selection two alleles")
 
 test_that("select population two_alleles", {
-  cat("test_selection_two_alleles")
   testthat::skip_on_os("solaris")
   select_matrix <- matrix(ncol = 5, nrow = 1)
   s <- 0.1
@@ -73,7 +72,6 @@ test_that("select on population", {
 
 test_that("select population two_alleles multiple markers", {
   testthat::skip_on_os("solaris")
-  cat("test_selection_on_pop_mult_mark")
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.1
   select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
@@ -149,7 +147,6 @@ test_that("select population two_alleles multiply vs sum", {
 
 test_that("select population two_alleles regions", {
   testthat::skip_on_os("solaris")
-  cat("test_selection_regions")
   select_matrix <- matrix(ncol = 5, nrow = 2)
   s <- 0.1
   select_matrix[1, ] <- c(0.25, 1.0, 1 + 0.5 * s, 1 + s, 0)
@@ -192,7 +189,6 @@ test_that("select population two_alleles regions", {
 
 test_that("selection abuse", {
   testthat::skip_on_os("solaris")
-  cat("test_selection_abuse")
   sourcepop <- simulate_admixture(pop_size = 100,
                                   total_runtime = 100)
 

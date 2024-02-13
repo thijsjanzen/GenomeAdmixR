@@ -2,7 +2,6 @@ context("fst")
 
 testthat::test_that("fst", {
   testthat::skip_on_os("solaris")
-  cat("test_fst")
 
   pop_size <- 100
   number_of_founders <- 20

@@ -1,8 +1,6 @@
 context("general usage")
 
-
 test_that("general usage", {
-  cat("test_general_usage")
   data("dgrp2.3R.5k.data")
   mks <- sample(dgrp2.3R.5k.data$markers, size = 100,
                 replace = FALSE, prob = NULL)
@@ -109,7 +107,6 @@ test_that("general usage", {
 })
 
 test_that("isofemale usage", {
-  cat("test_isofemale_usage")
   data("dgrp2.3R.5k.data")
 
   mks = sample(dgrp2.3R.5k.data$markers, size = 300, replace = FALSE, prob = NULL)
