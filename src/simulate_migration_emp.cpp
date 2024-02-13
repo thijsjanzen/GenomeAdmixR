@@ -232,8 +232,6 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     }
   }
 
-  std::cerr << "done initial fitness\n"; force_output();
-
   double max_fitness_pop_1 = *std::max_element(fitness_pop_1.begin(), fitness_pop_1.end());
   double max_fitness_pop_2 = *std::max_element(fitness_pop_2.begin(), fitness_pop_2.end());
 
@@ -250,7 +248,6 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
   for (int t = 0; t < total_runtime; ++t) {
     // Rcout << t << "\n"; force_output();
     if(track_frequency) {
-      std::cerr << "update track frequency\n"; force_output();
       arma::mat local_mat = update_all_frequencies_tibble_dual_pop (pop_1,
                                                                     pop_2,
                                                                     track_markers,
@@ -273,7 +270,6 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     std::vector<double> new_fitness_pop_1(pop_1.size(), 0.0);
     std::vector<double> new_fitness_pop_2(pop_2.size(), 0.0);
 
-    std::cerr << "update pop1\n"; force_output();
     std::vector<Fish_emp> new_generation_pop_1 = next_pop_migr(pop_1, // resident
                                                                pop_2, // migrants
                                                                marker_positions,
@@ -291,7 +287,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                substitution_matrix,
                                                                emp_gen,
                                                                num_threads);
-    std::cerr << "update pop2\n"; force_output();
+
     std::vector<Fish_emp> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                                pop_1,  // migrants
                                                                marker_positions,
@@ -313,24 +309,20 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     pop_2 = new_generation_pop_2;
 
     if (use_selection) {
-      std::cerr << "update fitness pop1 " << t << "\n"; force_output();
       for (size_t i = 0; i < pop_1.size(); ++i) {
         fitness_pop_1[i] = calculate_fitness(pop_1[i], select,
                                              marker_positions,
                                              multiplicative_selection);
       }
-      std::cerr << "update fitness pop2 " << t << "\n"; force_output();
       for (size_t i = 0; i < pop_2.size(); ++i) {
         fitness_pop_2[i] = calculate_fitness(pop_2[i], select,
                                              marker_positions,
                                              multiplicative_selection);
       }
-      std::cerr << "update max fitness\n"; force_output();
       max_fitness_pop_1 = *std::max_element(fitness_pop_1.begin(),
                                             fitness_pop_1.end());
       max_fitness_pop_2 = *std::max_element(fitness_pop_2.begin(),
                                             fitness_pop_2.end());
-      std::cerr << "fitness calculations done\n"; force_output();
     }
 
     if (t % updateFreq == 0 && verbose) {

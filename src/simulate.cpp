@@ -196,12 +196,9 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
 
     std::vector<Fish> new_generation(pop_size);
 
-  //  std::cerr << "t " << t << std::flush;
     update_pop(Pop, new_generation, pop_size,
                morgan, fitness, maxFitness,  use_selection,
                multiplicative_selection, num_threads);
-
-  //  std::cerr << " updated\n" << std::flush;
 
     if (t % updateFreq == 0 && verbose) {
       Rcout << "**";

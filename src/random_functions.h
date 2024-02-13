@@ -24,7 +24,6 @@ struct rnd_t {
 
   rnd_t() {
     auto seed = get_seed();
-  //  std::cerr << "initializing rnd_t with: " << seed << "\n" << std::flush;
     rndgen_ = std::mt19937_64(seed);
   }
 
