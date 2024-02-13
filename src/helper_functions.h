@@ -134,4 +134,6 @@ void mutate(Fish_emp& indiv,
             const double& mutation_rate,
             rnd_t& rndgen);
 
+std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select);
+
 #endif /* helper_functions_hpp */

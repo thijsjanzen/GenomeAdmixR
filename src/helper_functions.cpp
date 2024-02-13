@@ -258,8 +258,6 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
 
   junction prev_j(-1, 0);
 
-  int num_indiv = 0;
-
   for (int i = 0; i < v.size(); i += 2) {
     junction temp_j;
     temp_j.pos = v[i];
@@ -279,8 +277,6 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v) 
       indic_chrom = 1;
       temp.chromosome1.clear();
       temp.chromosome2.clear();
-
-      num_indiv++;
     }
 
     if (indic_chrom == 1) {
@@ -340,7 +336,9 @@ double calculate_fitness(const Fish& focal,
   // loc aa  Aa  AA ancestor
   //  0  1   2  3  4
 
-  for(auto it = (focal.chromosome1.begin()+1); it != focal.chromosome1.end(); ++it) {
+  for(auto it = (focal.chromosome1.begin()+1);
+      it != focal.chromosome1.end();
+      ++it) {
     if ((*it).pos > pos) {
       if ((*(it-1)).right == anc) num_alleles[focal_marker]++;
       focal_marker++;
@@ -992,4 +990,16 @@ NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
   }
 
   return output;
+}
+
+std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select) {
+  std::vector< std::array<double, 5> > select_matrix;
+  for (size_t i = 0; i < select.nrow(); ++i) {
+    std::array<double, 5> row_entry;
+    for (size_t j = 0; j < select.ncol(); ++j) {
+      row_entry[j] = select(i, j);
+    }
+    select_matrix.push_back(row_entry);
+  }
+  return select_matrix;
 }

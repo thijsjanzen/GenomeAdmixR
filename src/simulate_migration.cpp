@@ -298,35 +298,35 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1, // resident
                                                            pop_2, // migrants
                                                            pop_size[0],
-                                                                   fitness_pop_1,
-                                                                   fitness_pop_2,
-                                                                   max_fitness_pop_1,
-                                                                   max_fitness_pop_2,
-                                                                   use_selection,
-                                                                   migration_rate,
-                                                                   morgan,
-                                                                   num_threads);
+                                                           fitness_pop_1,
+                                                           fitness_pop_2,
+                                                           max_fitness_pop_1,
+                                                           max_fitness_pop_2,
+                                                           use_selection,
+                                                           migration_rate,
+                                                           morgan,
+                                                           num_threads);
 
     std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                            pop_1,  // migrants
                                                            pop_size[1],
-                                                                   fitness_pop_2,
-                                                                   fitness_pop_1,
-                                                                   max_fitness_pop_2,
-                                                                   max_fitness_pop_1,
-                                                                   use_selection,
-                                                                   migration_rate,
-                                                                   morgan,
-                                                                   num_threads);
+                                                           fitness_pop_2,
+                                                           fitness_pop_1,
+                                                           max_fitness_pop_2,
+                                                           max_fitness_pop_1,
+                                                           use_selection,
+                                                           migration_rate,
+                                                           morgan,
+                                                           num_threads);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
 
     if (use_selection) {
       for (size_t i = 0; i < pop_1.size(); ++i) {
-        fitness_pop_1[i] = calculate_fitness(pop_1[i], select, multiplicative_selection);
+        fitness_pop_1[i] = calculate_fitness(pop_1[i], select_matrix, multiplicative_selection);
       }
       for (size_t i = 0; i < pop_2.size(); ++i) {
-        fitness_pop_2[i] = calculate_fitness(pop_2[i], select, multiplicative_selection);
+        fitness_pop_2[i] = calculate_fitness(pop_2[i], select_matrix, multiplicative_selection);
       }
     }
 

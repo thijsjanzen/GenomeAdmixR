@@ -187,7 +187,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     const std::vector< Fish_emp>& source_pop_1,
     const std::vector< Fish_emp>& source_pop_2,
     const std::vector<double>& marker_positions,
-    const NumericMatrix& select,
+    const NumericMatrix& select_r,
     const std::vector<size_t>& pop_size,
     int total_runtime,
     double morgan,
@@ -206,7 +206,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     int num_threads) {
 
   bool use_selection = false;
-  if (select(0, 0) >= 0) use_selection = true;
+  if (select_r(0, 0) >= 0) use_selection = true;
 
   std::vector<Fish_emp> pop_1 = source_pop_1;
   std::vector<Fish_emp> pop_2 = source_pop_2;
@@ -214,7 +214,10 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
   std::vector<double> fitness_pop_1(pop_1.size(), 0.0);
   std::vector<double> fitness_pop_2(pop_2.size(), 0.0);
 
+  std::vector< std::array< double, 5 >> select;
+
   if (use_selection) {
+    select = convert_select_from_r(select_r);
     for (size_t i = 0; i < pop_1.size(); ++i) {
       fitness_pop_1[i] = calculate_fitness(pop_1[i], select,
                                            marker_positions,
@@ -275,19 +278,19 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                pop_2, // migrants
                                                                marker_positions,
                                                                pop_size[0],
-                                                                       fitness_pop_1,
-                                                                       fitness_pop_2,
-                                                                       max_fitness_pop_1,
-                                                                       max_fitness_pop_2,
-                                                                       select,
-                                                                       use_selection,
-                                                                       multiplicative_selection,
-                                                                       migration_rate,
-                                                                       morgan,
-                                                                       mutation_rate,
-                                                                       substitution_matrix,
-                                                                       emp_gen,
-                                                                       num_threads);
+                                                               fitness_pop_1,
+                                                               fitness_pop_2,
+                                                               max_fitness_pop_1,
+                                                               max_fitness_pop_2,
+                                                               select_r,
+                                                               use_selection,
+                                                               multiplicative_selection,
+                                                               migration_rate,
+                                                               morgan,
+                                                               mutation_rate,
+                                                               substitution_matrix,
+                                                               emp_gen,
+                                                               num_threads);
     std::cerr << "update pop2\n"; force_output();
     std::vector<Fish_emp> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                                pop_1,  // migrants
@@ -297,7 +300,7 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                        fitness_pop_1,
                                                                        max_fitness_pop_2,
                                                                        max_fitness_pop_1,
-                                                                       select,
+                                                                       select_r,
                                                                        use_selection,
                                                                        multiplicative_selection,
                                                                        migration_rate,

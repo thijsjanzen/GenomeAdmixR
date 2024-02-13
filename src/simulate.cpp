@@ -120,7 +120,7 @@ void update_pop(const std::vector<Fish>& Pop,
 }
 
 std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
-                                        const NumericMatrix& select,
+                                        const NumericMatrix& select_r,
                                         size_t pop_size,
                                         int total_runtime,
                                         double morgan,
@@ -137,13 +137,21 @@ std::vector< Fish > simulate_Population(const std::vector< Fish>& sourcePop,
                                         int num_threads) {
 
   bool use_selection = false;
-  if(select(0, 1) >= 0) use_selection = true;
+  if(select_r(0, 1) >= 0) use_selection = true;
 
   std::vector<Fish> Pop = sourcePop;
   std::vector<double> fitness;
   double maxFitness = -1;
-
+  std::vector< std::array<double, 5>> select;
   if(use_selection) {
+    for (size_t i = 0; i < select_r.nrow(); ++i) {
+      std::array<double, 5> entry;
+      for (size_t j = 0; j < 5; ++j) {
+        entry[j] = select_r(i, j);
+      }
+      select.push_back(entry);
+    }
+
     for(auto it = Pop.begin(); it != Pop.end(); ++it){
       double fit = calculate_fitness((*it), select, multiplicative_selection);
       if(fit > maxFitness) maxFitness = fit;
