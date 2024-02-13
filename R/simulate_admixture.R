@@ -61,7 +61,7 @@ simulate_admixture <- function(module = ancestry_module(),
                                multiplicative_selection = TRUE,
                                verbose = FALSE,
                                num_threads = 1) {
-
+  RcppParallel::setThreadOptions(num_threads)
   if (is.na(migration$migration_rate)) {
     if (module$type == "ancestry") {
       result <- simulate_ancestry(input_population = module$input_data,

@@ -19,6 +19,7 @@
 #include "Fish.h"
 #include "random_functions.h"
 #include "helper_functions.h"
+#include "util.h"
 
 #include <RcppParallel.h>
 
@@ -90,7 +91,7 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
   int seed_index = 0;
   std::mutex mutex;
 
-  tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+  set_num_threads();
 
   tbb::parallel_for(
     tbb::blocked_range<unsigned>(0, pop_size),

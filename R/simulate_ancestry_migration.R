@@ -117,6 +117,8 @@ simulate_ancestry_migration <- function(input_population_1 = NA,
     }
   }
 
+  RcppParallel::setThreadOptions(num_threads)
+
   input_population_1 <- check_input_pop(input_population_1)
   input_population_2 <- check_input_pop(input_population_2)
 

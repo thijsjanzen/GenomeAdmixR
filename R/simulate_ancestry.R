@@ -55,7 +55,7 @@ simulate_ancestry <- function(input_population = NA,
                                track_junctions = FALSE,
                                multiplicative_selection = TRUE) {
 
-
+  RcppParallel::setThreadOptions(num_threads)
 
   input_population <- check_input_pop(input_population)
 

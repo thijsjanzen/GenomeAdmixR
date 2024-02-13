@@ -80,7 +80,7 @@ simulate_sequence <- function(input_data = NA,
       stop("pop_size is undefined, need an input population")
     }
   }
-
+  RcppParallel::setThreadOptions(num_threads)
   select_matrix <- check_select_matrix(select_matrix,
                                        markers,
                                        use_data = TRUE)

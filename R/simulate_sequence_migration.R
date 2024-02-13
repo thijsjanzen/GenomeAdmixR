@@ -93,7 +93,7 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                                       verbose = verbose)
   input_data_population_2 <- verify_genomeadmixr_data(input_data_population_2,
                                                       verbose = verbose)
-
+  RcppParallel::setThreadOptions(num_threads)
   if (!is.na(critical_fst)) {
     stop_at_critical_fst <- TRUE
   }

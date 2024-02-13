@@ -16,6 +16,7 @@
 #include "Fish_emp.h"
 #include "random_functions.h"
 #include "helper_functions.h"
+#include "util.h"
 
 #include <RcppParallel.h>
 #include <RcppArmadillo.h>
@@ -128,7 +129,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
       }
     }
 
-    tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+    set_num_threads();
 
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
