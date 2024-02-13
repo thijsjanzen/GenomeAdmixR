@@ -6,8 +6,7 @@
 //
 //
 
-#ifndef random_functions_hpp
-#define random_functions_hpp
+#pragma once
 
 #include <random>
 #include <vector>
@@ -19,35 +18,36 @@
 
 
 struct rnd_t {
-  std::mt19937 rndgen_;
+  std::mt19937_64 rndgen_;
   std::uniform_real_distribution<> unif_dist = std::uniform_real_distribution<>(0, 1.0);
   std::uniform_int_distribution<> rand_num_dist;
 
   rnd_t() {
     auto seed = get_seed();
   //  std::cerr << "initializing rnd_t with: " << seed << "\n" << std::flush;
-    rndgen_ = std::mt19937(seed);
+    rndgen_ = std::mt19937_64(seed);
   }
 
   rnd_t(unsigned int seed) {
     auto local_seed = get_seed() + seed;
-    rndgen_ = std::mt19937(local_seed);
+    rndgen_ = std::mt19937_64(local_seed);
   }
 
   void set_seed(unsigned int s) {
-    rndgen_ = std::mt19937(s);
+    rndgen_ = std::mt19937_64(s);
   }
 
   double uniform() {
     return unif_dist(rndgen_);
   }
 
-  int random_number(unsigned int n) {
-    return std::uniform_int_distribution<> (0, n-1)(rndgen_);
+  int random_number(int n) {
+    if (n < 1) return 0;
+    return std::uniform_int_distribution<int> (0, n - 1)(rndgen_);
   }
 
   size_t poisson(double lambda) {
-    return std::poisson_distribution<int>(lambda)(rndgen_);
+    return std::poisson_distribution<size_t>(lambda)(rndgen_);
   }
 
   int get_seed() {
@@ -79,8 +79,13 @@ struct emp_genome {
 
   template <typename T>
   emp_genome(const std::vector<T>& positions) {
-    double total_sum = std::accumulate(positions.begin(),
-                                positions.end(), 0.0);
+    if (positions.empty()) {
+      throw std::runtime_error("positions is empty");
+    }
+    total_sum = std::accumulate(positions.begin(),
+                                positions.end(),
+                                0.0);
+
     double s = 0.0;
     double mult = 1.0 / total_sum;
     cdf_.resize(positions.size());
@@ -92,6 +97,9 @@ struct emp_genome {
   }
 
   size_t index_from_cdf(double p) const {
+
+    if (total_sum <= 0.0) return static_cast<size_t>(p * cdf_.size());
+
     // find index belonging to p
     return static_cast<size_t>(std::distance(cdf_.begin(),
                                              std::lower_bound(cdf_.begin(),
@@ -105,7 +113,7 @@ struct emp_genome {
     std::vector< size_t > indices;
     for(size_t i = 0; i < num_break_points; ++i) {
       auto found_index = index_from_cdf(rndgen.uniform());
-      if (found_index > 0) {
+      if (found_index > 0) { // first position can not be recombination point
         indices.push_back(found_index);
       }
     }
@@ -113,6 +121,5 @@ struct emp_genome {
     indices.push_back(cdf_.size());
     return indices;
   }
+  double total_sum;
 };
-
-#endif /* random_functions_hpp */

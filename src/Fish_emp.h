@@ -17,31 +17,12 @@ struct Fish_emp {
     chromosome1(c1), chromosome2(c2) {
   }
 
-  Fish_emp(Fish_emp&& other) {
-    chromosome1 = other.chromosome1;
-    chromosome2 = other.chromosome2;
-  }
+  Fish_emp(Fish_emp&& other) = default;
+  Fish_emp& operator=(Fish_emp&& other) = default;
 
-  Fish_emp& operator=(Fish_emp&& other) {
-    if (this != &other) {
-      chromosome1 = other.chromosome1;
-      chromosome2 = other.chromosome2;
-    }
-    return *this;
-  }
+  Fish_emp(const Fish_emp& other) = default;
 
-  Fish_emp(const Fish_emp& other) {
-    chromosome1 = other.chromosome1;
-    chromosome2 = other.chromosome2;
-  }
-
-  Fish_emp& operator=(const Fish_emp& other) {
-    if (this != &other) {
-      chromosome1 = other.chromosome1;
-      chromosome2 = other.chromosome2;
-    }
-    return *this;
-  }
+  Fish_emp& operator=(const Fish_emp& other) = default;
 
   std::vector< int > gamete(double morgan,
                             rnd_t& rndgen,

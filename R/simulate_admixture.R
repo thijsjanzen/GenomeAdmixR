@@ -105,7 +105,6 @@ simulate_admixture <- function(module = ancestry_module(),
       message("found positive migration rate, assuming two connected populations")
 
     if (module$type == "ancestry") {
-
       if (!inherits(module$input_population, "genomadmixr_simulation")) {
         if (is.list(module$input_population)) {
           input_population2 <- list()

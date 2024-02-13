@@ -1,6 +1,7 @@
 context("simulate_admixture_until")
 
 test_that("simulate_admixture_until", {
+  cat("test_sim_admix_until")
   testthat::skip_on_os("solaris")
 
   vx <- simulate_admixture(total_runtime = 100,
@@ -33,6 +34,7 @@ test_that("simulate_admixture_until", {
 })
 
 test_that("simulate_admixture_until_data", {
+  cat("test_sim_admix_until_data")
   testthat::skip_on_os("solaris")
 
   num_indiv <- 100

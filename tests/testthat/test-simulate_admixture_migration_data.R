@@ -2,7 +2,7 @@ context("test simulate admixture data migration")
 
 test_that("simulate_admixture_data", {
   testthat::skip_on_os("solaris")
-
+  cat("test_sim_admix_data")
   num_markers <- 100
   num_indiv <- 100
   chosen_markers <- 1:num_markers
@@ -77,9 +77,8 @@ test_that("simulate_admixture_data", {
   testthat::expect_false(v == TRUE)
 })
 
-
-test_that("simulate_migration_emp_selection", {
-  testthat::skip_on_os("solaris")
+test_that("simulate_admixture_data with selection", {
+  cat("test_sim_admix_data_selection")
   num_markers <- 100
   num_indiv <- 100
   chosen_markers <- 1:num_markers
@@ -115,7 +114,16 @@ test_that("simulate_migration_emp_selection", {
     select_matrix = select_matrix,
     total_runtime = 100)
 
-  vv <- calculate_marker_frequency(simul_two_pop$population_2, 50)
+  a <- simul_two_pop$initial_frequency
+  a1 <- a %>%
+    dplyr::group_by(population, ancestor) %>%
+    dplyr::summarise("mean_freq" = mean(frequency))
 
-  testthat::expect_equal(as.numeric(vv$ancestor[[1]]), 1)
+  b <- simul_two_pop$final_frequency
+  b1 <- b %>%
+    dplyr::group_by(population, ancestor) %>%
+    dplyr::summarise("mean_freq" = mean(frequency))
+
+  v <- all.equal(a1, b1)
+  testthat::expect_false(v == TRUE)
 })
