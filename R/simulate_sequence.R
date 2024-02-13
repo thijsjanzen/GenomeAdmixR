@@ -22,10 +22,13 @@
 #' @param select_matrix Selection matrix indicating the markers which are under
 #' selection. If not provided by the user, the simulation proceeds neutrally. If
 #' provided, each row in the matrix should contain five entries:
-#' \code{location}{ location of the marker under selection (in Morgan) }
-#' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
-#' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
-#' represents the mutant allele A}
+#' \itemize{
+#' \item{location of the marker under selection (in Morgan) }
+#' \item{fitness of wildtype (aa)}
+#' \item{fitness of heterozygote (aA)}
+#' \item{fitness of homozygote mutant (AA)}
+#' \item{Ancestral type that represents the mutant allele A}
+#' }
 #' @param verbose Verbose output if TRUE. Default value is FALSE
 #' @param markers A vector of locations of markers, these markers are
 #' tracked for every generation.
