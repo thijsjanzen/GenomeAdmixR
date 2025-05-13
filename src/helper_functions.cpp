@@ -675,13 +675,10 @@ double calculate_fitness(const Fish_emp& focal,
  //   Rcout << a1 << " " << a2 << " " << select(i, fit_index) << "\n";
   }
 
-  double output;
-  if (multiplicative_selection) {
-    output = std::accumulate(fitness_vec.begin(), fitness_vec.end(), 1.0,
-                             std::multiplies<>());
-  } else {
-    output = std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0);
-  }
+  double output = multiplicative_selection ?
+      std::accumulate(fitness_vec.begin(), fitness_vec.end(), 1.0,
+                             std::multiplies<>()) :
+      std::accumulate(fitness_vec.begin(), fitness_vec.end(), 0.0);
 
   return output;
 }

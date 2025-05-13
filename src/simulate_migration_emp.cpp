@@ -211,6 +211,10 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
   std::vector<Fish_emp> pop_1 = source_pop_1;
   std::vector<Fish_emp> pop_2 = source_pop_2;
 
+  if (pop_1.empty() || pop_2.empty()) {
+    throw "empty populations";
+  }
+
   std::vector<double> fitness_pop_1(pop_1.size(), 0.0);
   std::vector<double> fitness_pop_2(pop_2.size(), 0.0);
 
@@ -267,9 +271,6 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
       }
     }
 
-    std::vector<double> new_fitness_pop_1(pop_1.size(), 0.0);
-    std::vector<double> new_fitness_pop_2(pop_2.size(), 0.0);
-
     std::vector<Fish_emp> new_generation_pop_1 = next_pop_migr(pop_1, // resident
                                                                pop_2, // migrants
                                                                marker_positions,
@@ -292,19 +293,19 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
                                                                pop_1,  // migrants
                                                                marker_positions,
                                                                pop_size[1],
-                                                                       fitness_pop_2,
-                                                                       fitness_pop_1,
-                                                                       max_fitness_pop_2,
-                                                                       max_fitness_pop_1,
-                                                                       select_r,
-                                                                       use_selection,
-                                                                       multiplicative_selection,
-                                                                       migration_rate,
-                                                                       morgan,
-                                                                       mutation_rate,
-                                                                       substitution_matrix,
-                                                                       emp_gen,
-                                                                       num_threads);
+                                                               fitness_pop_2,
+                                                               fitness_pop_1,
+                                                               max_fitness_pop_2,
+                                                               max_fitness_pop_1,
+                                                               select_r,
+                                                               use_selection,
+                                                               multiplicative_selection,
+                                                               migration_rate,
+                                                               morgan,
+                                                               mutation_rate,
+                                                               substitution_matrix,
+                                                               emp_gen,
+                                                               num_threads);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
 
