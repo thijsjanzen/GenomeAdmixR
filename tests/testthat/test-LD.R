@@ -48,7 +48,6 @@ test_that("calculate_average_LD", {
 })
 
 test_that("calculate_LD_matrix", {
-  testthat::skip_on_os("solaris")
   pop_size <- 100
   number_of_founders <- 2
   sampled_individuals <- pop_size

@@ -1,7 +1,6 @@
 context("simulate_admixture")
 
 test_that("simulate_admixture", {
-  testthat::skip_on_os("solaris")
   select_matrix <- matrix(NA, nrow = 2, ncol = 5)
 
   s <- 0.1
@@ -16,22 +15,10 @@ test_that("simulate_admixture", {
                              select_matrix = select_matrix,
                              multiplicative_selection = FALSE)
   )
-
-  testthat::skip()
-  testthat::expect_message(
-    vx <- simulate_admixture(pop_size = 100,
-                             module = ancestry_module(number_of_founders = 2,
-                                                      morgan = 1),
-                             total_runtime = 100,
-                             select_matrix = select_matrix,
-                             num_threads = 2,
-                             multiplicative_selection = FALSE)
-  )
 })
 
 
 test_that("simulate admixture use", {
-  testthat::skip_on_os("solaris")
   testthat::expect_output(
     vx <- simulate_admixture(pop_size = 100,
                              module = ancestry_module(number_of_founders = 2,

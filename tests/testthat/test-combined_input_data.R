@@ -1,7 +1,6 @@
 context("test input data")
 
 test_that("input data", {
-  testthat::skip_on_os("solaris")
 
   chosen_markers <- 1:100
 

@@ -1,7 +1,6 @@
 context("create_populations")
 
 test_that("save_population", {
-  testthat::skip_on_os("solaris")
   pop_size <- 100
   number_of_founders <- 10
   run_time <- 10
