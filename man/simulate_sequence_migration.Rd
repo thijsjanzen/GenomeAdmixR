@@ -53,8 +53,8 @@ assuming that the markers included span an entire chromosome.}
 available threads}
 
 \item{select_matrix}{Selection matrix indicating the markers which are under
-selection. If not provided by the user, the simulation proceeds neutrally.
-If provided, each row in the matrix should contain five entries:
+selection. If not provided by the user, the simulation proceeds neutrally. If
+provided, each row in the matrix should contain five entries:
 \itemize{
 \item{location of the marker under selection (in Morgan) }
 \item{fitness of wildtype (aa)}
@@ -69,10 +69,9 @@ tracked for every generation.}
 
 \item{verbose}{Verbose output if TRUE. Default value is FALSE}
 
-\item{multiplicative_selection}{Default: TRUE. If TRUE, fitness is
-calculated for multiple markers by multiplying fitness values for each
-marker. If FALSE, fitness is calculated by adding fitness values for each
-marker.}
+\item{multiplicative_selection}{Default: TRUE. If TRUE, fitness is calculated
+for multiple markers by multiplying fitness values for each marker. If FALSE,
+fitness is calculated by adding fitness values for each marker.}
 
 \item{migration_rate}{Rate of migration between the two populations.
 Migration is implemented such that with probability m (migration rate) one
