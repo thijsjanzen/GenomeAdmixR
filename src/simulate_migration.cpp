@@ -97,7 +97,7 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
     tbb::blocked_range<unsigned>(0, pop_size),
     [&](const tbb::blocked_range<unsigned>& r) {
 
-      rnd_t rndgen2(seed_values[seed_index]);
+      thread_local rnd_t rndgen2(seed_values[seed_index]);
       {
         std::lock_guard<std::mutex> _(mutex);
         seed_index++;

@@ -99,7 +99,7 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
       [&](const tbb::blocked_range<unsigned>& r) {
 
         emp_genome local_emp_genome;
-        rnd_t rndgen2(seed_values[seed_index]);
+        thread_local rnd_t rndgen2(seed_values[seed_index]);
         {
           std::lock_guard<std::mutex> m(mutex);
           local_emp_genome = emp_gen_input;

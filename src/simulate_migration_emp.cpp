@@ -135,7 +135,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
 
-        rnd_t rndgen2(seed_values[seed_index]);
+        thread_local rnd_t rndgen2(seed_values[seed_index]);
         {
           std::lock_guard<std::mutex> _(mutex);
           seed_index++;
@@ -148,7 +148,6 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
         }
 
         for (unsigned i = r.begin(); i < r.end(); ++i) {
-
 
           int index1, index2;
           Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
