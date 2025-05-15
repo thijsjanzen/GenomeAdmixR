@@ -217,6 +217,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   for (size_t i = 0; i < select.nrow(); ++i) {
     std::array<double, 5> row_entry;
     for (size_t j = 0; j < select.ncol(); ++j) {
+      if (j >= 5) throw "select matrix too many columns";
        row_entry[j] = select(i, j);
     }
     select_matrix.push_back(row_entry);
@@ -271,7 +272,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   R_FlushConsole();
 
   for (int t = 0; t < total_runtime; ++t) {
-    // Rcout << t << "\n"; force_output();
+
     if(track_frequency) {
       arma::mat local_mat = update_all_frequencies_tibble_dual_pop (pop_1,
                                                                     pop_2,

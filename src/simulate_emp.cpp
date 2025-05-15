@@ -98,11 +98,10 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
 
-        emp_genome local_emp_genome;
+        thread_local emp_genome local_emp_genome(emp_gen_input);
         thread_local rnd_t rndgen2(seed_values[seed_index]);
         {
           std::lock_guard<std::mutex> m(mutex);
-          local_emp_genome = emp_gen_input;
           seed_index++;
           if (seed_index >= num_seeds) { // just in case.
             for (int i = 0; i < num_seeds; ++i) {
@@ -132,9 +131,9 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
           new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
                                                           rndgen2,
                                                           local_emp_genome),
-                                                          Pop[index2].gamete(morgan,
-                                                                             rndgen2,
-                                                                             local_emp_genome));
+                                       Pop[index2].gamete(morgan,
+                                                          rndgen2,
+                                                          local_emp_genome));
         }
       }
     );

@@ -102,7 +102,6 @@ test_that("simulate admixture use", {
 
 
 test_that("simulate admixture use, junctions", {
-  testthat::skip_on_os("solaris")
   vx <- simulate_admixture(module = ancestry_module(track_junctions = TRUE),
                            pop_size = 1000,
                            total_runtime = 100)
