@@ -19,6 +19,12 @@ Thijs Janzen gave a presentation demonstrating GenomeAdmixR (then named isoSIM) 
 More information can be found in the accompanying paper :  https://doi.org/10.1111/2041-210X.13612
 
 # Version history
+Version 2.1.10 - Fixed memory bug, improved documentation <br />
+Version 2.1.9  - updated tbb::task_scheduler_init to tbb::global_control <br />
+Version 2.1.7  - Improve documentation <br />
+Version 2.1.6  - check classes with inherits <br />
+Version 2.1.5  - Removed debugging output <br />
+Version 2.1.4  - Only output when verbose = TRUE <br />
 Version 2.1.3  - Changed DOI link in description <br />
 Version 2.1.2  - Improved testing <br />
 Version 2.1.1  - Removed GNU make dependency <br />
