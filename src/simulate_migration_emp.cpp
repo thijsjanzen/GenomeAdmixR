@@ -308,7 +308,13 @@ std::vector< std::vector< Fish_emp > > simulate_two_populations(
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
 
+    if (pop_1.empty() || pop_2.empty()) {
+      throw "pop magically became empty?";
+    }
+
     if (use_selection) {
+      fitness_pop_1 = std::vector<double>(pop_1.size(), 0.0);
+      fitness_pop_2 = std::vector<double>(pop_2.size(), 0.0);
       for (size_t i = 0; i < pop_1.size(); ++i) {
         fitness_pop_1[i] = calculate_fitness(pop_1[i], select,
                                              marker_positions,
