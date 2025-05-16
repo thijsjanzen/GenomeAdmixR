@@ -1,8 +1,6 @@
 context("create_populations")
 
 test_that("save_population", {
-  testthat::skip_on_os("solaris")
-  message("test_save_pop")
   pop_size <- 100
   number_of_founders <- 10
   run_time <- 10
@@ -31,7 +29,6 @@ test_that("save_population", {
 })
 
 test_that("data", {
-  message("test_data3")
   data("dgrp2.3R.5k.data")
   testthat::expect_equal(length(dgrp2.3R.5k.data$markers),
                          4603)

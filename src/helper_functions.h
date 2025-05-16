@@ -9,6 +9,7 @@
 #define helper_functions_hpp
 
 #include <vector>
+#include <array>
 #include "Fish.h"
 #include "Fish_emp.h"
 #include "random_functions.h"
@@ -43,7 +44,7 @@ std::vector< Fish > convert_NumericVector_to_fishVector(const NumericVector& v);
 List convert_to_list(const std::vector<Fish>& v);
 
 double calculate_fitness(const Fish& focal,
-                         const NumericMatrix& select,
+                         const std::vector<std::array<double, 5>>& select,
                          bool multiplicative_selection);
 
 int draw_random_founder(const NumericVector& v,
@@ -92,7 +93,7 @@ void update_founder_labels(const std::vector<int>& chrom,
                            std::vector<int>& founder_labels);
 
 double calculate_fitness(const Fish_emp& focal,
-                         const NumericMatrix& select,
+                         const std::vector<std::array<double, 5>>& select,
                          const std::vector<double>& locations,
                          bool multiplicative_selection);
 
@@ -132,5 +133,7 @@ void mutate(Fish_emp& indiv,
             const std::vector<std::vector<double>>& sub_matrix,
             const double& mutation_rate,
             rnd_t& rndgen);
+
+std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select);
 
 #endif /* helper_functions_hpp */

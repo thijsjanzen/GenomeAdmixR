@@ -1,10 +1,7 @@
 context("simulate_admixture_until")
 
 test_that("simulate_admixture_until", {
-  cat("test_sim_admix_until")
-  testthat::skip_on_os("solaris")
-
-  vx <- simulate_admixture(total_runtime = 100,
+   vx <- simulate_admixture(total_runtime = 100,
                            migration = migration_settings(
                              population_size = c(50, 50),
                              initial_frequencies = list(c(0.5, 0.5),
@@ -34,8 +31,6 @@ test_that("simulate_admixture_until", {
 })
 
 test_that("simulate_admixture_until_data", {
-  cat("test_sim_admix_until_data")
-  testthat::skip_on_os("solaris")
 
   num_indiv <- 100
   chosen_markers <- 1:100

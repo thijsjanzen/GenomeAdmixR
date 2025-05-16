@@ -12,29 +12,12 @@
 #' \code{combine_input_data}
 #' @param pop_size Vector containing the number of individuals in both
 #' populations.
-#' @param total_runtime  Number of generations
-#' @param morgan Length of the chromosome in Morgan (e.g. the number of
-#' crossovers during meiosis)
+#' @inheritParams default_params_doc
 #' @param recombination_rate rate in cM / Mbp, used to map recombination to the
 #' markers. If the recombination_rate is not set, the value for morgan is used,
 #' assuming that the markers included span an entire chromosome.
 #' @param num_threads number of threads. Default is 1. Set to -1 to use all
 #' available threads
-#' @param select_matrix Selection matrix indicating the markers which are under
-#' selection. If not provided by the user, the simulation proceeds neutrally.
-#' If provided, each row in the matrix should contain five entries:
-#' \code{location}{ location of the marker under selection (in Morgan) }
-#' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
-#' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
-#' representes the mutant allele A}
-#' @param verbose Verbose output if TRUE. Default value is FALSE
-#' @param markers A vector of locations of markers (relative locations in
-#' [0, 1]). If a vector is provided, ancestry at these marker positions is
-#' tracked for every generation.
-#' @param multiplicative_selection Default: TRUE. If TRUE, fitness is
-#' calculated for multiple markers by multiplying fitness values for each
-#' marker. If FALSE, fitness is calculated by adding fitness values for each
-#' marker.
 #' @param migration_rate  Rate of migration between the two populations.
 #' Migration is implemented such that with probability m (migration rate) one
 #' of the two parents of a new offspring is from the other population, with
@@ -93,7 +76,7 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                                       verbose = verbose)
   input_data_population_2 <- verify_genomeadmixr_data(input_data_population_2,
                                                       verbose = verbose)
-
+  RcppParallel::setThreadOptions(num_threads)
   if (!is.na(critical_fst)) {
     stop_at_critical_fst <- TRUE
   }

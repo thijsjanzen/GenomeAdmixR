@@ -5,33 +5,16 @@
 #' @param input_data Genomic data used as input, should be of type
 #' genomeadmixr_data. Either a single dataset is provided, or a list of
 #' multiple genomeadmixr_data objects.
+#' @inheritParams default_params_doc
 #' @param pop_size Vector containing the number of individuals in both
 #' populations.
 #' @param initial_frequencies A vector describing the initial contribution of
 #' each provided input data set to the starting hybrid swarm. By default, equal
 #' frequencies are assumed. If a vector not summing to 1 is provided, the vector
 #' is normalized.
-#' @param total_runtime  Number of generations
-#' @param morgan Length of the chromosome in Morgan (e.g. the number of
-#' crossovers during meiosis)
 #' @param recombination_rate rate in cM / Mbp, used to map recombination to the
 #' markers. If the recombination_rate is not set, the value for Morgan is used,
 #' assuming that the markers included span an entire chromosome.
-#' @param num_threads number of threads. Default is 1. Set to -1 to use all
-#' available threads
-#' @param select_matrix Selection matrix indicating the markers which are under
-#' selection. If not provided by the user, the simulation proceeds neutrally. If
-#' provided, each row in the matrix should contain five entries:
-#' \code{location}{ location of the marker under selection (in Morgan) }
-#' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
-#' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
-#' represents the mutant allele A}
-#' @param verbose Verbose output if TRUE. Default value is FALSE
-#' @param markers A vector of locations of markers, these markers are
-#' tracked for every generation.
-#' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated
-#' for multiple markers by multiplying fitness values for each marker. If FALSE,
-#' fitness is calculated by adding fitness values for each marker.
 #' @param mutation_rate the per base probability of mutation. Default is 0.
 #' @param substitution_matrix a 4x4 matrix representing the probability of
 #' mutating to another base (where [1/2/3/4] = [a/c/t/g]), conditional on the
@@ -80,7 +63,7 @@ simulate_sequence <- function(input_data = NA,
       stop("pop_size is undefined, need an input population")
     }
   }
-
+  RcppParallel::setThreadOptions(num_threads)
   select_matrix <- check_select_matrix(select_matrix,
                                        markers,
                                        use_data = TRUE)

@@ -48,7 +48,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-          
+
       - name: Install devtools
         run: install.packages("devtools")
         shell: Rscript {0}

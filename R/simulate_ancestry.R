@@ -13,27 +13,7 @@
 #' @param initial_frequencies A vector describing the initial frequency of each
 #' ancestor. By default, equal frequencies are assumed. If a vector not summing
 #' to 1 is provided, the vector is normalized.
-#' @param total_runtime  Number of generations
-#' @param morgan Length of the chromosome in Morgan (e.g. the number of
-#' crossovers during meiosis)
-#' @param num_threads number of threads. Default is 1. Set to -1 to use all
-#' available threads
-#' @param select_matrix Selection matrix indicating the markers which are under
-#' selection. If not provided by the user, the simulation proceeds neutrally. If
-#' provided, each row in the matrix should contain five entries:
-#' \code{location}{ location of the marker under selection (in Morgan) }
-#' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
-#' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
-#' represents the mutant allele A}
-#' @param verbose Verbose output if TRUE. Default value is FALSE
-#' @param markers A vector of locations of markers (relative locations in
-#' [0, 1]). If a vector is provided, ancestry at these marker positions is
-#' tracked for every generation.
-#' @param track_junctions Track the average number of junctions over time if
-#' TRUE
-#' @param multiplicative_selection Default: TRUE. If TRUE, fitness is calculated
-#' for multiple markers by multiplying fitness values for each marker. If FALSE,
-#' fitness is calculated by adding fitness values for each marker.
+#' @inheritParams default_params_doc
 #' @return A list with: \code{population} a population object, and three tibbles
 #' with allele frequencies (only contain values of a vector was provided to the
 #' argument \code{markers}: \code{frequencies} , \code{initial_frequencies} and
@@ -55,7 +35,7 @@ simulate_ancestry <- function(input_population = NA,
                                track_junctions = FALSE,
                                multiplicative_selection = TRUE) {
 
-
+  RcppParallel::setThreadOptions(num_threads)
 
   input_population <- check_input_pop(input_population)
 

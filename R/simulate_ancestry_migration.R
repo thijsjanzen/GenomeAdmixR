@@ -17,28 +17,7 @@
 #' the frequencies for all ancestor. The length of the vector indicates the
 #' number of unique ancestors. If a vector not summing to 1 is provided, the
 #' vector is normalized.
-#' @param total_runtime  Number of generations
-#' @param morgan Length of the chromosome in Morgan (e.g. the number of
-#' crossovers during meiosis)
-#' @param num_threads number of threads. Default is 1. Set to -1 to use all
-#' available threads
-#' @param select_matrix Selection matrix indicating the markers which are under
-#' selection. If not provided by the user, the simulation proceeds neutrally.
-#' If provided, each row in the matrix should contain five entries:
-#' \code{location}{ location of the marker under selection (in Morgan) }
-#' \code{fitness of wildtype (aa)} \code{fitness of heterozygote (aA)}
-#' \code{fitness of homozygote mutant (AA)} \code{Ancestral type that
-#' representes the mutant allele A}
-#' @param verbose Verbose output if TRUE. Default value is FALSE
-#' @param markers A vector of locations of markers (relative locations in
-#' [0, 1]). If a vector is provided, ancestry at these marker positions is
-#' tracked for every generation.
-#' @param track_junctions Track the average number of junctions over time if
-#' TRUE
-#' @param multiplicative_selection Default: TRUE. If TRUE, fitness is
-#' calculated for multiple markers by multiplying fitness values for each
-#' marker. If FALSE, fitness is calculated by adding fitness values for each
-#' marker.
+#' @inheritParams default_params_doc
 #' @param migration_rate  Rate of migration between the two populations.
 #' Migration is implemented such that with probability m (migration rate) one
 #' of the two parents of a new offspring is from the other population, with
@@ -116,6 +95,8 @@ simulate_ancestry_migration <- function(input_population_1 = NA,
       stop("need separate frequencies for each population")
     }
   }
+
+  RcppParallel::setThreadOptions(num_threads)
 
   input_population_1 <- check_input_pop(input_population_1)
   input_population_2 <- check_input_pop(input_population_2)

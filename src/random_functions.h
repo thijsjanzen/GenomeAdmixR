@@ -24,7 +24,6 @@ struct rnd_t {
 
   rnd_t() {
     auto seed = get_seed();
-  //  std::cerr << "initializing rnd_t with: " << seed << "\n" << std::flush;
     rndgen_ = std::mt19937_64(seed);
   }
 
@@ -82,7 +81,7 @@ struct emp_genome {
     if (positions.empty()) {
       throw std::runtime_error("positions is empty");
     }
-    total_sum = std::accumulate(positions.begin(),
+    auto total_sum = std::accumulate(positions.begin(),
                                 positions.end(),
                                 0.0);
 
@@ -98,8 +97,9 @@ struct emp_genome {
 
   size_t index_from_cdf(double p) const {
 
-    if (total_sum <= 0.0) return static_cast<size_t>(p * cdf_.size());
-
+    if (cdf_.empty()) throw "empty cdf";
+    
+    if (cdf_.back() <= 0.0) return static_cast<size_t>(p * cdf_.size());
     // find index belonging to p
     return static_cast<size_t>(std::distance(cdf_.begin(),
                                              std::lower_bound(cdf_.begin(),
@@ -121,5 +121,4 @@ struct emp_genome {
     indices.push_back(cdf_.size());
     return indices;
   }
-  double total_sum;
 };

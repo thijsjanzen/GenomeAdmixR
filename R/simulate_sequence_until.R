@@ -19,7 +19,7 @@ simulate_sequence_until <- function(input_data_population_1 = NA,
                                     mutation_rate = 0,
                                     substitution_matrix =
                                       matrix(1 / 4, nrow = 4, ncol = 4)) {
-
+  RcppParallel::setThreadOptions(num_threads)
   pops <- simulate_sequence_migration(
     input_data_population_1 = input_data_population_1,
     input_data_population_2 = input_data_population_2,

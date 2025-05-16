@@ -5,6 +5,7 @@
 //  Copyright Thijs Janzen 2018
 //
 //
+#include <array>
 #include <vector>
 #include <cstdlib>
 #include <numeric>
@@ -18,6 +19,7 @@
 #include "Fish.h"
 #include "random_functions.h"
 #include "helper_functions.h"
+#include "util.h"
 
 #include <RcppParallel.h>
 
@@ -89,13 +91,13 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
   int seed_index = 0;
   std::mutex mutex;
 
-  tbb::task_scheduler_init _tbb((num_threads > 0) ? num_threads : tbb::task_scheduler_init::automatic);
+  set_num_threads();
 
   tbb::parallel_for(
     tbb::blocked_range<unsigned>(0, pop_size),
     [&](const tbb::blocked_range<unsigned>& r) {
 
-      rnd_t rndgen2(seed_values[seed_index]);
+      thread_local rnd_t rndgen2(seed_values[seed_index]);
       {
         std::lock_guard<std::mutex> _(mutex);
         seed_index++;
@@ -210,8 +212,19 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     double migration_rate,
     int num_threads,
     rnd_t& rndgen) {
+
+  std::vector< std::array<double, 5> > select_matrix;
+  for (size_t i = 0; i < select.nrow(); ++i) {
+    std::array<double, 5> row_entry;
+    for (size_t j = 0; j < select.ncol(); ++j) {
+      if (j >= 5) throw "select matrix too many columns";
+       row_entry[j] = select(i, j);
+    }
+    select_matrix.push_back(row_entry);
+  }
+
   bool use_selection = false;
-  if (select(0, 0) >= 0) use_selection = true;
+  if (select_matrix[0][0] >= 0) use_selection = true;
 
   std::vector<Fish> pop_1 = source_pop_1;
   std::vector<Fish> pop_2 = source_pop_2;
@@ -220,22 +233,28 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   std::vector<double> fitness_pop_2(pop_2.size(), 0.0);
 
   if (use_selection) {
-    for (int j = 0; j < select.nrow(); ++j) {
-      if (select(j, 4) < 0) break; // these entries are only for tracking, not for selection calculations
+
+    for (auto j : select_matrix) {
+      if (j[4] < 0) break; // these entries are only for tracking, not for selection calculations
+
       double local_max_fitness = 0.0;
       for (int i = 1; i < 4; ++i) {
-        if (select(j, i) > local_max_fitness) {
-          local_max_fitness = select(j, i);
+        if (j[i] > local_max_fitness) {
+          local_max_fitness = j[i];
         }
       }
     }
 
     for (size_t i = 0; i < pop_1.size(); ++i) {
-      fitness_pop_1[i] = calculate_fitness(pop_1[i], select, multiplicative_selection);
+      fitness_pop_1[i] = calculate_fitness(pop_1[i],
+                                           select_matrix,
+                                           multiplicative_selection);
     }
 
     for (size_t i = 0; i < pop_2.size(); ++i) {
-      fitness_pop_2[i] = calculate_fitness(pop_2[i], select, multiplicative_selection);
+      fitness_pop_2[i] = calculate_fitness(pop_2[i],
+                                           select_matrix,
+                                           multiplicative_selection);
     }
   }
 
@@ -253,7 +272,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
   R_FlushConsole();
 
   for (int t = 0; t < total_runtime; ++t) {
-    // Rcout << t << "\n"; force_output();
+
     if(track_frequency) {
       arma::mat local_mat = update_all_frequencies_tibble_dual_pop (pop_1,
                                                                     pop_2,
@@ -280,35 +299,35 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1, // resident
                                                            pop_2, // migrants
                                                            pop_size[0],
-                                                                   fitness_pop_1,
-                                                                   fitness_pop_2,
-                                                                   max_fitness_pop_1,
-                                                                   max_fitness_pop_2,
-                                                                   use_selection,
-                                                                   migration_rate,
-                                                                   morgan,
-                                                                   num_threads);
+                                                           fitness_pop_1,
+                                                           fitness_pop_2,
+                                                           max_fitness_pop_1,
+                                                           max_fitness_pop_2,
+                                                           use_selection,
+                                                           migration_rate,
+                                                           morgan,
+                                                           num_threads);
 
     std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                            pop_1,  // migrants
                                                            pop_size[1],
-                                                                   fitness_pop_2,
-                                                                   fitness_pop_1,
-                                                                   max_fitness_pop_2,
-                                                                   max_fitness_pop_1,
-                                                                   use_selection,
-                                                                   migration_rate,
-                                                                   morgan,
-                                                                   num_threads);
+                                                           fitness_pop_2,
+                                                           fitness_pop_1,
+                                                           max_fitness_pop_2,
+                                                           max_fitness_pop_1,
+                                                           use_selection,
+                                                           migration_rate,
+                                                           morgan,
+                                                           num_threads);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
 
     if (use_selection) {
       for (size_t i = 0; i < pop_1.size(); ++i) {
-        fitness_pop_1[i] = calculate_fitness(pop_1[i], select, multiplicative_selection);
+        fitness_pop_1[i] = calculate_fitness(pop_1[i], select_matrix, multiplicative_selection);
       }
       for (size_t i = 0; i < pop_2.size(); ++i) {
-        fitness_pop_2[i] = calculate_fitness(pop_2[i], select, multiplicative_selection);
+        fitness_pop_2[i] = calculate_fitness(pop_2[i], select_matrix, multiplicative_selection);
       }
     }
 

@@ -10,6 +10,8 @@
 patterns in ancestry along the genome change after admixture. The simulation
 assumes Wright-Fisher dynamics, e.g. random mating and non-overlapping generations. In the simulation, instead of specific alleles, local ancestry is tracked, thus assuming that local molecular data can always be uniquely traced back to one of the founding individuals (populations). The package provides functionality to perform such simulations, but also to perform post-hoc statistical analyses and to visualize the obtained results.
 
+   Version 2.1.10 - Smoothened out documentation \cr
+   Version 2.1.9  - updated tbb::task_scheduler_init to tbb::global_control \cr
    Version 2.1.7  - Improve documentation \cr
    Version 2.1.6  - check classes with inherits \cr
    Version 2.1.5  - Removed debugging output \cr
@@ -85,5 +87,5 @@ Thijs Janzen
 Maintainer: (thijsjanzen@gmail.com)
 }
 \references{
-Janzen, T.,  Diaz, F. (2020) Individual-based simulations of genome evolution with ancestry: the GenomeAdmixR R package. bioRxiv 2020.10.19.343491; doi: https://doi.org/10.1101/2020.10.19.343491
+Janzen T, Diaz F. Individual-based simulations of genome evolution with ancestry: The GenomeAdmixR R package. Methods Ecol Evol. 2021; 12: 1346–1357. https://doi.org/10.1111/2041-210X.13612
 }

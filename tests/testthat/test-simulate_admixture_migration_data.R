@@ -2,7 +2,6 @@ context("test simulate admixture data migration")
 
 test_that("simulate_admixture_data", {
   testthat::skip_on_os("solaris")
-  cat("test_sim_admix_data")
   num_markers <- 100
   num_indiv <- 100
   chosen_markers <- 1:num_markers
@@ -38,6 +37,7 @@ test_that("simulate_admixture_data", {
   a1 <- a %>%
     dplyr::group_by(population, ancestor) %>%
     dplyr::summarise("mean_freq" = mean(frequency))
+
 
   b <- simul_two_pop$final_frequency
   b1 <- b %>%
@@ -77,7 +77,6 @@ test_that("simulate_admixture_data", {
 })
 
 test_that("simulate_admixture_data with selection", {
-  cat("test_sim_admix_data_selection")
   num_markers <- 100
   num_indiv <- 100
   chosen_markers <- 1:num_markers
@@ -100,7 +99,7 @@ test_that("simulate_admixture_data with selection", {
   class(fake_input_data2) <- "genomeadmixr_data"
 
   select_matrix <- matrix(ncol = 5, nrow = 1)
-  s <- 1.0
+  s <- 0.1
   select_matrix[1, ] <- c(50, 1.0, 1 + 0.5 * s, 1 + s, 1)
 
   simul_two_pop <- simulate_admixture(
