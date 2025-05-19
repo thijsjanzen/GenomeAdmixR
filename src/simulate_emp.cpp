@@ -78,9 +78,9 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
 
     int seed_index = 0;
     std::mutex mutex;
-    int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+    int num_seeds = num_threads * 20; // tbb might re-start threads due to the load-balancer
     if (num_threads == -1) {
-      num_seeds = 20;
+      num_seeds = 200;
     }
 
     std::vector< int > seed_values(num_seeds);

@@ -78,9 +78,9 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
   std::vector<Fish> new_generation(pop_size);
 
   rnd_t rndgen;
-  int num_seeds = num_threads * 2; // tbb might re-start threads due to the load-balancer
+  int num_seeds = num_threads * 10; // tbb might re-start threads due to the load-balancer
   if (num_threads == -1) {
-    num_seeds = 20;
+    num_seeds = 100;
   }
   std::vector< int > seed_values(num_seeds);
 
@@ -101,7 +101,7 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
       {
         std::lock_guard<std::mutex> _(mutex);
         seed_index++;
-        if (seed_index > num_seeds) { // just in case.
+        if (seed_index >= num_seeds) { // just in case.
           for (int i = 0; i < num_seeds; ++i) {
             seed_values[i] = rndgen.random_number(INT_MAX);
           }
