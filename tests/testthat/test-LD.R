@@ -1,7 +1,6 @@
 context("LD stats")
 
 test_that("calculate_average_LD", {
-  testthat::skip_on_os("solaris")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 1000

@@ -98,7 +98,7 @@ struct emp_genome {
   size_t index_from_cdf(double p) const {
 
     if (cdf_.empty()) throw "empty cdf";
-    
+
     if (cdf_.back() <= 0.0) return static_cast<size_t>(p * cdf_.size());
     // find index belonging to p
     return static_cast<size_t>(std::distance(cdf_.begin(),

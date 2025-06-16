@@ -1,7 +1,6 @@
 context("isoFemale creation")
 
 test_that("create_isofemale", {
-  testthat::skip_on_os("solaris")
   pop_size <- 100
   number_of_founders <- 2
   run_time <- 100
@@ -26,7 +25,6 @@ test_that("create_isofemale", {
 })
 
 test_that("create_population_from_isofemales", {
-  testthat::skip_on_os("solaris")
   pop_size <- 100
   number_of_founders <- 10
   run_time <- 100
@@ -93,7 +91,6 @@ testthat::expect_silent(
 })
 
 test_that("cpp classes", {
-  testthat::skip_on_os("solaris")
   a <- matrix(c(0.1, 1, 2, 2), nrow = 2)
   b <- matrix(c(0, 1, 1, -1), nrow = 2)
   indiv <- list(chromosome1 = a, chromosome2 = a)
@@ -132,7 +129,6 @@ test_that("cpp classes", {
 })
 
 test_that("create_isofemale_data", {
-  testthat::skip_on_os("solaris")
  data("dgrp2.3R.5k.data")
 
  females <- create_iso_female(module = sequence_module(

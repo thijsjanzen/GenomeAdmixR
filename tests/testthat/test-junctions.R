@@ -1,6 +1,5 @@
 
 test_that("expected_number_junctions", {
-  testthat::skip_on_os("solaris")
 
   if (requireNamespace("junctions")) {
 

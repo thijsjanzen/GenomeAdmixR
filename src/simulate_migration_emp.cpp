@@ -113,39 +113,15 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
         mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
     }
   } else {
-
-    int seed_index = 0;
-    std::mutex mutex;
-    int num_seeds = num_threads * 10; // tbb might re-start threads due to the load-balancer
-    if (num_threads == -1) {
-      num_seeds = 200;
-    }
-    std::vector< int > seed_values(num_seeds);
-
-    {
-      rnd_t rndgen;
-      for (int i = 0; i < num_seeds; ++i) {
-        seed_values[i] = rndgen.random_number(INT_MAX); // large value
-      }
-    }
-
     set_num_threads();
 
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
 
-        thread_local rnd_t rndgen2(seed_values[seed_index]);
-        {
-          std::lock_guard<std::mutex> _(mutex);
-          seed_index++;
-          if (seed_index >= num_seeds) { // just in case.
-            for (int i = 0; i < num_seeds; ++i) {
-              seed_values[i] = rndgen2.random_number(INT_MAX);
-            }
-            seed_index = 0;
-          }
-        }
+        size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        size_t local_time = static_cast<unsigned int>( time(NULL) );
+        thread_local rnd_t rndgen2(local_seed + local_time);
 
         for (unsigned i = r.begin(); i < r.end(); ++i) {
 

@@ -76,22 +76,6 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
     }
   } else {
 
-    int seed_index = 0;
-    std::mutex mutex;
-    int num_seeds = num_threads * 20; // tbb might re-start threads due to the load-balancer
-    if (num_threads == -1) {
-      num_seeds = 200;
-    }
-
-    std::vector< int > seed_values(num_seeds);
-
-    { // ensure that rndgen only does this, and doesn't live outside scope.
-      rnd_t rndgen;
-      for (int i = 0; i < num_seeds; ++i) {
-        seed_values[i] = rndgen.random_number(INT_MAX); // large value
-      }
-    }
-
     set_num_threads();
 
     tbb::parallel_for(
@@ -99,17 +83,9 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
       [&](const tbb::blocked_range<unsigned>& r) {
 
         thread_local emp_genome local_emp_genome(emp_gen_input);
-        thread_local rnd_t rndgen2(seed_values[seed_index]);
-        {
-          std::lock_guard<std::mutex> m(mutex);
-          seed_index++;
-          if (seed_index >= num_seeds) { // just in case.
-            for (int i = 0; i < num_seeds; ++i) {
-              seed_values[i] = rndgen2.random_number(INT_MAX);
-            }
-            seed_index = 0;
-          }
-        }
+        size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        size_t local_time = static_cast<unsigned int>( time(NULL) );
+        thread_local rnd_t rndgen2(local_seed + local_time);
 
         for (unsigned i = r.begin(); i < r.end(); ++i) {
           int index1 = 0;

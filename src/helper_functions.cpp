@@ -233,7 +233,9 @@ double calc_mean_junctions(const std::vector< Fish> & pop) {
 int draw_prop_fitness(const std::vector<double>& fitness,
                       const double& maxFitness,
                       rnd_t& rndgen) {
-
+  if (fitness.empty()) {
+    throw "Fitness is empty";
+  }
   if (maxFitness <= 0.0) {
     return rndgen.random_number(fitness.size());
   }

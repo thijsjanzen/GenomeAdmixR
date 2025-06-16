@@ -13,6 +13,8 @@
 #include <vector>
 #include <algorithm>
 
+#include <thread>
+
 #include "Fish.h"
 #include "random_functions.h"
 #include "helper_functions.h"
@@ -76,27 +78,15 @@ void update_pop(const std::vector<Fish>& Pop,
     }
   } else {
 
-
-    int seed_index = 0;
-    std::mutex mutex;
-
     set_num_threads();
 
     tbb::parallel_for(
       tbb::blocked_range<unsigned>(0, pop_size),
       [&](const tbb::blocked_range<unsigned>& r) {
 
-        thread_local rnd_t rndgen2(seed_values[seed_index]);
-        {
-          std::lock_guard<std::mutex> _(mutex);
-          seed_index++;
-          if (seed_index >= num_seeds) { // just in case.
-            for (int i = 0; i < num_seeds; ++i) {
-              seed_values[i] = rndgen2.random_number(INT_MAX);
-            }
-            seed_index = 0;
-          }
-        }
+      size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
+      size_t local_time = static_cast<unsigned int>( time(NULL) );
+      thread_local rnd_t rndgen2(local_seed + local_time);
 
         for (unsigned i = r.begin(); i < r.end(); ++i) {
           int index1 = 0;

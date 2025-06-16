@@ -112,7 +112,6 @@ test_that("simulate admixture use, junctions", {
 })
 
 test_that("simulate admixture use, markers", {
-  testthat::skip_on_os("solaris")
   pop <- simulate_admixture(module = ancestry_module(markers =
                                                        seq(0,
                                                            1,
@@ -157,7 +156,6 @@ test_that("simulate admixture use, markers", {
 })
 
 test_that("simulate admixture use, pop size", {
-  testthat::skip_on_os("solaris")
   pop <- simulate_admixture(pop_size = 100,
                             total_runtime = 3)
 

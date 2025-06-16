@@ -1,7 +1,6 @@
 context("test simulate admixture data migration")
 
 test_that("simulate_admixture_data", {
-  testthat::skip_on_os("solaris")
   num_markers <- 100
   num_indiv <- 100
   chosen_markers <- 1:num_markers

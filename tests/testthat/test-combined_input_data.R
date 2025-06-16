@@ -75,9 +75,6 @@ test_that("input data", {
 })
 
 test_that("input data simulation", {
-  testthat::skip_on_os("solaris")
-
-
   vx <- simulate_admixture(pop_size = 100,
                            total_runtime = 100)
 

@@ -1,7 +1,6 @@
 context("test plink data")
 
 test_that("plink data", {
-  testthat::skip_on_os("solaris")
 
   chosen_markers <- 1:100
 

@@ -29,12 +29,12 @@ using namespace Rcpp;
 
 Fish draw_parent(const std::vector< Fish>& pop_1,
                  const std::vector< Fish>& pop_2,
-                 double migration_rate,
-                 bool use_selection,
+                 const double& migration_rate,
+                 const bool& use_selection,
                  const std::vector< double >& fitness_source,
                  const std::vector< double >& fitness_migr,
-                 double max_fitness_source,
-                 double max_fitness_migr,
+                 const double& max_fitness_source,
+                 const double& max_fitness_migr,
                  int &index,
                  rnd_t& rndgen) {
 
@@ -65,31 +65,17 @@ Fish draw_parent(const std::vector< Fish>& pop_1,
 
 std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
                                            const std::vector< Fish>& pop_2,
-                                           size_t pop_size,
+                                           const size_t& pop_size,
                                            const std::vector< double >& fitness_source,
                                            const std::vector< double >& fitness_migr,
                                            const double& max_fitness_source,
                                            const double& max_fitness_migr,
-                                           bool use_selection,
-                                           double migration_rate,
-                                           double size_in_morgan,
-                                           int num_threads) {
+                                           const bool& use_selection,
+                                           const double& migration_rate,
+                                           const double& size_in_morgan,
+                                           const int& num_threads) {
 
   std::vector<Fish> new_generation(pop_size);
-
-  rnd_t rndgen;
-  int num_seeds = num_threads * 10; // tbb might re-start threads due to the load-balancer
-  if (num_threads == -1) {
-    num_seeds = 100;
-  }
-  std::vector< int > seed_values(num_seeds);
-
-  for (int i = 0; i < num_seeds; ++i) {
-    seed_values[i] = rndgen.random_number(INT_MAX); // large value
-  }
-
-  int seed_index = 0;
-  std::mutex mutex;
 
   set_num_threads();
 
@@ -97,17 +83,9 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
     tbb::blocked_range<unsigned>(0, pop_size),
     [&](const tbb::blocked_range<unsigned>& r) {
 
-      thread_local rnd_t rndgen2(seed_values[seed_index]);
-      {
-        std::lock_guard<std::mutex> _(mutex);
-        seed_index++;
-        if (seed_index >= num_seeds) { // just in case.
-          for (int i = 0; i < num_seeds; ++i) {
-            seed_values[i] = rndgen.random_number(INT_MAX);
-          }
-          seed_index = 0;
-        }
-      }
+      thread_local size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
+      thread_local size_t local_time = static_cast<unsigned int>( time(NULL) );
+      thread_local rnd_t rndgen2(local_seed + local_time);
 
       for (unsigned i = r.begin(); i < r.end(); ++i) {
         int index1 = -1;
@@ -260,7 +238,6 @@ std::vector< std::vector< Fish > > simulate_two_populations(
 
   double max_fitness_pop_1 = *std::max_element(fitness_pop_1.begin(), fitness_pop_1.end());
   double max_fitness_pop_2 = *std::max_element(fitness_pop_2.begin(), fitness_pop_2.end());
-
 
   int updateFreq = total_runtime / 20;
   if(updateFreq < 1) updateFreq = 1;
