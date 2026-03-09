@@ -16,6 +16,7 @@ A package to perfrom individual-based simulations of genome evolution with ances
 More information can be found in the accompanying paper :  https://doi.org/10.1111/2041-210X.13612
 
 # Version history
+Version 2.1.12 - Added support without TBB <br />
 Version 2.1.10 - Fixed memory bug, improved documentation <br />
 Version 2.1.9  - updated tbb::task_scheduler_init to tbb::global_control <br />
 Version 2.1.7  - Improve documentation <br />

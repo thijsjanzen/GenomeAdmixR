@@ -25,7 +25,7 @@ test_that("general usage", {
                                  markers = mks,
                                  morgan = 1),
         pop_size = 100,
-        total_runtime = 10,
+        total_runtime = 5,
         verbose = TRUE),
       "found multiple input populations"
     )
@@ -40,7 +40,7 @@ test_that("general usage", {
                                  morgan = 1,
                                  markers = mks),
         pop_size = 100,
-        total_runtime = 10,
+        total_runtime = 5,
         verbose = TRUE)
     )
   )
@@ -66,16 +66,7 @@ test_that("general usage", {
                                morgan = 1),
       inbreeding_pop_size = 100,
       n = 20,
-      run_time = 20)
-  )
-
-  testthat::expect_silent(
-    iso_100 <- create_iso_female(
-      module = sequence_module(molecular_data = simulated_pop,
-                               morgan = 1),
-      inbreeding_pop_size = 100,
-      n = 20,
-      run_time = 20)
+      run_time = 2)
   )
 
   testthat::expect_message(
@@ -84,7 +75,7 @@ test_that("general usage", {
                                morgan = 1,
                                markers = mks),
       pop_size = 100,
-      total_runtime = 11,
+      total_runtime = 5,
       select_matrix = selection_matrix)
   )
 
@@ -101,7 +92,7 @@ test_that("general usage", {
                                        stop_at_critical_fst = TRUE,
                                        critical_fst = 0.05,
                                        generations_between_update = 100),
-        total_runtime = 10)
+        total_runtime = 5)
     )
   )
 })

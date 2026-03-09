@@ -126,7 +126,6 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                            double size_in_morgan,
                                            int num_threads) {
 
-  if (num_threads > 1) {
     return next_pop_migr_threaded(pop_1,
                                   pop_2,
                                   pop_size,
@@ -138,37 +137,6 @@ std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
                                   migration_rate,
                                   size_in_morgan,
                                   num_threads);
-  }
-
-
-  std::vector<Fish> new_generation(pop_size);
-
-  rnd_t rndgen2; // calls get_seed
-
-  for (unsigned i = 0; i < pop_size; ++i) {
-    int index1 = -1;
-    int index2 = -1;
-    Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
-                               use_selection,
-                               fitness_source, fitness_migr,
-                               max_fitness_source, max_fitness_migr,
-                               index1, rndgen2);
-    Fish parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                               use_selection,
-                               fitness_source, fitness_migr,
-                               max_fitness_source, max_fitness_migr,
-                               index2, rndgen2);
-    while (index1 == index2) {
-      parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                            use_selection,
-                            fitness_source, fitness_migr,
-                            max_fitness_source, max_fitness_migr,
-                            index2, rndgen2);
-    }
-
-    new_generation[i] = mate(parent1, parent2, size_in_morgan, rndgen2);
-  }
-  return new_generation;
 }
 
 std::vector< std::vector< Fish > > simulate_two_populations(
