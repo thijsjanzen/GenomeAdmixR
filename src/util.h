@@ -55,35 +55,10 @@ public:
   T end() const { return end_; }
 };
 
-
-template<typename InputIterator, typename Body>
-inline void parallel_for_each(InputIterator first, InputIterator last,
-                              Body&& body ) {
-  std::for_each(first, last, std::forward<Body>(body));
-}
-
-
-template<typename Index, typename Func>
-inline void parallel_for(Index first, Index last, const Func f) {
-  for (; first != last; ++first) {
-    f(first);
-  }
-}
-
-
-template<typename Index, typename Func>
-inline void parallel_for(Index first, Index last, Index step, const Func f) {
-  for (; first != last; first += step) {
-    f(first);
-  }
-}
-
 template<typename T, typename Func>
 inline void parallel_for(blocked_range<T> b, const Func f) {
   f(b);
 }
-
-
 
 }  // namespace tbb
 
