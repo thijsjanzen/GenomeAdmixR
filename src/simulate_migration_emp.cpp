@@ -473,7 +473,7 @@ try {
 } catch(std::exception &ex) {
   forward_exception_to_r(ex);
 } catch(...) {
-  ::Rf_error("c++ exception (unknown reason)");
+  Rcpp::stop("c++ exception (unknown reason)");
 }
 return NA_REAL;
 }
