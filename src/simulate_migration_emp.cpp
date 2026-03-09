@@ -79,40 +79,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
 
   std::vector<Fish_emp> new_generation(pop_size);
 
-  if (num_threads == 1) {
-    rnd_t rndgen2;
-
-    for (size_t i = 0; i < pop_size; ++i) {
-
-      int index1, index2;
-      Fish_emp parent1 = draw_parent(pop_1, pop_2, migration_rate,
-                                     use_selection,
-                                     fitness_source, fitness_migr,
-                                     max_fitness_source, max_fitness_migr,
-                                     index1,
-                                     rndgen2);
-      Fish_emp parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                                     use_selection,
-                                     fitness_source, fitness_migr,
-                                     max_fitness_source, max_fitness_migr,
-                                     index2,
-                                     rndgen2);
-      while (index1 == index2) {
-        parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                              use_selection,
-                              fitness_source, fitness_migr,
-                              max_fitness_source, max_fitness_migr,
-                              index2,
-                              rndgen2);
-      }
-
-      new_generation[i] = Fish_emp(parent1.gamete(size_in_morgan, rndgen2, emp_gen),
-                                   parent2.gamete(size_in_morgan, rndgen2, emp_gen));
-
-      if (mutation_rate > 0)
-        mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
-    }
-  } else {
+ 
     set_num_threads();
 
     tbb::parallel_for(
@@ -154,7 +121,7 @@ std::vector< Fish_emp > next_pop_migr(const std::vector< Fish_emp >& pop_1,
             mutate(new_generation[i], substitution_matrix, mutation_rate, rndgen2);
         }
       });
-  }
+  
   return new_generation;
 }
 
