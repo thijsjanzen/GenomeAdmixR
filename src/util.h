@@ -83,6 +83,11 @@ inline void set_num_threads() {
 // set by RcppParallel::setThreadOptions(numThreads)
 inline size_t get_rcpp_num_threads() {
   auto* nt_env = std::getenv("RCPP_PARALLEL_NUM_THREADS");
+
+  if (nullptr == nt_env) {
+    Rcpp::Rcout << "RCPP_PARALLEL_NUM_THREADS not set, using automatic concurrency." << std::endl;
+  }
+
   return (nullptr == nt_env)
     ? tbb::task_arena::automatic  // -1
   : static_cast<size_t>(std::atoi(nt_env));
@@ -90,6 +95,9 @@ inline size_t get_rcpp_num_threads() {
 
 inline void set_num_threads() {
   auto num_threads = get_rcpp_num_threads();
+  if (num_threads > 1 || num_threads < 0)  {
+    Rcpp::Rcout << "Setting TBB max allowed parallelism to " << num_threads << std::endl;
+  }
   auto global_control =
     tbb::global_control(tbb::global_control::max_allowed_parallelism,
                         num_threads);
