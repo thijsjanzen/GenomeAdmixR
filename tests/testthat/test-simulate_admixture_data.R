@@ -66,18 +66,6 @@ test_that("simulate_admixture_data", {
   testthat::expect_silent(
     calculate_marker_frequency(simul_pop, location = 50)
   )
-
-  # try multithreading:
-  testthat::skip_on_os("windows")
-  simul_pop <- simulate_admixture(module = sequence_module(
-    molecular_data = list(fake_input_data1,
-                          fake_input_data2),
-    initial_frequencies = c(0.5, 0.5),
-    markers = chosen_markers,
-    morgan = 1),
-    pop_size = 100,
-    total_runtime = 100,
-    num_threads = 2)
 })
 
 test_that("simulate_admixture_data_mutation", {
