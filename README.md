@@ -10,13 +10,15 @@ Branch|[![AppVeyor logo](pics/AppVeyor.png)]|[![Codecov logo](pics/Codecov.png)]
 master|[![Build status](https://ci.appveyor.com/api/projects/status/vrfuo3dednjl52tr?svg=true)](https://ci.appveyor.com/project/thijsjanzen/genomeadmixr)|[![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://app.codecov.io/gh/thijsjanzen/GenomeAdmixR/)
 
 # What is GenomeAdmixR?
-A package to perfrom individual-based simulations of genome evolution with ancestry.
+A package to perform individual-based simulations of genome evolution with ancestry.
 
 # More information
 More information can be found in the accompanying paper :  https://doi.org/10.1111/2041-210X.13612
 
 # Version history
-Version 2.1.12 - Added support without TBB <br />
+Version 2.1.13 - Added support for installs without TBB (e.g. Alpine Linux) <br />
+Version 2.1.12 - Update to C++17 <br />
+Version 2.1.11 - Update internal seeding <br />
 Version 2.1.10 - Fixed memory bug, improved documentation <br />
 Version 2.1.9  - updated tbb::task_scheduler_init to tbb::global_control <br />
 Version 2.1.7  - Improve documentation <br />
