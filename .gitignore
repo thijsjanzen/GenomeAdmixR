@@ -21,3 +21,4 @@ codecov.R
 *.vcf
 *.map
 *.ped
+.positai

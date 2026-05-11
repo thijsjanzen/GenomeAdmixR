@@ -74,13 +74,10 @@ inline void set_num_threads() {
 }
 
 
-
-
 #else  // if RCPP_PARLLEL_USE_TBB = 0
 
-
-// probably the cleanest way to retrieve RcppParallel's concurrency setting
-// set by RcppParallel::setThreadOptions(numThreads)
+//  probably the cleanest way to retrieve RcppParallel's concurrency setting
+//  set by RcppParallel::setThreadOptions(numThreads)
 inline size_t get_rcpp_num_threads() {
   auto* nt_env = std::getenv("RCPP_PARALLEL_NUM_THREADS");
 

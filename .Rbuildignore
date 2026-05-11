@@ -7,3 +7,5 @@
 ^pics$
 ^\.github$
 
+^\.positai$
+^\.claude$
