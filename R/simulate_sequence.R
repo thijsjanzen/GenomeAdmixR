@@ -133,7 +133,7 @@ simulate_sequence <- function(input_data = NA,
   output$final_frequency <- convert_to_dna(output$final_frequency)
 
   class(output) <- "genomadmixr_simulation"
-
+  RcppParallel::setThreadOptions(1)
   return(output)
 }
 

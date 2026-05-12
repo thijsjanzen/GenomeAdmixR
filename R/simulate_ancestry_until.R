@@ -69,7 +69,7 @@ simulate_ancestry_until <- function(input_population_1 = NA,
     total_generations <- total_generations + generations_between_update
     if (verbose) message(total_generations, "\t", fst)
   }
-
+  RcppParallel::setThreadOptions(1)
   return(list("population_1" = pops$population_1,
               "population_2" = pops$population_2,
               "Number_of_generations" = total_generations,

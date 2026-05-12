@@ -177,5 +177,6 @@ simulate_ancestry_migration <- function(input_population_1 = NA,
                                          track_junctions)
 
   class(output) <- "genomadmixr_simulation"
+  RcppParallel::setThreadOptions(1)
   return(output)
 }

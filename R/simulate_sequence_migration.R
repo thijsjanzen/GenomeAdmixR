@@ -110,6 +110,7 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
 
   if (!inherits(input_data_population_1, "genomeadmixr_data") ||
       !inherits(input_data_population_2, "genomeadmixr_data")) {
+    RcppParallel::setThreadOptions(1)
     stop("input_data should be of class genomeadmixr_data\n
           you can create such data with the functions\n
           create_input_data or vcfR_to_genomeadmixr_data")
@@ -201,5 +202,6 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                          track_frequency)
 
   class(output) <- "genomadmixr_simulation"
+  RcppParallel::setThreadOptions(1)
   return(output)
 }

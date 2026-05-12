@@ -92,7 +92,7 @@ inline size_t get_rcpp_num_threads() {
 
 inline void set_num_threads() {
   auto num_threads = get_rcpp_num_threads();
-  if (num_threads > 1 || num_threads < 0)  {
+  if (num_threads != 1)  {
     Rcpp::Rcout << "Setting TBB max allowed parallelism to " << num_threads << std::endl;
   }
   auto global_control =

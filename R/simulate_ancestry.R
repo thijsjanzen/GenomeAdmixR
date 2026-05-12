@@ -43,6 +43,7 @@ simulate_ancestry <- function(input_population = NA,
     if (inherits(input_population, "population")) {
       pop_size <- length(input_population)
     } else {
+      RcppParallel::setThreadOptions(1)
       stop("pop_size is undefined, need an input population")
     }
   }
@@ -102,6 +103,6 @@ simulate_ancestry <- function(input_population = NA,
                                          track_junctions)
 
   class(output) <- "genomadmixr_simulation"
-
+  RcppParallel::setThreadOptions(1)
   return(output)
 }

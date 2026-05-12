@@ -78,6 +78,7 @@ simulate_sequence_until <- function(input_data_population_1 = NA,
     total_generations <- total_generations + generations_between_update
     message(total_generations, "\t", fst, "\n")
   }
+  RcppParallel::setThreadOptions(1)
   return(list("population_1" = pops$population_1,
               "population_2" = pops$population_2,
               "Number_of_generations" = total_generations,
