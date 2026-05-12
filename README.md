@@ -5,10 +5,10 @@
 [![](http://cranlogs.r-pkg.org/badges/GenomeAdmixR)](https://cran.r-project.org/package=GenomeAdmixR)
 
 
-| Branch     | [![GitHub Actions logo](man/figures/github_actions_logo.png)](https://github.com/features/actions)                                                   | [![Codecov logo](man/figures/Codecov.png)](https://www.codecov.io)                                                                                |
+| Branch     | [![GitHub Actions logo](man/figures/github_actions_logo.png)](https://github.com/features/actions)                                                   | [![Codecov logo](man/figures/Codecov.png)](https://about.codecov.io/)                                                                                |
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-|   `master` | [![R-CMD-check](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml)                | [![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://codecov.io/github/thijsjanzen/GenomeAdmixR/branch/master)   |
-|  `develop` | [![R-CMD-check](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop)](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml) | [![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/develop/graph/badge.svg)](https://codecov.io/github/thijsjanzen/GenomeAdmixR/branch/develop) |
+|   `master` | [![R-CMD-check](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml)                | [![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/master/graph/badge.svg)](https://app.codecov.io/github/thijsjanzen/GenomeAdmixR/branch/master)   |
+|  `develop` | [![R-CMD-check](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop)](https://github.com/thijsjanzen/GenomeAdmixR/actions/workflows/R-CMD-check.yaml) | [![codecov.io](https://codecov.io/gh/thijsjanzen/GenomeAdmixR/branch/develop/graph/badge.svg)](https://app.codecov.io/github/thijsjanzen/GenomeAdmixR/branch/develop) |
 
 # What is GenomeAdmixR?
 A package to perform individual-based simulations of genome evolution with ancestry.
