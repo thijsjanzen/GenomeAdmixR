@@ -20,6 +20,7 @@ print_mat <- function(mat) {
     paste0(mat[n, ], collapse = " & "),
     "\\end{bmatrix}")
 }
+RcppParallel::setThreadOptions( getOption("Ncpus",  RcppParallel::defaultNumThreads()) )
 ```
 
 ## Empirical data
