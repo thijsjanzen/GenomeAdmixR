@@ -63,7 +63,7 @@ simulate_sequence <- function(input_data = NA,
       stop("pop_size is undefined, need an input population")
     }
   }
-  RcppParallel::setThreadOptions(num_threads)
+  set_num_threads(num_threads)
   select_matrix <- check_select_matrix(select_matrix,
                                        markers,
                                        use_data = TRUE)
@@ -133,7 +133,7 @@ simulate_sequence <- function(input_data = NA,
   output$final_frequency <- convert_to_dna(output$final_frequency)
 
   class(output) <- "genomadmixr_simulation"
-  RcppParallel::setThreadOptions(1)
+  reset_num_threads()
   return(output)
 }
 

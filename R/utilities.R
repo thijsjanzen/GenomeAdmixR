@@ -736,3 +736,17 @@ convert_to_numeric_matrix <- function(genome_data) {
 
   return(genome_numeric)
 }
+
+#' @keywords internal
+set_num_threads <- function(num_threads) {
+  if (num_threads == 1) {
+    RcppParallel::setThreadOptions( 1L )
+  } else {
+    RcppParallel::setThreadOptions(num_threads)
+  }
+}
+
+#' @keywords internal
+reset_num_threads <- function() {
+  RcppParallel::setThreadOptions( getOption("Ncpus",  RcppParallel::defaultNumThreads()) )
+}

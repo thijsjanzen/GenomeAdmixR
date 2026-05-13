@@ -76,7 +76,7 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                                       verbose = verbose)
   input_data_population_2 <- verify_genomeadmixr_data(input_data_population_2,
                                                       verbose = verbose)
-  RcppParallel::setThreadOptions(num_threads)
+  set_num_threads(num_threads)
   if (!is.na(critical_fst)) {
     stop_at_critical_fst <- TRUE
   }
@@ -110,7 +110,7 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
 
   if (!inherits(input_data_population_1, "genomeadmixr_data") ||
       !inherits(input_data_population_2, "genomeadmixr_data")) {
-    RcppParallel::setThreadOptions(1)
+    reset_num_threads()
     stop("input_data should be of class genomeadmixr_data\n
           you can create such data with the functions\n
           create_input_data or vcfR_to_genomeadmixr_data")
@@ -202,6 +202,6 @@ simulate_sequence_migration <- function(input_data_population_1 = NA, # nolint
                                          track_frequency)
 
   class(output) <- "genomadmixr_simulation"
-  RcppParallel::setThreadOptions(1)
+  reset_num_threads()
   return(output)
 }

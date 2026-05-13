@@ -74,10 +74,13 @@ inline void set_num_threads() {
 }
 
 
+
+
 #else  // if RCPP_PARLLEL_USE_TBB = 0
 
-//  probably the cleanest way to retrieve RcppParallel's concurrency setting
-//  set by RcppParallel::setThreadOptions(numThreads)
+
+// probably the cleanest way to retrieve RcppParallel's concurrency setting
+// set by RcppParallel::setThreadOptions(numThreads)
 inline size_t get_rcpp_num_threads() {
   auto* nt_env = std::getenv("RCPP_PARALLEL_NUM_THREADS");
 
@@ -92,8 +95,8 @@ inline size_t get_rcpp_num_threads() {
 
 inline void set_num_threads() {
   auto num_threads = get_rcpp_num_threads();
-  if (num_threads != 1)  {
-    Rcpp::Rcout << "Setting TBB max allowed parallelism to " << num_threads << std::endl;
+  if (num_threads > 1 || num_threads < 0)  {
+ //   Rcpp::Rcout << "Setting TBB max allowed parallelism to " << num_threads << std::endl;
   }
   auto global_control =
     tbb::global_control(tbb::global_control::max_allowed_parallelism,

@@ -96,7 +96,7 @@ simulate_ancestry_migration <- function(input_population_1 = NA,
     }
   }
 
-  RcppParallel::setThreadOptions(num_threads)
+  set_num_threads(num_threads)
 
   input_population_1 <- check_input_pop(input_population_1)
   input_population_2 <- check_input_pop(input_population_2)
@@ -177,6 +177,6 @@ simulate_ancestry_migration <- function(input_population_1 = NA,
                                          track_junctions)
 
   class(output) <- "genomadmixr_simulation"
-  RcppParallel::setThreadOptions(1)
+  reset_num_threads()
   return(output)
 }

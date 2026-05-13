@@ -19,7 +19,7 @@ simulate_sequence_until <- function(input_data_population_1 = NA,
                                     mutation_rate = 0,
                                     substitution_matrix =
                                       matrix(1 / 4, nrow = 4, ncol = 4)) {
-  RcppParallel::setThreadOptions(num_threads)
+  set_num_threads(num_threads)
   pops <- simulate_sequence_migration(
     input_data_population_1 = input_data_population_1,
     input_data_population_2 = input_data_population_2,
@@ -78,7 +78,7 @@ simulate_sequence_until <- function(input_data_population_1 = NA,
     total_generations <- total_generations + generations_between_update
     message(total_generations, "\t", fst, "\n")
   }
-  RcppParallel::setThreadOptions(1)
+  reset_num_threads()
   return(list("population_1" = pops$population_1,
               "population_2" = pops$population_2,
               "Number_of_generations" = total_generations,
