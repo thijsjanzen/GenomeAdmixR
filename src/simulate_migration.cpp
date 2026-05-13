@@ -78,65 +78,66 @@ std::vector< Fish > next_pop_migr_threaded(const std::vector< Fish>& pop_1,
   std::vector<Fish> new_generation(pop_size);
 
   set_num_threads();
+  tbb::task_arena(num_threads).execute([&] {
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+      [&](const tbb::blocked_range<unsigned>& r) {
 
-  tbb::parallel_for(
-    tbb::blocked_range<unsigned>(0, pop_size),
-    [&](const tbb::blocked_range<unsigned>& r) {
+        thread_local size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        thread_local size_t local_time = static_cast<unsigned int>( time(NULL) );
+        thread_local rnd_t rndgen2(local_seed + local_time);
 
-      thread_local size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
-      thread_local size_t local_time = static_cast<unsigned int>( time(NULL) );
-      thread_local rnd_t rndgen2(local_seed + local_time);
+        for (unsigned i = r.begin(); i < r.end(); ++i) {
+          int index1 = -1;
+          int index2 = -1;
+          Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
+                                     use_selection,
+                                     fitness_source, fitness_migr,
+                                     max_fitness_source, max_fitness_migr,
+                                     index1, rndgen2);
+          Fish parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                     use_selection,
+                                     fitness_source, fitness_migr,
+                                     max_fitness_source, max_fitness_migr,
+                                     index2, rndgen2);
+          while (index1 == index2) {
+            parent2 = draw_parent(pop_1, pop_2, migration_rate,
+                                  use_selection,
+                                  fitness_source, fitness_migr,
+                                  max_fitness_source, max_fitness_migr,
+                                  index2, rndgen2);
+          }
 
-      for (unsigned i = r.begin(); i < r.end(); ++i) {
-        int index1 = -1;
-        int index2 = -1;
-        Fish parent1 = draw_parent(pop_1, pop_2, migration_rate,
-                                   use_selection,
-                                   fitness_source, fitness_migr,
-                                   max_fitness_source, max_fitness_migr,
-                                   index1, rndgen2);
-        Fish parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                                   use_selection,
-                                   fitness_source, fitness_migr,
-                                   max_fitness_source, max_fitness_migr,
-                                   index2, rndgen2);
-        while (index1 == index2) {
-          parent2 = draw_parent(pop_1, pop_2, migration_rate,
-                                use_selection,
-                                fitness_source, fitness_migr,
-                                max_fitness_source, max_fitness_migr,
-                                index2, rndgen2);
+          new_generation[i] = mate(parent1, parent2, size_in_morgan, rndgen2);
         }
-
-        new_generation[i] = mate(parent1, parent2, size_in_morgan, rndgen2);
-      }
-    });
+      });
+  });
   return new_generation;
 }
 
 std::vector< Fish > next_pop_migr(const std::vector< Fish>& pop_1,
-                                           const std::vector< Fish>& pop_2,
-                                           size_t pop_size,
-                                           const std::vector< double >& fitness_source,
-                                           const std::vector< double >& fitness_migr,
-                                           const double& max_fitness_source,
-                                           const double& max_fitness_migr,
-                                           bool use_selection,
-                                           double migration_rate,
-                                           double size_in_morgan,
-                                           int num_threads) {
+                                  const std::vector< Fish>& pop_2,
+                                  size_t pop_size,
+                                  const std::vector< double >& fitness_source,
+                                  const std::vector< double >& fitness_migr,
+                                  const double& max_fitness_source,
+                                  const double& max_fitness_migr,
+                                  bool use_selection,
+                                  double migration_rate,
+                                  double size_in_morgan,
+                                  int num_threads) {
 
-    return next_pop_migr_threaded(pop_1,
-                                  pop_2,
-                                  pop_size,
-                                  fitness_source,
-                                  fitness_migr,
-                                  max_fitness_source,
-                                  max_fitness_migr,
-                                  use_selection,
-                                  migration_rate,
-                                  size_in_morgan,
-                                  num_threads);
+  return next_pop_migr_threaded(pop_1,
+                                pop_2,
+                                pop_size,
+                                fitness_source,
+                                fitness_migr,
+                                max_fitness_source,
+                                max_fitness_migr,
+                                use_selection,
+                                migration_rate,
+                                size_in_morgan,
+                                num_threads);
 }
 
 std::vector< std::vector< Fish > > simulate_two_populations(
@@ -164,7 +165,7 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     std::array<double, 5> row_entry;
     for (size_t j = 0; j < select.ncol(); ++j) {
       if (j >= 5) throw "select matrix too many columns";
-       row_entry[j] = select(i, j);
+      row_entry[j] = select(i, j);
     }
     select_matrix.push_back(row_entry);
   }
@@ -244,26 +245,26 @@ std::vector< std::vector< Fish > > simulate_two_populations(
     std::vector<Fish> new_generation_pop_1 = next_pop_migr(pop_1, // resident
                                                            pop_2, // migrants
                                                            pop_size[0],
-                                                           fitness_pop_1,
-                                                           fitness_pop_2,
-                                                           max_fitness_pop_1,
-                                                           max_fitness_pop_2,
-                                                           use_selection,
-                                                           migration_rate,
-                                                           morgan,
-                                                           num_threads);
+                                                                   fitness_pop_1,
+                                                                   fitness_pop_2,
+                                                                   max_fitness_pop_1,
+                                                                   max_fitness_pop_2,
+                                                                   use_selection,
+                                                                   migration_rate,
+                                                                   morgan,
+                                                                   num_threads);
 
     std::vector<Fish> new_generation_pop_2 = next_pop_migr(pop_2,  // resident
                                                            pop_1,  // migrants
                                                            pop_size[1],
-                                                           fitness_pop_2,
-                                                           fitness_pop_1,
-                                                           max_fitness_pop_2,
-                                                           max_fitness_pop_1,
-                                                           use_selection,
-                                                           migration_rate,
-                                                           morgan,
-                                                           num_threads);
+                                                                   fitness_pop_2,
+                                                                   fitness_pop_1,
+                                                                   max_fitness_pop_2,
+                                                                   max_fitness_pop_1,
+                                                                   use_selection,
+                                                                   migration_rate,
+                                                                   morgan,
+                                                                   num_threads);
     pop_1 = new_generation_pop_1;
     pop_2 = new_generation_pop_2;
 
@@ -318,122 +319,122 @@ List simulate_migration_cpp(NumericVector input_population_1,
                             bool multiplicative_selection,
                             double migration_rate,
                             int num_threads) {
-try {
-  rnd_t rndgen;
+  try {
+    rnd_t rndgen;
 
-  std::vector< Fish > Pop_1;
-  std::vector< Fish > Pop_2;
-  int number_of_alleles = -1;
-  std::vector<int> founder_labels;
+    std::vector< Fish > Pop_1;
+    std::vector< Fish > Pop_2;
+    int number_of_alleles = -1;
+    std::vector<int> founder_labels;
 
-  if (input_population_1[0] > -1e4) {
-    Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
-    Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
+    if (input_population_1[0] > -1e4) {
+      Pop_1 = convert_NumericVector_to_fishVector(input_population_1);
+      Pop_2 = convert_NumericVector_to_fishVector(input_population_2);
 
-    for (auto it = Pop_1.begin(); it != Pop_1.end(); ++it) {
-      update_founder_labels((*it).chromosome1, founder_labels);
-      update_founder_labels((*it).chromosome2, founder_labels);
-    }
-
-    for (auto it = Pop_2.begin(); it != Pop_2.end(); ++it) {
-      update_founder_labels((*it).chromosome1, founder_labels);
-      update_founder_labels((*it).chromosome2, founder_labels);
-    }
-
-    number_of_alleles = founder_labels.size();
-
-    if (Pop_1.size() != pop_size[0]) {
-      // the populations have to be populated from the parents!
-      std::vector< Fish > Pop_1_new;
-      for(int j = 0; j < pop_size[0]; ++j) {
-        int index = rndgen.random_number(Pop_1.size());
-        Pop_1_new.push_back(Pop_1[index]);
+      for (auto it = Pop_1.begin(); it != Pop_1.end(); ++it) {
+        update_founder_labels((*it).chromosome1, founder_labels);
+        update_founder_labels((*it).chromosome2, founder_labels);
       }
-      Pop_1 = Pop_1_new;
-      Pop_1_new.clear(); // free up memory
-    }
 
-    if (Pop_2.size() != pop_size[1]) {
-      std::vector< Fish > Pop_2_new;
-      for (int j = 0; j < pop_size[1]; ++j) {
-        int index = rndgen.random_number(Pop_2.size());
-        Pop_2_new.push_back(Pop_2[index]);
+      for (auto it = Pop_2.begin(); it != Pop_2.end(); ++it) {
+        update_founder_labels((*it).chromosome1, founder_labels);
+        update_founder_labels((*it).chromosome2, founder_labels);
       }
-      Pop_2 = Pop_2_new;
-      Pop_2_new.clear(); // free up memory
-    }
-  } else {
 
-    for (int j = 0; j < 2; ++j) {
-      for (int i = 0; i < pop_size[j]; ++i) {
-        NumericVector focal_freqs = starting_frequencies(j, _);
+      number_of_alleles = founder_labels.size();
 
-        int founder_1 = draw_random_founder(focal_freqs, rndgen);
-        int founder_2 = draw_random_founder(focal_freqs, rndgen);
-
-        Fish p1 = Fish( founder_1 );
-        Fish p2 = Fish( founder_2 );
-
-        if(j == 0) Pop_1.push_back(mate(p1, p2, morgan, rndgen));
-        if(j == 1) Pop_2.push_back(mate(p1, p2, morgan, rndgen));
+      if (Pop_1.size() != pop_size[0]) {
+        // the populations have to be populated from the parents!
+        std::vector< Fish > Pop_1_new;
+        for(int j = 0; j < pop_size[0]; ++j) {
+          int index = rndgen.random_number(Pop_1.size());
+          Pop_1_new.push_back(Pop_1[index]);
+        }
+        Pop_1 = Pop_1_new;
+        Pop_1_new.clear(); // free up memory
       }
+
+      if (Pop_2.size() != pop_size[1]) {
+        std::vector< Fish > Pop_2_new;
+        for (int j = 0; j < pop_size[1]; ++j) {
+          int index = rndgen.random_number(Pop_2.size());
+          Pop_2_new.push_back(Pop_2[index]);
+        }
+        Pop_2 = Pop_2_new;
+        Pop_2_new.clear(); // free up memory
+      }
+    } else {
+
+      for (int j = 0; j < 2; ++j) {
+        for (int i = 0; i < pop_size[j]; ++i) {
+          NumericVector focal_freqs = starting_frequencies(j, _);
+
+          int founder_1 = draw_random_founder(focal_freqs, rndgen);
+          int founder_2 = draw_random_founder(focal_freqs, rndgen);
+
+          Fish p1 = Fish( founder_1 );
+          Fish p2 = Fish( founder_2 );
+
+          if(j == 0) Pop_1.push_back(mate(p1, p2, morgan, rndgen));
+          if(j == 1) Pop_2.push_back(mate(p1, p2, morgan, rndgen));
+        }
+      }
+      for (int i = 0; i < starting_frequencies.ncol(); ++i) {
+        founder_labels.push_back(i);
+      }
+      number_of_alleles = founder_labels.size();
     }
-    for (int i = 0; i < starting_frequencies.ncol(); ++i) {
-      founder_labels.push_back(i);
-    }
-    number_of_alleles = founder_labels.size();
+
+    int number_of_markers = track_markers.size();
+    // 5 columns: time, loc, anc, type, population
+    arma::mat frequencies_table(number_of_markers * number_of_alleles * total_runtime * 2, 5);
+    arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1,
+                                                                           Pop_2,
+                                                                           track_markers,
+                                                                           founder_labels,
+                                                                           0,
+                                                                           morgan);
+
+    std::vector<double> junctions;
+    std::vector< std::vector< Fish> > output_populations;
+    if (verbose) {Rcout << "starting simulation\n"; force_output();}
+    output_populations = simulate_two_populations(Pop_1,
+                                                  Pop_2,
+                                                  select,
+                                                  pop_size,
+                                                  total_runtime,
+                                                  morgan,
+                                                  verbose,
+                                                  frequencies_table,
+                                                  track_frequency,
+                                                  track_markers,
+                                                  track_junctions,
+                                                  junctions,
+                                                  multiplicative_selection,
+                                                  number_of_alleles,
+                                                  founder_labels,
+                                                  migration_rate,
+                                                  num_threads,
+                                                  rndgen);
+
+    if (verbose) {Rcout << "done simulating\n"; force_output();}
+
+    arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
+                                                                         output_populations[1],
+                                                                                           track_markers,
+                                                                                           founder_labels,
+                                                                                           total_runtime,
+                                                                                           morgan);
+    return List::create( Named("population_1") = convert_to_list(output_populations[0]),
+                         Named("population_2") = convert_to_list(output_populations[1]),
+                         Named("frequencies") = frequencies_table,
+                         Named("initial_frequencies") = initial_frequencies,
+                         Named("final_frequencies") = final_frequencies,
+                         Named("junctions") = junctions);
+  } catch(std::exception &ex) {
+    forward_exception_to_r(ex);
+  } catch(...) {
+    Rcpp::stop("c++ exception (unknown reason)");
   }
-
-  int number_of_markers = track_markers.size();
-  // 5 columns: time, loc, anc, type, population
-  arma::mat frequencies_table(number_of_markers * number_of_alleles * total_runtime * 2, 5);
-  arma::mat initial_frequencies = update_all_frequencies_tibble_dual_pop(Pop_1,
-                                                                         Pop_2,
-                                                                         track_markers,
-                                                                         founder_labels,
-                                                                         0,
-                                                                         morgan);
-
-  std::vector<double> junctions;
-  std::vector< std::vector< Fish> > output_populations;
-  if (verbose) {Rcout << "starting simulation\n"; force_output();}
-  output_populations = simulate_two_populations(Pop_1,
-                                                Pop_2,
-                                                select,
-                                                pop_size,
-                                                total_runtime,
-                                                morgan,
-                                                verbose,
-                                                frequencies_table,
-                                                track_frequency,
-                                                track_markers,
-                                                track_junctions,
-                                                junctions,
-                                                multiplicative_selection,
-                                                number_of_alleles,
-                                                founder_labels,
-                                                migration_rate,
-                                                num_threads,
-                                                rndgen);
-
-  if (verbose) {Rcout << "done simulating\n"; force_output();}
-
-  arma::mat final_frequencies = update_all_frequencies_tibble_dual_pop(output_populations[0],
-                                                                       output_populations[1],
-                                                                                         track_markers,
-                                                                                         founder_labels,
-                                                                                         total_runtime,
-                                                                                         morgan);
-  return List::create( Named("population_1") = convert_to_list(output_populations[0]),
-                       Named("population_2") = convert_to_list(output_populations[1]),
-                       Named("frequencies") = frequencies_table,
-                       Named("initial_frequencies") = initial_frequencies,
-                       Named("final_frequencies") = final_frequencies,
-                       Named("junctions") = junctions);
-} catch(std::exception &ex) {
-  forward_exception_to_r(ex);
-} catch(...) {
-  Rcpp::stop("c++ exception (unknown reason)");
-}
-return NA_REAL;
+  return NA_REAL;
 }

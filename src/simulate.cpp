@@ -44,33 +44,34 @@ void update_pop(const std::vector<Fish>& Pop,
   }
 
   set_num_threads();
+  tbb::task_arena(num_threads).execute([&] {
+    tbb::parallel_for(
+      tbb::blocked_range<unsigned>(0, pop_size),
+      [&](const tbb::blocked_range<unsigned>& r) {
 
-  tbb::parallel_for(
-    tbb::blocked_range<unsigned>(0, pop_size),
-    [&](const tbb::blocked_range<unsigned>& r) {
+        size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        size_t local_time = static_cast<unsigned int>( time(NULL) );
+        thread_local rnd_t rndgen2(local_seed + local_time);
 
-      size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
-      size_t local_time = static_cast<unsigned int>( time(NULL) );
-      thread_local rnd_t rndgen2(local_seed + local_time);
+        for (unsigned i = r.begin(); i < r.end(); ++i) {
+          int index1 = 0;
+          int index2 = 0;
+          if (use_selection) {
+            index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+            while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
+          } else {
+            index1 = rndgen2.random_number( pop_size );
+            index2 = rndgen2.random_number( pop_size );
+            while(index2 == index1) index2 = rndgen2.random_number( pop_size );
+          }
 
-      for (unsigned i = r.begin(); i < r.end(); ++i) {
-        int index1 = 0;
-        int index2 = 0;
-        if (use_selection) {
-          index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-          while(index2 == index1) index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-        } else {
-          index1 = rndgen2.random_number( pop_size );
-          index2 = rndgen2.random_number( pop_size );
-          while(index2 == index1) index2 = rndgen2.random_number( pop_size );
+          new_generation[i] = mate(Pop[index1],
+                                   Pop[index2],
+                                      morgan, rndgen2);
         }
-
-        new_generation[i] = mate(Pop[index1],
-                                 Pop[index2],
-                                    morgan, rndgen2);
-      }
-    });
+      });
+  });
 
   return;
 }
