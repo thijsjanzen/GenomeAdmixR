@@ -44,6 +44,11 @@ public:
   static size_t active_value(parameter /*param*/);  // undefined
 };
 
+class task_arena {
+  task_arena(size_t /*num_threads*/) {});
+  template<typename Func> void execute(const Func& f) { f(); }
+};
+
 
 template<typename T>
 class blocked_range {
