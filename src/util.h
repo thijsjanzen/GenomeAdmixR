@@ -24,11 +24,11 @@
 
 namespace tbb {
 
-namespace task_arena {
+//namespace task_arena {
 
-constexpr size_t automatic = size_t(-1);
+//constexpr size_t automatic = size_t(-1);
 
-}  // namespace task_arena
+//}  // namespace task_arena
 
 
 class global_control {
@@ -44,8 +44,10 @@ public:
   static size_t active_value(parameter /*param*/);  // undefined
 };
 
+
 class task_arena {
-  task_arena(size_t /*num_threads*/) {});
+public:
+  task_arena(size_t /*num_threads*/) {};
   template<typename Func> void execute(const Func& f) { f(); }
 };
 
@@ -59,6 +61,7 @@ public:
   T begin() const { return begin_; }
   T end() const { return end_; }
 };
+
 
 template<typename T, typename Func>
 inline void parallel_for(blocked_range<T> b, const Func f) {

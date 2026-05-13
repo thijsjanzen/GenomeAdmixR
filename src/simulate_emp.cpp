@@ -114,11 +114,9 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
         }
       );
     });
-
-    return;
+  }
+  return;
 }
-
-
 
 std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& sourcePop,
                                                 const std::vector<std::array<double, 5>>& select_matrix,
