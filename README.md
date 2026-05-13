@@ -17,6 +17,7 @@ A package to perform individual-based simulations of genome evolution with ances
 More information can be found in the accompanying paper :  https://doi.org/10.1111/2041-210X.13612
 
 # Version history
+Version 2.1.13.2 - Fixed weird behaviour with num_threads and TBB, now embedded parallel code in task_arena <br />
 Version 2.1.13 - Added support for installs without TBB (e.g. Alpine Linux) <br />
 Version 2.1.12 - Update to C++17 <br />
 Version 2.1.11 - Update internal seeding <br />
