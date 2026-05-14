@@ -49,6 +49,7 @@ class task_arena {
 public:
   task_arena(size_t /*num_threads*/) {};
   template<typename Func> void execute(const Func& f) { f(); }
+  static const size_t automatic = size_t(-1);
 };
 
 
@@ -103,9 +104,6 @@ inline size_t get_rcpp_num_threads() {
 
 inline void set_num_threads() {
   auto num_threads = get_rcpp_num_threads();
-  if (num_threads > 1 || num_threads < 0)  {
- //   Rcpp::Rcout << "Setting TBB max allowed parallelism to " << num_threads << std::endl;
-  }
   auto global_control =
     tbb::global_control(tbb::global_control::max_allowed_parallelism,
                         num_threads);
