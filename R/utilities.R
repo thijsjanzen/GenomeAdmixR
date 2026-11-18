@@ -117,7 +117,7 @@ check_select_matrix <- function(select_matrix,
 
     sites_under_selection <- select_matrix[, 1]
 
-    if (!(sites_under_selection %in% markers)) {
+    if (!all(sites_under_selection %in% markers)) {
       stop("location of sites under selection have to exist in original data")
     }
   }
@@ -327,11 +327,12 @@ calc_allele_frequencies <- function(indiv, alleles) {
 #' @export
 print.individual <- function(x, ...) {
   print("Individual with two Chromosomes")
+  # every chromosome starts with a junction at 0, which is not a crossover
   v1 <- paste("Chromosome 1:",
-              length(x$chromosome1[, 1]) - 2,
+              nrow(x$chromosome1) - 1,
               "junctions")
   v2 <- paste("Chromosome 2:",
-              length(x$chromosome2[, 1]) - 2,
+              nrow(x$chromosome2) - 1,
               "junctions")
   print(v1)
   print(v2)
@@ -552,7 +553,7 @@ print_substitution_matrix <- function(substitution_matrix) {
 
 #' @keywords internal
 verify_substitution_matrix <- function(substitution_matrix) {
-  if (length(substitution_matrix == 1)) {
+  if (length(substitution_matrix) == 1) {
     if (is.na(substitution_matrix[[1]])) {
       stop("No substitution matrix provided")
     }
@@ -735,18 +736,4 @@ convert_to_numeric_matrix <- function(genome_data) {
   genome_numeric <- apply(genome_numeric, 2, as.numeric)
 
   return(genome_numeric)
-}
-
-#' @keywords internal
-set_num_threads <- function(num_threads) {
-  if (num_threads == 1) {
-    RcppParallel::setThreadOptions( 1L )
-  } else {
-    RcppParallel::setThreadOptions(num_threads)
-  }
-}
-
-#' @keywords internal
-reset_num_threads <- function() {
-  RcppParallel::setThreadOptions( getOption("Ncpus",  RcppParallel::defaultNumThreads()) )
 }

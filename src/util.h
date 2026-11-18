@@ -24,32 +24,11 @@
 
 namespace tbb {
 
-//namespace task_arena {
-
-//constexpr size_t automatic = size_t(-1);
-
-//}  // namespace task_arena
-
-
-class global_control {
-public:
-  enum parameter {
-    max_allowed_parallelism,
-    thread_stack_size,
-    terminate_on_exception
-  };
-
-  global_control(parameter /*p*/, size_t /*value*/) {}
-  ~global_control() {}
-  static size_t active_value(parameter /*param*/);  // undefined
-};
-
-
 class task_arena {
 public:
-  task_arena(size_t /*num_threads*/) {};
+  explicit task_arena(int /*num_threads*/) {}
   template<typename Func> void execute(const Func& f) { f(); }
-  static const size_t automatic = size_t(-1);
+  static const int automatic = -1;
 };
 
 
@@ -65,48 +44,53 @@ public:
 
 
 template<typename T, typename Func>
-inline void parallel_for(blocked_range<T> b, const Func f) {
+inline void parallel_for(blocked_range<T> b, const Func& f) {
   f(b);
 }
 
 }  // namespace tbb
 
+#endif  // RCPP_PARALLEL_USE_TBB == 0
 
-// function name is lying.
-inline size_t get_rcpp_num_threads() {
-  return 1;
+
+#include <algorithm>
+#include <cstdint>
+#include "random_functions.h"
+
+// Draw a 64 bit seed from R's random number generator, such that set.seed()
+// in R makes simulations reproducible. The Rcpp generated wrappers in
+// RcppExports.cpp hold an RNGScope, so R's RNG state is loaded here.
+inline uint64_t seed_from_r() {
+  const auto hi = static_cast<uint64_t>(R::unif_rand() * 4294967296.0);
+  const auto lo = static_cast<uint64_t>(R::unif_rand() * 4294967296.0);
+  return (hi << 32) ^ lo;
 }
 
-// do nothing in this case.
-inline void set_num_threads() {
-  return;
+// Apply body(i, rng) to every i in [0, n), possibly in parallel.
+// Work is split into fixed blocks, and every block gets its own random number
+// generator derived from (seed, block index). The outcome therefore depends
+// only on 'seed', and not on the number of threads or on scheduling.
+// num_threads < 1 means: use all available cores.
+// 'body' must not call the R API; report errors with C++ exceptions.
+template <typename Body>
+void parallel_blocks(size_t n, int num_threads, uint64_t seed,
+                     const Body& body) {
+  constexpr size_t block_size = 64;
+  const size_t num_blocks = (n + block_size - 1) / block_size;
+  const int concurrency = num_threads < 1 ? -1 : num_threads;
+
+  tbb::task_arena arena(concurrency);
+  arena.execute([&] {
+    tbb::parallel_for(
+      tbb::blocked_range<size_t>(0, num_blocks),
+      [&](const tbb::blocked_range<size_t>& r) {
+        for (size_t b = r.begin(); b < r.end(); ++b) {
+          rnd_t rndgen(seed, b);
+          const size_t end = std::min(n, (b + 1) * block_size);
+          for (size_t i = b * block_size; i < end; ++i) {
+            body(i, rndgen);
+          }
+        }
+      });
+  });
 }
-
-
-
-
-#else  // if RCPP_PARLLEL_USE_TBB = 0
-
-
-// probably the cleanest way to retrieve RcppParallel's concurrency setting
-// set by RcppParallel::setThreadOptions(numThreads)
-inline size_t get_rcpp_num_threads() {
-  auto* nt_env = std::getenv("RCPP_PARALLEL_NUM_THREADS");
-
-  if (nullptr == nt_env) {
-    Rcpp::Rcout << "RCPP_PARALLEL_NUM_THREADS not set, using automatic concurrency." << std::endl;
-  }
-
-  return (nullptr == nt_env)
-    ? tbb::task_arena::automatic  // -1
-  : static_cast<size_t>(std::atoi(nt_env));
-}
-
-inline void set_num_threads() {
-  auto num_threads = get_rcpp_num_threads();
-  auto global_control =
-    tbb::global_control(tbb::global_control::max_allowed_parallelism,
-                        num_threads);
-}
-
-#endif

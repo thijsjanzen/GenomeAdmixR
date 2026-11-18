@@ -16,7 +16,8 @@ calculate_ld(pop, sampled_individuals = 10, markers = NA, verbose = FALSE)
 calculate the LD matrices}
 
 \item{markers}{vector of markers. If a single number is used, that number of
-markers is randomly placed along the genome.}
+markers is randomly placed along the genome. If not provided, 100 random
+markers are used (or, for sequence data, up to 100 sites from the data).}
 
 \item{verbose}{display verbose output, default is FALSE.}
 }

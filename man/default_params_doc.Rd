@@ -56,9 +56,10 @@ available threads}
 \item{morgan}{Length of the chromosome in Morgan (e.g. the number of
 crossovers during meiosis)}
 
-\item{markers}{A vector of locations of markers (relative locations in
-[0, 1]). If a vector is provided, ancestry at these marker positions is
-tracked for every generation.}
+\item{markers}{A vector of locations of markers. For ancestry simulations
+these are in Morgan (between 0 and \code{morgan}); for sequence data these
+are positions present in the input data. If a vector is provided, ancestry
+at these marker positions is tracked for every generation.}
 
 \item{track_junctions}{Track the average number of junctions over time if
 TRUE}

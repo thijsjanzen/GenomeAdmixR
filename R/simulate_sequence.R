@@ -63,9 +63,8 @@ simulate_sequence <- function(input_data = NA,
       stop("pop_size is undefined, need an input population")
     }
   }
-  set_num_threads(num_threads)
   select_matrix <- check_select_matrix(select_matrix,
-                                       markers,
+                                       input_data$markers,
                                        use_data = TRUE)
 
   if (length(markers) == 1) {
@@ -87,7 +86,7 @@ simulate_sequence <- function(input_data = NA,
     substitution_matrix <- verify_substitution_matrix(substitution_matrix)
   }
 
-  recombination_map <- c(-1, 0)
+  recombination_map <- numeric(0)  # default: proportional to marker distance
   if (!is.na(recombination_rate)) {
     recombination_map <- create_recombination_map(input_data$markers,
                                                   recombination_rate)
@@ -133,7 +132,6 @@ simulate_sequence <- function(input_data = NA,
   output$final_frequency <- convert_to_dna(output$final_frequency)
 
   class(output) <- "genomadmixr_simulation"
-  reset_num_threads()
   return(output)
 }
 

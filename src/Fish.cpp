@@ -9,19 +9,15 @@
 #include "Fish.h"
 #include "random_functions.h"
 #include <algorithm>
+#include <vector>
 
 
 std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
                                     const std::vector<junction>& chromosome2,
                                     const std::vector<double>& recom_positions) {
-//  static auto tl_go = decltype(chromosome1){};
-
   // we need something that is cheaply swappable:
   auto* g1 = &chromosome1;
   auto* g2 = &chromosome2;
- // auto& go = tl_go;   // offspring genome: recycle what's already there...
-//  go.clear();
-
   std::vector<junction> go;
 
   // predicate for lower_bound
@@ -52,7 +48,6 @@ std::vector<junction> recombine_new(const std::vector<junction>& chromosome1,
     std::swap(g1, g2);
     left_pos = right_pos;
   }
-  //go.emplace_back(1.0, -1);
   return go;
 }
 
@@ -76,13 +71,10 @@ void Recombine(      std::vector<junction>& offspring,
                      double MORGAN,
                      rnd_t& rndgen)  {
 
-  int numRecombinations = rndgen.poisson(MORGAN);
+  size_t numRecombinations = rndgen.poisson(MORGAN);
 
   if (numRecombinations == 0) {
-    offspring.insert(offspring.end(),
-                     chromosome1.begin(),
-                     chromosome1.end());
-
+    offspring = chromosome1;
     return;
   }
 
@@ -93,102 +85,29 @@ void Recombine(      std::vector<junction>& offspring,
   return;
 }
 
-Fish mate(const Fish& A, const Fish& B, double numRecombinations,
-          rnd_t& rndgen)
-{
+Fish mate(const Fish& A, const Fish& B, double morgan,
+          rnd_t& rndgen) {
   Fish offspring;
-  offspring.chromosome1.clear();
-  offspring.chromosome2.clear(); //just to be sure.
 
-  //first the father chromosome
-  int event = rndgen.random_number(2);
-  switch(event) {
-  case 0:  {
-    Recombine(offspring.chromosome1, A.chromosome1, A.chromosome2, numRecombinations, rndgen);
-    break;
-  }
-  case 1: {
-    Recombine(offspring.chromosome1, A.chromosome2, A.chromosome1, numRecombinations, rndgen);
-    break;
-  }
+  // gamete from parent A
+  if (rndgen.random_number(2) == 0) {
+    Recombine(offspring.chromosome1, A.chromosome1, A.chromosome2, morgan, rndgen);
+  } else {
+    Recombine(offspring.chromosome1, A.chromosome2, A.chromosome1, morgan, rndgen);
   }
 
-
-  //then the mother chromosome
-  event = rndgen.random_number(2);
-  switch(event) {
-  case 0:  {
-    Recombine(offspring.chromosome2, B.chromosome1, B.chromosome2, numRecombinations, rndgen);
-    break;
-  }
-  case 1: {
-    Recombine(offspring.chromosome2, B.chromosome2, B.chromosome1, numRecombinations, rndgen);
-    break;
-  }
+  // gamete from parent B
+  if (rndgen.random_number(2) == 0) {
+    Recombine(offspring.chromosome2, B.chromosome1, B.chromosome2, morgan, rndgen);
+  } else {
+    Recombine(offspring.chromosome2, B.chromosome2, B.chromosome1, morgan, rndgen);
   }
 
   return offspring;
 }
 
-Fish::Fish() {
-}
-
-junction::junction(){
-
-}
-
-junction::junction(long double loc, int B)  {
-  pos = loc;
-  right = B;
-}
-
-junction::junction(const junction& other) {
-  pos = other.pos;
-  right = other.right;
-}
-
-bool junction::operator ==(const junction& other) const {
-  if(pos != other.pos) return false;
-  if(right != other.right) return false;
-
-  return true;
-}
-
-bool junction::operator !=(const junction& other) const {
-  return( !( (*this) == other) );
-}
-
-Fish::Fish(int initLoc)    {
+Fish::Fish(int initLoc) {
   junction left(0.0, initLoc);
- // junction right(1,  -1);
-  chromosome1.push_back( left  );
-//  chromosome1.push_back( right );
-  chromosome2.push_back( left  );
-//  chromosome2.push_back( right );
-}
-
-Fish::Fish(Fish&& other) {
-  chromosome1 = other.chromosome1;
-  chromosome2 = other.chromosome2;
-}
-
-Fish& Fish::operator=(Fish&& other) {
-  if (this != &other) {
-    chromosome1 = other.chromosome1;
-    chromosome2 = other.chromosome2;
-  }
-  return *this;
-}
-
-Fish::Fish(const Fish& other) {
-  chromosome1 = other.chromosome1;
-  chromosome2 = other.chromosome2;
-}
-
-Fish& Fish::operator=(const Fish& other) {
-  if (this != &other) {
-    chromosome1 = other.chromosome1;
-    chromosome2 = other.chromosome2;
-  }
-  return *this;
+  chromosome1.push_back(left);
+  chromosome2.push_back(left);
 }

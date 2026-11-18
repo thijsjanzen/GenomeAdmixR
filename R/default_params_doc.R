@@ -31,9 +31,10 @@
 #' available threads
 #' @param morgan Length of the chromosome in Morgan (e.g. the number of
 #' crossovers during meiosis)
-#' @param markers A vector of locations of markers (relative locations in
-#' [0, 1]). If a vector is provided, ancestry at these marker positions is
-#' tracked for every generation.
+#' @param markers A vector of locations of markers. For ancestry simulations
+#' these are in Morgan (between 0 and \\code{morgan}); for sequence data these
+#' are positions present in the input data. If a vector is provided, ancestry
+#' at these marker positions is tracked for every generation.
 #' @param track_junctions Track the average number of junctions over time if
 #' TRUE
 #' @return Nothing

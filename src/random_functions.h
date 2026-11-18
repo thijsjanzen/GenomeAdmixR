@@ -10,30 +10,39 @@
 
 #include <random>
 #include <vector>
-#include <algorithm> // std::sort
-#include <thread>
-#include <chrono>
-#include <iostream>
+#include <algorithm>  // std::sort, std::lower_bound
+#include <numeric>    // std::accumulate
+#include <stdexcept>  // std::runtime_error
 #include <cmath>
+#include <cstdint>
 
-
+// Random number generator. It is always seeded explicitly: the master
+// generator of a simulation is seeded from R's RNG (see seed_from_r() in
+// util.h), so set.seed() makes simulations reproducible.
 struct rnd_t {
   std::mt19937_64 rndgen_;
-  std::uniform_real_distribution<> unif_dist = std::uniform_real_distribution<>(0, 1.0);
-  std::uniform_int_distribution<> rand_num_dist;
+  std::uniform_real_distribution<> unif_dist =
+                                 std::uniform_real_distribution<>(0, 1.0);
 
-  rnd_t() {
-    auto seed = get_seed();
-    rndgen_ = std::mt19937_64(seed);
+  explicit rnd_t(uint64_t seed) : rndgen_(seed) {}
+
+  // independent stream 'stream' derived from 'seed', used to give every
+  // block of individuals its own generator in multi-threaded code.
+  rnd_t(uint64_t seed, uint64_t stream) {
+    std::seed_seq ss{static_cast<uint32_t>(seed),
+                     static_cast<uint32_t>(seed >> 32),
+                     static_cast<uint32_t>(stream),
+                     static_cast<uint32_t>(stream >> 32)};
+    rndgen_.seed(ss);
   }
 
-  rnd_t(unsigned int seed) {
-    auto local_seed = get_seed() + seed;
-    rndgen_ = std::mt19937_64(local_seed);
+  void set_seed(uint64_t s) {
+    rndgen_.seed(s);
   }
 
-  void set_seed(unsigned int s) {
-    rndgen_ = std::mt19937_64(s);
+  // draw a fresh seed, e.g. to seed the worker generators of one generation
+  uint64_t next_seed() {
+    return rndgen_();
   }
 
   double uniform() {
@@ -48,63 +57,63 @@ struct rnd_t {
   size_t poisson(double lambda) {
     return std::poisson_distribution<size_t>(lambda)(rndgen_);
   }
-
-  int get_seed() {
-    const auto tt = static_cast<int64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    auto tid = std::this_thread::get_id();
-    const uint64_t e3{ std::hash<std::remove_const_t<decltype(tid)>>()(tid) };
-    auto output = static_cast<int>(tt + e3);
-    if (output < 0) output *= -1;
-    return output;
-  }
 };
 
+// Recombination map for sequence data: entry i is the (relative) probability
+// that a crossover falls between marker i - 1 and marker i.
 struct emp_genome {
   std::vector< double > cdf_;
 
-  emp_genome() {
-  }
+  emp_genome() = default;
 
-  emp_genome(const emp_genome& other) {
-    cdf_ = other.cdf_;
-  }
-
-  emp_genome& operator=(const emp_genome& other) {
-    if (this != &other) {
-      cdf_ = other.cdf_;
+  explicit emp_genome(const std::vector<double>& weights) {
+    if (weights.empty()) {
+      throw std::runtime_error("recombination map is empty");
     }
-    return *this;
+    for (const auto& w : weights) {
+      if (!(w >= 0.0) || !std::isfinite(w)) {
+        throw std::runtime_error("recombination map contains negative or "
+                                 "non-finite values, are the markers sorted?");
+      }
+    }
+    const double total_sum = std::accumulate(weights.begin(),
+                                             weights.end(),
+                                             0.0);
+    const size_t n = weights.size();
+    cdf_.resize(n);
+    if (total_sum > 0.0) {
+      double s = 0.0;
+      for (size_t i = 0; i < n; ++i) {
+        s += weights[i] / total_sum;
+        cdf_[i] = s;
+      }
+    } else {
+      // no information: every interval between markers is equally likely
+      for (size_t i = 0; i < n; ++i) {
+        cdf_[i] = n > 1 ? static_cast<double>(i) / (n - 1) : 1.0;
+      }
+    }
+    cdf_.back() = 1.0;  // guard against rounding error
   }
 
-  template <typename T>
-  emp_genome(const std::vector<T>& positions) {
+  // Default map: crossover probability proportional to the physical
+  // distance between adjacent markers. Positions must be sorted.
+  static emp_genome from_positions(const std::vector<double>& positions) {
     if (positions.empty()) {
       throw std::runtime_error("positions is empty");
     }
-    auto total_sum = std::accumulate(positions.begin(),
-                                positions.end(),
-                                0.0);
-
-    double s = 0.0;
-    double mult = 1.0 / total_sum;
-    cdf_.resize(positions.size());
-    for (size_t i = 0; i < positions.size(); ++i) {
-      s += positions[i] * mult;
-      cdf_[i] = s;
+    std::vector<double> gaps(positions.size(), 0.0);
+    for (size_t i = 1; i < positions.size(); ++i) {
+      gaps[i] = positions[i] - positions[i - 1];
     }
-    return;
+    return emp_genome(gaps);
   }
 
   size_t index_from_cdf(double p) const {
-
-    if (cdf_.empty()) throw "empty cdf";
-
-    if (cdf_.back() <= 0.0) return static_cast<size_t>(p * cdf_.size());
-    // find index belonging to p
-    return static_cast<size_t>(std::distance(cdf_.begin(),
-                                             std::lower_bound(cdf_.begin(),
-                                                              cdf_.end(),
-                                                              p)));
+    if (cdf_.empty()) throw std::runtime_error("empty cdf");
+    auto it = std::lower_bound(cdf_.begin(), cdf_.end(), p);
+    if (it == cdf_.end()) --it;
+    return static_cast<size_t>(std::distance(cdf_.begin(), it));
   }
 
   std::vector< size_t > recompos(double morgan,

@@ -35,87 +35,40 @@ void update_pop_emp(const std::vector<Fish_emp>& Pop,
                     size_t pop_size,
                     double morgan,
                     const std::vector<double>& fitness,
-                    const double& maxFitness,
+                    double maxFitness,
                     bool use_selection,
                     int num_threads,
-                    const emp_genome& emp_gen_input) {
+                    const emp_genome& emp_gen,
+                    uint64_t seed) {
 
-  if (Pop.size() != pop_size) {
-    stop("wrong size pop");
-  }
   if (new_generation.size() != pop_size) {
     stop("new_generation wrong size");
   }
-
-  if (num_threads == 1) {
-    rnd_t rndgen2;
-    emp_genome local_emp_genome = emp_gen_input;
-    for (size_t i = 0; i < pop_size; ++i) {
-      int index1 = 0;
-      int index2 = 0;
-      if (use_selection) {
-        index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-        index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-        while(index1 == index2) {
-          index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-        }
-      } else {
-        index1 = rndgen2.random_number( pop_size );
-        index2 = rndgen2.random_number( pop_size );
-        while(index1 == index2) {
-          index2 = rndgen2.random_number( pop_size );
-        }
-      }
-
-      new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
-                                                      rndgen2,
-                                                      local_emp_genome),
-                                                      Pop[index2].gamete(morgan,
-                                                                         rndgen2,
-                                                                         local_emp_genome));
-    }
-  } else {
-
-    set_num_threads();
-    tbb::task_arena(num_threads).execute([&] {
-      tbb::parallel_for(
-        tbb::blocked_range<unsigned>(0, pop_size),
-        [&](const tbb::blocked_range<unsigned>& r) {
-
-          thread_local emp_genome local_emp_genome(emp_gen_input);
-          size_t local_seed = std::hash<std::thread::id>{}(std::this_thread::get_id());
-          size_t local_time = static_cast<unsigned int>( time(NULL) );
-          thread_local rnd_t rndgen2(local_seed + local_time);
-
-          for (unsigned i = r.begin(); i < r.end(); ++i) {
-            int index1 = 0;
-            int index2 = 0;
-            if (use_selection) {
-              index1 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-              index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-              while(index1 == index2) {
-                index2 = draw_prop_fitness(fitness, maxFitness, rndgen2);
-              }
-            } else {
-              index1 = rndgen2.random_number( pop_size );
-              index2 = rndgen2.random_number( pop_size );
-              while(index1 == index2) {
-                index2 = rndgen2.random_number( pop_size );
-              }
-            }
-
-            new_generation[i] = Fish_emp(Pop[index1].gamete(morgan,
-                                                            rndgen2,
-                                                            local_emp_genome),
-                                                            Pop[index2].gamete(morgan,
-                                                                               rndgen2,
-                                                                               local_emp_genome));
-          }
-        }
-      );
-    });
+  const int source_size = static_cast<int>(Pop.size());
+  if (source_size < 2) {
+    stop("need at least two individuals to produce offspring");
   }
-  return;
+
+  parallel_blocks(pop_size, num_threads, seed, [&](size_t i, rnd_t& rndgen) {
+    int index1 = 0;
+    int index2 = 0;
+    if (use_selection) {
+      index1 = draw_prop_fitness(fitness, maxFitness, rndgen);
+      index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
+      while(index1 == index2) {
+        index2 = draw_prop_fitness(fitness, maxFitness, rndgen);
+      }
+    } else {
+      index1 = rndgen.random_number(source_size);
+      index2 = rndgen.random_number(source_size);
+      while(index1 == index2) {
+        index2 = rndgen.random_number(source_size);
+      }
+    }
+
+    new_generation[i] = Fish_emp(Pop[index1].gamete(morgan, rndgen, emp_gen),
+                                 Pop[index2].gamete(morgan, rndgen, emp_gen));
+  });
 }
 
 std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& sourcePop,
@@ -127,17 +80,17 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
                                                 bool verbose,
                                                 arma::mat& frequencies,
                                                 bool track_frequency,
-                                                const std::vector<int>& track_markers,
+                                                const std::vector<double>& track_markers,
                                                 bool multiplicative_selection,
                                                 double mutation_rate,
                                                 const std::vector<std::vector<double>>& sub_matrix,
                                                 rnd_t& rndgen,
                                                 const emp_genome& emp_gen,
-                                                int num_threads) {
+                                                int num_threads,
+                                                int& generations_run) {
 
   size_t num_alleles = 5;
-  bool use_selection = false;
-  if(select_matrix[0][0] >= 0) use_selection = true;
+  const bool use_selection = !select_matrix.empty();
 
   std::vector<Fish_emp> Pop = sourcePop;
   std::vector<double> fitness;
@@ -163,6 +116,7 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
     Rcout << "*";
   }
 
+  generations_run = 0;
   for(int t = 0; t < total_runtime; ++t) {
     // Rcout << t << " " << Pop.size() << "\n"; force_output();
     if(track_frequency) {
@@ -171,14 +125,13 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
         if(track_markers[i] < 0) break;
 
         int index = find_location(marker_positions, track_markers[i]);
-        if (index < 0)
-          continue;
+        if (index < 0) {
+          throw std::runtime_error("tracked marker not found in data");
+        }
 
-        //  Rcout << track_markers[i] << " " << index << "\n"; force_output();
-        int pos_in_bp = track_markers[i];
         std::vector<std::vector<double>> local_mat = update_frequency_tibble(Pop,
                                                                              index,
-                                                                             pos_in_bp,
+                                                                             track_markers[i],
                                                                              t);
 
         // now we have to find where to copy local_mat into frequencies
@@ -206,7 +159,8 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
                    maxFitness,
                    use_selection,
                    num_threads,
-                   emp_gen);
+                   emp_gen,
+                   rndgen.next_seed());
 
     if (mutation_rate > 0) {
       for(auto it = newGeneration.begin(); it != newGeneration.end(); ++it) {
@@ -229,15 +183,17 @@ std::vector< Fish_emp > simulate_population_emp(const std::vector< Fish_emp>& so
       Rcout << "**";
     }
 
-    if (t > 2 && is_fixed(Pop)) {
-      if (verbose) Rcout << "\n After " << t << " generations, the population has become completely homozygous and fixed\n";
+    Pop.swap(newGeneration);
+    generations_run = t + 1;
+
+    // with mutation, a fixed population can still change
+    if (mutation_rate <= 0 && t > 2 && is_fixed(Pop)) {
+      if (verbose) Rcout << "\n After " << generations_run << " generations, the population has become completely homozygous and fixed\n";
       R_FlushConsole();
       return(Pop);
     }
 
     Rcpp::checkUserInterrupt();
-
-    Pop.swap(newGeneration);
   }
   if(verbose) Rcout << "\n";
   return(Pop);
@@ -259,25 +215,21 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                       int num_threads,
                       const Rcpp::NumericVector& recombination_map) {
   try {
-    rnd_t rndgen;
+    rnd_t rndgen(seed_from_r());
 
-    std::vector< std::array<double, 5> > select_matrix;
-    for (size_t i = 0; i < select.nrow(); ++i) {
-      std::array<double, 5> row_entry;
-      for (size_t j = 0; j < select.ncol(); ++j) {
-        row_entry[j] = select(i, j);
-      }
-      select_matrix.push_back(row_entry);
-    }
+    std::vector< std::array<double, 5> > select_matrix =
+      convert_select_from_r(select);
 
     std::vector<double> marker_positions(marker_positions_R.begin(),
                                          marker_positions_R.end());
 
-    std::vector<int> track_markers(track_markers_R.begin(),
-                                   track_markers_R.end());
+    std::vector<double> track_markers(track_markers_R.begin(),
+                                      track_markers_R.end());
 
-    emp_genome emp_gen(marker_positions);
-    if (static_cast<size_t>(recombination_map.size()) ==
+    // default: crossovers proportional to the distance between markers
+    emp_genome emp_gen = emp_genome::from_positions(marker_positions);
+    if (recombination_map.size() > 0 &&
+        static_cast<size_t>(recombination_map.size()) ==
         static_cast<size_t>(marker_positions.size())) {
       std::vector<double> recom_map(recombination_map.begin(),
                                     recombination_map.end());
@@ -327,6 +279,7 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
       frequencies_table = x;
     }
 
+    int generations_run = 0;
     arma::mat initial_frequencies = update_all_frequencies_tibble(Pop,
                                                                   marker_positions,
                                                                   marker_positions,
@@ -348,12 +301,19 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                                                                substitution_matrix,
                                                                rndgen,
                                                                emp_gen,
-                                                               num_threads);
+                                                               num_threads,
+                                                               generations_run);
+
+    if (track_frequency) {
+      // drop the rows of generations that were not simulated (early fixation)
+      const size_t rows_per_generation = track_markers.size() * number_of_alleles;
+      frequencies_table.resize(rows_per_generation * generations_run, 4);
+    }
 
     arma::mat final_frequencies = update_all_frequencies_tibble(output_pop,
                                                                 marker_positions,
                                                                 marker_positions,
-                                                                total_runtime,
+                                                                generations_run,
                                                                 morgan);
 
     return List::create( Named("population") = convert_to_list(output_pop,

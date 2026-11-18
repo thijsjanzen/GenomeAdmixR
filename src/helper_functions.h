@@ -134,6 +134,9 @@ void mutate(Fish_emp& indiv,
             const double& mutation_rate,
             rnd_t& rndgen);
 
-std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select);
+std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select,
+                                                           double scale = 1.0);
+
+int get_ancestry(const std::vector< junction >& chrom, double marker);
 
 #endif /* helper_functions_hpp */

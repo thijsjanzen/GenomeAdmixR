@@ -6,7 +6,8 @@
 #' @param sampled_individuals Number of individuals randomly sampled to
 #' calculate the LD matrices
 #' @param markers vector of markers. If a single number is used, that number of
-#' markers is randomly placed along the genome.
+#' markers is randomly placed along the genome. If not provided, 100 random
+#' markers are used (or, for sequence data, up to 100 sites from the data).
 #' @param verbose display verbose output, default is FALSE.
 #' @return An object containing two items:
 #' \item{ld_matrix}{
@@ -38,15 +39,23 @@ calculate_ld <- function(pop,
 
   if (length(markers) == 1) {
     if (is.na(markers)) {
-      if (inherits(pop, "genomadmixr_data")) {
-        markers <- pop$markers
+      if (check_for_bases(pop)) {
+        # sequence data: use the sites present in the data (at most 100)
+        markers <- pop[[1]]$chromosome1[, 1]
+        if (length(markers) > 100) markers <- sort(sample(markers, 100))
+      } else {
+        markers <- create_random_markers(100)
       }
     } else {
       markers <- create_random_markers(markers[1])
     }
   }
 
-  popx <- pop[1:sampled_individuals]
+  sampled_individuals <- min(sampled_individuals, length(pop))
+  if (sampled_individuals < 2) {
+    stop("need at least two individuals to calculate LD")
+  }
+  popx <- pop[sample(length(pop), sampled_individuals)]
   class(popx) <- "population"
   pop_for_cpp <- population_to_vector(popx)
   if (verbose) message("starting creation of allele matrix")

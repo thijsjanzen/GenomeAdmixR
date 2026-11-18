@@ -11,9 +11,8 @@
 #include <string>
 #include <thread>
 #include <chrono>
-
-#include <chrono>
-#include <thread>
+#include <algorithm>
+#include <stdexcept>
 
 void force_output() {
 //  std::this_thread::sleep_for(std::chrono::nanoseconds(100));
@@ -23,6 +22,18 @@ void force_output() {
   R_CheckUserInterrupt();
 }
 
+
+// ancestry at position 'marker' (relative position in [0, 1])
+int get_ancestry(const std::vector< junction >& chrom,
+                 double marker) {
+  if (chrom.empty() || marker < chrom.front().pos) {
+    return -1;
+  }
+  // first junction strictly to the right of marker
+  auto it = std::upper_bound(chrom.begin(), chrom.end(), marker,
+                             [](double m, const junction& j) { return m < j.pos; });
+  return (it - 1)->right;
+}
 
 bool is_fixed(const std::vector< Fish >& v) {
 
@@ -66,45 +77,17 @@ void update_anc_chrom(const std::vector<junction>& chrom,
                       const std::vector<int>& founder_labels,
                       double m,
                       arma::mat& allele_matrix) {
-  if (chrom.size() == 1) {
-    if (m >= chrom[0].pos) {
-      int local_anc = chrom[0].right;
-      int index = find_index(founder_labels, local_anc);
-      allele_matrix(index, 3)++;
-      return;
-    }
+  int local_anc = get_ancestry(chrom, m);
+  if (local_anc == -1 && !chrom.empty()) {
+    // location before the first site (sequence data): use the first site
+    local_anc = chrom.front().right;
   }
-
-  if (m > chrom.back().pos) {
-    int local_anc = chrom.back().right;
-    int index = find_index(founder_labels, local_anc);
-    allele_matrix(index, 3)++;
-    return;
+  int index = find_index(founder_labels, local_anc);
+  if (index < 0) {
+    throw std::runtime_error("could not find ancestry at marker " +
+                             std::to_string(m));
   }
-
-
-  for(auto i = chrom.begin(); i != chrom.end(); ++i) {
-    if (i->pos == m) {
-      int local_anc = i->right;
-      int index = find_index(founder_labels, local_anc);
-      allele_matrix(index, 3)++;
-      return;
-    }
-
-    if (i->pos > m) {
-      if (i != chrom.begin()) {
-
-        int local_anc = (*(i-1)).right;
-        int index = find_index(founder_labels, local_anc);
-        allele_matrix(index, 3)++;
-        return;
-      }
-    }
-  }
-
-  Rcpp::Rcout << m << "\n"; force_output();
-  Rcpp::stop("ERROR DID NOT FIND MARKER");
-  return;
+  allele_matrix(index, 3)++;
 }
 
 
@@ -219,22 +202,23 @@ arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_
 }
 
 double calc_mean_junctions(const std::vector< Fish> & pop) {
+  if (pop.empty()) return 0.0;
 
-  double mean_junctions = 0.0;
-  for (auto it = pop.begin(); it != pop.end(); ++it) {
-    mean_junctions += (*it).chromosome1.size() - 2; // start and end don't count
-    mean_junctions += (*it).chromosome2.size() - 2;
+  double total = 0.0;
+  for (const auto& indiv : pop) {
+    // every chromosome stores a start junction at 0.0 (and no end junction),
+    // so the number of crossover junctions is size() - 1
+    total += static_cast<double>(indiv.chromosome1.size()) - 1.0;
+    total += static_cast<double>(indiv.chromosome2.size()) - 1.0;
   }
-  mean_junctions *= 1.0 / (pop.size() * 2); // diploid
-
-  return(mean_junctions);
+  return total / (2.0 * pop.size());  // diploid
 }
 
 int draw_prop_fitness(const std::vector<double>& fitness,
                       const double& maxFitness,
                       rnd_t& rndgen) {
   if (fitness.empty()) {
-    throw "Fitness is empty";
+    throw std::runtime_error("Fitness is empty");
   }
   if (maxFitness <= 0.0) {
     return rndgen.random_number(fitness.size());
@@ -325,69 +309,25 @@ List convert_to_list(const std::vector<Fish>& v) {
   return output;
 }
 
+// select: one row per site; columns: location (relative, in [0, 1]),
+// fitness aa, Aa, AA, ancestor A. Rows with a negative ancestor are ignored.
 double calculate_fitness(const Fish& focal,
                          const std::vector< std::array<double, 5>>& select,
                          bool multiplicative_selection) {
-
-  int number_of_markers = select.size();
-  std::vector< int > num_alleles(number_of_markers, 0);
-
-  int focal_marker = 0;
-  double pos = select[focal_marker][0];
-  double anc = select[focal_marker][4];
-  // loc aa  Aa  AA ancestor
-  //  0  1   2  3  4
-
-  for(auto it = (focal.chromosome1.begin()+1);
-      it != focal.chromosome1.end();
-      ++it) {
-    if ((*it).pos > pos) {
-      if ((*(it-1)).right == anc) num_alleles[focal_marker]++;
-      focal_marker++;
-      if(focal_marker >= number_of_markers) {
-        break;
-      }
-      pos = select[focal_marker][0];
-      anc = select[focal_marker][4];
-    }
-    if (anc < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-  }
-
-  focal_marker = 0;
-  pos = select[focal_marker][0];
-  anc = select[focal_marker][4];
-
-  for(auto it = (focal.chromosome2.begin()+1); it != focal.chromosome2.end(); ++it) {
-    if ((*it).pos > pos) {
-      if ((*(it-1)).right == anc) num_alleles[focal_marker]++;
-      focal_marker++;
-      if (focal_marker >= number_of_markers) {
-        break;
-      }
-      pos = select[focal_marker][0];
-      anc = select[focal_marker][4];
-    }
-    if(anc < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-  }
-
-  double fitness = 0.0;
-  if (multiplicative_selection) fitness = 1.0;
-  for (size_t i = 0; i < num_alleles.size(); ++i) {
-    if(select[i][4] < 0) break; // these entries are only for tracking alleles over time, not for selection calculation
-
-    int fitness_index = 1 + num_alleles[i];
-    if (fitness_index > select[0].size()) {
-      throw "fitness_index out of select range";
-    }
-
+  double fitness = multiplicative_selection ? 1.0 : 0.0;
+  for (const auto& site : select) {
+    if (site[4] < 0) continue;
+    const int anc = static_cast<int>(site[4]);
+    const int num_alleles = (get_ancestry(focal.chromosome1, site[0]) == anc) +
+                            (get_ancestry(focal.chromosome2, site[0]) == anc);
+    const double w = site[1 + num_alleles];
     if (multiplicative_selection) {
-      fitness *= select[i][fitness_index];
+      fitness *= w;
     } else {
-      fitness += select[i][fitness_index];
+      fitness += w;
     }
   }
-
-  return(fitness);
+  return fitness;
 }
 
 
@@ -417,14 +357,12 @@ try {
     update_founder_labels((*it).chromosome2, founder_labels);
   }
 
-  double morgan = markers[markers.size() - 1];
-  markers = scale_markers(markers, morgan); // make sure they are in [0, 1];
-
+  // locations are relative positions on the chromosome, in [0, 1]
   arma::mat frequencies = update_all_frequencies_tibble(Pop,
                                                         markers,
                                                         founder_labels,
                                                         0,
-                                                        morgan);
+                                                        1.0);
 
   return frequencies;
 } catch(std::exception &ex) {
@@ -433,29 +371,6 @@ try {
   Rcpp::stop("c++ exception (unknown reason)");
 }
 return arma::mat();
-}
-
-int get_ancestry(const std::vector< junction >& chrom,
-                 float marker) {
-
-  if (marker < chrom.front().pos) {
-    return(-1);
-  }
-
-  if (marker > chrom.back().pos) {
-    return(chrom.back().right);
-  }
-
-  for(auto i = chrom.begin(); i != chrom.end(); ++i) {
-    if ((*i).pos == marker) {
-      return (*i).right;
-    }
-
-    if ((*i).pos > marker) {
-      return((i-1)->right);
-    }
-  }
-  return chrom.back().right;
 }
 
 // [[Rcpp::export]]
@@ -536,7 +451,7 @@ return NA_REAL;
 }
 
 
-float calc_het(const Fish& indiv, float marker) {
+float calc_het(const Fish& indiv, double marker) {
   int allele1 = get_ancestry(indiv.chromosome1, marker);
   int allele2 = get_ancestry(indiv.chromosome2, marker);
 
@@ -547,7 +462,7 @@ float calc_het(const Fish& indiv, float marker) {
 
 
 float calculate_heterozygosity_pop(const std::vector< Fish >& pop,
-                                   float marker) {
+                                   double marker) {
 
   float freq_heterozygosity = 0.f;
   for(const auto& i : pop) {
@@ -608,14 +523,11 @@ return arma::mat();
 
 NumericVector scale_markers(const Rcpp::NumericVector& markers,
                             double morgan) {
-  if (markers.size() == 1) {
-    return markers;
-  }
-
   Rcpp::NumericVector outputmarkers(markers.size());
 
   for(int i = 0; i < markers.size(); ++i) {
-    outputmarkers[i] = markers[i] * 1.0 / morgan;
+    // negative values are 'no marker' placeholders and stay negative
+    outputmarkers[i] = markers[i] < 0 ? markers[i] : markers[i] / morgan;
   }
   return outputmarkers;
 }
@@ -648,12 +560,8 @@ double calculate_fitness(const Fish_emp& focal,
                          bool multiplicative_selection) {
 
   int number_of_markers = select.size();
-  std::vector<double> fitness_vec(number_of_markers);
-
-  if (select[0].size() < 5) {
-    Rcout << "select matrix too small"; force_output();
-    throw "select matrix too small";
-  }
+  std::vector<double> fitness_vec(number_of_markers,
+                                  multiplicative_selection ? 1.0 : 0.0);
 
   for (int i = 0; i < number_of_markers; ++i) {
     auto focal_pos = select[i][0];
@@ -661,18 +569,15 @@ double calculate_fitness(const Fish_emp& focal,
     if (focal_anc == -1) continue; // do not take into account
     int focal_index = find_location(locations, focal_pos);
 
-    if (focal_index < 0 || focal_index > focal.chromosome1.size()) {
-      Rcout << "focal_index out of range"; force_output();
-      throw "focal_index out of range";
+    if (focal_index < 0 ||
+        static_cast<size_t>(focal_index) >= focal.chromosome1.size() ||
+        static_cast<size_t>(focal_index) >= focal.chromosome2.size()) {
+      throw std::runtime_error("site under selection not found in data");
     }
 
     auto a1 = focal.chromosome1[focal_index];
     auto a2 = focal.chromosome2[focal_index];
     int fit_index = 1 + (a1 == focal_anc) + (a2 == focal_anc);
-    if (fit_index > select[0].size()) {
-      Rcout << "fit_index out of range"; force_output();
-      throw "fit_index out of range";
-    }
     fitness_vec[i] = select[i][fit_index];
  //   Rcout << a1 << " " << a2 << " " << select(i, fit_index) << "\n";
   }
@@ -733,16 +638,18 @@ std::vector< std::vector<double > > update_frequency_tibble(const std::vector< F
   }
 
   for (size_t i = 0; i < pop.size(); ++i) {
-    if (marker_index >= pop[i].chromosome1.size()) {
-      Rcpp::stop("marker index out of bounds");
+    if (marker_index >= pop[i].chromosome1.size() ||
+        marker_index >= pop[i].chromosome2.size()) {
+      throw std::runtime_error("marker index out of bounds");
     }
-    if (marker_index >= pop[i].chromosome2.size()) {
-      Rcpp::stop("marker index out of bounds");
+    for (int local_anc : {pop[i].chromosome1[marker_index],
+                          pop[i].chromosome2[marker_index]}) {
+      if (local_anc < 0 || local_anc >= num_alleles) {
+        throw std::runtime_error("sequence data contains values other than "
+                                 "0 (missing), 1 (a), 2 (c), 3 (t), 4 (g)");
+      }
+      allele_matrix[local_anc][3]++;
     }
-    size_t local_anc1 = pop[i].chromosome1[marker_index];
-    allele_matrix[local_anc1][3]++;
-    size_t local_anc2 = pop[i].chromosome2[marker_index];
-    allele_matrix[local_anc2][3]++;
   }
 
   for (size_t i = 0; i < allele_matrix.size(); ++i) {
@@ -763,8 +670,6 @@ int find_location(const std::vector<double>& markers,
       return std::distance(markers.begin(), loc);
     }
   }
-  Rcout << "could not find location\n"; force_output();
-  throw "could not find location\n";
   return -1;
 }
 
@@ -782,8 +687,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
     auto index = find_location(locations, markers[i]);
 
     if (index < 0) {
-      Rcout << i << " " << index << "\n"; force_output();
-      Rcpp::stop("out of bounds in update_all_frequencies_tibble\n");
+      throw std::runtime_error("tracked marker not found in data");
     }
 
     std::vector<std::vector<double >> local_mat = update_frequency_tibble(pop,
@@ -861,6 +765,9 @@ arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
    if (markers[i] < 0) continue;
 
    int index = find_location(locations, markers[i]);
+   if (index < 0) {
+     throw std::runtime_error("tracked marker not found in data");
+   }
    std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
                                                                            index,
                                                             markers[i],
@@ -977,7 +884,7 @@ NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
 
   for (int i = 0; i < num_indiv; ++i) {
     int index_c1 = i * 2;
-    int index_c2 = i + 1;
+    int index_c2 = index_c1 + 1;
 
     for (int j = 0; j < num_markers; ++j) {
       std::vector< int > alleles = get_alleles(input_mat(i, j),
@@ -991,13 +898,21 @@ NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
   return output;
 }
 
-std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select) {
+// Converts the R selection matrix. Returns an empty vector (no selection)
+// when the matrix is the "no selection" placeholder. Locations are divided
+// by 'scale' (morgan, for ancestry simulations; 1 for sequence data).
+std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select,
+                                                           double scale) {
   std::vector< std::array<double, 5> > select_matrix;
-  for (size_t i = 0; i < select.nrow(); ++i) {
+  if (select.ncol() != 5) {
+    return select_matrix;
+  }
+  for (int i = 0; i < select.nrow(); ++i) {
     std::array<double, 5> row_entry;
-    for (size_t j = 0; j < select.ncol(); ++j) {
+    for (int j = 0; j < 5; ++j) {
       row_entry[j] = select(i, j);
     }
+    row_entry[0] /= scale;
     select_matrix.push_back(row_entry);
   }
   return select_matrix;

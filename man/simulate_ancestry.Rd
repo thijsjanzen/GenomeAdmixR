@@ -54,9 +54,10 @@ provided, each row in the matrix should contain five entries:
 \item{Ancestral type that represents the mutant allele A}
 }}
 
-\item{markers}{A vector of locations of markers (relative locations in
-[0, 1]). If a vector is provided, ancestry at these marker positions is
-tracked for every generation.}
+\item{markers}{A vector of locations of markers. For ancestry simulations
+these are in Morgan (between 0 and \code{morgan}); for sequence data these
+are positions present in the input data. If a vector is provided, ancestry
+at these marker positions is tracked for every generation.}
 
 \item{verbose}{Verbose output if TRUE. Default value is FALSE}
 

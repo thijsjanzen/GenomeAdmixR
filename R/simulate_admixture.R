@@ -41,7 +41,7 @@ simulate_admixture <- function(module = ancestry_module(),
                                num_threads = 1) {
   if (is.na(migration$migration_rate)) {
     if (module$type == "ancestry") {
-      result <- simulate_ancestry(input_population = module$input_data,
+      result <- simulate_ancestry(input_population = module$input_population,
                                   pop_size = pop_size,
                                   number_of_founders = module$number_of_founders,
                                   initial_frequencies =
