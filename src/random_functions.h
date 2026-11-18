@@ -64,34 +64,50 @@ struct rnd_t {
 struct emp_genome {
   std::vector< double > cdf_;
 
-  emp_genome() = default;
-
-  explicit emp_genome(const std::vector<double>& weights) {
+ private:
+  static void check_weights(const std::vector<double>& weights) {
     if (weights.empty()) {
       throw std::runtime_error("recombination map is empty");
     }
-    for (const auto& w : weights) {
-      if (!(w >= 0.0) || !std::isfinite(w)) {
+    for (const double weight : weights) {
+      if (!(weight >= 0.0) || !std::isfinite(weight)) {
         throw std::runtime_error("recombination map contains negative or "
                                  "non-finite values, are the markers sorted?");
       }
     }
-    const double total_sum = std::accumulate(weights.begin(),
-                                             weights.end(),
-                                             0.0);
-    const size_t n = weights.size();
-    cdf_.resize(n);
-    if (total_sum > 0.0) {
-      double s = 0.0;
-      for (size_t i = 0; i < n; ++i) {
-        s += weights[i] / total_sum;
-        cdf_[i] = s;
-      }
+  }
+
+  void build_cdf_from_weights(const std::vector<double>& weights,
+                              double total_weight) {
+    cdf_.resize(weights.size());
+    double cumulative_probability = 0.0;
+    for (size_t i = 0; i < weights.size(); ++i) {
+      cumulative_probability += weights[i] / total_weight;
+      cdf_[i] = cumulative_probability;
+    }
+  }
+
+  // no information: every interval between markers is equally likely
+  void build_uniform_cdf(size_t number_of_markers) {
+    cdf_.resize(number_of_markers);
+    for (size_t i = 0; i < number_of_markers; ++i) {
+      cdf_[i] = number_of_markers > 1 ?
+                  static_cast<double>(i) / (number_of_markers - 1) : 1.0;
+    }
+  }
+
+ public:
+  emp_genome() = default;
+
+  explicit emp_genome(const std::vector<double>& weights) {
+    check_weights(weights);
+    const double total_weight = std::accumulate(weights.begin(),
+                                                weights.end(),
+                                                0.0);
+    if (total_weight > 0.0) {
+      build_cdf_from_weights(weights, total_weight);
     } else {
-      // no information: every interval between markers is equally likely
-      for (size_t i = 0; i < n; ++i) {
-        cdf_[i] = n > 1 ? static_cast<double>(i) / (n - 1) : 1.0;
-      }
+      build_uniform_cdf(weights.size());
     }
     cdf_.back() = 1.0;  // guard against rounding error
   }
@@ -102,18 +118,23 @@ struct emp_genome {
     if (positions.empty()) {
       throw std::runtime_error("positions is empty");
     }
-    std::vector<double> gaps(positions.size(), 0.0);
+    std::vector<double> distance_to_previous(positions.size(), 0.0);
     for (size_t i = 1; i < positions.size(); ++i) {
-      gaps[i] = positions[i] - positions[i - 1];
+      distance_to_previous[i] = positions[i] - positions[i - 1];
     }
-    return emp_genome(gaps);
+    return emp_genome(distance_to_previous);
   }
 
-  size_t index_from_cdf(double p) const {
-    if (cdf_.empty()) throw std::runtime_error("empty cdf");
-    auto it = std::lower_bound(cdf_.begin(), cdf_.end(), p);
-    if (it == cdf_.end()) --it;
-    return static_cast<size_t>(std::distance(cdf_.begin(), it));
+  // index of the first cdf entry that is not smaller than 'probability'
+  size_t index_from_cdf(double probability) const {
+    if (cdf_.empty()) {
+      throw std::runtime_error("empty cdf");
+    }
+    auto position = std::lower_bound(cdf_.begin(), cdf_.end(), probability);
+    if (position == cdf_.end()) {
+      --position;
+    }
+    return static_cast<size_t>(std::distance(cdf_.begin(), position));
   }
 
   std::vector< size_t > recompos(double morgan,

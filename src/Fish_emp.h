@@ -1,7 +1,7 @@
 #ifndef Fish_emp_hpp
 #define Fish_emp_hpp
 
-#include <stdio.h>
+#include <utility>
 #include <vector>
 #include "random_functions.h"
 
@@ -12,9 +12,9 @@ struct Fish_emp {
   Fish_emp()
     {}
 
-  Fish_emp(const std::vector< int >& c1,
-           const std::vector< int >& c2) :
-    chromosome1(c1), chromosome2(c2) {
+  Fish_emp(std::vector< int > c1,
+           std::vector< int > c2) :
+    chromosome1(std::move(c1)), chromosome2(std::move(c2)) {
   }
 
   Fish_emp(Fish_emp&& other) = default;

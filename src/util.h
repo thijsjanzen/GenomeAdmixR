@@ -61,36 +61,51 @@ inline void parallel_for(blocked_range<T> b, const Func& f) {
 // in R makes simulations reproducible. The Rcpp generated wrappers in
 // RcppExports.cpp hold an RNGScope, so R's RNG state is loaded here.
 inline uint64_t seed_from_r() {
-  const auto hi = static_cast<uint64_t>(R::unif_rand() * 4294967296.0);
-  const auto lo = static_cast<uint64_t>(R::unif_rand() * 4294967296.0);
-  return (hi << 32) ^ lo;
+  const double two_to_the_32 = 4294967296.0;
+  const auto high_bits = static_cast<uint64_t>(R::unif_rand() * two_to_the_32);
+  const auto low_bits  = static_cast<uint64_t>(R::unif_rand() * two_to_the_32);
+  return (high_bits << 32) ^ low_bits;
 }
 
-// Apply body(i, rng) to every i in [0, n), possibly in parallel.
-// Work is split into fixed blocks, and every block gets its own random number
-// generator derived from (seed, block index). The outcome therefore depends
-// only on 'seed', and not on the number of threads or on scheduling.
+// Calls task(index, random_generator) for every index in [0, number_of_tasks),
+// possibly in parallel.
+//
+// The indices are split into fixed blocks of 64, and every block gets its own
+// random number generator, derived from (seed, block number). The outcome
+// therefore depends only on 'seed', not on the number of threads or on the
+// order in which threads run.
+//
 // num_threads < 1 means: use all available cores.
-// 'body' must not call the R API; report errors with C++ exceptions.
-template <typename Body>
-void parallel_blocks(size_t n, int num_threads, uint64_t seed,
-                     const Body& body) {
+// 'task' must not call the R API; report errors with C++ exceptions instead.
+template <typename Task>
+void parallel_blocks(size_t number_of_tasks,
+                     int num_threads,
+                     uint64_t seed,
+                     const Task& task) {
   constexpr size_t block_size = 64;
-  const size_t num_blocks = (n + block_size - 1) / block_size;
-  const int concurrency = num_threads < 1 ? -1 : num_threads;
+  const size_t number_of_blocks = (number_of_tasks + block_size - 1) / block_size;
+  const int maximum_concurrency = num_threads < 1 ? -1 : num_threads;  // -1: automatic
 
-  tbb::task_arena arena(concurrency);
+  auto run_block = [&](size_t block_number) {
+    rnd_t random_generator(seed, block_number);
+    const size_t first_index = block_number * block_size;
+    const size_t end_index = std::min(number_of_tasks, first_index + block_size);
+    for (size_t index = first_index; index < end_index; ++index) {
+      task(index, random_generator);
+    }
+  };
+
+  auto run_range_of_blocks = [&](const tbb::blocked_range<size_t>& block_range) {
+    for (size_t block_number = block_range.begin();
+         block_number < block_range.end();
+         ++block_number) {
+      run_block(block_number);
+    }
+  };
+
+  tbb::task_arena arena(maximum_concurrency);
   arena.execute([&] {
-    tbb::parallel_for(
-      tbb::blocked_range<size_t>(0, num_blocks),
-      [&](const tbb::blocked_range<size_t>& r) {
-        for (size_t b = r.begin(); b < r.end(); ++b) {
-          rnd_t rndgen(seed, b);
-          const size_t end = std::min(n, (b + 1) * block_size);
-          for (size_t i = b * block_size; i < end; ++i) {
-            body(i, rndgen);
-          }
-        }
-      });
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, number_of_blocks),
+                      run_range_of_blocks);
   });
 }

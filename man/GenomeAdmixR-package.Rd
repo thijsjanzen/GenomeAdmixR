@@ -9,6 +9,7 @@
    Individual-based simulations forward in time, simulating how
 patterns in ancestry along the genome change after admixture. The simulation
 assumes Wright-Fisher dynamics, e.g. random mating and non-overlapping generations. In the simulation, instead of specific alleles, local ancestry is tracked, thus assuming that local molecular data can always be uniquely traced back to one of the founding individuals (populations). The package provides functionality to perform such simulations, but also to perform post-hoc statistical analyses and to visualize the obtained results.
+   Version 2.1.15 - Shared implementation of all simulation types \cr
    Version 2.1.14 - Bug fixes (selection, junctions, VCF import, recombination map), reproducible seeding \cr
    Version 2.1.13 - Added support for machines without TBB \cr
    Version 2.1.12 -Update to C++17 \cr

@@ -1,3 +1,22 @@
+# GenomeAdmixR 2.1.15
+
+## Changes
+
+* The four C++ simulation drivers (one or two populations, with ancestry or
+  sequence data) are replaced by one generic implementation
+  (`src/simulation.h`). What differs between ancestry and sequence data lives
+  in two small model classes (`src/models.h`). This removes about 900 lines of
+  duplicated C++ code; the R interface is unchanged.
+* In single-population sequence simulations, mutations are now applied in
+  parallel together with reproduction, as in two-population simulations.
+  Results with `mutation_rate > 0` therefore differ from version 2.1.14.
+* Single-population sequence simulations no longer resample the input data
+  when it already contains `pop_size` individuals, in line with the other
+  simulation types.
+* Sequence simulations no longer depend on the order in which the compiler
+  evaluates function arguments, so they give the same results with GCC and
+  clang. Results with GCC are unchanged.
+
 # GenomeAdmixR 2.1.14
 
 ## Bug fixes

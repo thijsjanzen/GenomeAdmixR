@@ -24,32 +24,21 @@ void force_output() {
 
 
 // ancestry at position 'marker' (relative position in [0, 1])
-int get_ancestry(const std::vector< junction >& chrom,
+// Ancestry at 'marker' (a relative position in [0, 1]), or -1 if the marker
+// lies before the start of the chromosome.
+int get_ancestry(const std::vector< junction >& chromosome,
                  double marker) {
-  if (chrom.empty() || marker < chrom.front().pos) {
+  if (chromosome.empty() || marker < chromosome.front().pos) {
     return -1;
   }
-  // first junction strictly to the right of marker
-  auto it = std::upper_bound(chrom.begin(), chrom.end(), marker,
-                             [](double m, const junction& j) { return m < j.pos; });
-  return (it - 1)->right;
-}
-
-bool is_fixed(const std::vector< Fish >& v) {
-
-  if (!matching_chromosomes(v[0].chromosome1, v[0].chromosome2)) {
-    return false;
-  }
-
-  for(auto it = v.begin(); it != v.end(); ++it) {
-    if (!matching_chromosomes((*it).chromosome1, v[0].chromosome1)) {
-      return false;
-    }
-    if (!matching_chromosomes((*it).chromosome1, (*it).chromosome2)) {
-      return false;
-    }
-  }
-  return true;
+  auto marker_is_left_of = [](double location, const junction& block_start) {
+    return location < block_start.pos;
+  };
+  // the first junction to the right of the marker starts the next block
+  auto next_block = std::upper_bound(chromosome.begin(), chromosome.end(),
+                                     marker, marker_is_left_of);
+  auto block_containing_marker = next_block - 1;
+  return block_containing_marker->right;
 }
 
 int find_index(const std::vector<int>& v, int value) {
@@ -73,21 +62,21 @@ void update_founder_labels(const std::vector<junction> chrom,
   return;
 }
 
-void update_anc_chrom(const std::vector<junction>& chrom,
+void update_anc_chrom(const std::vector<junction>& chromosome,
                       const std::vector<int>& founder_labels,
-                      double m,
+                      double marker,
                       arma::mat& allele_matrix) {
-  int local_anc = get_ancestry(chrom, m);
-  if (local_anc == -1 && !chrom.empty()) {
+  int ancestry = get_ancestry(chromosome, marker);
+  if (ancestry == -1 && !chromosome.empty()) {
     // location before the first site (sequence data): use the first site
-    local_anc = chrom.front().right;
+    ancestry = chromosome.front().right;
   }
-  int index = find_index(founder_labels, local_anc);
-  if (index < 0) {
+  const int founder_index = find_index(founder_labels, ancestry);
+  if (founder_index < 0) {
     throw std::runtime_error("could not find ancestry at marker " +
-                             std::to_string(m));
+                             std::to_string(marker));
   }
-  allele_matrix(index, 3)++;
+  allele_matrix(founder_index, 3)++;
 }
 
 
@@ -124,7 +113,7 @@ arma::mat update_frequency_tibble(const std::vector< Fish >& v,
 }
 
 arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
-                                        const NumericVector& markers,
+                                        const std::vector<double>& markers,
                                         const std::vector<int>& founder_labels,
                                         int t,
                                         double morgan) {
@@ -132,7 +121,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
   int number_of_alleles = founder_labels.size();
   arma::mat output(markers.size() * number_of_alleles, 4);
 
-  for (int i = 0; i < markers.size(); ++i) {
+  for (size_t i = 0; i < markers.size(); ++i) {
      if (markers[i] < 0) continue;
      arma::mat local_mat = update_frequency_tibble(pop,
                                                    markers[i],
@@ -154,64 +143,16 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
 
 
 
-arma::mat record_frequencies_pop(const std::vector< Fish >& pop,
-                                 const NumericVector& markers,
-                                 const std::vector<int>& founder_labels,
-                                 int t,
-                                 int pop_indicator,
-                                 double morgan) {
-  int number_of_alleles = founder_labels.size();
-  arma::mat output(markers.size() * number_of_alleles, 5);
-  if (markers.size() < 1) {
-    Rcout << "markers empty\n"; force_output();
-    return(output);
+// total number of crossover junctions in a population. Every chromosome
+// stores a start junction at 0.0 (and no end junction), so a chromosome
+// carries size() - 1 crossover junctions.
+double total_junctions(const std::vector< Fish >& population) {
+  double number_of_junctions = 0.0;
+  for (const auto& individual : population) {
+    number_of_junctions += static_cast<double>(individual.chromosome1.size()) - 1.0;
+    number_of_junctions += static_cast<double>(individual.chromosome2.size()) - 1.0;
   }
-
-  for(int i = 0; i < markers.size(); ++i) {
-    if (markers[i] < 0) continue;
-    arma::mat local_mat = update_frequency_tibble(pop,
-                                                  markers[i],
-                                                         founder_labels,
-                                                         t,
-                                                         morgan);
-    // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
-    // and we have to put that in the right place in the output matrix
-    int start = i * number_of_alleles;
-    int end = start + number_of_alleles;
-    for (int j = start; j < end; ++j) {
-      for (int k = 0; k < 4; ++k) {
-        output(j, k) = local_mat(j - start, k);
-      }
-      output(j, 4) = pop_indicator;
-    }
-  }
-  return(output);
-}
-
-arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish >& pop_1,
-                                                 const std::vector< Fish >& pop_2,
-                                                 const NumericVector& markers,
-                                                 const std::vector<int>& founder_labels,
-                                                 int t,
-                                                 double morgan) {
-  arma::mat output_1 = record_frequencies_pop(pop_1, markers, founder_labels, t, 1, morgan);
-  arma::mat output_2 = record_frequencies_pop(pop_2, markers, founder_labels, t, 2, morgan);
-
-  arma::mat output = arma::join_cols(output_1, output_2);
-  return(output);
-}
-
-double calc_mean_junctions(const std::vector< Fish> & pop) {
-  if (pop.empty()) return 0.0;
-
-  double total = 0.0;
-  for (const auto& indiv : pop) {
-    // every chromosome stores a start junction at 0.0 (and no end junction),
-    // so the number of crossover junctions is size() - 1
-    total += static_cast<double>(indiv.chromosome1.size()) - 1.0;
-    total += static_cast<double>(indiv.chromosome2.size()) - 1.0;
-  }
-  return total / (2.0 * pop.size());  // diploid
+  return number_of_junctions;
 }
 
 int draw_prop_fitness(const std::vector<double>& fitness,
@@ -316,15 +257,22 @@ double calculate_fitness(const Fish& focal,
                          bool multiplicative_selection) {
   double fitness = multiplicative_selection ? 1.0 : 0.0;
   for (const auto& site : select) {
-    if (site[4] < 0) continue;
-    const int anc = static_cast<int>(site[4]);
-    const int num_alleles = (get_ancestry(focal.chromosome1, site[0]) == anc) +
-                            (get_ancestry(focal.chromosome2, site[0]) == anc);
-    const double w = site[1 + num_alleles];
+    const double location = site[0];
+    const double selected_ancestor = site[4];
+    if (selected_ancestor < 0) {
+      continue;
+    }
+    const int ancestor = static_cast<int>(selected_ancestor);
+    const bool first_copy  = get_ancestry(focal.chromosome1, location) == ancestor;
+    const bool second_copy = get_ancestry(focal.chromosome2, location) == ancestor;
+    const int number_of_copies = static_cast<int>(first_copy) +
+                                 static_cast<int>(second_copy);
+    // columns 1, 2 and 3 hold the fitness for 0, 1 and 2 copies
+    const double site_fitness = site[1 + number_of_copies];
     if (multiplicative_selection) {
-      fitness *= w;
+      fitness *= site_fitness;
     } else {
-      fitness += w;
+      fitness += site_fitness;
     }
   }
   return fitness;
@@ -359,7 +307,7 @@ try {
 
   // locations are relative positions on the chromosome, in [0, 1]
   arma::mat frequencies = update_all_frequencies_tibble(Pop,
-                                                        markers,
+                                                        Rcpp::as<std::vector<double>>(markers),
                                                         founder_labels,
                                                         0,
                                                         1.0);
@@ -683,6 +631,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
   arma::mat output(markers.size() * number_of_alleles, 4);
 
   for (size_t i = 0; i < markers.size(); ++i) {
+    if (markers[i] < 0) continue;  // not tracked: rows stay empty
 
     auto index = find_location(locations, markers[i]);
 
@@ -704,101 +653,6 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish_emp >& pop,
   }
   return(output);
 }
-
-bool is_fixed(const std::vector< Fish_emp >& v) {
-
-  if(!matching_chromosomes(v[0].chromosome1, v[0].chromosome2)) {
-    return false;
-  }
-
-  for(auto it = v.begin(); it != v.end(); ++it) {
-    if(!matching_chromosomes((*it).chromosome1, v[0].chromosome1)) {
-      return false;
-    }
-    if(!matching_chromosomes((*it).chromosome1, (*it).chromosome2)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-bool matching_chromosomes(const std::vector< junction >& v1,
-                          const std::vector< junction >& v2) {
-  if(v1.size() != v2.size()) {
-    return false;
-  }
-  for(size_t i = 0; i < v1.size(); ++i) {
-    if(v1[i] != v2[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-bool matching_chromosomes(const std::vector< int >& v1,
-                          const std::vector< int >& v2) {
-  if(v1.size() != v2.size()) {
-    return false;
-  }
-  for(size_t i = 0; i < v1.size(); ++i) {
-    if(v1[i] != v2[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-arma::mat record_frequencies_pop(const std::vector< Fish_emp >& pop,
-                                 const std::vector<double>& markers,
-                                 const std::vector<double>& locations,
-                                 int t,
-                                 int pop_indicator,
-                                 double morgan) {
-  int number_of_alleles = 5;
-  arma::mat output(markers.size() * number_of_alleles, 5);
-  if (markers.size() < 1) {
-    Rcout << "markers empty\n"; force_output();
-    return(output);
-  }
-
-  for(size_t i = 0; i < markers.size(); ++i) {
-   if (markers[i] < 0) continue;
-
-   int index = find_location(locations, markers[i]);
-   if (index < 0) {
-     throw std::runtime_error("tracked marker not found in data");
-   }
-   std::vector< std::vector< double> > local_mat = update_frequency_tibble(pop,
-                                                                           index,
-                                                            markers[i],
-                                                            t);
-    // now we have a (markers x alleles) x 5 tibble, e.g. [loc, anc, freq, pop]
-    // and we have to put that in the right place in the output matrix
-    int start = i * number_of_alleles;
-    int end = start + number_of_alleles;
-    for(int j = start; j < end; ++j) {
-      for(int k = 0; k < 4; ++k) {
-        output(j, k) = local_mat[j - start][k];
-      }
-      output(j, 4) = pop_indicator;
-    }
-  }
-  return(output);
-}
-
-arma::mat update_all_frequencies_tibble_dual_pop(const std::vector< Fish_emp >& pop_1,
-                                                 const std::vector< Fish_emp >& pop_2,
-                                                 const std::vector<double>& markers,
-                                                 const std::vector<double>& locations,
-                                                 int t,
-                                                 double morgan) {
-  arma::mat output_1 = record_frequencies_pop(pop_1, markers, locations, t, 1, morgan);
-  arma::mat output_2 = record_frequencies_pop(pop_2, markers, locations, t, 2, morgan);
-
-  arma::mat output = arma::join_cols(output_1, output_2);
-  return(output);
-}
-
 
 int draw_mutated_base(int source_base,
                       const std::vector< std::vector< double >>& sub_matrix,
@@ -903,17 +757,18 @@ NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
 // by 'scale' (morgan, for ancestry simulations; 1 for sequence data).
 std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select,
                                                            double scale) {
-  std::vector< std::array<double, 5> > select_matrix;
-  if (select.ncol() != 5) {
-    return select_matrix;
+  std::vector< std::array<double, 5> > selection_sites;
+  const bool is_placeholder = select.ncol() != 5;
+  if (is_placeholder) {
+    return selection_sites;
   }
-  for (int i = 0; i < select.nrow(); ++i) {
-    std::array<double, 5> row_entry;
-    for (int j = 0; j < 5; ++j) {
-      row_entry[j] = select(i, j);
+  for (int row = 0; row < select.nrow(); ++row) {
+    std::array<double, 5> site;
+    for (int column = 0; column < 5; ++column) {
+      site[column] = select(row, column);
     }
-    row_entry[0] /= scale;
-    select_matrix.push_back(row_entry);
+    site[0] /= scale;  // location
+    selection_sites.push_back(site);
   }
-  return select_matrix;
+  return selection_sites;
 }
