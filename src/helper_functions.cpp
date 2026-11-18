@@ -26,6 +26,7 @@ void force_output() {
 // ancestry at position 'marker' (relative position in [0, 1])
 // Ancestry at 'marker' (a relative position in [0, 1]), or -1 if the marker
 // lies before the start of the chromosome.
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 int get_ancestry(const std::vector< junction >& chromosome,
                  double marker) {
   if (chromosome.empty() || marker < chromosome.front().pos) {
@@ -62,6 +63,7 @@ void update_founder_labels(const std::vector<junction> chrom,
   return;
 }
 
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 void update_anc_chrom(const std::vector<junction>& chromosome,
                       const std::vector<int>& founder_labels,
                       double marker,
@@ -146,6 +148,7 @@ arma::mat update_all_frequencies_tibble(const std::vector< Fish >& pop,
 // total number of crossover junctions in a population. Every chromosome
 // stores a start junction at 0.0 (and no end junction), so a chromosome
 // carries size() - 1 crossover junctions.
+// Written by Claude (Anthropic).
 double total_junctions(const std::vector< Fish >& population) {
   double number_of_junctions = 0.0;
   for (const auto& individual : population) {
@@ -252,6 +255,7 @@ List convert_to_list(const std::vector<Fish>& v) {
 
 // select: one row per site; columns: location (relative, in [0, 1]),
 // fitness aa, Aa, AA, ancestor A. Rows with a negative ancestor are ignored.
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 double calculate_fitness(const Fish& focal,
                          const std::vector< std::array<double, 5>>& select,
                          bool multiplicative_selection) {
@@ -755,6 +759,7 @@ NumericMatrix vcf_to_matrix_cpp(const Rcpp::NumericMatrix input_mat,
 // Converts the R selection matrix. Returns an empty vector (no selection)
 // when the matrix is the "no selection" placeholder. Locations are divided
 // by 'scale' (morgan, for ancestry simulations; 1 for sequence data).
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 std::vector< std::array<double, 5> > convert_select_from_r(const Rcpp::NumericMatrix& select,
                                                            double scale) {
   std::vector< std::array<double, 5> > selection_sites;

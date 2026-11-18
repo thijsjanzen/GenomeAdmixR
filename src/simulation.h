@@ -40,6 +40,7 @@
 
 // Returns a copy of 'source_population' with 'target_size' individuals. If the
 // sizes differ, the individuals are drawn at random (with replacement).
+// Written by Claude (Anthropic).
 template <class Individual>
 std::vector<Individual> resize_population(
     const std::vector<Individual>& source_population,
@@ -65,6 +66,7 @@ std::vector<Individual> resize_population(
 
 
 // A population is fixed when every chromosome of every individual is the same.
+// Written by Claude (Anthropic).
 template <class Individual>
 bool is_fixed(const std::vector<Individual>& population) {
   if (population.empty()) {
@@ -83,6 +85,7 @@ bool is_fixed(const std::vector<Individual>& population) {
 
 
 // One population, together with the fitness of its individuals.
+// Written by Claude (Anthropic), including all member functions.
 template <class Model>
 struct PopulationState {
   using individual_type = typename Model::individual_type;
@@ -120,6 +123,7 @@ struct PopulationState {
 
 // Draws parents for the offspring of one population. With probability
 // 'migration_rate' a parent comes from the other population (if any).
+// Written by Claude (Anthropic), including all member functions.
 template <class Model>
 class ParentSampler {
  public:
@@ -180,6 +184,7 @@ class ParentSampler {
 
 // Produces 'offspring_count' offspring, each from two different parents.
 // The work is spread over 'num_threads' threads; 'seed' determines the result.
+// Written by Claude (Anthropic).
 template <class Model>
 std::vector<typename Model::individual_type> produce_offspring(
     const Model& model,
@@ -218,6 +223,7 @@ std::vector<typename Model::individual_type> produce_offspring(
 }
 
 
+// Written by Claude (Anthropic).
 struct SimulationSettings {
   std::vector<size_t> population_sizes;   // one entry per population
   double migration_rate = 0.0;
@@ -231,6 +237,7 @@ struct SimulationSettings {
 };
 
 
+// Written by Claude (Anthropic).
 template <class Model>
 struct SimulationResult {
   std::vector< std::vector<typename Model::individual_type> > populations;
@@ -245,6 +252,7 @@ struct SimulationResult {
 // Runs a simulation of one population, or of two populations connected by
 // migration, for settings.total_runtime generations, or until all
 // populations are fixed.
+// Written by Claude (Anthropic), including all member functions.
 template <class Model>
 class Simulation {
  public:
@@ -523,6 +531,7 @@ class Simulation {
 };
 
 
+// Written by Claude (Anthropic).
 template <class Model>
 SimulationResult<Model> run_simulation(
     const Model& model,

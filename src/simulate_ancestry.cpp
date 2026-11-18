@@ -20,6 +20,7 @@ using namespace Rcpp;
 
 namespace {
 
+// Written by Claude (Anthropic).
 AncestryModel create_ancestry_model(const NumericMatrix& select,
                                     double morgan,
                                     bool multiplicative_selection) {
@@ -32,12 +33,14 @@ AncestryModel create_ancestry_model(const NumericMatrix& select,
 }
 
 // R passes c(-1e6, -1e6) when there is no input population
+// Written by Claude (Anthropic).
 bool has_input_population(const NumericVector& input_population) {
   return input_population[0] > -1e4;
 }
 
 // Each individual is the offspring of two founders, which are drawn with
 // probabilities 'founder_frequencies'.
+// Written by Claude (Anthropic).
 std::vector<Fish> create_founder_population(size_t population_size,
                                             const NumericVector& founder_frequencies,
                                             double morgan,
@@ -57,6 +60,7 @@ std::vector<Fish> create_founder_population(size_t population_size,
   return population;
 }
 
+// Written by Claude (Anthropic).
 void add_founder_labels(const std::vector<Fish>& population,
                         std::vector<int>& founder_labels) {
   for (const auto& individual : population) {
@@ -65,6 +69,7 @@ void add_founder_labels(const std::vector<Fish>& population,
   }
 }
 
+// Written by Claude (Anthropic).
 void use_numbered_founder_labels(size_t number_of_founders,
                                  std::vector<int>& founder_labels) {
   for (size_t founder = 0; founder < number_of_founders; ++founder) {
@@ -73,12 +78,14 @@ void use_numbered_founder_labels(size_t number_of_founders,
 }
 
 // markers are given in Morgan, chromosomes are stored on [0, 1]
+// Written by Claude (Anthropic).
 std::vector<double> markers_on_relative_scale(const NumericVector& markers,
                                               double morgan) {
   const NumericVector scaled_markers = scale_markers(markers, morgan);
   return std::vector<double>(scaled_markers.begin(), scaled_markers.end());
 }
 
+// Written by Claude (Anthropic).
 SimulationSettings create_settings(const std::vector<size_t>& population_sizes,
                                    double migration_rate,
                                    int total_runtime,
@@ -100,6 +107,7 @@ SimulationSettings create_settings(const std::vector<size_t>& population_sizes,
   return settings;
 }
 
+// Written by Claude (Anthropic).
 void print_message(bool verbose, const char* message) {
   if (verbose) {
     Rcout << message;
@@ -111,6 +119,7 @@ void print_message(bool verbose, const char* message) {
 
 
 // [[Rcpp::export]]
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericMatrix select,
                   size_t pop_size,
@@ -172,6 +181,7 @@ List simulate_cpp(Rcpp::NumericVector input_population,
 
 
 // [[Rcpp::export]]
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 List simulate_migration_cpp(NumericVector input_population_1,
                             NumericVector input_population_2,
                             NumericMatrix select,

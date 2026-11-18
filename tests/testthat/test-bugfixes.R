@@ -1,4 +1,4 @@
-# regression tests for bugs fixed in 2.1.14
+# Written by Claude (Anthropic): regression tests for the bugs fixed in 2.1.14.
 
 make_f1_data <- function(n_markers, n_ind = 50) {
   # every individual carries one chromosome of all 'a' and one of all 'c'

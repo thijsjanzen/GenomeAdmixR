@@ -28,6 +28,7 @@ struct rnd_t {
 
   // independent stream 'stream' derived from 'seed', used to give every
   // block of individuals its own generator in multi-threaded code.
+  // Written by Claude (Anthropic).
   rnd_t(uint64_t seed, uint64_t stream) {
     std::seed_seq ss{static_cast<uint32_t>(seed),
                      static_cast<uint32_t>(seed >> 32),
@@ -41,6 +42,7 @@ struct rnd_t {
   }
 
   // draw a fresh seed, e.g. to seed the worker generators of one generation
+  // Written by Claude (Anthropic).
   uint64_t next_seed() {
     return rndgen_();
   }
@@ -65,6 +67,7 @@ struct emp_genome {
   std::vector< double > cdf_;
 
  private:
+  // Written by Claude (Anthropic).
   static void check_weights(const std::vector<double>& weights) {
     if (weights.empty()) {
       throw std::runtime_error("recombination map is empty");
@@ -77,6 +80,7 @@ struct emp_genome {
     }
   }
 
+  // Written by Claude (Anthropic).
   void build_cdf_from_weights(const std::vector<double>& weights,
                               double total_weight) {
     cdf_.resize(weights.size());
@@ -88,6 +92,7 @@ struct emp_genome {
   }
 
   // no information: every interval between markers is equally likely
+  // Written by Claude (Anthropic).
   void build_uniform_cdf(size_t number_of_markers) {
     cdf_.resize(number_of_markers);
     for (size_t i = 0; i < number_of_markers; ++i) {
@@ -99,6 +104,7 @@ struct emp_genome {
  public:
   emp_genome() = default;
 
+  // Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
   explicit emp_genome(const std::vector<double>& weights) {
     check_weights(weights);
     const double total_weight = std::accumulate(weights.begin(),
@@ -114,6 +120,7 @@ struct emp_genome {
 
   // Default map: crossover probability proportional to the physical
   // distance between adjacent markers. Positions must be sorted.
+  // Written by Claude (Anthropic).
   static emp_genome from_positions(const std::vector<double>& positions) {
     if (positions.empty()) {
       throw std::runtime_error("positions is empty");
@@ -126,6 +133,7 @@ struct emp_genome {
   }
 
   // index of the first cdf entry that is not smaller than 'probability'
+  // Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
   size_t index_from_cdf(double probability) const {
     if (cdf_.empty()) {
       throw std::runtime_error("empty cdf");

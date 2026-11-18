@@ -21,6 +21,7 @@ using namespace Rcpp;
 
 namespace {
 
+// Written by Claude (Anthropic).
 bool has_user_recombination_map(const NumericVector& recombination_map,
                                 size_t number_of_locations) {
   return recombination_map.size() > 0 &&
@@ -30,6 +31,7 @@ bool has_user_recombination_map(const NumericVector& recombination_map,
 // A user supplied map also sets the length of the chromosome (its sum, in
 // Morgan). Otherwise crossovers are proportional to the distance between
 // adjacent locations.
+// Written by Claude (Anthropic).
 void set_recombination_map(SequenceModel& model,
                            const NumericVector& recombination_map) {
   if (has_user_recombination_map(recombination_map, model.locations.size())) {
@@ -42,6 +44,7 @@ void set_recombination_map(SequenceModel& model,
   }
 }
 
+// Written by Claude (Anthropic).
 std::vector< std::vector<double> > to_substitution_matrix(
     const NumericMatrix& substitution_matrix) {
   std::vector< std::vector<double> > output(4, std::vector<double>(4, 0.0));
@@ -53,6 +56,7 @@ std::vector< std::vector<double> > to_substitution_matrix(
   return output;
 }
 
+// Written by Claude (Anthropic).
 void set_mutation(SequenceModel& model,
                   double mutation_rate,
                   const NumericMatrix& substitution_matrix) {
@@ -64,6 +68,7 @@ void set_mutation(SequenceModel& model,
   }
 }
 
+// Written by Claude (Anthropic).
 SequenceModel create_sequence_model(const NumericVector& locations,
                                     const NumericMatrix& select,
                                     double morgan,
@@ -82,10 +87,12 @@ SequenceModel create_sequence_model(const NumericVector& locations,
 }
 
 // R passes a matrix filled with -1e6 when there is no input population
+// Written by Claude (Anthropic).
 bool has_input_population(const NumericMatrix& input_population) {
   return input_population(0, 0) > -1e4;
 }
 
+// Written by Claude (Anthropic).
 std::vector<Fish_emp> create_starting_population(const NumericMatrix& input_population,
                                                  size_t population_size,
                                                  rnd_t& random_generator) {
@@ -94,6 +101,7 @@ std::vector<Fish_emp> create_starting_population(const NumericMatrix& input_popu
   return resize_population(input, population_size, random_generator);
 }
 
+// Written by Claude (Anthropic).
 SimulationSettings create_settings(const std::vector<size_t>& population_sizes,
                                    double migration_rate,
                                    int total_runtime,
@@ -115,6 +123,7 @@ SimulationSettings create_settings(const std::vector<size_t>& population_sizes,
   return settings;
 }
 
+// Written by Claude (Anthropic).
 void print_message(bool verbose, const char* message) {
   if (verbose) {
     Rcout << message;
@@ -126,6 +135,7 @@ void print_message(bool verbose, const char* message) {
 
 
 // [[Rcpp::export]]
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                       const Rcpp::NumericVector& marker_positions_R,
                       const Rcpp::NumericMatrix& select,
@@ -181,6 +191,7 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
 
 
 // [[Rcpp::export]]
+// Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
 List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericMatrix& input_population_2,
                                 const NumericVector& marker_positions_R,

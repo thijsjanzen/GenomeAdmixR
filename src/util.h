@@ -60,6 +60,7 @@ inline void parallel_for(blocked_range<T> b, const Func& f) {
 // Draw a 64 bit seed from R's random number generator, such that set.seed()
 // in R makes simulations reproducible. The Rcpp generated wrappers in
 // RcppExports.cpp hold an RNGScope, so R's RNG state is loaded here.
+// Written by Claude (Anthropic).
 inline uint64_t seed_from_r() {
   const double two_to_the_32 = 4294967296.0;
   const auto high_bits = static_cast<uint64_t>(R::unif_rand() * two_to_the_32);
@@ -77,6 +78,7 @@ inline uint64_t seed_from_r() {
 //
 // num_threads < 1 means: use all available cores.
 // 'task' must not call the R API; report errors with C++ exceptions instead.
+// Written by Claude (Anthropic).
 template <typename Task>
 void parallel_blocks(size_t number_of_tasks,
                      int num_threads,

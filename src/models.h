@@ -20,6 +20,7 @@
 // Local ancestry along a chromosome of 'morgan' Morgan. Chromosomes are stored
 // as junctions on [0, 1], so marker and selection locations are relative
 // positions in [0, 1].
+// Written by Claude (Anthropic), including all member functions.
 struct AncestryModel {
   using individual_type = Fish;
 
@@ -70,6 +71,7 @@ struct AncestryModel {
 
 // Sequence data: a base (0 = missing, 1 to 4 = a, c, t, g) at every location.
 // Marker and selection locations are locations present in the data.
+// Written by Claude (Anthropic), including all member functions.
 struct SequenceModel {
   using individual_type = Fish_emp;
 
