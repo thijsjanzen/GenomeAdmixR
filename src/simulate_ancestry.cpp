@@ -117,9 +117,8 @@ void print_message(bool verbose, const char* message) {
 
 }  // namespace
 
-
-// [[Rcpp::export]]
 // Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
+// [[Rcpp::export]]
 List simulate_cpp(Rcpp::NumericVector input_population,
                   NumericMatrix select,
                   size_t pop_size,
@@ -179,9 +178,8 @@ List simulate_cpp(Rcpp::NumericVector input_population,
   return NA_REAL;
 }
 
-
-// [[Rcpp::export]]
 // Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
+// [[Rcpp::export]]
 List simulate_migration_cpp(NumericVector input_population_1,
                             NumericVector input_population_2,
                             NumericMatrix select,

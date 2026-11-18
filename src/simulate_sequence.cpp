@@ -133,9 +133,8 @@ void print_message(bool verbose, const char* message) {
 
 }  // namespace
 
-
-// [[Rcpp::export]]
 // Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
+// [[Rcpp::export]]
 List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
                       const Rcpp::NumericVector& marker_positions_R,
                       const Rcpp::NumericMatrix& select,
@@ -189,9 +188,8 @@ List simulate_emp_cpp(const Rcpp::NumericMatrix& input_population,
   return NA_REAL;
 }
 
-
-// [[Rcpp::export]]
 // Rewritten by Claude (Anthropic); the original was written by Thijs Janzen.
+// [[Rcpp::export]]
 List simulate_migration_emp_cpp(const NumericMatrix& input_population_1,
                                 const NumericMatrix& input_population_2,
                                 const NumericVector& marker_positions_R,
